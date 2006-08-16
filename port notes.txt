@@ -1,0 +1,64 @@
+Nick Velloff
+nick@lymabean.com
+
+Porting xiff version b4 
+
+Notes:
+
+Here are global changes I am making. For each change I give an example where I implimented the change.
+Global Changes:
+
+1. "package" added to all .as files.
+	- package org.jivesoftware.xiff.data{} added
+2. package info removed from all class definitions
+	- class org.jivesoftware.xiff.data.ExtensionContainer implements IExtendable
+	changed to public class ExtensionContainer implements IExtendable
+3. added "public" namespace to all static variables and functions (now default to internal and will not be
+	accessible outside package scope
+	- static var _fExtensionContainer:ExtensionContainer = undefined;
+	public static var _fExtensionContainer:ExtensionContainer = undefined;
+4. must state "override" when overriding methods in prototype chain 
+	public class IQ extends XMPPStanza implements ISerializable
+	override public function serialize( parentNode:XMLNode ):Boolean
+5. import flash.xml.XMLNode;
+	depreciated XMLNode must now be imported.
+6. import flash.xml.XMLDocument;
+	depreciated XML changed to flash.xml.XMLDocument and must be imported.
+7. return type Void changed to void
+8. private static functions changed to internal to allow subclasses access to the method
+	(org.jivesoftware.xiff.data.XMLStanza)
+	internal static function exists( val:* ):Boolean
+9. implicit coercion of type no longer allowed
+	ExtensionClassRegistry.register(AuthExtension);
+	changed to ExtensionClassRegistry.register(Function(AuthExtension));
+10. you can no longer delete properties of a sealed class (such as XMLNode)
+	delete myDigestNode; /changed to/ myDigestNode = null;
+	as far as i know this will make it available for garbage collection
+11. interface methods must be public
+	public function getID(prefix:String):String	
+12. compiler likes all vars to be strong typed.
+13. null is no longer a valid Boolean return type .. replaced with false (not sure if this will break us at run time)
+14. null is no longer a valid Number return type .. replaced with NaN (not sure if this will break us at run time)
+15. must now send exact number of arguments to constructor method > added 6th arg "null"
+	-var regIQ:IQ = new IQ( server, IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+16. all costom objects (ie. Presence,Message) cannot be instanciated without the proper number of arguments
+	- var pres:Presence = new Presence("","","","","",NaN);
+	// should probably set defaults for these...
+
+
+
+Known issues:
+XMPPConnection line 809 : dont know if all IO errors should be handled this way
+	- private function onIOError(event:IOErrorEvent):void{
+
+
+ExtensionContainer line 59 : not sure if this is an appropriate replacement
+	- _global.ASSetPropFlags(this, _exts, 1); // you'll see my best guess on how to protect the object in AS3.
+
+org.jivesoftware.xiff.utility.ListenerXMLSocket general notice:
+	- the IOErrorEvent.IO_ERROR event will dispatch in the event of any communication failure.
+	Currently there is no implimentation to handle this event other than the onConnectFailure.
+	This is change in the event model we will have to address across the application. 
+	Also, there is now a SecurityErrorEvent.SECURITY_ERROR event that dispatches sandbox and port
+	issues. we should impliment handlers for this event.
+	- 8.10.06 update... i am removing ListenerXMLSocket as XMLSocket now supports the standard event model.
