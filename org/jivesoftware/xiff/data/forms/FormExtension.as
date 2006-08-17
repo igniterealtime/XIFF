@@ -40,7 +40,8 @@
 	 * @toc-path Extensions/Conferencing
 	 * @toc-sort 1/2
 	 */
-	public class FormExtension extends Extension implements ISerializable, IExtension
+	//public class FormExtension extends Extension implements ISerializable, IExtension
+	public class FormExtension extends Extension implements ISerializable
 	{
 	    public static var FIELD_TYPE_BOOLEAN:String = "boolean";
 	    public static var FIELD_TYPE_FIXED:String = "fixed";

@@ -44,27 +44,56 @@
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
 		private var myItems:Array;
-	
+		
+		/*
 		public function addExtension( extension:IExtension ):IExtension { return null; }
 		public function getAllExtensionsByNS( namespace:String ):Array { return null; }
 		public function getAllExtensions():Array { return null; }
 		public function removeExtension( extension:IExtension ):Boolean { return null; }
-		public function removeAllExtensions( namespace:String ):Void { }
-	
-		private static var isStaticConstructed:Boolean = MUCBaseExtensionStatic();
-		private static var staticDependencies = [ ExtensionContainer ];
+		public function removeAllExtensions( namespace:String ):Void { } 
+		*/
+		
+		//private static var isStaticConstructed:Boolean = MUCBaseExtensionStatic();
+		//private static var staticDependencies = [ ExtensionContainer ];
 	
 		public function MUCBaseExtension( parent:XMLNode )
 		{
 			super(parent);
 		}
-	
+		
+		/* Attempting subclassing instead of decoration
 		public static function MUCBaseExtensionStatic():Boolean
 		{
 			ExtensionContainer.decorate(MUCBaseExtension.prototype);
 			return true;
 		}
-	
+		*/
+		
+		public function addExtension( extension:IExtension ):IExtension
+		{
+			var ext:IExtension = ExtensionContainer.addExtension(extension);
+			return ext;
+		}
+		public function getAllExtensions():Array
+		{
+			var a:Array = ExtensionContainer.getAllExtensions();
+			return a;
+		}
+		public function getAllExtensionsByNS( ns:String ):Array
+		{
+			var a:Array = ExtensionContainer.getAllExtensionsByNS(ns);
+			return a;
+		}
+		public function removeExtension( extension:IExtension ):Boolean
+		{
+			var b:Boolean = ExtensionContainer.removeExtension(extension);
+			return b;
+		}
+		public function removeAllExtensions( ns:String ):void
+		{
+			ExtensionContainer.removeAllExtensions(ns);
+		}
+		
 		/**
 		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
 		 */

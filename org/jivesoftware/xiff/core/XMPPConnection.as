@@ -605,7 +605,6 @@
 				var resultObj:Object = pattern.exec(ev.data);
 				if (resultObj != null) // stop searching for unterminated node
 				{
-					trace("isAMatch!");
 					var str:String = ev.data;
 					var index:Number = resultObj.index + 13;
 					ev.data = str.substring(0,index) + "/" + str.substring(index,str.length);
@@ -615,7 +614,6 @@
 			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
-			trace(">>>>>>>>>" + ev.data);
 			xmlData.parseXML( ev.data );
 			
 			var event:IncomingDataEvent = new IncomingDataEvent();
@@ -706,7 +704,7 @@
 		
 		private function handleIQ( node:XMLNode ):IQ
 		{
-			var iq:IQ = new IQ("","","","",{},null);
+			var iq:IQ = new IQ();
 			
 			// Populate the IQ with the incoming data
 			if( !iq.deserialize( node ) ) {
@@ -722,7 +720,10 @@
 				if( pendingIQs[iq.id] !== undefined ) {
 					var callbackInfo:* = pendingIQs[iq.id];
 					callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );
-					callbackInfo.func( iq );
+					if (callbackInfo.func != null) { 
+						callbackInfo.func( iq );
+					}
+					pendingIQs[iq.id] = null;
 					delete pendingIQs[iq.id];
 				}
 				else {
@@ -879,7 +880,7 @@
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				var authIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("log_user2_"), "sendAuthentication_result", this, null );
 				
-				var resultAuth:Array = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
+				var resultAuth:* = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
 				var responseAuth:AuthExtension = new AuthExtension(authIQ.getNode());
 	
 	//			if (resultAuth.isDigest()) {

@@ -33,11 +33,14 @@
 	 * @toc-path Data
 	 * @toc-sort 1
 	 */
-	public class ExtensionContainer implements IExtendable
+	//public class ExtensionContainer implements IExtendable
+	public class ExtensionContainer
 	{
-		public static var _fExtensionContainer:ExtensionContainer = undefined;
-		public static var _exts:String = "__e_";
-	
+		//public static var _fExtensionContainer:ExtensionContainer = undefined;
+		//public static var _exts:String = "__e_";
+		
+		public static var _exts:Object;
+		/*
 		public static function decorate(proto:Object):void
 		{
 			if (_fExtensionContainer == null) {
@@ -50,26 +53,27 @@
 			proto.removeExtension = _fExtensionContainer.removeExtension;
 			proto.removeAllExtensions = _fExtensionContainer.removeAllExtensions;
 		}
-	
-		public function addExtension( ext:IExtension ):IExtension
+		*/
+		 
+		public static function addExtension( ext:IExtension ):IExtension
 		{
-			if (this[_exts] == undefined) {
-				this[_exts] = new Object();
-				this["setPropertyIsEnumerable"]("_exts",false);
+			
+			if (_exts == null) {
+				_exts = new Object();
+				//this["setPropertyIsEnumerable"]("_exts",false);
 				//_global.ASSetPropFlags(this, _exts, 1);
 			}
-	
-			if (this[_exts][ext.getNS()] == undefined) {
-				this[_exts][ext.getNS()] = new Array();
+			if ([_exts][ext.getNS()] == null) {
+				_exts[ext.getNS()] = new Array();
 			}
 	
-			this[_exts][ext.getNS()].push(ext);
+			_exts[ext.getNS()].push(ext);
 			return ext;
 		}
 	
-		public function removeExtension( ext:IExtension ):Boolean
-		{
-			var extensions:Array = this[_exts][ext.getNS()];
+		public static function removeExtension( ext:IExtension ):Boolean
+		{	
+			var extensions:Array = _exts[ext.getNS()];
 			for (var i:String in extensions) {
 			//for (var i in extensions) { untyped var throws compiler warning
 				if (extensions[i] === ext) {
@@ -80,26 +84,25 @@
 			}
 			return false;
 		}
-		public function removeAllExtensions( namespace:String ):void
+		public static function removeAllExtensions( ns:String ):void
 		{
-			//for (var i in this[_exts][namespace]) {
-			for (var i:String in this[_exts][namespace]) {
-				this[_exts][namespace][i].remove();
+			for (var i:String in _exts[ns]) {
+				_exts[ns][i].remove();
 			}
-			this[_exts][namespace] = new Array();
+			_exts[ns] = new Array();
 		}
 	
-		public function getAllExtensionsByNS( namespace:String ):Array
+		public static function getAllExtensionsByNS( ns:String ):Array
 		{
-			return this[_exts][namespace];
+			return _exts[ns];
 		}
 	
-		public function getAllExtensions():Array
+		public static function getAllExtensions():Array
 		{
 			var exts:Array = new Array();
-			for (var ns:String in this[_exts]) {
+			for (var ns:String in _exts) {
 			//for (var ns in this[_exts]) {
-				exts = exts.concat(this[_exts][ns]);
+				exts = exts.concat(_exts[ns]);
 			}
 			return exts;
 		}

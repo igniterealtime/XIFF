@@ -20,6 +20,7 @@ package {
 			_conn.addEventListener(ConnectionSuccessEvent.CONNECT_SUCCESS,onConnectSuccess);
 			_conn.addEventListener(ErrorEvent.XIFF_ERROR,onConnectError);
 			_conn.addEventListener(OutgoingDataEvent.OUTGOING_DATA,onOutgoingData)
+			_conn.addEventListener(IncomingDataEvent.INCOMING_DATA,onIncomingData);
 			_conn.username = "nick";
 			_conn.password = "1492nick";
 			_conn.server = "69.45.147.228";
@@ -44,6 +45,10 @@ package {
 		internal function onOutgoingData(e:OutgoingDataEvent):void
 		{
 			trace("onOutgoingData: " + e.data); 
+		}
+		internal function onIncomingData(e:IncomingDataEvent):void
+		{
+			trace("onIncomingData: " + e.data); 
 		}
 	}
 }

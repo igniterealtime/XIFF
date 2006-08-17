@@ -50,9 +50,9 @@
 			return false;
 		}
 		
-		public static function lookup( namespace:String ):Function
+		public static function lookup( ns:String ):Class
 		{
-			return myClasses[namespace];
+			return myClasses[ns];
 		}
 	}
 }

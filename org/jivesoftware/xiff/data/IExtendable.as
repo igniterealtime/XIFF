@@ -38,9 +38,9 @@
 	public interface IExtendable
 	{
 		function addExtension( extension:IExtension ):IExtension;
-		function getAllExtensionsByNS( namespace:String ):Array;
+		function getAllExtensionsByNS( ns:String ):Array;
 		function getAllExtensions():Array;
 		function removeExtension( extension:IExtension ):Boolean;
-		function removeAllExtensions( namespace:String ):void;
+		function removeAllExtensions( ns:String ):void;
 	}
 }
