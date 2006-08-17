@@ -661,7 +661,7 @@
 			}
 		}
 		
-		private function socketClosed():void
+		private function socketClosed(e:Event):void
 		{
 			//var eventObj:Object = {target:this, type:"disconnection"};
 			//dispatchEvent( eventObj );

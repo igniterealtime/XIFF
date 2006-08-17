@@ -21,6 +21,7 @@ package {
 			_conn.addEventListener(ErrorEvent.XIFF_ERROR,onConnectError);
 			_conn.addEventListener(OutgoingDataEvent.OUTGOING_DATA,onOutgoingData)
 			_conn.addEventListener(IncomingDataEvent.INCOMING_DATA,onIncomingData);
+			_conn.addEventListener(DisconnectionEvent.DISCONNECT,onDisconnect);
 			_conn.username = "nick";
 			_conn.password = "1492nick";
 			_conn.server = "69.45.147.228";
@@ -37,6 +38,10 @@ package {
 		internal function onConnectSuccess(e:Event):void
 		{
 			trace("onConnectSuccess"); 
+		}
+		internal function onDisconnect(d:DisconnectionEvent):void
+		{
+			trace("onDisconnect"); 
 		}
 		internal function onConnectError(e:ErrorEvent):void
 		{
