@@ -47,7 +47,7 @@
 		private var myHistoryNode:XMLNode;
 		private var myPasswordNode:XMLNode;
 	
-		public function MUCExtension( parent:XMLNode )
+		public function MUCExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}

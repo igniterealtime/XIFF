@@ -44,7 +44,7 @@
 	
 		private var myItems:Array;
 	
-		public function MUCAdminExtension( parent:XMLNode )
+		public function MUCAdminExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}

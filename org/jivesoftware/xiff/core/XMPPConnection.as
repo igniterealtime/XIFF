@@ -771,7 +771,7 @@
 		
 		private function handlePresence( node:XMLNode ):Presence
 		{
-			var pres:Presence = new Presence("","","","","",NaN);
+			var pres:Presence = new Presence();
 			
 			// Populate
 			if( !pres.deserialize( node ) ) {

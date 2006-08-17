@@ -65,7 +65,7 @@
 		private var myPriorityNode:XMLNode;
 	
 	
-		public function Presence( recipient:String, sender:String, presenceType:String, showVal:String, statusVal:String, priorityVal:Number ) 
+		public function Presence( recipient:String="", sender:String="", presenceType:String="", showVal:String="", statusVal:String="", priorityVal:Number=NaN ) 
 		{		
 			super( recipient, sender, presenceType, null, "presence" );
 			

@@ -41,7 +41,7 @@
 		private var myActorNode:XMLNode;
 		private var myReasonNode:XMLNode;
 	
-		public function MUCItem(parent:XMLNode)
+		public function MUCItem(parent:XMLNode=null)
 		{
 			super();
 	

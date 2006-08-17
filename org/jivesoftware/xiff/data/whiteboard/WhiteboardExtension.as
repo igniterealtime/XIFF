@@ -52,7 +52,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	
 	    private var myPaths:Array;
 		
-		public function WhiteboardExtension( parent:XMLNode )
+		public function WhiteboardExtension( parent:XMLNode=null )
 		{
 			super( parent );
 	        myPaths = new Array();

@@ -27,6 +27,7 @@
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.im.RosterItem;
+	import flash.xml.XMLNode;
 	 
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
@@ -53,11 +54,11 @@
 		public static var SUBSCRIBE_TYPE_REMOVE:String = "remove";
 		public static var SHOW_UNAVAILABLE:String = "unavailable";
 		
-	    private static var staticDepends = ExtensionClassRegistry;
+	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
 		private var myItems:Array;
 		
-		public function RosterExtension( parent:XMLNode )
+		public function RosterExtension( parent:XMLNode=null )
 		{
 			super( parent );
 		}
@@ -91,7 +92,7 @@
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    public static function enable():Void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(RosterExtension);
 	    }
@@ -108,7 +109,7 @@
 			var node:XMLNode = getNode();
 			
 			// Serialize each roster item
-			for( var i in myItems ) {
+			for( var i:String in myItems ) {
 				if( !myItems[i].serialize( node ) ){
 					return false;
 				}
@@ -133,8 +134,8 @@
 			setNode( node );
 			removeAllItems();
 			
-			var children = node.childNodes;
-			for( var i in children ){
+			var children:Array = node.childNodes;
+			for( var i:String in children ){
 				switch( children[i].nodeName ) {
 					case "item":
 						var item:RosterItem = new RosterItem( getNode() );
@@ -168,7 +169,7 @@
 		 */
 		public function getItemByJID( jid:String ):RosterItem
 		{
-			for( var i in myItems ) {
+			for( var i:String in myItems ) {
 				if( myItems[i].jid == jid ) {
 					return myItems[i];
 				}
@@ -186,7 +187,7 @@
 		 * @param groups An array of strings of the group names that this contact should be placed in.
 		 * @availability Flash Player 7
 		 */
-		public function addItem( jid:String, subscription:String, displayName:String, groups:Array ):Void
+		public function addItem( jid:String="", subscription:String="", displayName:String="", groups:Array=null ):void
 		{
 			var item:RosterItem = new RosterItem( getNode() );
 			
@@ -194,7 +195,7 @@
 			if( exists( subscription ) ) { item.subscription = subscription; }
 			if( exists( displayName ) ) { item.name = displayName; }
 			if( exists( groups ) ) {
-				for( var i in groups ) {
+				for( var i:String in groups ) {
 					item.addGroup( groups[i] );
 				}
 			}
@@ -205,9 +206,9 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function removeAllItems():Void
+		public function removeAllItems():void
 		{
-			for( var i in myItems ) {
+			for( var i:String in myItems ) {
 				myItems[i].setNode( null );
 			}
 			

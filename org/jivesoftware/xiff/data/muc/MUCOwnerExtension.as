@@ -45,7 +45,7 @@
 	
 		private var myDestroyNode:XMLNode;
 	
-		public function MUCOwnerExtension( parent:XMLNode )
+		public function MUCOwnerExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}

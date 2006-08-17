@@ -53,7 +53,7 @@
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
-		public function RegisterExtension( parent:XMLNode )
+		public function RegisterExtension( parent:XMLNode=null )
 		{
 			super(parent);
 			myFields = new Object();

@@ -27,7 +27,9 @@
 	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.XMPPStanza;
+	import flash.events.EventDispatcher;
 	
+	import org.jivesoftware.xiff.events.*;
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
 	 * an event that is fired when you revoke a subscription, but rather when one of your
@@ -99,7 +101,7 @@
 	 * @param aConnection A reference to an XMPPConnection class instance
 	 * @param externalDataProvider (Optional) A reference to an instance of a data provider
 	 */ 
-	public class Roster
+	public class Roster extends EventDispatcher
 	{
 		private var myConnection:XMPPConnection;
 		private var rosterItems;
@@ -107,14 +109,17 @@
 		private var pendingSubscriptionRequestJID;
 		
 		// These are needed by the EventDispatcher
-		private var dispatchEvent:Function;
-		public var removeEventListener:Function;
-		public var addEventListener:Function;
+		//private var dispatchEvent:Function;
+		//public var removeEventListener:Function;
+		//public var addEventListener:Function;
 		
 		// Used for static constructor with EventDispatcher and DataProvider
+		/* 
+		mx.controls.listclasses.DataProvider is phased out along with support for v2 components
+		*/
 		private static var staticConstructorDependencies = [
-			mx.events.EventDispatcher,
-			mx.controls.listclasses.DataProvider,
+			//mx.events.EventDispatcher,
+			//mx.controls.listclasses.DataProvider,
 			ExtensionClassRegistry,
 			RosterExtension
 		]
@@ -138,8 +143,8 @@
 		
 		private static function RosterStaticConstructor():Boolean
 		{	
-			mx.events.EventDispatcher.initialize( Roster.prototype );
-			mx.controls.listclasses.DataProvider.Initialize( Array );
+			//mx.events.EventDispatcher.initialize( Roster.prototype );
+			//mx.controls.listclasses.DataProvider.Initialize( Array );
 			
 			ExtensionClassRegistry.register( RosterExtension );
 			
@@ -157,7 +162,7 @@
 		 * @availability Flash Player 7
 		 * @param externalDP A reference to the external data provider
 		 */
-		public function setExternalDataProvider( externalDP:Object ):Void
+		public function setExternalDataProvider( externalDP:Object ):void
 		{
 			// Check to see that it hasn't already been set, else it will overwrite for no reason
 			if( rosterItems !== externalDP ) {
@@ -190,7 +195,7 @@
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:String, displayName:String, group:String, requestSubscription:Boolean ):Void
+		public function addContact( id:String, displayName:String, group:String, requestSubscription:Boolean ):void
 		{
 			if( displayName == null )
 				displayName = id;
@@ -229,7 +234,7 @@
 		 * @availability Flash Player 7
 		 * @see #subscriptionDenial
 		 */
-		public function requestSubscription( id:String ):Void
+		public function requestSubscription( id:String ):void
 		{
 			// Only request for items in the roster
 			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
@@ -250,7 +255,7 @@
 		 * @param id The JID of the contact to remove
 		 * @availability Flash Player 7
 		 */
-		public function removeContact( id:String ):Void
+		public function removeContact( id:String ):void
 		{
 			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
 			for( var i = 0; i < l; i++ ) {
@@ -275,7 +280,7 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function fetchRoster():Void
+		public function fetchRoster():void
 		{
 			var tempIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("roster_"), "fetchRoster_result", this );
 			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
@@ -292,7 +297,7 @@
 		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
-		public function grantSubscription( to:String, requestAfterGrant:Boolean ):Void
+		public function grantSubscription( to:String, requestAfterGrant:Boolean ):void
 		{
 			var tempPresence:Presence = new Presence( to, null, Presence.SUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
@@ -312,7 +317,7 @@
 		 * @availability Flash Player 7
 		 * @param to The JID of the user or service that you are denying subscription
 		 */
-		public function denySubscription( to:String ):Void
+		public function denySubscription( to:String ):void
 		{
 			var tempPresence:Presence = new Presence( to, null, Presence.UNSUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
@@ -327,7 +332,7 @@
 		 * @param newName The new display name for this contact
 		 * @param newGroup The new group to associate the contact with
 		 */
-		public function updateContact( id:String, newName:String, newGroup:String ):Void
+		public function updateContact( id:String, newName:String, newGroup:String ):void
 		{
 			// Make sure we already subscribe
 			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
@@ -382,7 +387,7 @@
 		 * @param priority (Optional) A priority number for the presence
 		 * @see org.jivesoftware.xiff.data.Presence
 		 */
-		public function setPresence( show:String, status:String, priority:Number ):Void
+		public function setPresence( show:String, status:String, priority:Number ):void
 		{
 			//var tempPresence:Presence = new Presence( null, null, Presence.AVAILABLE_TYPE, show, status, priority );
 			var tempPresence:Presence = new Presence( null, null, null, show, status, priority );
@@ -427,7 +432,7 @@
 		 * @param optionFlags The option flags
 		 * @availability Flash Player 7
 		 */
-		public function sortItems( compareFunc, optionFlags ):Void
+		public function sortItems( compareFunc, optionFlags ):void
 		{
 			rosterItems.sortItems( compareFunc, optionFlags );
 		}
@@ -442,13 +447,13 @@
 		 * <pre>myRoster.sortItemsBy( "displayName", "ASC" );</pre>
 		 * @availability Flash Player 7
 		 */
-		public function sortItemsBy( fieldName, order ):Void
+		public function sortItemsBy( fieldName, order ):void
 		{
 			rosterItems.sortItemsBy( fieldName, order );
 		}
 		
 		// Recommended fix by gepatto to fix B3 issue
-		private function fetchRoster_result( resultIQ:IQ ):Void
+		private function fetchRoster_result( resultIQ:IQ ):void
 		{
 			// Clear out the old roster
 			rosterItems.removeAll();
@@ -472,19 +477,19 @@
 		}
 	
 	
-		private function addContact_result( resultIQ:IQ ):Void
+		private function addContact_result( resultIQ:IQ ):void
 		{
 			// Contact was added, request subscription
 			requestSubscription( pendingSubscriptionRequestJID );
 			pendingSubscriptionRequestJID = null;
 		}
 		
-		private function unsubscribe_result( resultIQ:IQ ):Void
+		private function unsubscribe_result( resultIQ:IQ ):void
 		{
 			// Does nothing for now
 		}
 		
-		private function handleEvent( eventObj ):Void
+		private function handleEvent( eventObj ):void
 		{
 			switch( eventObj.type )
 			{	
@@ -514,8 +519,11 @@
 							
 							// Check to see if subscription was removed, and send an event if so
 							if( rosterItem.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ) {
-								var eventObj:Object = {target:this, type:"subscriptionRevocation", jid:rosterItem.jid};
-								dispatchEvent( eventObj );
+								var ev:SubscriptionRevocationEvent = new SubscriptionRevocationEvent();
+								ev.jid = rosterItem.jid;
+								dispatchEvent( ev );
+								//var eventObj:Object = {target:this, type:"subscriptionRevocation", jid:rosterItem.jid};
+								//dispatchEvent( eventObj );
 							}
 							return;
 						}
@@ -529,35 +537,53 @@
 					break;
 					
 				case "modelChanged":
+					var e:ModelChangedEvent = new ModelChangedEvent();
+					
 					// Forward to the listener for modelChanged
-					var forwardObj:Object = {type:eventObj.type, eventName:eventObj.eventName}
-					if( eventObj.firstItem ) forwardObj.firstItem = eventObj.firstItem;
-					if( eventObj.lastItem ) forwardObj.lastItem = eventObj.lastItem;
-					if( eventObj.removedIDs ) forwardObj.removedIDs = eventObj.removedIDs;
-					if( eventObj.fieldName ) forwardObj.fieldName = eventObj.fieldName;
-					dispatchEvent( forwardObj );
+					//var forwardObj:Object = {type:eventObj.type, eventName:eventObj.eventName}
+					if( eventObj.firstItem ) e.firstItem = eventObj.firstItem;
+					if( eventObj.firstItem ) e.lastItem = eventObj.lastItem;
+					if( eventObj.firstItem ) e.removedIDs = eventObj.removedIDs;
+					if( eventObj.firstItem ) e.fieldName = eventObj.fieldName;
+
+					//if( eventObj.firstItem ) forwardObj.firstItem = eventObj.firstItem;
+					//if( eventObj.lastItem ) forwardObj.lastItem = eventObj.lastItem;
+					//if( eventObj.removedIDs ) forwardObj.removedIDs = eventObj.removedIDs;
+					//if( eventObj.fieldName ) forwardObj.fieldName = eventObj.fieldName;
+					dispatchEvent( e );
 					break;
 			}
 		}
 		
-		private function handlePresence( aPresence:Presence ):Void
+		private function handlePresence( aPresence:Presence ):void
 		{
 			// Handle based on the type of the presence received
 			switch( aPresence.type.toLowerCase() )
 			{
 				case Presence.SUBSCRIBE_TYPE:
-					var eventObj:Object = {target:this, type:"subscriptionRequest", jid:aPresence.from};
-					dispatchEvent( eventObj );
+					var sReq:SubscriptionRequestEvent = new SubscriptionRequestEvent();
+					sReq.jid = aPresence.from;
+					dispatchEvent(sReq);
+					//var eventObj:Object = {target:this, type:"subscriptionRequest", jid:aPresence.from};
+					//dispatchEvent( eventObj );
 					break;
 					
 				case Presence.UNSUBSCRIBED_TYPE:
-					var eventObj:Object = {target:this, type:"subscriptionDenial", jid:aPresence.from};
-					dispatchEvent( eventObj );
+					var sDeny:SubscriptionDenialEvent = new SubscriptionDenialEvent();
+					sDeny.jid = aPresence.from;
+					dispatchEvent(sDeny);
+					
+					//var eventObj:Object = {target:this, type:"subscriptionDenial", jid:aPresence.from};
+					//dispatchEvent( eventObj );
 					break;
 					
 				case Presence.UNAVAILABLE_TYPE:
-					var eventObj:Object = {target:this, type:"userUnavailable", jid:aPresence.from};
-					dispatchEvent( eventObj );
+					var unavailEv:UserUnavailableEvent = new UserUnavailableEvent();
+					unavailEv.jid = aPresence.from;
+					dispatchEvent(unavailEv);
+					
+					//var eventObj:Object = {target:this, type:"userUnavailable", jid:aPresence.from};
+					//dispatchEvent( eventObj );
 					
 					var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
 					for( var i = 0; i < l; i++ ) {
@@ -573,8 +599,13 @@
 				// AVAILABLE is the default type, so undefined is also possible
 				case Presence.AVAILABLE_TYPE:
 				case undefined:
-					var eventObj:Object = {target:this, type:"userAvailable", jid:aPresence.from, data:aPresence};
-					dispatchEvent( eventObj );
+					var availEv:UserAvailableEvent = new UserAvailableEvent()
+					availEv.jid =  aPresence.from;
+					availEv.data = aPresence;
+					dispatchEvent(availEv);
+					
+					//var eventObj:Object = {target:this, type:"userAvailable", jid:aPresence.from, data:aPresence};
+					//dispatchEvent( eventObj );
 					
 					// Change the item on the roster
 					var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
@@ -590,7 +621,7 @@
 					
 		}
 		
-		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):Void
+		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):void
 		{
 			// If no displayName, use the jid
 			if( displayName == null )
@@ -603,7 +634,7 @@
 			rosterItems.addItem( tempRI );
 		}
 		
-		private function updateRosterItemSubscription( index:Number, type:String, name:String, group:String ):Void
+		private function updateRosterItemSubscription( index:Number, type:String, name:String, group:String ):void
 		{
 			// Update this appropriately
 			if( type == "remove" ) {
@@ -618,7 +649,7 @@
 			}
 		}
 		
-		private function updateRosterItemPresence( index, presence:Presence ):Void
+		private function updateRosterItemPresence( index, presence:Presence ):void
 		{
 			var item = rosterItems.getItemAt( index );
 			item.status = presence.status;
@@ -651,7 +682,7 @@
 			return myConnection;
 		}
 		
-		public function set connection( aConnection:XMPPConnection ):Void
+		public function set connection( aConnection:XMPPConnection ):void
 		{
 			myConnection = aConnection;
 			

@@ -47,7 +47,7 @@
 	
 		private var myItems:Array;
 	
-		public function BrowseExtension(parent:XMLNode)
+		public function BrowseExtension(parent:XMLNode = null)
 		{
 			super(parent);
 	

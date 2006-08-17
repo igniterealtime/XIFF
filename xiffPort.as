@@ -8,6 +8,7 @@ package {
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
 	
+	import org.jivesoftware.xiff.im.Roster;
 	
 	public class xiffPort extends Sprite
 	{
@@ -55,6 +56,17 @@ package {
 		{
 			trace("onIncomingData: " + e.data); 
 		}
+		
+		internal function setupRoster() : void{
+			//_roster = new Roster();
+			//_roster.connection = _conn;
+			//_roster.addEventListener("subscriptionRevocation",Delegate.create(this,subscriptionRevocation));
+			//_roster.addEventListener("subscriptionRequest",Delegate.create(this,subscriptionRequest));
+			//_roster.addEventListener("subscriptionDenial",Delegate.create(this,subscriptionDenial));
+			//_roster.addEventListener("userUnavailable",Delegate.create(this,userUnavailable)); // possibly remove and use presence
+			//_roster.addEventListener("userAvailable",Delegate.create(this,userAvailable)); // possibly remove and use presence
+		}
+		
 	}
 }
 

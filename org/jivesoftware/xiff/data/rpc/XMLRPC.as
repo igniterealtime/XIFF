@@ -1,4 +1,6 @@
 ﻿package org.jivesoftware.xiff.data.rpc{
+	import flash.xml.XMLDocument;
+	
 	/*
 	 * Copyright (C) 2003-2004 
 	 * Sean Voisen <sean@mediainsites.com>
@@ -34,7 +36,7 @@
 	 */
 	public class XMLRPC
 	{
-		private static var XMLFactory:XML = new XML();
+		private static var XMLFactory:XMLDocument = new XMLDocument();
 	
 		/**
 		 * Extract and marshall the XML-RPC response to Flash types.
@@ -87,7 +89,7 @@
 			return mc;
 		}
 	
-		private static function extractValue(value:XML)
+		private static function extractValue(value:XMLDocument)
 		{
 			var result = null;
 	

@@ -23,6 +23,7 @@
 	 
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.ISerializable;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * This class is used internally by the RosterExtension class for managing items
@@ -44,7 +45,7 @@
 		
 		private var myGroupNodes:Array;
 		
-		public function RosterItem( parent:XMLNode )
+		public function RosterItem( parent:XMLNode=null )
 		{
 			super();
 			
@@ -88,8 +89,8 @@
 		{
 			setNode( node );
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:XMLNode = node.childNodes;
+			for( var i:XMLNode in children ) {
 				switch( children[i].nodeName ) {
 					case "group":
 						myGroupNodes.push( children[i] );
@@ -107,7 +108,7 @@
 		 * @availability Flash Player 7
 		 * @param groupName The name of the group to add
 		 */
-		public function addGroup( groupName:String ):Void
+		public function addGroup( groupName:String ):void
 		{
 			var node:XMLNode = addTextNode( getNode(), "group", groupName );
 			
@@ -137,7 +138,7 @@
 			return myGroupNodes.length;
 		}
 		
-		public function removeAllGroups():Void
+		public function removeAllGroups():void
 		{
 			for( var i in myGroupNodes ) {
 				myGroupNodes[i].removeNode();
@@ -170,7 +171,7 @@
 			return getNode().attributes.jid;
 		}
 		
-		public function set jid( newJID:String ):Void
+		public function set jid( newJID:String ):void
 		{
 			getNode().attributes.jid = newJID;
 		}
@@ -185,7 +186,7 @@
 			return getNode().attributes.name;
 		}
 		
-		public function set name( newName:String ):Void
+		public function set name( newName:String ):void
 		{
 			getNode().attributes.name = newName;
 		}
@@ -208,7 +209,7 @@
 			return getNode().attributes.subscription;
 		}
 		
-		public function set subscription( newSubscription:String ):Void
+		public function set subscription( newSubscription:String ):void
 		{
 			getNode().attributes.subscription = newSubscription;
 		}

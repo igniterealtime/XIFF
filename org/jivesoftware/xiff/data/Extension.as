@@ -37,7 +37,7 @@
 	 */
 	public class Extension extends XMLStanza
 	{
-		public function Extension(parent:XMLNode)
+		public function Extension(parent:XMLNode=null)
 		{
 			super();
 	

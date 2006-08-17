@@ -72,7 +72,7 @@
 	    private var myInstructionsNode:XMLNode;
 	    private var myTitleNode:XMLNode;
 	
-		public function FormExtension( parent:XMLNode )
+		public function FormExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}

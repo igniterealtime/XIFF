@@ -51,7 +51,7 @@
 		private var myPasswordNode:XMLNode;
 		private var myStatusNode:XMLNode;
 	
-		public function MUCUserExtension( parent:XMLNode )
+		public function MUCUserExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}

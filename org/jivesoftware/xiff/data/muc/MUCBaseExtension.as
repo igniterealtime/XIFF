@@ -56,7 +56,7 @@
 		//private static var isStaticConstructed:Boolean = MUCBaseExtensionStatic();
 		//private static var staticDependencies = [ ExtensionContainer ];
 	
-		public function MUCBaseExtension( parent:XMLNode )
+		public function MUCBaseExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}
