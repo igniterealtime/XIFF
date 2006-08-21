@@ -47,46 +47,14 @@
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
 		public static var CLIENT_NS:String = "jabber:client";
-		
 
-		// These are added by the ExtensionContainer decoration
-		//public function addExtension( extension:IExtension ):IExtension { return null; }
-		//public function getAllExtensionsByNS( namespace:String ):Array { return null; }
-		//public function getAllExtensions():Array { return null; }
-		//public function removeExtension( extension:IExtension ):Boolean { return false; }
-		//public function removeAllExtensions( namespace:String ):void { }
-		
-		public function addExtension( extension:IExtension ):IExtension
-		{
-			var ext:IExtension = ExtensionContainer.addExtension(extension);
-			return ext;
-		}
-		public function getAllExtensions():Array
-		{
-			var a:Array = ExtensionContainer.getAllExtensions();
-			return a;
-		}
-		public function getAllExtensionsByNS( ns:String ):Array
-		{
-			var a:Array = ExtensionContainer.getAllExtensionsByNS(ns);
-			return a;
-		}
-		public function removeExtension( extension:IExtension ):Boolean
-		{
-			var b:Boolean = ExtensionContainer.removeExtension(extension);
-			return b;
-		}
-		public function removeAllExtensions( ns:String ):void
-		{
-			ExtensionContainer.removeAllExtensions(ns);
-		}
-		
+	
 		private var myErrorNode:XMLNode;
 		private var myErrorConditionNode:XMLNode;
 	
 		//private static var theIDGenerator:IIDGenerator = new IncrementalGenerator();
-		//private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
-		//private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
+		private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
+		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
 		public function XMPPStanza( recipient:String, sender:String, theType:String, theID:String, nName:String )
 		{
@@ -98,14 +66,13 @@
 			type = theType;
 			id = theID;
 		}
-		
-		/* Attempting subclassing instead of decoration
+	
 		private static function XMPPStanzaStaticConstructor():void
 		{
-			ExtensionContainer.decorate(XMPPStanza.prototype);
+			//trace ("Proto: " + XMPPStanza.prototype);
+			//ExtensionContainer.decorate(XMPPStanza.prototype);
 		}
-		*/
-		
+	
 		/**
 		 * (Static method) Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
@@ -152,7 +119,7 @@
 		public function serialize( parentNode:XMLNode ):Boolean
 		{		
 			var node:XMLNode = getNode();
-			var exts:Array = ExtensionContainer.getAllExtensions(); // now using static class
+			var exts:Array = getAllExtensions();
 	
 			for (var i:String in exts) {
 				ISerializable(exts[i]).serialize(node);
@@ -174,7 +141,6 @@
 			
 			for( var i:String in children )
 			{
-				
 				var nName:String = children[i].nodeName;
 				var nNamespace:String = children[i].attributes.xmlns;
 	
@@ -192,7 +158,7 @@
 					if (extClass != null) {
 						var ext:IExtension = new extClass();
 						ISerializable(ext).deserialize(children[i]);
-						ExtensionContainer.addExtension(ext); // now using static class
+						addExtension(ext);
 					}
 				}
 			}
