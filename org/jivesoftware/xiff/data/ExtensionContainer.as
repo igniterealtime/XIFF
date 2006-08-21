@@ -33,13 +33,36 @@
 	 * @toc-path Data
 	 * @toc-sort 1
 	 */
-	//public class ExtensionContainer implements IExtendable
-	public class ExtensionContainer
+	public class ExtensionContainer implements IExtendable
 	{
-		//public static var _fExtensionContainer:ExtensionContainer = undefined;
+		public static var _fExtensionContainer:ExtensionContainer = undefined;
 		//public static var _exts:String = "__e_";
+		public var _exts:Object;
 		
-		public static var _exts:Object;
+		public static var instance: ExtensionContainer;
+		private static var create:Boolean;
+		
+		
+		public function ExtensionContainer(){
+			//to enforce the singleton nature of this class
+			//the 'create' variable is used to force a single instance
+			//and access point through the 'getInstance' method
+			if (!create){
+				throw new Error("Class cannot be instantiated");
+				
+			}
+			_exts = new Object();
+		}
+		
+		public static function getInstance():ExtensionContainer {
+			if (instance == null){
+				create = true;
+				instance = new ExtensionContainer();
+				create = false;
+			}
+			return instance;
+		}
+		
 		/*
 		public static function decorate(proto:Object):void
 		{
@@ -54,25 +77,30 @@
 			proto.removeAllExtensions = _fExtensionContainer.removeAllExtensions;
 		}
 		*/
-		 
-		public static function addExtension( ext:IExtension ):IExtension
+	
+		public function addExtension( ext:IExtension ):IExtension
 		{
-			
-			if (_exts == null) {
-				_exts = new Object();
-				//this["setPropertyIsEnumerable"]("_exts",false);
+			/*
+			if (this[_exts] == undefined) {
+				this[_exts] = new Object();
+				this["setPropertyIsEnumerable"]("_exts",false);
 				//_global.ASSetPropFlags(this, _exts, 1);
 			}
-			if ([_exts][ext.getNS()] == null) {
-				_exts[ext.getNS()] = new Array();
+	
+			if (this[_exts][ext.getNS()] == undefined) {
+				this[_exts][ext.getNS()] = new Array();
 			}
 	
-			_exts[ext.getNS()].push(ext);
+			this[_exts][ext.getNS()].push(ext);
+			*/
+			if (_exts[ext.getNS()] == null){
+				_exts[ext.getNS()] = new Array();
+			}
 			return ext;
 		}
 	
-		public static function removeExtension( ext:IExtension ):Boolean
-		{	
+		public function removeExtension( ext:IExtension ):Boolean
+		{
 			var extensions:Array = _exts[ext.getNS()];
 			for (var i:String in extensions) {
 			//for (var i in extensions) { untyped var throws compiler warning
@@ -84,20 +112,21 @@
 			}
 			return false;
 		}
-		public static function removeAllExtensions( ns:String ):void
+		public function removeAllExtensions( namespace:String ):void
 		{
-			for (var i:String in _exts[ns]) {
-				_exts[ns][i].remove();
+			//for (var i in this[_exts][namespace]) {
+			for (var i:String in _exts[namespace]) {
+				_exts[namespace][i].remove();
 			}
-			_exts[ns] = new Array();
+			_exts[namespace] = new Array();
 		}
 	
-		public static function getAllExtensionsByNS( ns:String ):Array
+		public function getAllExtensionsByNS( namespace:String ):Array
 		{
-			return _exts[ns];
+			return _exts[namespace];
 		}
 	
-		public static function getAllExtensions():Array
+		public function getAllExtensions():Array
 		{
 			var exts:Array = new Array();
 			for (var ns:String in _exts) {
