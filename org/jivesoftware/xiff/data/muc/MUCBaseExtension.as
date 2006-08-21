@@ -68,31 +68,7 @@
 			return true;
 		}
 		*/
-		
-		public function addExtension( extension:IExtension ):IExtension
-		{
-			var ext:IExtension = ExtensionContainer.addExtension(extension);
-			return ext;
-		}
-		public function getAllExtensions():Array
-		{
-			var a:Array = ExtensionContainer.getAllExtensions();
-			return a;
-		}
-		public function getAllExtensionsByNS( ns:String ):Array
-		{
-			var a:Array = ExtensionContainer.getAllExtensionsByNS(ns);
-			return a;
-		}
-		public function removeExtension( extension:IExtension ):Boolean
-		{
-			var b:Boolean = ExtensionContainer.removeExtension(extension);
-			return b;
-		}
-		public function removeAllExtensions( ns:String ):void
-		{
-			ExtensionContainer.removeAllExtensions(ns);
-		}
+
 		
 		/**
 		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
