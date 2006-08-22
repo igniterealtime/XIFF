@@ -56,7 +56,7 @@
 		
 	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
-		private var myItems:Array;
+		private var myItems:Array = [];
 		
 		public function RosterExtension( parent:XMLNode=null )
 		{

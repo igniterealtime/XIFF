@@ -118,8 +118,10 @@
 			// Through the magic of AS, this will not fail if the 
 			// original node is undefined
 			
-			if (original == null) original = XMLStanza.XMLFactory.createElement('');
-			original.removeNode();
+			//if (original == null) original = XMLStanza.XMLFactory.createElement('');
+			if (original != null){
+				original.removeNode();
+			}
 	
 			if (exists(value)) {
 				newNode = XMLStanza.XMLFactory.createElement(elementName);
@@ -151,14 +153,15 @@
 		 */
 		public function setNode( node:XMLNode ):Boolean
 		{
-			var oldParent:XMLNode = (myXML.parentNode == null)?(XMLStanza.XMLFactory.createElement('')):(myXML.parentNode);
+			//var oldParent:XMLNode = (myXML.parentNode == null)?(XMLStanza.XMLFactory.createElement('')):(myXML.parentNode);
+			var oldParent:XMLNode = myXML.parentNode;
 			
 			// Transfer ownership from the node's parent to our old parent
 	
 			myXML.removeNode();
 			myXML = node;
 	
-			if (exists(myXML)) {
+			if (exists(myXML) && oldParent != null) {
 				oldParent.appendChild(myXML);
 			}
 	

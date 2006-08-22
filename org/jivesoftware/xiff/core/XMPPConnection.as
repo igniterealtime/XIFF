@@ -705,21 +705,26 @@
 		private function handleIQ( node:XMLNode ):IQ
 		{
 			var iq:IQ = new IQ();
-			
 			// Populate the IQ with the incoming data
 			if( !iq.deserialize( node ) ) {
 				throw new SerializationException();
 			}
 			
 			// If it's an error, handle it
+			
 			if( iq.type == IQ.ERROR_TYPE ) {
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
 			else {
+				
 				// Start the callback for this IQ if one exists
 				if( pendingIQs[iq.id] !== undefined ) {
 					var callbackInfo:* = pendingIQs[iq.id];
-					callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );
+					
+					//trace(callbackInfo.methodScope);	
+					//trace(callbackInfo.methodName);
+					
+					callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );					
 					if (callbackInfo.func != null) { 
 						callbackInfo.func( iq );
 					}
@@ -738,7 +743,6 @@
 								data: ext,
 								iq: iq
 							}); */
-							
 							var event:IQEvent = new IQEvent(ext.getNS());
 							event.data = ext;
 							event.iq = iq;

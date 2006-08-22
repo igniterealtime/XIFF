@@ -24,6 +24,7 @@
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
+	import org.jivesoftware.xiff.utility.DataProvider;
 	
 	/**
 	 * This class is used internally by the RosterExtension class for managing items
@@ -89,8 +90,8 @@
 		{
 			setNode( node );
 	
-			var children:XMLNode = node.childNodes;
-			for( var i:XMLNode in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName ) {
 					case "group":
 						myGroupNodes.push( children[i] );
@@ -123,9 +124,9 @@
 		 */
 		public function getGroups():Array
 		{
-			var returnArr:Array = new Array();
+			var returnArr:DataProvider = new DataProvider();
 			
-			for( var i in myGroupNodes )
+			for( var i:String in myGroupNodes )
 			{
 				returnArr.push( myGroupNodes[i].firstChild.nodeValue );
 			}
@@ -140,7 +141,7 @@
 		
 		public function removeAllGroups():void
 		{
-			for( var i in myGroupNodes ) {
+			for( var i:String in myGroupNodes ) {
 				myGroupNodes[i].removeNode();
 			}
 			
@@ -149,7 +150,7 @@
 		
 		public function removeGroupByName( groupName:String ):Boolean
 		{
-			for( var i in myGroupNodes )
+			for( var i:String in myGroupNodes )
 			{
 				if( myGroupNodes[i].nodeValue == groupName ) {
 					myGroupNodes[i].removeNode();

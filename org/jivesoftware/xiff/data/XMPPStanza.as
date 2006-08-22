@@ -69,7 +69,6 @@
 	
 		private static function XMPPStanzaStaticConstructor():void
 		{
-			//trace ("Proto: " + XMPPStanza.prototype);
 			//ExtensionContainer.decorate(XMPPStanza.prototype);
 		}
 	
@@ -138,12 +137,12 @@
 			setNode(xmlNode);
 			
 			var children:Array = xmlNode.childNodes;
-			
 			for( var i:String in children )
 			{
+				
 				var nName:String = children[i].nodeName;
 				var nNamespace:String = children[i].attributes.xmlns;
-	
+				
 				nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NS;
 				
 				if( nName == "error" ) {
@@ -271,13 +270,16 @@
 		 */
 		public function get errorMessage():String
 		{
+			
 			if( exists( errorCondition ) ) {
 				//return myErrorConditionNode.firstChild.nodeValue;
-				return myErrorConditionNode.nextSibling.firstChild.nodeValue;  // fix recommended by bram 7/12/05
+				//return myErrorConditionNode.nextSibling.firstChild.nodeValue;  // fix recommended by bram 7/12/05
+				return errorCondition.toString();
 			}
 			else {
 				return myErrorNode.firstChild.nodeValue;
 			}
+			
 		}
 		
 		public function set errorMessage( theMsg:String ):void

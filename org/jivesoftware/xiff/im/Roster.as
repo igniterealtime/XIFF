@@ -30,6 +30,10 @@
 	import flash.events.EventDispatcher;
 	
 	import org.jivesoftware.xiff.events.*;
+	import org.jivesoftware.xiff.utility.DataProvider;
+	import org.jivesoftware.xiff.utility.DataProviderEvent;
+	import flash.events.Event;
+	
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
 	 * an event that is fired when you revoke a subscription, but rather when one of your
@@ -104,9 +108,10 @@
 	public class Roster extends EventDispatcher
 	{
 		private var myConnection:XMPPConnection;
-		private var rosterItems;
+		private var rosterItems:DataProvider;
 		
-		private var pendingSubscriptionRequestJID;
+		
+		private var pendingSubscriptionRequestJID:String;
 		
 		// These are needed by the EventDispatcher
 		//private var dispatchEvent:Function;
@@ -117,28 +122,37 @@
 		/* 
 		mx.controls.listclasses.DataProvider is phased out along with support for v2 components
 		*/
-		private static var staticConstructorDependencies = [
+		private static var staticConstructorDependencies:Array = [
 			//mx.events.EventDispatcher,
 			//mx.controls.listclasses.DataProvider,
+			
 			ExtensionClassRegistry,
 			RosterExtension
 		]
 		
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
-		public function Roster( aConnection:XMPPConnection, externalDataProvider:Object )
+		//public function Roster( aConnection:XMPPConnection = null, externalDataProvider:Object = null)
+		public function Roster( aConnection:XMPPConnection = null)
 		{	
 			// Initialize the rosterItems
 			// If an external dataprovider is provided, use that instead
+			/*(
 			if( externalDataProvider != null ) {
 				setExternalDataProvider( externalDataProvider );
 			}
 			else {
-				rosterItems = new Array();
-				rosterItems.addEventListener( "modelChanged", this );
+				rosterItems = new DataProvider();
+				rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
+				//rosterItems.addEventListener( "modelChanged", this );
 			}
+			*/
+			rosterItems = new DataProvider();
+			rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
 			
-			connection = aConnection;
+			if (aConnection != null){ 
+				connection = aConnection;
+			}
 		}
 		
 		private static function RosterStaticConstructor():Boolean
@@ -162,6 +176,7 @@
 		 * @availability Flash Player 7
 		 * @param externalDP A reference to the external data provider
 		 */
+		/*
 		public function setExternalDataProvider( externalDP:Object ):void
 		{
 			// Check to see that it hasn't already been set, else it will overwrite for no reason
@@ -170,13 +185,14 @@
 				externalDP.removeAll()
 				
 				var l = rosterItems.getLength == undefined ? rosterItems.getLength() : rosterItems.length;
-				for( var i = 0; i < l; i++ )
+				for( var i:uint = 0; i < l; i++ )
 					externalDP.addItem( rosterItems.getItemAt( i ) );
 					
 	            rosterItems.removeEventListener("modelChanged", this);
 				rosterItems = externalDP;
 			}
 		}
+		*/
 		
 		/**
 		 * Adds a contact to the roster. Remember: All roster data is managed on the server-side,
@@ -200,9 +216,9 @@
 			if( displayName == null )
 				displayName = id;
 				
-			var callbackObj = null;
-			var callbackMethod = null;
-			var subscription = RosterExtension.SUBSCRIBE_TYPE_NONE;
+			var callbackObj:Object = null;
+			var callbackMethod:String = null;
+			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			
 			if( requestSubscription == true ) {
 				callbackObj = this;
@@ -237,9 +253,10 @@
 		public function requestSubscription( id:String ):void
 		{
 			// Only request for items in the roster
-			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			for( var i = 0; i < l; i++ ) {
-				if( rosterItems.getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
+			var l:uint = rosterItems.length;
+			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			for( var i:uint = 0; i < l; i++ ) {
+				if( rosterItems.getItemAt(i).jid.toLowerCase() == id.toLowerCase() ) {
 					var tempPresence:Presence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 					myConnection.send( tempPresence );
 					return;
@@ -257,8 +274,9 @@
 		 */
 		public function removeContact( id:String ):void
 		{
-			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			for( var i = 0; i < l; i++ ) {
+			var l:uint = rosterItems.length;
+			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			for( var i:uint = 0; i < l; i++ ) {
 				// Only attempt unsubscribe to users that we are currently subscribed to
 				if( rosterItems.getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
@@ -335,8 +353,9 @@
 		public function updateContact( id:String, newName:String, newGroup:String ):void
 		{
 			// Make sure we already subscribe
-			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			for( var i = 0; i < l; i++ ) {
+			var l:uint = rosterItems.length;
+			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			for( var i:uint = 0; i < l; i++ ) {
 				if( id.toLowerCase() == rosterItems.getItemAt( i ).jid.toLowerCase() ) {
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
@@ -358,8 +377,9 @@
 		 */
 		public function getContactInformation( jid:String ):Object
 		{
-			var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			for( var i = 0; i < l; i++ ) {
+			var l:uint = rosterItems.length;
+			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			for( var i:uint = 0; i < l; i++ ) {
 				if( jid.toLowerCase() == rosterItems.getItemAt( i ).jid.toLowerCase() )
 					return rosterItems.getItemAt( i );
 			}
@@ -417,10 +437,12 @@
 		 * @param index The index of the item whose ID you wish to retrieve
 		 * @return The item ID
 		 */
-		public function getItemID( index:Number ):Number
+		/*
+		public function getItemID( index:uint ):Number
 		{
 			return rosterItems.getItemID( index );
 		}
+		*/
 		
 		/**
 		 * Sorts items in the roster using a specific comparison function
@@ -432,7 +454,7 @@
 		 * @param optionFlags The option flags
 		 * @availability Flash Player 7
 		 */
-		public function sortItems( compareFunc, optionFlags ):void
+		public function sortItems( compareFunc:*, optionFlags:* ):void
 		{
 			rosterItems.sortItems( compareFunc, optionFlags );
 		}
@@ -447,26 +469,28 @@
 		 * <pre>myRoster.sortItemsBy( "displayName", "ASC" );</pre>
 		 * @availability Flash Player 7
 		 */
-		public function sortItemsBy( fieldName, order ):void
+		public function sortItemsBy( fieldName:String, order:* ):void
 		{
 			rosterItems.sortItemsBy( fieldName, order );
 		}
 		
 		// Recommended fix by gepatto to fix B3 issue
-		private function fetchRoster_result( resultIQ:IQ ):void
+		public function fetchRoster_result( resultIQ:IQ ):void
 		{
+			
+			trace(resultIQ.getAllExtensionsByNS(RosterExtension.NS));
 			// Clear out the old roster
 			rosterItems.removeAll();
 			
 			// Go through the result IQ and add each item
-			var ext:RosterExtension = resultIQ.getAllExtensionsByNS( RosterExtension.NS )[0];
-			var newItems = ext.getAllItems();
+			var ext:RosterExtension = resultIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
+			var newItems:Array = ext.getAllItems();
 			
-			for( var i=0; i < newItems.length; i++ ) {
-				var item = newItems[ i ];
+			for( var i:uint=0; i < newItems.length; i++ ) {
+				var item:* = newItems[ i ];
 				if( item.getGroups().length > 0 ){
 					//if a user is in several groups, add it as item for each group. Fix by guido
-					for (var j=0; j < item.getGroups().length;j++) {
+					for (var j:uint=0; j < item.getGroups().length;j++) {
 						addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase() );
 					}	
 				}else{
@@ -489,7 +513,7 @@
 			// Does nothing for now
 		}
 		
-		private function handleEvent( eventObj ):void
+		private function handleEvent( eventObj:* ):void
 		{
 			switch( eventObj.type )
 			{	
@@ -507,19 +531,22 @@
 					break;
 					
 				case RosterExtension.NS:
+					trace ("RosterExtension.NS");
+				
 					var tempIQ:IQ = eventObj.data;
 					var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0];
-					var rosterItem = ext.getAllItems()[0];
+					var rosterItem:* = ext.getAllItems()[0];
 					
 					// Add this item to the roster if it's not there
-					var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-					for( var i = 0; i < l; i++ ) {
+					var l:uint = rosterItems.length;
+					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					for( var i:uint = 0; i < l; i++ ) {
 						if( rosterItems.getItemAt( i ).jid.toLowerCase() == rosterItem.jid.toLowerCase() ) {
 							updateRosterItemSubscription( i, rosterItem.subscription.toLowerCase(), rosterItem.name, rosterItem.getGroups()[0] );
 							
 							// Check to see if subscription was removed, and send an event if so
 							if( rosterItem.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ) {
-								var ev:SubscriptionRevocationEvent = new SubscriptionRevocationEvent();
+								var ev:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
 								ev.jid = rosterItem.jid;
 								dispatchEvent( ev );
 								//var eventObj:Object = {target:this, type:"subscriptionRevocation", jid:rosterItem.jid};
@@ -542,9 +569,9 @@
 					// Forward to the listener for modelChanged
 					//var forwardObj:Object = {type:eventObj.type, eventName:eventObj.eventName}
 					if( eventObj.firstItem ) e.firstItem = eventObj.firstItem;
-					if( eventObj.firstItem ) e.lastItem = eventObj.lastItem;
-					if( eventObj.firstItem ) e.removedIDs = eventObj.removedIDs;
-					if( eventObj.firstItem ) e.fieldName = eventObj.fieldName;
+					if( eventObj.lastItem ) e.lastItem = eventObj.lastItem;
+					//if( eventObj.removedIDs ) e.removedIDs = eventObj.removedIDs;
+					if( eventObj.fieldName ) e.fieldName = eventObj.fieldName;
 
 					//if( eventObj.firstItem ) forwardObj.firstItem = eventObj.firstItem;
 					//if( eventObj.lastItem ) forwardObj.lastItem = eventObj.lastItem;
@@ -558,10 +585,12 @@
 		private function handlePresence( aPresence:Presence ):void
 		{
 			// Handle based on the type of the presence received
+			aPresence.type = (aPresence.type == null)?(Presence.AVAILABLE_TYPE):(aPresence.type);
+			
 			switch( aPresence.type.toLowerCase() )
 			{
 				case Presence.SUBSCRIBE_TYPE:
-					var sReq:SubscriptionRequestEvent = new SubscriptionRequestEvent();
+					var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
 					sReq.jid = aPresence.from;
 					dispatchEvent(sReq);
 					//var eventObj:Object = {target:this, type:"subscriptionRequest", jid:aPresence.from};
@@ -569,7 +598,7 @@
 					break;
 					
 				case Presence.UNSUBSCRIBED_TYPE:
-					var sDeny:SubscriptionDenialEvent = new SubscriptionDenialEvent();
+					var sDeny:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
 					sDeny.jid = aPresence.from;
 					dispatchEvent(sDeny);
 					
@@ -578,16 +607,16 @@
 					break;
 					
 				case Presence.UNAVAILABLE_TYPE:
-					var unavailEv:UserUnavailableEvent = new UserUnavailableEvent();
+					var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
 					unavailEv.jid = aPresence.from;
 					dispatchEvent(unavailEv);
 					
 					//var eventObj:Object = {target:this, type:"userUnavailable", jid:aPresence.from};
 					//dispatchEvent( eventObj );
-					
-					var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-					for( var i = 0; i < l; i++ ) {
-						var r = rosterItems.getItemAt( i );
+					var l:uint = rosterItems.length;
+					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					for( var i:uint = 0; i < l; i++ ) {
+						var r:* = rosterItems.getItemAt( i );
 						if( r.jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
 							r.show = RosterExtension.SHOW_UNAVAILABLE;
 							rosterItems.replaceItemAt( i, r );
@@ -598,8 +627,8 @@
 				
 				// AVAILABLE is the default type, so undefined is also possible
 				case Presence.AVAILABLE_TYPE:
-				case undefined:
-					var availEv:UserAvailableEvent = new UserAvailableEvent()
+				//case undefined:
+					var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
 					availEv.jid =  aPresence.from;
 					availEv.data = aPresence;
 					dispatchEvent(availEv);
@@ -608,10 +637,11 @@
 					//dispatchEvent( eventObj );
 					
 					// Change the item on the roster
-					var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-					for( var i = 0; i < l; i++ ) {
-						if( rosterItems.getItemAt( i ).jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
-							updateRosterItemPresence( i, aPresence );
+					var ll:uint = rosterItems.length;
+					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					for( var ii:uint = 0; i < ll; ii++ ) {
+						if( rosterItems.getItemAt( ii ).jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
+							updateRosterItemPresence( ii, aPresence );
 							// removed break, beacuse if user is in seeral groups only one itme gets updated. Bug fix by guido
 							//break;
 						}
@@ -623,13 +653,14 @@
 		
 		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):void
 		{
+			trace("addRosterItem");
 			// If no displayName, use the jid
 			if( displayName == null )
 				displayName = jid;
 				
-			var tempRI = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
+			var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
 			// XIFF-10
-			if(jid!=undefined) 
+			if(jid != null) 
 			//
 			rosterItems.addItem( tempRI );
 		}
@@ -641,7 +672,7 @@
 				rosterItems.removeItemAt( index );
 			}
 			else {
-				var item = rosterItems.getItemAt( index );
+				var item:Object = rosterItems.getItemAt( index );
 				item.subscribeType = type;
 				item.group = group;
 				item.displayName = name != null ? name : item.jid;
@@ -649,9 +680,9 @@
 			}
 		}
 		
-		private function updateRosterItemPresence( index, presence:Presence ):void
+		private function updateRosterItemPresence( index:*, presence:Presence ):void
 		{
-			var item = rosterItems.getItemAt( index );
+			var item:Object = rosterItems.getItemAt( index );
 			item.status = presence.status;
 			// By default, normal isn't specified, so if null, we will use NORMAL
 			item.show = presence.show != null ? presence.show : Presence.SHOW_NORMAL;
@@ -667,7 +698,8 @@
 		 */
 		public function get length():Number
 		{
-			var l:Number = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			var l:uint = rosterItems.length;
+			//var l:Number = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
 			return l;
 		}
 		
@@ -685,11 +717,12 @@
 		public function set connection( aConnection:XMPPConnection ):void
 		{
 			myConnection = aConnection;
-			
 			// Set up listeners
-			myConnection.addEventListener( "presence", this );
-			myConnection.addEventListener( "login", this );
-			myConnection.addEventListener( RosterExtension.NS, this );
+			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
+			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
+			//myConnection.addEventListener( "presence", this );
+			//myConnection.addEventListener( "login", this );
+			myConnection.addEventListener( RosterExtension.NS, handleEvent );
 		}
 	}
 }

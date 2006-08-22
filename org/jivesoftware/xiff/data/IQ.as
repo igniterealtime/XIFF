@@ -55,10 +55,11 @@
 		public static var RESULT_TYPE:String = "result";
 		public static var ERROR_TYPE:String = "error";
 	
-		public function IQ( recipient:String="", iqType:String="", iqID:String="", iqCallback:String="", iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
+		public function IQ( recipient:String=null, iqType:String=null, iqID:String=null, iqCallback:String=null, iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
 		{
-			// Flash gives a warning if superconstructor is not first, hence the inline id check
-			super( recipient, null, iqType, exists( iqID ) ? iqID : generateID("iq_"), "iq" );
+			var id:String = exists( iqID ) ? iqID : generateID("iq_");
+			
+			super( recipient, null, iqType, id, "iq" );
 			
 			callbackName = iqCallback;
 			callbackScope = iqCallbackScope;

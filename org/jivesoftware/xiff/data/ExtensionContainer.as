@@ -93,9 +93,12 @@
 	
 			this[_exts][ext.getNS()].push(ext);
 			*/
+			//trace("addExtension: " + ext);
+			
 			if (_exts[ext.getNS()] == null){
 				_exts[ext.getNS()] = new Array();
 			}
+			_exts[ext.getNS()].push(ext);
 			return ext;
 		}
 	
