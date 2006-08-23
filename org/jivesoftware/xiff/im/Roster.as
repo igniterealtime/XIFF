@@ -33,6 +33,8 @@
 	import org.jivesoftware.xiff.utility.DataProvider;
 	import org.jivesoftware.xiff.utility.DataProviderEvent;
 	import flash.events.Event;
+	import flash.utils.describeType;
+	import org.jivesoftware.xiff.data.XMLStanza;
 	
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
@@ -477,13 +479,43 @@
 		// Recommended fix by gepatto to fix B3 issue
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
-			
-			trace(resultIQ.getAllExtensionsByNS(RosterExtension.NS));
 			// Clear out the old roster
 			rosterItems.removeAll();
-			
+	
+			//added an extra loop to go through all the extensions that are found
+			var exts:Array = resultIQ.getAllExtensionsByNS( RosterExtension.NS );
+			var len:int = exts.length;
+
+			for (var x:int; x < len; x++){
+				var ext:RosterExtension = exts[x];
+				var newItems:Array = ext.getAllItems()
+				var eLen:int = newItems.length;
+				for( var i:int=0; i < len; i++ ) {
+					var item:* = newItems[ i ];
+					var classInfo:XML = flash.utils.describeType(item);
+		
+
+					if (item is XMLStanza){
+						var groups:Array = item.getGroups();
+						var gLen:int = groups.length;
+						
+						if( gLen > 0 ){
+							//if a user is in several groups, add it as item for each group. Fix by guido
+							for (var j:int=0; j < gLen;j++) {
+								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", 'General', item.subscription.toLowerCase() );
+							}	
+						}else{
+							addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase() );
+						}
+					
+					}				
+
+				}
+			}
+			/*
 			// Go through the result IQ and add each item
 			var ext:RosterExtension = resultIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
+
 			var newItems:Array = ext.getAllItems();
 			
 			for( var i:uint=0; i < newItems.length; i++ ) {
@@ -498,6 +530,7 @@
 				}
 				
 			}
+			*/
 		}
 	
 	
@@ -653,16 +686,17 @@
 		
 		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):void
 		{
-			trace("addRosterItem");
 			// If no displayName, use the jid
-			if( displayName == null )
+			if( displayName == null ){
 				displayName = jid;
+			}
 				
 			var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
 			// XIFF-10
-			if(jid != null) 
-			//
-			rosterItems.addItem( tempRI );
+			if(jid != null) {
+
+				rosterItems.addItem( tempRI );
+			}
 		}
 		
 		private function updateRosterItemSubscription( index:Number, type:String, name:String, group:String ):void

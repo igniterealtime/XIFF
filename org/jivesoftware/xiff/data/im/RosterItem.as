@@ -122,15 +122,15 @@
 		 * @availability Flash Player 7
 		 * @return An array of strings containing the name of each group
 		 */
-		public function getGroups():Array
+		public function getGroups():DataProvider
 		{
 			var returnArr:DataProvider = new DataProvider();
-			
+
 			for( var i:String in myGroupNodes )
 			{
-				returnArr.push( myGroupNodes[i].firstChild.nodeValue );
+				returnArr.push(myGroupNodes[i].firstChild.nodeValue);
+
 			}
-			
 			return returnArr;
 		}
 		

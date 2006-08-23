@@ -99,6 +99,7 @@
 				_exts[ext.getNS()] = new Array();
 			}
 			_exts[ext.getNS()].push(ext);
+			
 			return ext;
 		}
 	

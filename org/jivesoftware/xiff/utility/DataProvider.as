@@ -1,38 +1,41 @@
+
 package org.jivesoftware.xiff.utility
 {
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.EventDispatcher;
 	import flash.events.DataEvent;
-
-	public class DataProvider extends Array implements IEventDispatcher
+	
+	public dynamic class DataProvider extends Array implements IEventDispatcher
 	{
 		private var evD:EventDispatcher;
-		
+	
 		public function DataProvider(numElements:int=0)
 		{
 			super(numElements);
 			evD = new EventDispatcher();
 		}
+		
+
 		// MM Methods pulled from mx.listclasses.DataProvider and ported
 	
 	
 		public function addItemAt(index:uint, value:*) : void
 		{
-			if (index<length) {
+			if (index<=length) {
+				//add the item at the specified location
 				splice(index, 0, value);
-			} else if (index>length) {
+			} else {
 				trace("Cannot add an item past the end of the DataProvider");
 				return;
 			}
-			this[index] = value;
 	
 			updateViews( "addItems", index, index);
 		}
 		
 		public function addItem(value:*) : void
 		{
-			addItemAt(this.length, value);
+			addItemAt(length, value);
 		}
 		
 		public function addItemsAt(index:uint, newItems:Array) : void
@@ -125,7 +128,8 @@ package org.jivesoftware.xiff.utility
 		// Event Handling
 		public function hasEventListener(type:String):Boolean
 		{
-			return evD.hasEventListener.apply(null,arguments);
+			//return evD.hasEventListener.apply(null,arguments);
+			return true;
 		}
 		
 		public function willTrigger(type:String):Boolean

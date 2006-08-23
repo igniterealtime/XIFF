@@ -84,43 +84,43 @@ package {
 		// Event handlers
 		internal function messageHandler(e:MessageEvent):void
 		{
-			trace("messageHandler: " + e.type); 
+			//trace("messageHandler: " + e.type); 
 		}
 		internal function presenceHandler(e:PresenceEvent):void
 		{
-			trace("presenceHandler: " + e.type); 
+			//trace("presenceHandler: " + e.type); 
 		}
 		internal function rosterUpdate(e:Event):void
 		{
-			trace("rosterUpdate: " + e.type); 
+			//trace("rosterUpdate: " + e.type); 
 		}
 		internal function rosterHandler(e:RosterEvent):void
 		{
-			trace("rosterHandler: " + e.type); 
+			//trace("rosterHandler: " + e.type); 
 		}
 		internal function onLogin(e:LoginEvent):void
 		{
-			trace("onLogin"); 
+			//trace("onLogin"); 
 		}
 		internal function onConnectSuccess(e:ConnectionSuccessEvent):void
 		{
-			trace("onConnectSuccess"); 
+			//trace("onConnectSuccess"); 
 		}
 		internal function onDisconnect(d:DisconnectionEvent):void
 		{
-			trace("onDisconnect"); 
+			//trace("onDisconnect"); 
 		}
 		internal function onConnectError(e:ErrorEvent):void
 		{
-			trace("onConnectError: " + "type:" + e.errorType + "  message:" + e.errorMessage); 
+			//trace("onConnectError: " + "type:" + e.errorType + "  message:" + e.errorMessage); 
 		}
 		internal function onOutgoingData(e:OutgoingDataEvent):void
 		{
-			trace("onOutgoingData: " + e.data); 
+			//trace("onOutgoingData: " + e.data); 
 		}
 		internal function onIncomingData(e:IncomingDataEvent):void
 		{
-			trace("onIncomingData: " + e.data); 
+			//trace("onIncomingData: " + e.data); 
 		}
 	}
 }
