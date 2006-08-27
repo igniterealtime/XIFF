@@ -87,7 +87,6 @@
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean
 		{
-			trace("IQ deserialize xmlNode = " + xmlNode);
 			return super.deserialize( xmlNode );
 		}
 		

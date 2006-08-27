@@ -303,8 +303,6 @@
 			
 			AuthExtension.enable();
 			RegisterExtension.enable();
-			// test
-			//RosterExtension.enable();
 		}
 		
 		/*
@@ -408,10 +406,12 @@
 				//if( o instanceof IQ ) {
 				if( o is IQ ) {
 					// Add reference to callback to pending
-	                var iq:IQ = IQ(o);
-					addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
+	                var iq:IQ = o as IQ;
+	                if (iq.callbackName != null && iq.callbackScope != null)
+	                {
+	                	addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
+	                }		
 				}
-				
 				var root:XMLNode = o.getNode().parentNode;
 	
 				//if (root == null || root == undefined) {
@@ -663,10 +663,7 @@
 		}
 		
 		private function socketClosed(e:Event):void
-		{
-			//var eventObj:Object = {target:this, type:"disconnection"};
-			//dispatchEvent( eventObj );
-			
+		{	
 			var event:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( event );
 		}
@@ -695,10 +692,6 @@
 			socket.close();
 			active = false;
 			loggedIn = false;
-				
-			//var eventObj:Object = {target:this, type:"disconnection"};
-			//dispatchEvent( eventObj );
-			
 			var event:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( event );
 		}
@@ -722,9 +715,6 @@
 				if( pendingIQs[iq.id] !== undefined ) {
 					var callbackInfo:* = pendingIQs[iq.id];
 					
-					//trace(callbackInfo.methodScope);	
-					//trace(callbackInfo.methodName);
-					
 					callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );					
 					if (callbackInfo.func != null) { 
 						callbackInfo.func( iq );
@@ -734,18 +724,14 @@
 				}
 				else {
 					var exts:Array = iq.getAllExtensions();
-					//trace ("exts:Array = iq.getAllExtensions() = " + exts);
 					for (var ns:String in exts) {
 						// Static type casting
 						var ext:IExtension = exts[ns] as IExtension;
-						//var ext:IExtension = IExtension(exts[ns]);
-						//trace  ("IExtension(exts[ns]) : " + ext);
 						if (ext != null) {
-							trace ("FIRE: " + ext.getNS());
 							var event:IQEvent = new IQEvent(ext.getNS());
 							event.data = ext;
 							event.iq = iq;
-							//dispatchEvent( event );
+							dispatchEvent( event );
 						}
 					}
 				}
@@ -782,11 +768,6 @@
 			if( !pres.deserialize( node ) ) {
 				throw new SerializationException();
 			}
-			
-			
-			//var eventObj:Object = {target:this, type:"presence", data:pres};
-			//dispatchEvent( eventObj );
-			
 			var event:PresenceEvent = new PresenceEvent();
 			event.data = pres;
 			dispatchEvent( event );
@@ -809,7 +790,6 @@
 			the appropriate error code
 			*/
 			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
-			//dispatchError ("IOErrorEvent",event.text,event.type,NaN); // need error code here!
 		}
 		
 		private function securityError(event:SecurityErrorEvent):void{
@@ -819,9 +799,6 @@
 		
 		private function dispatchError( condition:String, message:String, type:String, code:Number ):void
 		{
-			//var eventObj:Object = {target:this, type:"error", errorCondition:condition, errorMessage:message, errorType:type, errorCode:code};
-			//dispatchEvent( eventObj );
-			
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
 			event.errorMessage = message;
@@ -834,10 +811,6 @@
 		{
 			// Data is untyped because it could be a string or XML
 			socket.send( someData );
-			
-			//var eventObj:Object = {target:this, type:"outgoingData", data:someData};
-			//dispatchEvent( eventObj );
-			
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
 			event.data = someData;
 			dispatchEvent( event );
@@ -858,10 +831,6 @@
 				resource = resultAuth.resource;
 				// dispatch login event
 				loggedIn = true;
-				
-				//var eventObj:Object = {target:this, type:"login"};
-				//dispatchEvent( eventObj );
-				
 				var event:LoginEvent = new LoginEvent();
 				dispatchEvent( event );
 			}
@@ -914,10 +883,6 @@
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				loggedIn = true;
-	
-				//var eventObj:Object = {target:this, type:"login"};
-				//dispatchEvent( eventObj );
-				
 				var event:LoginEvent = new LoginEvent();
 				dispatchEvent( event );
 			}

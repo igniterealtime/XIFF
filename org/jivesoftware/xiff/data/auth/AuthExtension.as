@@ -54,7 +54,6 @@
 		public function AuthExtension( parent:XMLNode = null)
 		{
 			super(parent);
-			
 		}
 	
 		/**
@@ -101,10 +100,8 @@
 	
 		public function deserialize( node:XMLNode ):Boolean
 		{
-			trace ("AuthExtension deserialize node = " + node.toString());
 			
 			setNode(node);
-	
 			var children:Array = node.childNodes;
 			for( var i:String in children ) {
 				switch( children[i].nodeName )

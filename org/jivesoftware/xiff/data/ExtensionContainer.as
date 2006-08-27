@@ -35,33 +35,10 @@
 	 */
 	public class ExtensionContainer implements IExtendable
 	{
-		public static var _fExtensionContainer:ExtensionContainer = undefined;
-		//public static var _exts:String = "__e_";
 		public var _exts:Object;
 		
-		
-		public static var instance: ExtensionContainer;
-		private static var create:Boolean;
-		
-		
 		public function ExtensionContainer(){
-			//to enforce the singleton nature of this class
-			//the 'create' variable is used to force a single instance
-			//and access point through the 'getInstance' method
-			if (!create){
-				throw new Error("Class cannot be instantiated");
-				
-			}
 			_exts = new Object();
-		}
-		
-		public static function getInstance():ExtensionContainer {
-			if (instance == null){
-				create = true;
-				instance = new ExtensionContainer();
-				create = false;
-			}
-			return instance;
 		}
 		
 		/*
@@ -97,9 +74,6 @@
 				_exts[ext.getNS()] = new Array();
 			}
 			_exts[ext.getNS()].push(ext);
-			
-			trace ("addExtension: " + ext);
-			trace ("getAllExtensions() + " + getAllExtensions());
 			return ext;
 		}
 	

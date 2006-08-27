@@ -35,7 +35,7 @@
 	 * @toc-path Data/Base Classes
 	 * @toc-sort 1/2
 	 */
-	public class XMLStanza implements INodeProxy, IExtendable
+	public class XMLStanza extends ExtensionContainer implements INodeProxy, IExtendable
 	{
 	    // Global factory for all XMLNode generation
 		public static var XMLFactory:XMLDocument = new XMLDocument();
@@ -43,6 +43,7 @@
 	
 		public function XMLStanza()
 		{
+			super();
 			myXML = XMLStanza.XMLFactory.createElement('');
 		}
 	
@@ -166,37 +167,6 @@
 			}
 	
 			return true;
-		}
-		
-		public function addExtension( extension:IExtension ):IExtension{
-			var extContainer:ExtensionContainer = ExtensionContainer.getInstance();
-			var res: IExtension = extContainer.addExtension(extension);
-			return res;
-		}
-		
-		public function getAllExtensionsByNS( ns:String ):Array{
-			var extContainer:ExtensionContainer = ExtensionContainer.getInstance();
-			var res: Array = extContainer.getAllExtensionsByNS(ns);
-			return res;
-		}
-		
-		public function getAllExtensions():Array{
-			var extContainer:ExtensionContainer = ExtensionContainer.getInstance();
-			var res: Array = extContainer.getAllExtensions();
-			return res;
-		}
-		
-		public function removeExtension( extension:IExtension ):Boolean{
-			var extContainer:ExtensionContainer = ExtensionContainer.getInstance();
-			var res: Boolean = extContainer.removeExtension(extension);
-			return res;
-		}
-		
-
-		public function removeAllExtensions( ns:String ):void{
-			var extContainer:ExtensionContainer = ExtensionContainer.getInstance();
-			extContainer.removeAllExtensions(ns);
-			
 		}
 	}
 }

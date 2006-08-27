@@ -219,7 +219,7 @@
 			if( displayName == null )
 				displayName = id;
 				
-			var callbackObj:Object = null;
+			var callbackObj:Roster = null;
 			var callbackMethod:String = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			
@@ -230,7 +230,7 @@
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 			}
 				
-			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
+			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			ext.addItem( id, null, displayName, [group] );
 			tempIQ.addExtension( ext );
@@ -240,7 +240,6 @@
 			// need the roster item for changing the subscription type (if requested)
 			//
 			// XXX Sean, please review this and remove this comment
-	
 			addRosterItem( id, displayName, RosterExtension.SHOW_UNAVAILABLE, "Pending", group, subscription );
 		}
 		
@@ -256,10 +255,9 @@
 		public function requestSubscription( id:String ):void
 		{
 			// Only request for items in the roster
-			var l:uint = rosterItems.length;
-			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			for( var i:uint = 0; i < l; i++ ) {
-				if( rosterItems.getItemAt(i).jid.toLowerCase() == id.toLowerCase() ) {
+			var l:int = rosterItems.length;
+			for( var i:int = 0; i < l; i++ ) {
+				if( rosterItems.getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
 					var tempPresence:Presence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 					myConnection.send( tempPresence );
 					return;
@@ -318,7 +316,7 @@
 		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
-		public function grantSubscription( tojid:String, requestAfterGrant:Boolean ):void
+		public function grantSubscription( tojid:String, requestAfterGrant:Boolean = false ):void
 		{
 			var tempPresence:Presence = new Presence( tojid, null, Presence.SUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
@@ -533,14 +531,14 @@
 		}
 	
 	
-		private function addContact_result( resultIQ:IQ ):void
+		public function addContact_result( resultIQ:IQ ):void
 		{
 			// Contact was added, request subscription
 			requestSubscription( pendingSubscriptionRequestJID );
 			pendingSubscriptionRequestJID = null;
 		}
 		
-		private function unsubscribe_result( resultIQ:IQ ):void
+		public function unsubscribe_result( resultIQ:IQ ):void
 		{
 			// Does nothing for now
 		}
@@ -602,7 +600,6 @@
 					break;
 					
 				case DataProviderEvent.MODEL_CHANGED :
-					trace ("DataProviderEvent.MODEL_CHANGED");
 					var e:ModelChangedEvent = new ModelChangedEvent();
 					
 					// Forward to the listener for modelChanged
@@ -672,9 +669,6 @@
 					availEv.data = aPresence;
 					dispatchEvent(availEv);
 					
-					//var eventObj:Object = {target:this, type:"userAvailable", jid:aPresence.from, data:aPresence};
-					//dispatchEvent( eventObj );
-					
 					// Change the item on the roster
 					var ll:uint = rosterItems.length;
 					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
@@ -707,10 +701,9 @@
 		
 		private function updateRosterItemSubscription( index:Number, type:String, name:String, group:String ):void
 		{
-			trace("updateRosterItemSubscription() type = " + type);
 			// Update this appropriately
 			if( type == "remove" ) {
-				rosterItems.removeItemAt( index );
+				var i:int = rosterItems.removeItemAt( index );
 			}
 			else {
 				var item:Object = rosterItems.getItemAt( index );

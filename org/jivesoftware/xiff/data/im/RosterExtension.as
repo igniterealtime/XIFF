@@ -131,7 +131,6 @@
 		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{
-			trace ("RosterExtension deserialize node = " + node.toString());
 			setNode( node );
 			removeAllItems();
 			
