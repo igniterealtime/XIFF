@@ -325,7 +325,7 @@
 		 * @availability Flash Player 7
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
-		public function join(createReserved:Boolean):Boolean
+		public function join(createReserved:Boolean = false):Boolean
 		{
 			if( !isActive() && myConnection.isActive() ) {
 	            //trace("Room: join: " + roomName);
@@ -1046,7 +1046,7 @@
 	     * @param alternateJID A JID for current members to use as an alternate room to join after the room has been destroyed.  Like a postal forwarding address.
 		 * @availability Flash Player 7
 		 */
-	    public function destroy(reason:String, alternateJID:String, callback:Function):void
+	    public function destroy(reason:String, alternateJID:String=null, callback:Function=null):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();

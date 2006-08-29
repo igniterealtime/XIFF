@@ -65,7 +65,7 @@
 		private var myPriorityNode:XMLNode;
 	
 	
-		public function Presence( recipient:String="", sender:String="", presenceType:String="", showVal:String="", statusVal:String="", priorityVal:Number=NaN ) 
+		public function Presence( recipient:String=null, sender:String=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
 		{		
 			super( recipient, sender, presenceType, null, "presence" );
 			
@@ -134,6 +134,8 @@
 		 */
 		public function get show():String 
 		{
+			if (myShowNode == null) return null;
+			
 			if (!exists(myShowNode.firstChild)){
 				return Presence.SHOW_NORMAL;
 			}
@@ -142,6 +144,7 @@
 		
 		public function set show( showVal:String ):void 
 		{
+			
 			myShowNode = replaceTextNode(getNode(), myShowNode, "show", showVal);
 		}
 		
@@ -152,6 +155,7 @@
 		 */
 		public function get status():String 
 		{
+			if (myStatusNode == null) return null;
 			return myStatusNode.firstChild.nodeValue;
 		}
 		
@@ -167,6 +171,7 @@
 		 */
 		public function get priority():Number 
 		{
+			if (myPriorityNode == null) return NaN;
 			var p:Number = Number(myPriorityNode.firstChild.nodeValue);
 			if( isNaN( p ) ) {
 				return NaN;

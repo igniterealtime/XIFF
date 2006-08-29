@@ -179,6 +179,7 @@
 		 */
 		public function get subject():String
 		{
+			if (mySubjectNode == null) return null;
 			return mySubjectNode.firstChild.nodeValue;
 		}
 		
@@ -196,6 +197,7 @@
 		 */
 		public function get thread():String
 		{
+			if (myThreadNode == null) return null;
 			return myThreadNode.firstChild.nodeValue;
 		}
 		

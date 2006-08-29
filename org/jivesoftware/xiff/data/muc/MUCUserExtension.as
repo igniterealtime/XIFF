@@ -168,6 +168,7 @@
 		 */
 		public function get password():String
 		{
+			if (myPasswordNode == null) return null;
 			return myPasswordNode.firstChild.nodeValue;
 		}
 	
@@ -181,6 +182,7 @@
 		 */
 		public function get statusCode():Number
 		{
+			if (myStatusNode == null) return NaN;
 			return Number(myStatusNode.attributes.code);
 		}
 	
@@ -195,6 +197,7 @@
 		 */
 		public function get statusMessage():String
 		{
+			if (myStatusNode == null) return null;
 			return myStatusNode.firstChild.nodeValue;
 		}
 	
