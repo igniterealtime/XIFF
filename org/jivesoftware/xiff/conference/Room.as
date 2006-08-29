@@ -25,6 +25,13 @@
 	import org.jivesoftware.xiff.data.*;
 	import org.jivesoftware.xiff.data.muc.*;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
+	import org.jivesoftware.xiff.utility.DataProvider;
+	import org.jivesoftware.xiff.utility.DataProviderEvent;
+	import flash.events.EventDispatcher;
+	import org.jivesoftware.xiff.events.MessageEvent;
+	import org.jivesoftware.xiff.events.PresenceEvent;
+	import org.jivesoftware.xiff.events.DisconnectionEvent;
+	import org.jivesoftware.xiff.events.RoomEvent;
 	
 	/**
 	 * Broadcast when the room subject changes. The event object contains an attribute <code>subject</code> with the new subject as a String.
@@ -156,7 +163,7 @@
 	 * @toc-path Conferencing
 	 * @toc-sort 1
 	 */
-	public class Room
+	public class Room extends EventDispatcher
 	{
 		public static var NO_AFFILIATION:String = MUC.NO_AFFILIATION;
 		public static var MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
@@ -183,41 +190,46 @@
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
 		
-		private var rosterItems;
+		private var rosterItems:DataProvider;
 		
 		// These are needed by the EventDispatcher
-		private var dispatchEvent:Function;
-		public var removeEventListener:Function;
-		public var addEventListener:Function;
+		//private var dispatchEvent:Function;
+		//public var removeEventListener:Function;
+		//public var addEventListener:Function;
 		
 		// Used for static constructor with EventDispatcher and DataProvider
-		private static var staticConstructorDependencies = [ 
-			mx.events.EventDispatcher, 
-			mx.controls.listclasses.DataProvider,
+		private static var staticConstructorDependencies:Array = [ 
+			//mx.events.EventDispatcher, 
+			//mx.controls.listclasses.DataProvider,
+			
 	        FormExtension,
 	        MUC
 		]
 	
 		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 		
-		public function Room( aConnection:XMPPConnection )
+		public function Room( aConnection:XMPPConnection=null )
 		{
-			rosterItems = new Array();
+			rosterItems = new DataProvider();
+			rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
+			
+			//rosterItems = new Array();
 	
 	        // Guarantee getLength() exists
-	        decorateProvider(rosterItems);
+	        //decorateProvider(rosterItems);
 			
-			rosterItems.addEventListener( "modelChanged", this );
+			//rosterItems.addEventListener( "modelChanged", this );
 			
 			active = false;
-			
-			setConnection( aConnection );	
+			if (aConnection != null){
+				setConnection( aConnection );
+			}
 		}
 		
 		private static function RoomStaticConstructor():Boolean
 		{
-			mx.events.EventDispatcher.initialize( Room.prototype );
-			mx.controls.listclasses.DataProvider.Initialize( Array );
+			//mx.events.EventDispatcher.initialize( Room.prototype );
+			//mx.controls.listclasses.DataProvider.Initialize( Array );
 	        MUC.enable();
 	        FormExtension.enable();
 			
@@ -231,17 +243,21 @@
 		 * @availability Flash Player 7
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
-		public function setConnection( connection:XMPPConnection ):Void
+		public function setConnection( connection:XMPPConnection ):void
 		{
-		 	myConnection.removeEventListener( "message", this );
-		 	myConnection.removeEventListener( "presence", this );
-		 	myConnection.removeEventListener( "disconnection", this );
-	
+			if (myConnection != null)
+			{
+				myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
+				myConnection.removeEventListener(PresenceEvent.PRESENCE, handleEvent);
+				myConnection.removeEventListener(DisconnectionEvent.DISCONNECT, handleEvent);	
+			}
+			
+			
 			myConnection = connection;
-		 	
-		 	myConnection.addEventListener( "message", this );
-		 	myConnection.addEventListener( "presence", this );
-		 	myConnection.addEventListener( "disconnection", this );
+			
+			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent);
+			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
+			myConnection.addEventListener(DisconnectionEvent.DISCONNECT, handleEvent);
 		}
 	
 		/**
@@ -268,7 +284,8 @@
 		 * @availability Flash Player 7
 		 * @param externalDP A reference to the external data provider
 		 */
-		public function setExternalDataProvider( externalDP:Object ):Void
+		/*
+		public function setExternalDataProvider( externalDP:Object ):void
 		{
 			// Check to see that it hasn't already been set, else it will overwrite for no reason
 			if( rosterItems !== externalDP ) {
@@ -292,7 +309,7 @@
 	            rosterItems.addEventListener("modelChanged", this);
 			}
 		}
-		
+		*/
 		 
 	    /** 
 	     * Joins a conference room based on the parameters specified by the room
@@ -317,7 +334,7 @@
 				var joinPresence:Presence = new Presence( getUserJID() );
 	            var muc:MUCExtension = new MUCExtension();
 	           
-	            if( password != undefined ) {
+	            if( password != null ) {
 	                muc.password = password;
 	            }
 	
@@ -335,7 +352,7 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function leave():Void
+		public function leave():void
 		{
 			if( isActive() ) {
 				var leavePresence:Presence = new Presence( getUserJID(), null, Presence.UNAVAILABLE_TYPE );
@@ -356,7 +373,7 @@
 		 * @param htmlBody (Optional) The message body with HTML formatting
 		 * @availability Flash Player 7
 		 */
-		public function sendMessage( body:String, htmlBody:String ):Void
+		public function sendMessage( body:String=null, htmlBody:String=null ):void
 		{
 			if( isActive() ) {
 				var tempMessage:Message = new Message( getRoomJID(), null, body, htmlBody, Message.GROUPCHAT_TYPE );
@@ -372,7 +389,7 @@
 		 * @param htmlBody (Optional) The message body with HTML formatting
 		 * @availability Flash Player 7
 		 */
-		public function sendPrivateMessage( recipientNickname:String, body:String, htmlBody:String )
+		public function sendPrivateMessage( recipientNickname:String, body:String=null, htmlBody:String=null ) : void
 		{
 			if( isActive() ) {
 				var tempMessage:Message = new Message( getRoomJID() + "/" + recipientNickname, null, body, htmlBody, Message.CHAT_TYPE );
@@ -388,7 +405,7 @@
 		 * @param newSubject The new subject
 		 * @availability Flash Player 7
 		 */
-		public function changeSubject( newSubject:String ):Void
+		public function changeSubject( newSubject:String ):void
 		{
 			if( isActive() ) {
 				var tempMessage:Message = new Message( getRoomJID(), null, null, null, Message.GROUPCHAT_TYPE, newSubject );
@@ -403,7 +420,7 @@
 		 * @param reason The reason for the kick
 		 * @availability Flash Player 7
 		 */
-		public function kickOccupant( occupantNick:String, reason:String ):Void
+		public function kickOccupant( occupantNick:String, reason:String ):void
 		{
 			if( isActive() ) {
 				var tempIQ:IQ = new IQ( getRoomJID(), IQ.SET_TYPE, XMPPStanza.generateID("kick_occupant_") );
@@ -422,7 +439,7 @@
 		 * @param voice Whether to add voice (true) or remove voice (false)
 		 * @availability Flash Player 7
 		 */
-		public function setOccupantVoice( occupantNick:String, voice:Boolean ):Void
+		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
 		{
 			if( isActive() ) {
 				var tempIQ:IQ = new IQ( getRoomJID(), IQ.SET_TYPE, XMPPStanza.generateID("voice_") );
@@ -447,7 +464,7 @@
 	     * @param reason A string describing why you would like to invite the user
 		 * @availability Flash Player 7
 	     */
-	    public function invite(jid:String, reason:String):Void
+	    public function invite(jid:String, reason:String):void
 	    {
 	        var msg:Message = new Message(getRoomJID())
 	        var muc:MUCUserExtension = new MUCUserExtension();
@@ -472,7 +489,7 @@
 	     * @param reason A string describing why the invitiation was declined
 		 * @availability Flash Player 7
 	     */
-	    public function decline(jid:String, reason:String):Void
+	    public function decline(jid:String, reason:String):void
 	    {
 	        var msg:Message = new Message(getRoomJID())
 	        var muc:MUCUserExtension = new MUCUserExtension();
@@ -512,7 +529,7 @@
 	     * @return the room's JID
 		 * @availability Flash Player 7
 	     */
-	    public function setRoomJID(jid:String):Void
+	    public function setRoomJID(jid:String):void
 	    {
 	        myJID = jid;
 	    }
@@ -552,6 +569,7 @@
 			return myAffiliation;
 		}
 		
+		/*
 	    private function decorateProvider(dp:Object) 
 	    {
 	        if (dp.getLength == undefined && dp.length != undefined) {
@@ -559,6 +577,7 @@
 	            _global.ASSetPropFlags(dp.prototype, "getLength", 1);
 	        }
 	    }
+	    */
 	
 		/**
 		 * Determines whether the connection to the room is active - that is, the user is connected and has joined the room.
@@ -578,8 +597,9 @@
 	
 	    public function getLength():Number
 	    {
-			var l = rosterItems.getLength();
-	        return l ? l : rosterItems.length;
+	    	return rosterItems.length;
+			//var l = rosterItems.getLength();
+	        //return l ? l : rosterItems.length;
 	    }
 		
 		public function getItemAt( index:Number ):Object
@@ -592,17 +612,17 @@
 			return rosterItems.getItemID( index );
 		}
 		
-		public function sortItems( compareFunc, optionFlags ):Void
+		public function sortItems( compareFunc:*, optionFlags:* ):void
 		{
 			rosterItems.sortItems( compareFunc, optionFlags );
 		}
 		
-		public function sortItemsBy( fieldName, order ):Void
+		public function sortItemsBy( fieldName:*, order:* ):void
 		{
 			rosterItems.sortItemsBy( fieldName, order );
 		}
 		
-		private function handleEvent( eventObj ):Void
+		private function handleEvent( eventObj:Object ):void
 		{
 			switch( eventObj.type )
 			{
@@ -611,32 +631,51 @@
 					
 					// Check to see that the message is from this room
 					if( isThisRoom( msg.from ) ) {
+						var e:RoomEvent;
 						if ( msg.type == Message.GROUPCHAT_TYPE ) {
 							// Check for a subject change
 							if( msg.subject != null ) {
 								mySubject = msg.subject;
-								dispatchEvent( {target:this, type:"subjectChange", subject:msg.subject} );
+								e = new RoomEvent(RoomEvent.SUBJECT_CHANGE);
+								e.subject = msg.subject;
+								dispatchEvent(e);
+								//dispatchEvent( {target:this, type:"subjectChange", subject:msg.subject} );
 							}
 							else {
-								dispatchEvent( {target:this, type:"groupMessage", data:msg} );
+								e = new RoomEvent(RoomEvent.GROUP_MESSAGE);
+								e.data = msg;
+								dispatchEvent(e);
+								//dispatchEvent( {target:this, type:"groupMessage", data:msg} );
 							}
 						} else if ( msg.type == Message.NORMAL_TYPE ) {
-							var form = msg.getAllExtensionsByNS(FormExtension.NS)[0];
+							var form:Array = msg.getAllExtensionsByNS(FormExtension.NS)[0];
 							if (form) {
-								dispatchEvent({type: "configureForm", target: this, data:form});
+								e = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
+								e.data = form;
+								dispatchEvent(e);
+								//dispatchEvent({type: "configureForm", target: this, data:form});
 							}
 						}
 					}
 	
 					// It could be a private message via the conference
 					else if( isThisUser(msg.to) && msg.type == Message.CHAT_TYPE ) {
-						dispatchEvent( {target:this, type:"privateMessage", data:msg} );
+						e = new RoomEvent(RoomEvent.PRIVATE_MESSAGE);
+						e.data = msg;
+						dispatchEvent(e);
+						//dispatchEvent( {target:this, type:"privateMessage", data:msg} );
 	                } 
 	
 	                // Could be an decline to a previous invite
 	                else {
 	                    var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
 	                    if (muc && muc.type == MUCUserExtension.DECLINE_TYPE) {
+	                    	e = new RoomEvent(RoomEvent.DECLINED);
+	                    	e.from = muc.reason;
+	                    	e.reason = muc.reason;
+	                    	e.data = msg;
+	                    	dispatchEvent(e);
+	                    	/*
 	                        dispatchEvent({
 	                            type:"declined", 
 	                            target:this, 
@@ -644,6 +683,7 @@
 	                            reason: muc.reason,
 	                            data: msg
 	                        });
+	                        */
 	                    }
 	                }
 					break;
@@ -656,7 +696,10 @@
 					if (presence.type == Presence.ERROR_TYPE) {
 						switch (presence.errorCode) {
 							case 409:
-								dispatchEvent({type:"nickConflict", target:this, nickname:nickname});
+								e = new RoomEvent(RoomEvent.NICK_CONFLICT);
+								e.nickname = nickname;
+								dispatchEvent(e);
+								//dispatchEvent({type:"nickConflict", target:this, nickname:nickname});
 								break;
 						}
 					} else if( isThisRoom( presence.from ) ) {
@@ -677,7 +720,9 @@
 						if (presence.type == Presence.UNAVAILABLE_TYPE && isActive() && isThisUser(presence.from)) {
 							//trace("Room: becoming inactive: " + presence.getNode());
 							active = false;
-							dispatchEvent({type:"roomLeave", target:this});
+							e = new RoomEvent(RoomEvent.ROOM_LEAVE);
+							dispatchEvent(e);
+							//dispatchEvent({type:"roomLeave", target:this});
 						}
 					}
 					break;
@@ -687,17 +732,19 @@
 					// The server disconnected, so we are no longer active
 					active = false;
 					rosterItems.removeAll();
-					dispatchEvent({type:"roomLeave", target:this});
+					e = new RoomEvent(RoomEvent.ROOM_LEAVE);
+					dispatchEvent(e);
+					//dispatchEvent({type:"roomLeave", target:this});
 					break;
-					
-				case "modelChanged":
-					// Forward to the listener for modelChanged
-					var forwardObj:Object = {type:eventObj.type, eventName:eventObj.eventName}
-					if( eventObj.firstItem ) forwardObj.firstItem = eventObj.firstItem;
-					if( eventObj.lastItem ) forwardObj.lastItem = eventObj.lastItem;
-					if( eventObj.removedIDs ) forwardObj.removedIDs = eventObj.removedIDs;
-					if( eventObj.fieldName ) forwardObj.fieldName = eventObj.fieldName;
-					dispatchEvent( forwardObj );
+
+				case DataProviderEvent.MODEL_CHANGED :
+					//forward the event	
+					var ev:DataProviderEvent = new DataProviderEvent(DataProviderEvent.MODEL_CHANGED);
+					ev.fieldName = eventObj.fieldName;
+					ev.firstItem = eventObj.firstItem;
+					ev.lastItem = eventObj.lastItem;
+					ev.removedItems = eventObj.removedItems;
+					dispatchEvent( ev );
 					break;
 			}
 		}
@@ -706,7 +753,7 @@
 	     * Room owner (creation/configuration/destruction) methods
 	     */
 	
-	    private function unlockRoom( isReserved:Boolean ):Void
+	    private function unlockRoom( isReserved:Boolean ):void
 	    {
 	        // http://www.jabber.org/jeps/jep-0045.html#createroom
 	
@@ -746,7 +793,7 @@
 	     * @see cancelConfiguration
 		 * @availability Flash Player 7
 		 */
-	    public function requestConfiguration():Void
+	    public function requestConfiguration():void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.GET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -761,13 +808,16 @@
 	    /*
 	     * IQ callback when form is ready
 	     */
-	    private function finish_requestConfiguration(iq:IQ):Void
+	    private function finish_requestConfiguration(iq:IQ):void
 	    {
 	        var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
 	        var form:FormExtension = owner.getAllExtensionsByNS(FormExtension.NS)[0];
 	
 	        if( form.type == FormExtension.REQUEST_TYPE ) {
-	            dispatchEvent({type: "configureForm", target:this, data:form});
+	        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
+	        	e.data = form;
+	        	dispatchEvent(e);
+	            //dispatchEvent({type: "configureForm", target:this, data:form});
 	        }
 	    }
 	
@@ -781,13 +831,13 @@
 	     * @see configureForm
 		 * @availability Flash Player 7
 		 */
-	    public function configure(fieldmap:Object):Void
+	    public function configure(fieldmap:Object):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension;
 	
-			if (fieldmap instanceof FormExtension) {
+			if (fieldmap is FormExtension) {
 				form = FormExtension(fieldmap);
 			} else {
 				form = new FormExtension();
@@ -813,7 +863,7 @@
 	     * @see join
 		 * @availability Flash Player 7
 		 */
-	    public function cancelConfiguration():Void
+	    public function cancelConfiguration():void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -846,7 +896,7 @@
 	     * @see ban
 		 * @availability Flash Player 7
 	     */
-	    public function grant(affiliation:String, jids:Array, callback:Function):Void
+	    public function grant(affiliation:String, jids:Array, callback:Function):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -855,7 +905,7 @@
 	        iq.callbackName = "finish_admin";
 	        iq.callback = callback;
 	
-	        for (var i=0; i < jids.length; i++) {
+	        for (var i:int=0; i < jids.length; i++) {
 	            owner.addItem(affiliation, null, null, jids[i], null, null);
 	        }
 	
@@ -879,7 +929,7 @@
 	     * @see allow
 		 * @availability Flash Player 7
 	     */
-	    public function revoke(jids:Array, callback:Function):Void
+	    public function revoke(jids:Array, callback:Function):void
 	    {
 	        grant(Room.NO_AFFILIATION, jids, callback);
 	    }
@@ -896,7 +946,7 @@
 	     * @see allow
 		 * @availability Flash Player 7
 	     */
-	    public function ban(jids:Array, callback:Function):Void
+	    public function ban(jids:Array, callback:Function):void
 	    {
 	        grant(Room.OUTCAST_AFFILIATION, jids, callback);
 	    }
@@ -913,7 +963,7 @@
 	     * @see ban
 		 * @availability Flash Player 7
 	     */
-	    public function allow(jids:Array, callback:Function):Void
+	    public function allow(jids:Array, callback:Function):void
 	    {
 	        grant(Room.NO_AFFILIATION, jids, callback);
 	    }
@@ -922,14 +972,22 @@
 	     * The default handler for admin IQ messages
 	     * Dispatches the adminError event if anything went wrong
 	     */
-	    private function finish_admin(iq:IQ):Void
+	    private function finish_admin(iq:IQ):void
 	    {
 	        if (iq.type == IQ.ERROR_TYPE) {
+	        	var e:RoomEvent = new RoomEvent(RoomEvent.ADMIN_ERROR);
+	        	e.errorCondition = iq.errorCondition;
+	        	e.errorMessage = iq.errorMessage;
+	        	e.errorType = iq.errorType;
+	        	e.errorCode = iq.errorCode;
+	        	dispatchEvent(e);
+	        	/*
 	            dispatchEvent({type:"adminError", target:this, 
 	                errorCondition:iq.errorCondition,
 	                errorMessage: iq.errorMessage,
 	                errorType: iq.errorType,
-	                errorCode: iq.errorCode}); 
+	                errorCode: iq.errorCode});
+	             */
 	        }
 	    }
 	
@@ -952,7 +1010,7 @@
 	     * @see affiliations
 		 * @availability Flash Player 7
 	     */
-	    public function requestAffiliations(affiliation:String)
+	    public function requestAffiliations(affiliation:String) : void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.GET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -966,14 +1024,17 @@
 	        getConnection().send(iq);
 	    }
 	
-	    private function finish_requestAffiliates(iq:IQ):Void
+	    private function finish_requestAffiliates(iq:IQ):void
 	    {
 	        finish_admin(iq);
 	        if (iq.type == IQ.RESULT_TYPE) {
 	            var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
 	            var items:Array = owner.getAllItems();
 	            // trace("Affiliates: " + items);
-	            dispatchEvent({type:"affiliations", target:this, data:items});
+	            var e:RoomEvent = new RoomEvent(RoomEvent.AFFILIATIONS);
+	            e.data = items;
+	            dispatchEvent(e);
+	            //dispatchEvent({type:"affiliations", target:this, data:items});
 	        }
 	    }
 	
@@ -985,7 +1046,7 @@
 	     * @param alternateJID A JID for current members to use as an alternate room to join after the room has been destroyed.  Like a postal forwarding address.
 		 * @availability Flash Player 7
 		 */
-	    public function destroy(reason:String, alternateJID:String, callback:Function):Void
+	    public function destroy(reason:String, alternateJID:String, callback:Function):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -997,16 +1058,17 @@
 	        myConnection.send(iq);
 	    }
 		
-		private function updateRoomRoster( aPresence:Presence ):Void
+		private function updateRoomRoster( aPresence:Presence ):void
 		{
 			//trace("Room: updateRoomRoster: " + aPresence.getNode() + " : " + getLength());
 	
 	        // one presence for each user
-			var r = rosterItems;
-			var userNickname = aPresence.from.split( "/" )[1];
+			var r:DataProvider = rosterItems;
+			var userNickname:String = aPresence.from.split( "/" )[1];
 			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
 	        var item:MUCItem = userExts[0].getAllItems()[0];
-	
+			var e:RoomEvent;
+			
 			if ( isThisUser( aPresence.from ) ) {
 	            myAffiliation = item.affiliation;
 	            myRole = item.role;
@@ -1014,11 +1076,13 @@
 				if (!isActive() && aPresence.type != Presence.UNAVAILABLE_TYPE) {
 					//trace("Room: becoming active: " + presence.getNode());
 					active = true;
-					dispatchEvent({type:"roomJoin", target:this});
+					e = new RoomEvent(RoomEvent.ROOM_JOIN);
+					dispatchEvent(e);
+					//dispatchEvent({type:"roomJoin", target:this});
 				}
 			}
 	
-	        for( var i=0; i < getLength(); i++ ) {
+	        for( var i:int=0; i < getLength(); i++ ) {
 				//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
 	
 	            if( getItemAt( i ).nickname == userNickname ) {
@@ -1028,10 +1092,13 @@
 						//trace("Room: updateRoomRoster: leaving room: " + userNickname);
 	
 	                    // Notify listeners that a user has left the room
-	                    dispatchEvent( {target:this, type:"userDeparture", nickname:userNickname} );
+	                    e = new RoomEvent(RoomEvent.USER_DEPARTURE);
+	                    e.nickname = userNickname;
+	                    dispatchEvent(e);
+	                    //dispatchEvent( {target:this, type:"userDeparture", nickname:userNickname} );
 	                    r.removeItemAt( i );
 	
-	                } else if (item != undefined) {
+	                } else if (item != null) {
 	                    r.editField( i, "affiliation", item.affiliation );
 	                    r.editField( i, "role", item.role );
 	                    r.editField( i, "show", aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL );
@@ -1047,12 +1114,15 @@
 					item.affiliation, item.role, item.jid );
 	
 	            if( userNickname != nickname ) {
-	                dispatchEvent( {target:this, type:"userJoin", nickname:userNickname} );
+	            	e = new RoomEvent(RoomEvent.USER_JOIN);
+	            	e.nickname = userNickname;
+	            	dispatchEvent(e);
+	                //dispatchEvent( {target:this, type:"userJoin", nickname:userNickname} );
 	            } 
 	        }
 		}
 		
-		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):Void
+		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):void
 		{
 			rosterItems.addItem( {nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid} );
 		}
@@ -1093,7 +1163,7 @@
 			return myJID.split("@")[1];
 		}
 		 
-		public function set conferenceServer( aServer:String ):Void
+		public function set conferenceServer( aServer:String ):void
 		{
 			setRoomJID(roomName + "@" + aServer);
 		}
@@ -1108,7 +1178,7 @@
 			return myJID.split("@")[0];
 		}
 		
-		public function set roomName( aName:String ):Void
+		public function set roomName( aName:String ):void
 		{
 			setRoomJID(aName + "@" + conferenceServer);
 		}
@@ -1120,10 +1190,10 @@
 		 */
 		public function get nickname():String
 		{
-			return myNickname == undefined ? myConnection.username : myNickname;
+			return myNickname == null ? myConnection.username : myNickname;
 		}
 		
-		public function set nickname( theNickname ):Void
+		public function set nickname( theNickname:String ):void
 		{	
 			if( isActive() ) {
 				pendingNickname = theNickname;
@@ -1141,7 +1211,7 @@
 	        return myPassword;
 	    }
 	
-	    public function set password(aPassword:String):Void
+	    public function set password(aPassword:String):void
 	    {
 	        myPassword = aPassword;
 	    } 

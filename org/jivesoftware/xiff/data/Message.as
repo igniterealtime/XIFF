@@ -47,6 +47,7 @@
 	
 	public class Message extends XMPPStanza implements ISerializable
 	{
+		
 		// Static variables for specific type strings
 		public static var NORMAL_TYPE:String = "normal";
 		public static var CHAT_TYPE:String = "chat";
@@ -65,7 +66,8 @@
 		public function Message( recipient:String=null, msgID:String=null, msgBody:String=null, msgHTMLBody:String=null, msgType:String=null, msgSubject:String=null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
-			super( recipient, null, msgType, exists( msgID ) ? msgID : generateID("m_"), "message" );
+			var msgId:String = exists( msgID ) ? msgID : generateID("m_");
+			super( recipient, null, msgType, msgId, "message" );
 			body = msgBody;
 			htmlBody = msgHTMLBody;
 			subject = msgSubject;

@@ -25,6 +25,7 @@
 	import org.jivesoftware.xiff.data.ISerializable;
 	
 	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the administration command data model in <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.

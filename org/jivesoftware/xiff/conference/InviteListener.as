@@ -25,6 +25,9 @@
 	import org.jivesoftware.xiff.conference.Room;
 	import org.jivesoftware.xiff.data.Message;
 	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
+	import flash.events.EventDispatcher;
+	import org.jivesoftware.xiff.events.MessageEvent;
+	import org.jivesoftware.xiff.events.InviteEvent;
 	
 	/**
 	 * Broadcast when an invite has been received to the connection user
@@ -62,30 +65,32 @@
 	 * @toc-path Conferencing
 	 * @toc-sort 1
 	 */
-	public class InviteListener
+	public class InviteListener extends EventDispatcher
 	{
 		private var myConnection:XMPPConnection;
 		
 		// These are needed by the EventDispatcher
-		private var dispatchEvent:Function;
-		public var removeEventListener:Function;
-		public var addEventListener:Function;
+		//private var dispatchEvent:Function;
+		//public var removeEventListener:Function;
+		//public var addEventListener:Function;
 		
 		// Used for static constructor with EventDispatcher and DataProvider
-		private static var staticConstructorDependencies = [ mx.events.EventDispatcher ]
+		//private static var staticConstructorDependencies = [ mx.events.EventDispatcher ]
 	
-		private static var isEnabled:Boolean = InviteListener.enable();
+		//private static var isEnabled:Boolean = InviteListener.enable();
 		
 		public function InviteListener( aConnection:XMPPConnection )
 		{
 			setConnection( aConnection );	
 		}
 		
+		/*
 		private static function enable():Boolean
 		{
 			mx.events.EventDispatcher.initialize( InviteListener.prototype );
 			return true;
 		}
+		*/
 		
 		/**
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
@@ -94,11 +99,11 @@
 		 * @availability Flash Player 7
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
-		public function setConnection( connection:XMPPConnection ):Void
+		public function setConnection( connection:XMPPConnection ):void
 		{
-	        myConnection.removeEventListener("message", this);
+			myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
 			myConnection = connection;
-		 	myConnection.addEventListener("message", this);
+			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent);
 		}
 	
 		/**
@@ -113,11 +118,11 @@
 			return myConnection;
 		}
 		 
-		private function handleEvent( eventObj ):Void
+		private function handleEvent( eventObj:Object ):void
 		{
 			switch( eventObj.type )
 			{
-				case "message":
+				case MessageEvent.MESSAGE:
 					var msg:Message = eventObj.data;
 	                var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
 	
@@ -126,15 +131,12 @@
 	                        var room:Room = new Room(myConnection);
 	                        room.setRoomJID(msg.from);
 	                        room.password = muc.password;
-	
-	                        dispatchEvent({
-	                            type:"invited", 
-	                            target:this, 
-	                            from: muc.from,
-	                            reason: muc.reason,
-	                            room: room,
-	                            data: msg
-	                        });
+							var e:InviteEvent = new InviteEvent();
+							e.from = muc.from;
+							e.reason = muc.reason;
+							e.room = room;
+							e.data = msg;
+							dispatchEvent(e);
 	                    }
 	                }
 					break;

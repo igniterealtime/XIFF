@@ -23,6 +23,7 @@
 	
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.ISerializable;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * This class is used by the MUCExtension for internal representation of
@@ -65,8 +66,8 @@
 		{
 			setNode(node);
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName )
 				{
 					case "actor":
@@ -86,7 +87,7 @@
 			return myActorNode.attributes.jid;
 		}
 	
-		public function set actor(val:String):Void
+		public function set actor(val:String):void
 		{
 			myActorNode = ensureNode(myActorNode, "actor");
 			myActorNode.attributes.jid = val;
@@ -97,7 +98,7 @@
 			return myReasonNode.firstChild.nodeValue;
 		}
 	
-		public function set reason(val:String):Void
+		public function set reason(val:String):void
 		{
 			myReasonNode = replaceTextNode(getNode(), myReasonNode, "reason", val);
 		}
@@ -107,7 +108,7 @@
 			return getNode().attributes.affiliation;
 		}
 	
-		public function set affiliation(val:String):Void
+		public function set affiliation(val:String):void
 		{
 			getNode().attributes.affiliation = val;
 		}
@@ -117,7 +118,7 @@
 			return getNode().attributes.jid;
 		}
 	
-		public function set jid(val:String):Void
+		public function set jid(val:String):void
 		{
 			getNode().attributes.jid = val;
 		}
@@ -132,7 +133,7 @@
 			return getNode().attributes.nick;
 		}
 	
-		public function set nick(val:String):Void
+		public function set nick(val:String):void
 		{
 			getNode().attributes.nick = val;
 		}
@@ -142,7 +143,7 @@
 			return getNode().attributes.role;
 		}
 	
-		public function set role(val:String):Void
+		public function set role(val:String):void
 		{
 			getNode().attributes.role = val;
 		}

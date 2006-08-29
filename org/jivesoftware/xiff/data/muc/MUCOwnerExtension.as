@@ -26,6 +26,7 @@
 	import org.jivesoftware.xiff.data.ISerializable;
 	
 	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the administration command data model in <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
@@ -60,12 +61,12 @@
 			return MUCOwnerExtension.ELEMENT;
 		}
 	
-		public function deserialize( node:XMLNode ):Boolean
+		override public function deserialize( node:XMLNode ):Boolean
 		{
 			super.deserialize(node);
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName )
 				{
 					case "destroy":
@@ -76,7 +77,7 @@
 			return true;
 		}
 	
-	    public function serialize( parent:XMLNode ):Boolean
+	    override public function serialize( parent:XMLNode ):Boolean
 	    {
 	        return super.serialize(parent);
 	    }
@@ -89,10 +90,10 @@
 	     * @param alternateJID A string containing a JID that room members can use instead of this room
 	     * @availability Flash Player 7
 	     */
-	    public function destroy(reason:String, alternateJID:String):Void
+	    public function destroy(reason:String, alternateJID:String):void
 	    {
 	        myDestroyNode = ensureNode(myDestroyNode, "destroy");
-	        for (var i in myDestroyNode.childNodes) {
+	        for (var i:String in myDestroyNode.childNodes) {
 	            myDestroyNode.childNodes[i].removeNode();
 	        }
 	

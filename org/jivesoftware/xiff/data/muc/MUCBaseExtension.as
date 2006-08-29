@@ -30,6 +30,7 @@
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	
 	import org.jivesoftware.xiff.data.muc.MUCItem;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -77,15 +78,15 @@
 		{
 			var node:XMLNode = getNode();
 	
-			for (var i in myItems) {
+			for (var i:String in myItems) {
 				if (!myItems[i].serialize(node)) {
 					return false;
 				}
 			}
 	
 			var exts:Array = getAllExtensions();
-			for (var i in exts) {
-				if (!exts[i].serialize(node)) {
+			for (var ii:String in exts) {
+				if (!exts[ii].serialize(node)) {
 					return false;
 				}
 			}
@@ -102,8 +103,8 @@
 			setNode(node);
 			removeAllItems();
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName )
 				{
 					case "item":
@@ -113,11 +114,11 @@
 						break;
 	
 					default:
-						var extClass:Function = ExtensionClassRegistry.lookup(children[i].attributes.xmlns);
+						var extClass:Class = ExtensionClassRegistry.lookup(children[i].attributes.xmlns);
 						if (extClass != null) {
 							var ext:IExtension = new extClass();
 							if (ext != null) {
-								if (ext instanceof ISerializable) {
+								if (ext is ISerializable) {
 									ISerializable(ext).deserialize(children[i]);
 								}
 								addExtension(ext);
@@ -152,7 +153,7 @@
 		 * @return The newly created MUCItem
 		 * @availability Flash Player 7
 		 */
-		public function addItem(affiliation:String, role:String, nick:String, jid:String, actor:String, reason:String):MUCItem
+		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:String=null, actor:String=null, reason:String=null):MUCItem
 		{
 			var item:MUCItem = new MUCItem(getNode());
 	
@@ -172,9 +173,9 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function removeAllItems():Void
+		public function removeAllItems():void
 		{
-			for (var i in myItems) {
+			for (var i:String in myItems) {
 				myItems[i].setNode(null);
 			}
 		 	myItems = new Array();

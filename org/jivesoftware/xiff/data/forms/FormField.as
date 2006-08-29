@@ -23,6 +23,7 @@
 	 
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.ISerializable;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * This class is used by the FormExtension class for managing fields
@@ -82,8 +83,8 @@
 	        myValueNodes = new Array();
 	        myOptionNodes = new Array();
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 	            var c:XMLNode = children[i];
 	
 				switch( children[i].nodeName ) {
@@ -107,7 +108,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get name():String { return getNode().attributes["var"]; }
-	    public function set name(val:String) 
+	    public function set name(val:String) :void
 	    { 
 	        getNode().attributes["var"] = val; 
 	    }
@@ -133,7 +134,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get type():String { return getNode().attributes.type; }
-	    public function set type(val:String) 
+	    public function set type(val:String) :void
 	    { 
 	        getNode().attributes.type = val; 
 	    }
@@ -145,7 +146,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get label():String { return getNode().attributes.label; }
-	    public function set label(val:String) 
+	    public function set label(val:String) :void
 	    { 
 	        getNode().attributes.label = val; 
 	    }
@@ -171,7 +172,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get value():String { return myValueNodes[0].firstChild.nodeValue; }
-	    public function set value(val:String)
+	    public function set value(val:String) :void
 	    {
 	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", val);
 	    }
@@ -193,7 +194,7 @@
 	    public function getAllValues():Array
 	    {
 	        var res:Array = new Array();
-	        for (var i=0; i < myValueNodes.length; i++) {
+	        for (var i:int=0; i < myValueNodes.length; i++) {
 	            res.push(myValueNodes[i].firstChild.nodeValue);
 	        }
 	        return res;
@@ -205,15 +206,15 @@
 	     * @param val Array of Strings
 		 * @availability Flash Player 7
 	     */
-	    public function setAllValues(val:Array) 
+	    public function setAllValues(val:Array) :void
 	    {
-	        for (var v in myValueNodes) {
+	        for (var v:String in myValueNodes) {
 	            myValueNodes[v].removeNode();
 	        }
 	
 	        myValueNodes = new Array();
 	
-	        for (var i=0; i < val.length; i++) {
+	        for (var i:int=0; i < val.length; i++) {
 	            myValueNodes[i] = replaceTextNode(getNode(), undefined, "value", val[i]);
 	        }
 	    }
@@ -235,7 +236,7 @@
 	    public function getAllOptions():Array
 	    {
 	        var res:Array = new Array();
-	        for (var i=0; i < myOptionNodes.length; i++) {
+	        for (var i:int=0; i < myOptionNodes.length; i++) {
 	            res.push({
 	                label: myOptionNodes[i].attributes.label,
 	                value: myOptionNodes[i].firstChild.nodeValue
@@ -251,16 +252,16 @@
 	     * <code>value</code>
 		 * @availability Flash Player 7
 	     */
-	    public function setAllOptions(val:Array)
+	    public function setAllOptions(val:Array):void
 	    {
-	        for (var v in myOptionNodes) {
+	        for (var v:String in myOptionNodes) {
 	            myOptionNodes[v].removeNode();
 	        }
 	
 	        myOptionNodes = new Array();
 	
-	        for (var i=0; i < val.length; i++) {
-	            var option = replaceTextNode(getNode(), undefined, "value", val[i].value);
+	        for (var i:int=0; i < val.length; i++) {
+	            var option:XMLNode = replaceTextNode(getNode(), undefined, "value", val[i].value);
 	            option.attributes.label = val[i].label;
 	            myOptionNodes[i] = option;
 	        }

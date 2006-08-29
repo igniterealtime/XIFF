@@ -25,10 +25,11 @@
 	import org.jivesoftware.xiff.data.ISerializable;
 	
 	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionContainer;
+	//import org.jivesoftware.xiff.data.ExtensionContainer;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	
 	import org.jivesoftware.xiff.data.forms.FormField;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -41,7 +42,7 @@
 	 * @toc-sort 1/2
 	 */
 	//public class FormExtension extends Extension implements ISerializable, IExtension
-	public class FormExtension extends Extension implements ISerializable
+	public class FormExtension extends Extension implements IExtension, ISerializable
 	{
 	    public static var FIELD_TYPE_BOOLEAN:String = "boolean";
 	    public static var FIELD_TYPE_FIXED:String = "fixed";
@@ -62,8 +63,8 @@
 	    public static var NS:String = "jabber:x:data";
 	    public static var ELEMENT:String = "x";
 	
-		private static var isStaticConstructed:Boolean = enable();
-		private static var staticDependencies = [ ExtensionClassRegistry ];
+		//private static var isStaticConstructed:Boolean = enable();
+		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 	
 		private var myItems:Array;
 		private var myFields:Array;
@@ -86,13 +87,12 @@
 		{
 			return FormExtension.ELEMENT;
 		}
-	
+		
 		public static function enable():Boolean
-		{
-			ExtensionClassRegistry.register(FormExtension);
-			return true;
-		}
-	
+	    {
+	        ExtensionClassRegistry.register(FormExtension);
+	        return true;
+	    }
 		/**
 		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
 		 */
@@ -100,7 +100,7 @@
 		{
 			var node:XMLNode = getNode();
 	
-			for (var i in myFields) {
+			for (var i:String in myFields) {
 				if (!myFields[i].serialize(node)) {
 					return false;
 				}
@@ -120,25 +120,26 @@
 			removeAllItems();
 			removeAllFields();
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 	            var c:XMLNode = children[i];
-	
+				var field:FormField;
 				switch( children[i].nodeName )
 				{
 	                case "instructions": myInstructionsNode = c; break;
 	                case "title": myTitleNode = c; break;
 	                case "reported": 
-	                    var field:FormField = new FormField();
+	                    field = new FormField();
 	                    field.deserialize(c);
 	                    myReportedFields.push(field);
 	                    break;
 	
 					case "item":
 	                    var newItem:Array = [];
-	                    for (var j in c.childNodes) {
+	                    for (var j:String in c.childNodes) {
 	                        var fieldXML:XMLNode = c.childNodes[j];
-	                        var field = new FormField(c);
+	                        //var field = new FormField(c);
+	                        field = c as FormField;
 	                        field.deserialize(fieldXML);
 	                        newItem.push(field);
 	                    }
@@ -147,7 +148,7 @@
 						break;
 	
 	                case "field":
-	                    var field:FormField = new FormField();
+	                    field = new FormField();
 	                    field.deserialize(c);
 	                    myFields.push(field);
 	                    break;
@@ -167,11 +168,12 @@
 	    public function getFormType():String
 	    {
 	        // Most likely at the start of the array
-	        for (var i=0; i < myFields.length; i++) {
+	        for (var i:int=0; i < myFields.length; i++) {
 	            if (myFields[i].name == "FORM_TYPE") {
 	                return myFields[i].value;
 	            }
 	        }
+	        return "";
 	    }
 	
 		/**
@@ -203,11 +205,11 @@
 	     * @param fieldmap Object in format obj[key:String].value:Array
 	     * @availability Flash Player 7
 	     */
-	    public function setFields(fieldmap:Object):Void
+	    public function setFields(fieldmap:Object):void
 	    {
 	        removeAllFields();
-	        for (var f in fieldmap) {
-	            var field = new FormField();
+	        for (var f:String in fieldmap) {
+	            var field:FormField = new FormField();
 	            field.name = f;
 	            field.setAllValues(fieldmap[f]);
 	            myFields.push(field);
@@ -219,10 +221,10 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function removeAllItems():Void
+		public function removeAllItems():void
 		{
-			for (var i in myItems) {
-	            for (var j in myItems) {
+			for (var i:String in myItems) {
+	            for (var j:String in myItems) {
 	                myItems[i][j].getNode().removeNode();
 	                myItems[i][j].setNode(null);
 	            }
@@ -234,10 +236,10 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function removeAllFields():Void
+		public function removeAllFields():void
 		{
-			for (var i in myFields) {
-	            for (var j in myFields[i]) {
+			for (var i:String in myFields) {
+	            for (var j:String in myFields[i]) {
 	                myFields[i][j].getNode().removeNode();
 	                myFields[i][j].setNode(null);
 	            }
@@ -251,7 +253,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get instructions():String { return myInstructionsNode.firstChild.nodeValue; }
-	    public function set instructions(val:String) 
+	    public function set instructions(val:String) :void
 	    { 
 	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
 	    }
@@ -262,7 +264,7 @@
 		 * @availability Flash Player 7
 	     */
 	    public function get title():String { return myTitleNode.firstChild.nodeValue; }
-	    public function set title(val:String) 
+	    public function set title(val:String) :void
 	    { 
 	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", val);
 	    }
@@ -291,7 +293,7 @@
 	     */
 	
 	    public function get type():String { return getNode().attributes.type; }
-	    public function set type(val:String) 
+	    public function set type(val:String) :void
 	    { 
 	        // TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 	        // TODO Change the behavior of the serialization depending on the type

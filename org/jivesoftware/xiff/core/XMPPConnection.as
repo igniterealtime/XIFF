@@ -48,6 +48,7 @@
 	import flash.events.Event;
 	import org.jivesoftware.xiff.events.*;
 	import org.jivesoftware.xiff.data.im.RosterExtension;
+	import org.jivesoftware.xiff.data.forms.FormExtension;
 	/*
 	 * NOTE: Jabber error codes are deprecated in IETF XMPP.
 	 * XIFF supports both Jabber codes and XMPP error conditions.
@@ -303,6 +304,7 @@
 			
 			AuthExtension.enable();
 			RegisterExtension.enable();
+			FormExtension.enable();
 		}
 		
 		/*

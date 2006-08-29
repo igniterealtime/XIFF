@@ -12,6 +12,9 @@ package {
 	import org.jivesoftware.xiff.data.muc.*;
 	import org.jivesoftware.xiff.data.Message;
 	
+	import org.jivesoftware.xiff.conference.Room;
+	import org.jivesoftware.xiff.conference.InviteListener;
+	
 	public class xiffPort extends Sprite
 	{
 		internal var _conn:XMPPConnection;
@@ -20,6 +23,9 @@ package {
 		public function xiffPort()
 		{
 			Security.loadPolicyFile("http://69.45.147.228/crossdomain.xml");
+			// temp stuff for debugging
+			var r:Room = new Room();
+			var l:InviteListener = new InviteListener(_conn);
 			
 			setupXMPPConnection();
 			setupConnectionListeners();

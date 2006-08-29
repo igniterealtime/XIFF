@@ -67,13 +67,13 @@
 		public static var PARTICIPANT_ROLE:String = "participant";
 		public static var VISITOR_ROLE:String = "visitor";
 	
-		private static var staticDependencies = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
+		private static var staticDependencies:Array = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
 	
 	    /**
 	     * Register the multi-user chat extension capabilities with this method
 	     * @availability Flash Player 7
 	     */
-	    public static function enable():Void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register( MUCExtension );
 	        ExtensionClassRegistry.register( MUCUserExtension );

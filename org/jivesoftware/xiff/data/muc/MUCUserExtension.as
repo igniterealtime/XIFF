@@ -25,6 +25,7 @@
 	import org.jivesoftware.xiff.data.ISerializable;
 	
 	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the base MUC user protocol schema from <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
@@ -66,12 +67,12 @@
 			return MUCUserExtension.ELEMENT;
 		}
 	
-		public function deserialize( node:XMLNode ):Boolean
+		override public function deserialize( node:XMLNode ):Boolean
 		{
 			super.deserialize(node);
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName )
 				{
 					case DECLINE_TYPE:
@@ -103,7 +104,7 @@
 		 */
 		public function get type():String
 		{
-			return myActionNode.nodeName == undefined ? OTHER_TYPE : myActionNode.nodeName;
+			return myActionNode.nodeName == null ? OTHER_TYPE : myActionNode.nodeName;
 		}
 	
 		/**
@@ -141,7 +142,7 @@
 		/**
 		 * Use this extension to invite another user
 		 */
-		public function invite(to:String, from:String, reason:String)
+		public function invite(to:String, from:String, reason:String):void
 		{
 			updateActionNode(INVITE_TYPE, {to:to, from:from}, reason);
 		}
@@ -149,7 +150,7 @@
 		/**
 		 * Use this extension to destroy a room
 		 */
-		public function destroy(room:String, reason:String)
+		public function destroy(room:String, reason:String):void
 		{
 			updateActionNode(DESTROY_TYPE, {jid: room}, reason);
 		}
@@ -157,7 +158,7 @@
 		/**
 		 * Use this extension to decline an invitation
 		 */
-		public function decline(to:String, from:String, reason:String)
+		public function decline(to:String, from:String, reason:String):void
 		{
 			updateActionNode(DECLINE_TYPE, {to:to, from:from}, reason);
 		}
@@ -170,7 +171,7 @@
 			return myPasswordNode.firstChild.nodeValue;
 		}
 	
-		public function set password(val:String):Void
+		public function set password(val:String):void
 		{
 			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
 		}
@@ -183,7 +184,7 @@
 			return Number(myStatusNode.attributes.code);
 		}
 	
-		public function set statusCode(val:Number):Void
+		public function set statusCode(val:Number):void
 		{
 			myStatusNode = ensureNode(myStatusNode, "status");
 			myStatusNode.attributes.code = val.toString();
@@ -197,7 +198,7 @@
 			return myStatusNode.firstChild.nodeValue;
 		}
 	
-		public function set statusMessage(val:String):Void
+		public function set statusMessage(val:String):void
 		{
 			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", val);
 		}
@@ -205,12 +206,12 @@
 		/**
 		 * Internal method that manages the type of node that we will use for invite/destroy/decline messages
 		 */
-		private function updateActionNode(type:String, attrs:Object, reason:String)
+		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
 			myActionNode.removeNode();
 	
 			myActionNode = XMLFactory.createElement(type);
-			for (var i in attrs) {
+			for (var i:* in attrs) {
 				if (exists(attrs[i])) {
 					myActionNode.attributes[i] = attrs[i];
 				}

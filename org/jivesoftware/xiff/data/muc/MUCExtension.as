@@ -25,6 +25,7 @@
 	import org.jivesoftware.xiff.data.ISerializable;
 	
 	import org.jivesoftware.xiff.data.Extension;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * Implements the base MUC protocol schema from <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
@@ -74,8 +75,8 @@
 		{
 			setNode(node);
 	
-			var children = node.childNodes;
-			for( var i in children ) {
+			var children:Array = node.childNodes;
+			for( var i:String in children ) {
 				switch( children[i].nodeName )
 				{
 					case "history":
@@ -98,7 +99,7 @@
 			return myPasswordNode.firstChild.nodeValue;
 		}
 	
-		public function set password(val:String):Void
+		public function set password(val:String):void
 		{
 			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
 		}
@@ -112,13 +113,14 @@
 			return exists(myHistoryNode);
 		}
 	
-		public function set history(val:Boolean):Void
+		public function set history(val:Boolean):void
 		{
 			if (val) {
 				myHistoryNode = ensureNode(myHistoryNode, "history");
 			} else {
 				myHistoryNode.removeNode();
-				delete myHistoryNode;
+				myHistoryNode = null;
+				//delete myHistoryNode;
 			}
 		}
 	
@@ -130,7 +132,7 @@
 			return Number(myHistoryNode.attributes.maxchars);
 		}
 	
-		public function set maxchars(val:Number):Void
+		public function set maxchars(val:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxchars = val.toString();
@@ -144,7 +146,7 @@
 			return Number(myHistoryNode.attributes.maxstanzas);
 		}
 	
-		public function set maxstanzas(val:Number):Void
+		public function set maxstanzas(val:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxstanzas = val.toString();
@@ -158,7 +160,7 @@
 			return Number(myHistoryNode.attributes.seconds);
 		}
 	
-		public function set seconds(val:Number):Void
+		public function set seconds(val:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.seconds = val.toString();
@@ -174,7 +176,7 @@
 			return myHistoryNode.attributes.since;
 		}
 	
-		public function set since(val:String):Void
+		public function set since(val:String):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.since = val;
