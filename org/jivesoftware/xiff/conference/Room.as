@@ -25,13 +25,11 @@
 	import org.jivesoftware.xiff.data.*;
 	import org.jivesoftware.xiff.data.muc.*;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
-	import org.jivesoftware.xiff.utility.DataProvider;
-	import org.jivesoftware.xiff.utility.DataProviderEvent;
-	import flash.events.EventDispatcher;
 	import org.jivesoftware.xiff.events.MessageEvent;
 	import org.jivesoftware.xiff.events.PresenceEvent;
 	import org.jivesoftware.xiff.events.DisconnectionEvent;
 	import org.jivesoftware.xiff.events.RoomEvent;
+	import mx.collections.ArrayCollection;
 	
 	/**
 	 * Broadcast when the room subject changes. The event object contains an attribute <code>subject</code> with the new subject as a String.
@@ -163,7 +161,7 @@
 	 * @toc-path Conferencing
 	 * @toc-sort 1
 	 */
-	public class Room extends EventDispatcher
+	public class Room extends ArrayCollection
 	{
 		public static var NO_AFFILIATION:String = MUC.NO_AFFILIATION;
 		public static var MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
@@ -189,19 +187,8 @@
 		
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
-		
-		private var rosterItems:DataProvider;
-		
-		// These are needed by the EventDispatcher
-		//private var dispatchEvent:Function;
-		//public var removeEventListener:Function;
-		//public var addEventListener:Function;
-		
-		// Used for static constructor with EventDispatcher and DataProvider
+
 		private static var staticConstructorDependencies:Array = [ 
-			//mx.events.EventDispatcher, 
-			//mx.controls.listclasses.DataProvider,
-			
 	        FormExtension,
 	        MUC
 		]
@@ -210,15 +197,6 @@
 		
 		public function Room( aConnection:XMPPConnection=null )
 		{
-			rosterItems = new DataProvider();
-			rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
-			
-			//rosterItems = new Array();
-	
-	        // Guarantee getLength() exists
-	        //decorateProvider(rosterItems);
-			
-			//rosterItems.addEventListener( "modelChanged", this );
 			
 			active = false;
 			if (aConnection != null){
@@ -228,8 +206,7 @@
 		
 		private static function RoomStaticConstructor():Boolean
 		{
-			//mx.events.EventDispatcher.initialize( Room.prototype );
-			//mx.controls.listclasses.DataProvider.Initialize( Array );
+			trace ("MUC.enable();");
 	        MUC.enable();
 	        FormExtension.enable();
 			
@@ -271,45 +248,6 @@
 		{
 			return myConnection;
 		}
-	
-	
-		/**
-		 * Allows use of an external data provider instead of the one used internally by the
-		 * class by default. This is useful in the case of a Macromedia Central application
-		 * where the data provider might need to be an instance of an LCDataProvider.
-		 *
-		 * The data provider should either implement the Data Provider API interface, or
-		 * the interface for Central's LCDataProvider.
-		 *
-		 * @availability Flash Player 7
-		 * @param externalDP A reference to the external data provider
-		 */
-		/*
-		public function setExternalDataProvider( externalDP:Object ):void
-		{
-			// Check to see that it hasn't already been set, else it will overwrite for no reason
-			if( rosterItems !== externalDP ) {
-				// Copy what ever is in the current data provider in case switching on the fly
-				externalDP.removeAll()
-				
-				var l = getLength();
-				for( var i = 0; i < l; i++ ) {
-					externalDP.addItem( getItemAt( i ) );
-	            }
-					
-	            // Stop deligating for old provider
-	            rosterItems.removeEventListener("modelChanged", this);
-	
-				rosterItems = externalDP;
-	            
-	            // Decorate roster items with getLength()
-	            decorateProvider(rosterItems);
-	
-	            // Relink to deligate modelChanged events
-	            rosterItems.addEventListener("modelChanged", this);
-			}
-		}
-		*/
 		 
 	    /** 
 	     * Joins a conference room based on the parameters specified by the room
@@ -359,10 +297,7 @@
 				myConnection.send( leavePresence );
 				
 				// Clear out the roster items
-				rosterItems.removeAll();
-			
-				// Handled in the presence listener when the server says we're inactive
-				//active = false;
+				removeAll();
 			}
 		}
 		
@@ -568,16 +503,6 @@
 		{
 			return myAffiliation;
 		}
-		
-		/*
-	    private function decorateProvider(dp:Object) 
-	    {
-	        if (dp.getLength == undefined && dp.length != undefined) {
-	            dp['getLength'] = function () { return this['length'] };
-	            _global.ASSetPropFlags(dp.prototype, "getLength", 1);
-	        }
-	    }
-	    */
 	
 		/**
 		 * Determines whether the connection to the room is active - that is, the user is connected and has joined the room.
@@ -589,39 +514,7 @@
 		{
 			return active;
 		}
-	
-		public function get length():Number
-		{
-			return getLength();
-		}
-	
-	    public function getLength():Number
-	    {
-	    	return rosterItems.length;
-			//var l = rosterItems.getLength();
-	        //return l ? l : rosterItems.length;
-	    }
-		
-		public function getItemAt( index:Number ):Object
-		{
-			return rosterItems.getItemAt( index );
-		}
-		
-		public function getItemID( index:Number ):Number
-		{
-			return rosterItems.getItemID( index );
-		}
-		
-		public function sortItems( compareFunc:*, optionFlags:* ):void
-		{
-			rosterItems.sortItems( compareFunc, optionFlags );
-		}
-		
-		public function sortItemsBy( fieldName:*, order:* ):void
-		{
-			rosterItems.sortItemsBy( fieldName, order );
-		}
-		
+
 		private function handleEvent( eventObj:Object ):void
 		{
 			switch( eventObj.type )
@@ -639,13 +532,11 @@
 								e = new RoomEvent(RoomEvent.SUBJECT_CHANGE);
 								e.subject = msg.subject;
 								dispatchEvent(e);
-								//dispatchEvent( {target:this, type:"subjectChange", subject:msg.subject} );
 							}
 							else {
 								e = new RoomEvent(RoomEvent.GROUP_MESSAGE);
 								e.data = msg;
 								dispatchEvent(e);
-								//dispatchEvent( {target:this, type:"groupMessage", data:msg} );
 							}
 						} else if ( msg.type == Message.NORMAL_TYPE ) {
 							var form:Array = msg.getAllExtensionsByNS(FormExtension.NS)[0];
@@ -653,7 +544,6 @@
 								e = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
 								e.data = form;
 								dispatchEvent(e);
-								//dispatchEvent({type: "configureForm", target: this, data:form});
 							}
 						}
 					}
@@ -663,7 +553,6 @@
 						e = new RoomEvent(RoomEvent.PRIVATE_MESSAGE);
 						e.data = msg;
 						dispatchEvent(e);
-						//dispatchEvent( {target:this, type:"privateMessage", data:msg} );
 	                } 
 	
 	                // Could be an decline to a previous invite
@@ -675,15 +564,6 @@
 	                    	e.reason = muc.reason;
 	                    	e.data = msg;
 	                    	dispatchEvent(e);
-	                    	/*
-	                        dispatchEvent({
-	                            type:"declined", 
-	                            target:this, 
-	                            from: muc.from,
-	                            reason: muc.reason,
-	                            data: msg
-	                        });
-	                        */
 	                    }
 	                }
 					break;
@@ -699,7 +579,6 @@
 								e = new RoomEvent(RoomEvent.NICK_CONFLICT);
 								e.nickname = nickname;
 								dispatchEvent(e);
-								//dispatchEvent({type:"nickConflict", target:this, nickname:nickname});
 								break;
 						}
 					} else if( isThisRoom( presence.from ) ) {
@@ -722,7 +601,6 @@
 							active = false;
 							e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 							dispatchEvent(e);
-							//dispatchEvent({type:"roomLeave", target:this});
 						}
 					}
 					break;
@@ -731,20 +609,9 @@
 				case "disconnection":
 					// The server disconnected, so we are no longer active
 					active = false;
-					rosterItems.removeAll();
+					removeAll();
 					e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 					dispatchEvent(e);
-					//dispatchEvent({type:"roomLeave", target:this});
-					break;
-
-				case DataProviderEvent.MODEL_CHANGED :
-					//forward the event	
-					var ev:DataProviderEvent = new DataProviderEvent(DataProviderEvent.MODEL_CHANGED);
-					ev.fieldName = eventObj.fieldName;
-					ev.firstItem = eventObj.firstItem;
-					ev.lastItem = eventObj.lastItem;
-					ev.removedItems = eventObj.removedItems;
-					dispatchEvent( ev );
 					break;
 			}
 		}
@@ -817,7 +684,6 @@
 	        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
 	        	e.data = form;
 	        	dispatchEvent(e);
-	            //dispatchEvent({type: "configureForm", target:this, data:form});
 	        }
 	    }
 	
@@ -935,7 +801,7 @@
 	    }
 	
 	    /**
-	     * Bans an arrya of JIDs from entering the room.  This is the same as:
+	     * Bans an array of JIDs from entering the room.  This is the same as:
 	     * Room.grant(OUTCAST_AFFILIATION, jid)
 	     *
 	     * If the process could not be completed, the room will dispatch the event
@@ -981,13 +847,6 @@
 	        	e.errorType = iq.errorType;
 	        	e.errorCode = iq.errorCode;
 	        	dispatchEvent(e);
-	        	/*
-	            dispatchEvent({type:"adminError", target:this, 
-	                errorCondition:iq.errorCondition,
-	                errorMessage: iq.errorMessage,
-	                errorType: iq.errorType,
-	                errorCode: iq.errorCode});
-	             */
 	        }
 	    }
 	
@@ -1060,10 +919,6 @@
 		
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
-			//trace("Room: updateRoomRoster: " + aPresence.getNode() + " : " + getLength());
-	
-	        // one presence for each user
-			var r:DataProvider = rosterItems;
 			var userNickname:String = aPresence.from.split( "/" )[1];
 			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
 	        var item:MUCItem = userExts[0].getAllItems()[0];
@@ -1078,11 +933,10 @@
 					active = true;
 					e = new RoomEvent(RoomEvent.ROOM_JOIN);
 					dispatchEvent(e);
-					//dispatchEvent({type:"roomJoin", target:this});
 				}
 			}
 	
-	        for( var i:int=0; i < getLength(); i++ ) {
+	        for( var i:int=0; i < length; i++ ) {
 				//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
 	
 	            if( getItemAt( i ).nickname == userNickname ) {
@@ -1095,13 +949,14 @@
 	                    e = new RoomEvent(RoomEvent.USER_DEPARTURE);
 	                    e.nickname = userNickname;
 	                    dispatchEvent(e);
-	                    //dispatchEvent( {target:this, type:"userDeparture", nickname:userNickname} );
-	                    r.removeItemAt( i );
+	                    removeItemAt (i);
 	
 	                } else if (item != null) {
-	                    r.editField( i, "affiliation", item.affiliation );
-	                    r.editField( i, "role", item.role );
-	                    r.editField( i, "show", aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL );
+	                	
+	                	var o:Object = getItemAt(i);
+	                	o.affiliation = item.affiliation;
+	                	o.role = item.role;
+	                	o.show = aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL;
 	                }
 	                return;
 	            }
@@ -1117,14 +972,13 @@
 	            	e = new RoomEvent(RoomEvent.USER_JOIN);
 	            	e.nickname = userNickname;
 	            	dispatchEvent(e);
-	                //dispatchEvent( {target:this, type:"userJoin", nickname:userNickname} );
 	            } 
 	        }
 		}
 		
 		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):void
 		{
-			rosterItems.addItem( {nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid} );
+			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid});
 		}
 		
 		/**

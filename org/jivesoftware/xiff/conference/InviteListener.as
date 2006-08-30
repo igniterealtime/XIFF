@@ -79,9 +79,10 @@
 	
 		//private static var isEnabled:Boolean = InviteListener.enable();
 		
-		public function InviteListener( aConnection:XMPPConnection )
+		public function InviteListener( aConnection:XMPPConnection=null )
 		{
-			setConnection( aConnection );	
+			if (aConnection != null)
+				setConnection( aConnection );	
 		}
 		
 		/*
@@ -101,7 +102,9 @@
 		 */
 		public function setConnection( connection:XMPPConnection ):void
 		{
-			myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
+			if (myConnection != null){
+				myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
+			}
 			myConnection = connection;
 			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent);
 		}
@@ -123,9 +126,12 @@
 			switch( eventObj.type )
 			{
 				case MessageEvent.MESSAGE:
-					var msg:Message = eventObj.data;
-	                var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-	
+					var msg:Message = eventObj.data as Message;
+					var arr:Array =  msg.getAllExtensionsByNS(MUCUserExtension.NS);
+					var testArr:Array = msg.getAllExtensions();
+					var muc:MUCUserExtension = arr != null ? arr[0] : null;
+	                //var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+					
 	                if (muc != null) {
 	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
 	                        var room:Room = new Room(myConnection);

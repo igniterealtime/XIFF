@@ -27,16 +27,14 @@
 	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.XMPPStanza;
-	import flash.events.EventDispatcher;
 	
 	import org.jivesoftware.xiff.events.*;
-	import org.jivesoftware.xiff.utility.DataProvider;
-	import org.jivesoftware.xiff.utility.DataProviderEvent;
 	import flash.events.Event;
 	import flash.utils.describeType;
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import flash.xml.XMLDocument;
-	import flash.events.DataEvent;
+	
+	import mx.collections.ArrayCollection;
 	
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
@@ -109,50 +107,20 @@
 	 * @param aConnection A reference to an XMPPConnection class instance
 	 * @param externalDataProvider (Optional) A reference to an instance of a data provider
 	 */ 
-	public class Roster extends EventDispatcher
+	public class Roster extends ArrayCollection
 	{
 		private var myConnection:XMPPConnection;
-		public var rosterItems:DataProvider;
-		
-		
 		private var pendingSubscriptionRequestJID:String;
 		
-		// These are needed by the EventDispatcher
-		//private var dispatchEvent:Function;
-		//public var removeEventListener:Function;
-		//public var addEventListener:Function;
-		
-		// Used for static constructor with EventDispatcher and DataProvider
-		/* 
-		mx.controls.listclasses.DataProvider is phased out along with support for v2 components
-		*/
-		private static var staticConstructorDependencies:Array = [
-			//mx.events.EventDispatcher,
-			//mx.controls.listclasses.DataProvider,
-			
+		private static var staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
 			RosterExtension
 		]
 		
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
-		//public function Roster( aConnection:XMPPConnection = null, externalDataProvider:Object = null)
 		public function Roster( aConnection:XMPPConnection = null)
 		{	
-			// Initialize the rosterItems
-			// If an external dataprovider is provided, use that instead
-			/*(
-			if( externalDataProvider != null ) {
-				setExternalDataProvider( externalDataProvider );
-			}
-			else {
-				rosterItems = new DataProvider();
-				rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
-				//rosterItems.addEventListener( "modelChanged", this );
-			}
-			*/
-			rosterItems = new DataProvider();
-			rosterItems.addEventListener(DataProviderEvent.MODEL_CHANGED, handleEvent);
 			
 			if (aConnection != null){ 
 				connection = aConnection;
@@ -161,42 +129,9 @@
 		
 		private static function RosterStaticConstructor():Boolean
 		{	
-			//mx.events.EventDispatcher.initialize( Roster.prototype );
-			//mx.controls.listclasses.DataProvider.Initialize( Array );
-			
 			ExtensionClassRegistry.register( RosterExtension );
-			
 			return true;
 		}
-		
-		/**
-		 * Allows use of an external data provider instead of the one used internally by the
-		 * class by default. This is useful in the case of a Macromedia Central application
-		 * where the data provider might need to be an instance of an LCDataProvider.
-		 *
-		 * The data provider should either implement the Data Provider API interface, or
-		 * the interface for Central's LCDataProvider.
-		 *
-		 * @availability Flash Player 7
-		 * @param externalDP A reference to the external data provider
-		 */
-		/*
-		public function setExternalDataProvider( externalDP:Object ):void
-		{
-			// Check to see that it hasn't already been set, else it will overwrite for no reason
-			if( rosterItems !== externalDP ) {
-				// Copy what ever is in the current data provider in case switching on the fly
-				externalDP.removeAll()
-				
-				var l = rosterItems.getLength == undefined ? rosterItems.getLength() : rosterItems.length;
-				for( var i:uint = 0; i < l; i++ )
-					externalDP.addItem( rosterItems.getItemAt( i ) );
-					
-	            rosterItems.removeEventListener("modelChanged", this);
-				rosterItems = externalDP;
-			}
-		}
-		*/
 		
 		/**
 		 * Adds a contact to the roster. Remember: All roster data is managed on the server-side,
@@ -261,9 +196,9 @@
 				return;
 			}
 			// Only request for items in the roster
-			var l:int = rosterItems.length;
+			var l:int = length;
 			for( var i:int = 0; i < l; i++ ) {
-				if( rosterItems.getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
+				if( getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
 					tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 					myConnection.send( tempPresence );
 					return;
@@ -281,17 +216,16 @@
 		 */
 		public function removeContact( id:String ):void
 		{
-			var l:uint = rosterItems.length;
-			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			var l:uint = length;
 			for( var i:uint = 0; i < l; i++ ) {
 				// Only attempt unsubscribe to users that we are currently subscribed to
-				if( rosterItems.getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
+				if( getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
 					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 					ext.addItem( id, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 					tempIQ.addExtension( ext );
 					myConnection.send( tempIQ );
-					rosterItems.removeItemAt(i); 
+					removeItemAt(i); 
 					return;
 				}
 			}
@@ -360,10 +294,9 @@
 		public function updateContact( id:String, newName:String, newGroup:String ):void
 		{
 			// Make sure we already subscribe
-			var l:uint = rosterItems.length;
-			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			var l:uint = length;
 			for( var i:uint = 0; i < l; i++ ) {
-				if( id.toLowerCase() == rosterItems.getItemAt( i ).jid.toLowerCase() ) {
+				if( id.toLowerCase() == getItemAt( i ).jid.toLowerCase() ) {
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 					ext.addItem( id, null, newName, [newGroup] );
@@ -384,13 +317,12 @@
 		 */
 		public function getContactInformation( jid:String ):Object
 		{
-			var l:uint = rosterItems.length;
-			//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+			var l:uint = length;
 			for( var i:uint = 0; i < l; i++ ) 
 			{
-				if( jid.toLowerCase() == rosterItems.getItemAt( i ).jid.toLowerCase() )
+				if( jid.toLowerCase() == getItemAt( i ).jid.toLowerCase() )
 				{
-					return rosterItems.getItemAt( i );
+					return getItemAt( i );
 				}
 					
 			}
@@ -425,70 +357,12 @@
 			myConnection.send( tempPresence );
 		}
 		
-		/**
-		 * Gets a roster item at a specific index. 
-		 * Part of the "read-only" implementation of the DataProvider API. Roster items are 
-		 * generic objects with the following attributes: <code>jid</code>, <code>displayName</code>, <code>group</code>, 
-		 * <code>subscribeType</code>, <code>status</code>, <code>show</code>, and <code>priority</code>.
-		 *
-		 * @availability Flash Player 7
-		 * @param index The index of the item to get
-		 * @return An object representing the roster item retrieved. Null, if none is found at the index provided.
-		 */
-		public function getItemAt( index:Number ):Object
-		{
-			return rosterItems.getItemAt( index );
-		}
-		
-		/**
-		 * Gets the ID of a roster item at a particular index.
-		 * Part of the "read-only" implementation of the DataProvider API.
-		 *
-		 * @availability Flash Player 7
-		 * @param index The index of the item whose ID you wish to retrieve
-		 * @return The item ID
-		 */
-		/*
-		public function getItemID( index:uint ):Number
-		{
-			return rosterItems.getItemID( index );
-		}
-		*/
-		
-		/**
-		 * Sorts items in the roster using a specific comparison function
-		 * as passed to the method. Part of the "read-only" implementation
-		 * of the DataProvider API. For more information, consult the DataProvider
-		 * documentation.
-		 *
-		 * @param compareFunc The function to use for comparison
-		 * @param optionFlags The option flags
-		 * @availability Flash Player 7
-		 */
-		public function sortItems( compareFunc:*, optionFlags:* ):void
-		{
-			rosterItems.sortItems( compareFunc, optionFlags );
-		}
-		
-		/**
-		 * Sorts items in the roster by a specific field name.
-		 *
-		 * @param fieldName The field name to sort by
-		 * @param order The sort order, either ascending or descending - "ASC" or "DSC".
-		 * @example The following example sorts roster items by their display name in
-		 * ascending order.
-		 * <pre>myRoster.sortItemsBy( "displayName", "ASC" );</pre>
-		 * @availability Flash Player 7
-		 */
-		public function sortItemsBy( fieldName:String, order:* ):void
-		{
-			rosterItems.sortItemsBy( fieldName, order );
-		}
+
 		
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
 			// Clear out the old roster
-			rosterItems.removeAll();
+			removeAll();
 			var exts:Array = resultIQ.getAllExtensionsByNS( RosterExtension.NS );
 			var len:int = exts.length;
 
@@ -549,10 +423,9 @@
 					var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 					var rosterItem:* = ext.getAllItems()[0];
 					// Add this item to the roster if it's not there
-					var l:uint = rosterItems.length;
-					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					var l:uint = length;
 					for( var i:uint = 0; i < l; i++ ) {
-						if( rosterItems.getItemAt( i ).jid.toLowerCase() == rosterItem.jid.toLowerCase() ) {
+						if( getItemAt( i ).jid.toLowerCase() == rosterItem.jid.toLowerCase() ) {
 							updateRosterItemSubscription( i, rosterItem.subscription.toLowerCase(), rosterItem.name, rosterItem.getGroups()[0] );
 							
 							// Check to see if subscription was removed, and send an event if so
@@ -571,16 +444,6 @@
 						// Get any possible group name for this item
 						addRosterItem( rosterItem.jid, rosterItem.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", rosterItem.getGroups()[0], rosterItem.subscription.toLowerCase() );
 					}
-					break;
-					
-				case DataProviderEvent.MODEL_CHANGED :
-					//forward the event	
-					var e:DataProviderEvent = new DataProviderEvent(DataProviderEvent.MODEL_CHANGED);
-					e.fieldName = eventObj.fieldName;
-					e.firstItem = eventObj.firstItem;
-					e.lastItem = eventObj.lastItem;
-					e.removedItems = eventObj.removedItems;
-					dispatchEvent( e );
 					break;
 			}
 		}
@@ -608,13 +471,13 @@
 					var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
 					unavailEv.jid = aPresence.from;
 					dispatchEvent(unavailEv);
-					var l:uint = rosterItems.length;
-					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					var l:uint = length;
 					for( var i:uint = 0; i < l; i++ ) {
-						var r:* = rosterItems.getItemAt( i );
+						var r:* = getItemAt( i );
 						if( r.jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
 							r.show = RosterExtension.SHOW_UNAVAILABLE;
-							rosterItems.replaceItemAt( i, r );
+							removeItemAt(i);
+							addItemAt(r,i);
 							break;
 						}
 					}
@@ -629,10 +492,9 @@
 					dispatchEvent(availEv);
 					
 					// Change the item on the roster
-					var ll:uint = rosterItems.length;
-					//var l = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
+					var ll:uint = length;
 					for( var ii:uint = 0; ii < ll; ii++ ) {
-						if( rosterItems.getItemAt( ii ).jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
+						if( getItemAt( ii ).jid.toLowerCase() == aPresence.from.split("/")[0].toLowerCase() ) {
 							updateRosterItemPresence( ii, aPresence );
 							// removed break, beacuse if user is in seeral groups only one itme gets updated. Bug fix by guido
 							//break;
@@ -653,15 +515,15 @@
 			// XIFF-10
 			if(jid != null) {
 				// we need to check if the item already exists (as in pending request)
-				for (var i:int=0; i<rosterItems.length; i++){
-					if (rosterItems.getItemAt(i).jid == jid)
+				for (var i:int=0; i<length; i++){
+					if (getItemAt(i).jid == jid)
 					{
 						// if so, do nothing.. item will update with presence information
 						return true;
 					}
 				}
 				
-				rosterItems.addItem( tempRI );
+				addItem( tempRI );
 			}
 			return true;
 		}
@@ -670,39 +532,29 @@
 		{
 			// Update this appropriately
 			if( type == "remove" ) {
-				var i:int = rosterItems.removeItemAt( index );
+				var i:Object = removeItemAt( index );
 			}
 			else {
-				var item:Object = rosterItems.getItemAt( index );
+				var item:Object = getItemAt( index );
 				item.subscribeType = type;
 				item.group = group;
 				item.displayName = name != null ? name : item.jid;
-				rosterItems.replaceItemAt( index, item );
+				removeItemAt(index);
+				addItemAt(item, index);
 			}
 		}
 		
 		private function updateRosterItemPresence( index:*, presence:Presence ):void
 		{
-			var item:Object = rosterItems.getItemAt( index );
+			var item:Object = getItemAt( index );
 			item.status = presence.status;
 			// By default, normal isn't specified, so if null, we will use NORMAL
 			item.show = presence.show != null ? presence.show : Presence.SHOW_NORMAL;
 			item.priority = presence.priority;
-			
-			rosterItems.replaceItemAt( index, item );
+			removeItemAt(index);
+			addItemAt(item, index);
 		}
 		
-		/**
-		 * (Read-only) The number of items in the roster.
-		 *
-		 * @availability Flash Player 7
-		 */
-		public function get length():Number
-		{
-			var l:uint = rosterItems.length;
-			//var l:Number = rosterItems.getLength !== undefined ? rosterItems.getLength() : rosterItems.length;
-			return l;
-		}
 		
 		/**
 		 * The instance of the XMPPConnection class to use for the roster to use for
@@ -721,8 +573,6 @@
 			// Set up listeners
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
 			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
-			//myConnection.addEventListener( "presence", this );
-			//myConnection.addEventListener( "login", this );
 			myConnection.addEventListener( RosterExtension.NS, handleEvent );
 		}
 	}

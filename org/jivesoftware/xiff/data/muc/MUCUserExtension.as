@@ -211,7 +211,7 @@
 		 */
 		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
-			myActionNode.removeNode();
+			if (myActionNode != null) myActionNode.removeNode();
 	
 			myActionNode = XMLFactory.createElement(type);
 			for (var i:* in attrs) {

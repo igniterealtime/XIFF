@@ -24,7 +24,6 @@
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
-	import org.jivesoftware.xiff.utility.DataProvider;
 	
 	/**
 	 * This class is used internally by the RosterExtension class for managing items
@@ -122,9 +121,9 @@
 		 * @availability Flash Player 7
 		 * @return An array of strings containing the name of each group
 		 */
-		public function getGroups():DataProvider
+		public function getGroups():Array
 		{
-			var returnArr:DataProvider = new DataProvider();
+			var returnArr:Array = new Array();
 
 			for( var i:String in myGroupNodes )
 			{
