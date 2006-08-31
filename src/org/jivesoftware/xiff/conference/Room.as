@@ -231,9 +231,9 @@
 			
 			myConnection = connection;
 			
-			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent);
-			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
-			myConnection.addEventListener(DisconnectionEvent.DISCONNECT, handleEvent);
+			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent, false, 0, true);
+			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent, false, 0, true);
+			myConnection.addEventListener(DisconnectionEvent.DISCONNECT, handleEvent, false, 0, true);
 		}
 	
 		/**
@@ -297,6 +297,9 @@
 				
 				// Clear out the roster items
 				removeAll();
+				myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
+				myConnection.removeEventListener(PresenceEvent.PRESENCE, handleEvent);
+				myConnection.removeEventListener(DisconnectionEvent.DISCONNECT, handleEvent);
 			}
 		}
 		
