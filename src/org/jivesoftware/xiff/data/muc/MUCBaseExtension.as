@@ -44,7 +44,7 @@
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
-		private var myItems:Array;
+		private var myItems:Array = [];
 		
 		/*
 		public function addExtension( extension:IExtension ):IExtension { return null; }

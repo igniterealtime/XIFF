@@ -206,7 +206,6 @@
 		
 		private static function RoomStaticConstructor():Boolean
 		{
-			trace ("MUC.enable();");
 	        MUC.enable();
 	        FormExtension.enable();
 			
