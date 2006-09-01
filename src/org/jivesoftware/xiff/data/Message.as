@@ -155,8 +155,16 @@
 		 */
 		public function get htmlBody():String
 		{
-			var ext:XHTMLExtension = getAllExtensionsByNS(XHTMLExtension.NS)[0];
-			return ext.body;
+			try
+			{
+				var ext:XHTMLExtension = getAllExtensionsByNS(XHTMLExtension.NS)[0];
+				return ext.body;
+			}
+			catch (e:Error)
+			{
+				trace("Error : null trapped. Resuming.");
+			}
+			return null;
 		}
 		
 		public function set htmlBody( bodyHTML:String ):void

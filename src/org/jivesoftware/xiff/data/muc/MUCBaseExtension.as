@@ -45,32 +45,12 @@
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
 		private var myItems:Array = [];
-		
-		/*
-		public function addExtension( extension:IExtension ):IExtension { return null; }
-		public function getAllExtensionsByNS( namespace:String ):Array { return null; }
-		public function getAllExtensions():Array { return null; }
-		public function removeExtension( extension:IExtension ):Boolean { return null; }
-		public function removeAllExtensions( namespace:String ):Void { } 
-		*/
-		
-		//private static var isStaticConstructed:Boolean = MUCBaseExtensionStatic();
-		//private static var staticDependencies = [ ExtensionContainer ];
 	
 		public function MUCBaseExtension( parent:XMLNode=null )
 		{
 			super(parent);
 		}
-		
-		/* Attempting subclassing instead of decoration
-		public static function MUCBaseExtensionStatic():Boolean
-		{
-			ExtensionContainer.decorate(MUCBaseExtension.prototype);
-			return true;
-		}
-		*/
 
-		
 		/**
 		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
 		 */

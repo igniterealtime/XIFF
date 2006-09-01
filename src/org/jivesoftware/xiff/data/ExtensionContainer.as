@@ -40,36 +40,9 @@
 		public function ExtensionContainer(){
 			_exts = new Object();
 		}
-		
-		/*
-		public static function decorate(proto:Object):void
-		{
-			if (_fExtensionContainer == null) {
-			//if (_fExtensionContainer == undefined) {
-				_fExtensionContainer = new ExtensionContainer();
-			}
-			proto.addExtension = _fExtensionContainer.addExtension;
-			proto.getAllExtensionsByNS = _fExtensionContainer.getAllExtensionsByNS;
-			proto.getAllExtensions = _fExtensionContainer.getAllExtensions;
-			proto.removeExtension = _fExtensionContainer.removeExtension;
-			proto.removeAllExtensions = _fExtensionContainer.removeAllExtensions;
-		}
-		*/
 	
 		public function addExtension( ext:IExtension ):IExtension
 		{
-			/*
-			if (this[_exts] == undefined) {
-				this[_exts] = new Object();
-				//_global.ASSetPropFlags(this, _exts, 1);
-			}
-	
-			if (this[_exts][ext.getNS()] == undefined) {
-				this[_exts][ext.getNS()] = new Array();
-			}
-	
-			this[_exts][ext.getNS()].push(ext);
-			*/
 			if (_exts[ext.getNS()] == null){
 				_exts[ext.getNS()] = new Array();
 			}

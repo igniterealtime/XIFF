@@ -126,13 +126,11 @@
 			switch( eventObj.type )
 			{
 				case MessageEvent.MESSAGE:
-					var msg:Message = eventObj.data as Message;
-					var arr:Array =  msg.getAllExtensionsByNS(MUCUserExtension.NS);
-					var testArr:Array = msg.getAllExtensions();
-					var muc:MUCUserExtension = arr != null ? arr[0] : null;
-	                //var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-					
-	                if (muc != null) {
+				
+					try
+					{
+						var msg:Message = eventObj.data as Message;
+						var muc:MUCUserExtension =  msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
 	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
 	                        var room:Room = new Room(myConnection);
 	                        room.setRoomJID(msg.from);
@@ -144,7 +142,12 @@
 							e.data = msg;
 							dispatchEvent(e);
 	                    }
-	                }
+    				 }
+    				 catch (e:Error)
+    				 {
+    				 	trace("Error : null trapped. Resuming.");
+    				 }
+                    
 					break;
 			}
 		}

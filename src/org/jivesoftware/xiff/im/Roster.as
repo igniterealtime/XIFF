@@ -363,28 +363,34 @@
 		{
 			// Clear out the old roster
 			removeAll();
-			var exts:Array = resultIQ.getAllExtensionsByNS( RosterExtension.NS );
-			var len:int = exts.length;
-
-			for (var x:int; x < len; x++){
-				var ext:RosterExtension = exts[x];
-				var newItems:Array = ext.getAllItems();
-				var eLen:int = newItems.length;
-				for( var i:int=0; i < eLen; i++ ) {
-					var item:* = newItems[ i ];
-					//var classInfo:XML = flash.utils.describeType(item);
-					if (item is XMLStanza){
-						var groups:Array = item.getGroups();
-						var gLen:int = groups.length;
-						if( gLen > 0 ){
-							for (var j:int=0; j < gLen;j++) {
-								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase() );
-							}	
-						}else{
-							addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase() );
-						}
-					}				
+			try
+			{
+				var exts:Array = resultIQ.getAllExtensionsByNS( RosterExtension.NS );
+				var len:int = exts.length;
+				for (var x:int; x < len; x++){
+					var ext:RosterExtension = exts[x];
+					var newItems:Array = ext.getAllItems();
+					var eLen:int = newItems.length;
+					for( var i:int=0; i < eLen; i++ ) {
+						var item:* = newItems[ i ];
+						//var classInfo:XML = flash.utils.describeType(item);
+						if (item is XMLStanza){
+							var groups:Array = item.getGroups();
+							var gLen:int = groups.length;
+							if( gLen > 0 ){
+								for (var j:int=0; j < gLen;j++) {
+									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase() );
+								}	
+							}else{
+								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase() );
+							}
+						}				
+					}
 				}
+			}
+			catch (e:Error)
+			{
+				trace("Error : null trapped. Resuming.");
 			}
 		}
 	
@@ -419,30 +425,37 @@
 					break;
 					
 				case RosterExtension.NS:
-					var tempIQ:IQ = eventObj.iq as IQ;
-					var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
-					var rosterItem:* = ext.getAllItems()[0];
-					// Add this item to the roster if it's not there
-					var l:uint = length;
-					for( var i:uint = 0; i < l; i++ ) {
-						if( getItemAt( i ).jid.toLowerCase() == rosterItem.jid.toLowerCase() ) {
-							updateRosterItemSubscription( i, rosterItem.subscription.toLowerCase(), rosterItem.name, rosterItem.getGroups()[0] );
-							
-							// Check to see if subscription was removed, and send an event if so
-							if( rosterItem.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ) {
+					try
+					{
+						var tempIQ:IQ = eventObj.iq as IQ;
+						var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
+						var rosterItem:* = ext.getAllItems()[0];
+						// Add this item to the roster if it's not there
+						var l:uint = length;
+						for( var i:uint = 0; i < l; i++ ) {
+							if( getItemAt( i ).jid.toLowerCase() == rosterItem.jid.toLowerCase() ) {
+								updateRosterItemSubscription( i, rosterItem.subscription.toLowerCase(), rosterItem.name, rosterItem.getGroups()[0] );
 								
-								var ev:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
-								ev.jid = rosterItem.jid;
-								dispatchEvent( ev );
+								// Check to see if subscription was removed, and send an event if so
+								if( rosterItem.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ) {
+									
+									var ev:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
+									ev.jid = rosterItem.jid;
+									dispatchEvent( ev );
+								}
+								return;
 							}
-							return;
+						}
+						
+						// Add the new item as long as this is not a remove subscription response
+						if( rosterItem.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE ) {
+							// Get any possible group name for this item
+							addRosterItem( rosterItem.jid, rosterItem.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", rosterItem.getGroups()[0], rosterItem.subscription.toLowerCase() );
 						}
 					}
-					
-					// Add the new item as long as this is not a remove subscription response
-					if( rosterItem.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE ) {
-						// Get any possible group name for this item
-						addRosterItem( rosterItem.jid, rosterItem.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", rosterItem.getGroups()[0], rosterItem.subscription.toLowerCase() );
+					catch (e:Error)
+					{
+						trace("Error : null trapped. Resuming.");
 					}
 					break;
 			}

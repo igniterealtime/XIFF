@@ -566,12 +566,19 @@
 		
 		private function getRegistrationFields_result( resultIQ:IQ ):void
 		{
-			var ext:RegisterExtension = resultIQ.getAllExtensionsByNS(RegisterExtension.NS)[0];
-			var fields:Array = ext.getRequiredFieldNames(); //TODO, phase this out
-			
-			var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
-			event.fields = fields;
-			event.data = ext;
+			try
+			{
+				var ext:RegisterExtension = resultIQ.getAllExtensionsByNS(RegisterExtension.NS)[0];
+				var fields:Array = ext.getRequiredFieldNames(); //TODO, phase this out
+				
+				var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
+				event.fields = fields;
+				event.data = ext;
+			}
+			catch (e:Error)
+			 {
+			 	trace("Error : null trapped. Resuming.");
+			 }
 		}
 		
 		private function sendRegistrationFields_result( resultIQ:IQ ):void
@@ -828,13 +835,20 @@
 		
 		private function sendAnonymousLogin_result(resultIQ:IQ):void {
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
-				// update resource
-				var resultAuth:Array = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
-				resource = resultAuth.resource;
-				// dispatch login event
-				loggedIn = true;
-				var event:LoginEvent = new LoginEvent();
-				dispatchEvent( event );
+				try
+				{
+					// update resource
+					var resultAuth:Array = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
+					resource = resultAuth.resource;
+					// dispatch login event
+					loggedIn = true;
+					var event:LoginEvent = new LoginEvent();
+					dispatchEvent( event );
+				}
+				catch (e:Error)
+				{
+					trace("Error : null trapped. Resuming.");
+				}
 			}
 		}
 		
@@ -855,25 +869,20 @@
 			// Begin authentication procedure
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				var authIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("log_user2_"), "sendAuthentication_result", this, null );
-				
-				var resultAuth:* = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
-				var responseAuth:AuthExtension = new AuthExtension(authIQ.getNode());
-	
-	//			if (resultAuth.isDigest()) {
-	//				responseAuth.digest = AuthExtension.computeDigest(sessionID, password);
-	//			} else if (resultAuth.isPassword()) {
+				try
+				{
+					var resultAuth:* = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
+					var responseAuth:AuthExtension = new AuthExtension(authIQ.getNode());
 					responseAuth.password = password;
-	//			} else {
-	//				// Connection method not supported
-	//				dispatchError( "feature-not-implemented", "Feature Not Implemented", "cancel", 501 );
-	//				return;
-	//			}
-	
-				responseAuth.username = username;
-				responseAuth.resource = resource;
-				authIQ.addExtension(responseAuth);
-	
-				send( authIQ );
+					responseAuth.username = username;
+					responseAuth.resource = resource;
+					authIQ.addExtension(responseAuth);
+					send( authIQ );
+				}
+				catch (e:Error)
+				{
+					trace("Error : null trapped. Resuming.");
+				}
 			}
 			else {
 				// We weren't expecting this
