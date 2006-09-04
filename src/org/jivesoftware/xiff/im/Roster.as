@@ -297,6 +297,7 @@
 			var l:uint = length;
 			for( var i:uint = 0; i < l; i++ ) {
 				if( id.toLowerCase() == getItemAt( i ).jid.toLowerCase() ) {
+					trace("updateContact: " + id);
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 					ext.addItem( id, null, newName, [newGroup] );
