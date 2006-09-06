@@ -4,6 +4,7 @@
     <classEntry path="org.jivesoftware.xiff.conference.InviteListener"/>
     <classEntry path="org.jivesoftware.xiff.conference.Room"/>
     <classEntry path="org.jivesoftware.xiff.core.Browser"/>
+    <classEntry path="org.jivesoftware.xiff.core.XMPPBinaryConnection"/>
     <classEntry path="org.jivesoftware.xiff.core.XMPPConnection"/>
     <classEntry path="org.jivesoftware.xiff.data.Extension"/>
     <classEntry path="org.jivesoftware.xiff.data.ExtensionClassRegistry"/>
