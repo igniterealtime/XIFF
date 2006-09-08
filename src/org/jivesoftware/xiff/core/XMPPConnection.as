@@ -1,25 +1,8 @@
 ﻿package org.jivesoftware.xiff.core{
+	
 	/*
-	 * Copyright (C) 2003-2004 
-	 * Sean Voisen <sean@mediainsites.com>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+	New licensing and author information needed.
+	*/
 	 
 	import org.jivesoftware.xiff.data.IExtension;
 	 
@@ -30,7 +13,6 @@
 	import org.jivesoftware.xiff.data.auth.AuthExtension;
 	import org.jivesoftware.xiff.data.register.RegisterExtension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	
 	import org.jivesoftware.xiff.exception.SerializationException;
 	
 	import flash.xml.XMLNode;
@@ -42,216 +24,38 @@
 	import flash.events.DataEvent;
 	import flash.events.SecurityErrorEvent;
 	
-	// new event model
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	import flash.events.Event;
 	import org.jivesoftware.xiff.events.*;
 	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
-	/*
-	 * NOTE: Jabber error codes are deprecated in IETF XMPP.
-	 * XIFF supports both Jabber codes and XMPP error conditions.
-	 * A list of error conditions is available at: http://www.jabber.org/jeps/jep-0086.html
-	 */
-	
-	/**
-	 * Broadcast when the user is disconnected from the server.
-	 *
-	 * @availability Flash Player 7
-	 * @see #disconnect
-	 * @example The following example traces out a message when there has been a disconnection.
-	 * <pre>listener = new Object();
-	 * listener.disconnection = function( eventObject ) {
-	 *     trace( "There has been a disconnection." );
-	 * }
-	 * myXMPPConnection.addEventListener( "disconnection", listener );
-	 * </pre>
-	 */
-	[Event("disconnection")]
-	
-	/**
-	 * Broadcast when a password change on the server is successful. Password changes are initiated using the <code>changePassword</code> method.
-	 *
-	 * @availability Flash Player 7
-	 * @see #changePassword
-	 * @example The following example waits for a change password success, and updates the password stored in the XMPPConnection class, in case
-	 * the same class instance is used for future connections.
-	 * <pre>var newPasswd:String = "12345";
-	 * listener = new Object();
-	 * listener.changePasswordSuccess = function( eventObject ) {
-	 *     trace( "Password changed!" );
-	 *     myXMPPConnection.password = newPasswd;
-	 * }
-	 * myXMPPConnection.addEventListener( "changePasswordSuccess", listener );
-	 *
-	 * myXMPPConnection.changePassword( newPasswd );
-	 * </pre>
-	 */
-	[Event("changePasswordSuccess")]
-	
-	/**
-	 * Broadcast when the data required for registration is received. This data is requested using the getRegistrationFields() method.
-	 * The event object contains a member "fields" that is an array of strings representing each field.
-	 *
-	 * @availability Flash Player 7
-	 * @see #getRegistrationFields
-	 */
-	[Event("registrationFields")]
-	
-	/**
-	 * Broadcast when registration of a new account on the server is successful. You can register a new account using the
-	 * <code>sendRegistrationFields()</code> method.
-	 * 
-	 * @availability Flash Player 7
-	 * @see #sendRegistrationFields
-	 */
-	[Event("registrationSuccess")]
-	
-	/**
-	 * Broadcast when a connection to the server has successfully been made. Use the <code>connect()</code> method to connect
-	 * to the server.
-	 *
-	 * @availability Flash Player 7
-	 * @see #connect
-	 */
-	[Event("connection")]
-	
-	/**
-	 * Broadcast when the XMPPConnection receives data from the server. The event object contains an attribute <code>data</code> with
-	 * the XML data (as an instance of an XML object) received from the server. This event is primarily useful for debugging purposes.
-	 *
-	 * @availability Flash Player 7
-	 * @example This example traces out all incoming XML data from the server.
-	 * <pre>listener = new Object();
-	 * listener.incomingData = function( eventObject ) {
-	 *     trace( "INCOMING: " + eventObject.data );
-	 * }
-	 * myXMPPConnection.addEventListener( "incomingData", listener );
-	 * </pre>
-	 */
-	[Event("incomingData")]
-	
-	/**
-	 * Broadcast whenever there is an update to the roster. This is primarily used by the <code>Roster</code> class to get updates and
-	 * process them accordingly. The event object contains an attribute <code>data</code> with an instance of an <code>IQ</code> containing the
-	 * entire update stanza.
-	 *
-	 * @availability Flash Player 7
-	 */
-	[Event("rosterUpdate")]
-	
-	/**
-	 * Broadcast whenever a message is received. The event object contains an attribute <code>data</code> with an instance of the <code>Message</code>
-	 * class containing the message data.
-	 *
-	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.Message
-	 * @example This example traces out all incoming messages.
-	 * <pre>listener = new Object();
-	 * listener.message = function( eventObject ) {
-	 *    trace( eventObject.data.body );
-	 * }
-	 * myXMPPConnection.addEventListener( "message", listener );
-	 * </pre>
-	 */
-	[Event("message")]
-	
-	/**
-	 * Broadcast whenever a presence XMPP stanza is received. The event object contains an attribute <code>data</code> with an instance of the
-	 * <code>Presence</code> class containing the presence data.
-	 *
-	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.Presence
-	 */
-	[Event("presence")]
-	
-	/**
-	 * Broadcast whenever an error is returned by the server or the library. For more information on errors and XMPP error conditions,
-	 * take a look at <a href="http://www.jabber.org/jeps/jep-0086.html">JEP-0086</a>. The event object contains several attributes:
-	 * <ul>
-	 * <li>errorCondition - The XMPP condition of the error.</li>
-	 * <li>errorMessage - The message for the error as given by the server.</li>
-	 * <li>errorType - The error type.</li>
-	 * <li>errorCode - The (deprecated) Jabber error code. Error codes are still used by Jabber servers like Jabberd 1.4, but are deprecated by the official XMPP standard.</li>
-	 * </ul>
-	 *
-	 * @availability Flash Player 7
-	 * @example This example simply traces out relevant error information when an error is received.
-	 * <pre>listener = new Object();
-	 * listener.error = function( eventObject ) {
-	 *     trace( "ERROR " + eventObject.errorCode + ": " + eventObject.errorMessage );
-	 * }
-	 * myXMPPConnection.addEventListener( "error", listener );
-	 * </pre>
-	 */
-	[Event("error")]
-	
-	/**
-	 * Broadcast whenever data is sent to the server. The event object contains an attribute <code>data</code> with the XML data being
-	 * sent (as an instance of the XML object). This is primarily useful for debugging.
-	 *
-	 * @availability Flash Player 7
-	 * @example This example traces out all outgoing XML data from the client.
-	 * <pre>listener = new Object();
-	 * listener.outgoingData = function( eventObject ) {
-	 *     trace( "OUTGOING: " + eventObject.data );
-	 * }
-	 * myXMPPConnection.addEventListener( "outgoingData", listener );
-	 * </pre>
-	 */
-	[Event("outgoingData")]
-	
-	/**
-	 * Connects to an XMPP server and manages incoming/outgoing data from that server.
-	 * The XMPPConnection class is the core of the XIFF Library, as all else relies on this class
-	 * to communicate with the server. For an in-depth look at the XMPP protocol core, take a look
-	 * at the <a href="http://www.jabber.org/ietf/draft-ietf-xmpp-core-23.txt">IETF draft for the
-	 * XMPP Core</a>. Usually, you will have one instance of the XMPPConnection class for each
-	 * connection to a server.
-	 *
-	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @toc-path Core
-	 * @toc-sort 1
-	 */
-	public class XMPPConnection extends EventDispatcher implements IEventDispatcher
+
+	public class XMPPConnection extends EventDispatcher
 	{
 		
-		private var _useAnonymousLogin:Boolean;
+		protected var _useAnonymousLogin:Boolean;
 		
-		private var socket:XMLSocket;
+		protected var socket:XMLSocket;
 		
-		private var myServer:String;
-		private var myUsername:String;
-		private var myResource:String;
-		private var myPassword:String;
-		private var myJID:String;
+		protected var myServer:String;
+		protected var myUsername:String;
+		protected var myResource:String;
+		protected var myPassword:String;
+		protected var myJID:String;
 	
-		private var myPort:Number;
-		private var active:Boolean;
-		private var loggedIn:Boolean;
-		private var ignoreWhitespace:Boolean;
+		protected var myPort:Number;
+		protected var active:Boolean;
+		protected var loggedIn:Boolean;
+		protected var ignoreWhitespace:Boolean;
 		
-		private var openingStreamTag:String;
-		private var closingStreamTag:String;
+		protected var openingStreamTag:String;
+		protected var closingStreamTag:String;
 		
-		private var sessionID:String;
-		private var pendingIQs:Object;
+		protected var sessionID:String;
+		protected var pendingIQs:Object;
 		
-		private var _expireTagSearch:Boolean;
-		// The following are needed by the EventDispatcher
-		//private var dispatchEvent:Function;
-		
-		/**
-		 * Used to remove instances as listeners for certain events. Event dispatching is handled using
-		 * Macromedia's EventDispatcher class found in mx.events.EventDispatcher.
-		 *
-		 * @availability Flash Player 7
-		 * @param event The name of the event that should no longer be listened to
-		 * @param handler The event listener that should stop listening
-		 */
-		//public function removeEventListener( event:String, handler ):void {};
+		protected var _expireTagSearch:Boolean;
+
 		
 		/**
 		 * Used to add listeners for certain events. Event dispatching is handled using Macromedia's
@@ -273,13 +77,6 @@
 		 * myXMPPConnection.addEventListener( "incomingData", listener );
 		 * </pre>
 		 */
-		//public function addEventListener( event:String, handler ):void {};
-		
-		// End EventDispatcher decorated methods
-		
-		// These are used by the static constructor
-		//private static var staticConstructorDependency = [ mx.events.EventDispatcher, XMPPStanza, AuthExtension, RegisterExtension, ExtensionClassRegistry ];
-		//private static var xmppConnectionStaticConstructed:Boolean = XMPPConnectionStaticConstructor();
 		
 		public function XMPPConnection()
 		{	
@@ -290,7 +87,6 @@
 			socket.addEventListener(Event.CLOSE,socketClosed);
 			socket.addEventListener(DataEvent.DATA,socketReceivedData);
 			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityError);
-			//socket.setListener( this );
 			
 			// Hash to hold callbacks for IQs
 			pendingIQs = new Object();
@@ -307,20 +103,6 @@
 			FormExtension.enable();
 		}
 		
-		/*
-		// Static constructor
-		private static function XMPPConnectionStaticConstructor():Boolean
-		{
-			// Add event dispatch capabilities
-			mx.events.EventDispatcher.initialize( XMPPConnection.prototype );
-	
-			// Add extensions that we recognize
-			AuthExtension.enable();
-			RegisterExtension.enable();
-			
-			return true;
-		}
-		*/
 		/**
 		 * Connects to the server.
 		 *
@@ -360,16 +142,6 @@
 					closingStreamTag = new String( "</stream:stream>" );
 					break;
 			}
-			/* socket no longer returns connect Boolean
-			// Throws error if connect returns false (no connection)
-			if( !socket.connect( server, port ) ) {
-				dispatchError( "remote-server-not-found", "Server Not Found", "cancel", 404 );
-				return false;
-			}
-			else {
-				return true;
-			}
-			*/
 			socket.connect( server, port );
 			return true;
 		}
@@ -405,9 +177,7 @@
 		public function send( o:XMPPStanza ):void
 		{
 			if( isActive() ) {
-				//if( o instanceof IQ ) {
 				if( o is IQ ) {
-					// Add reference to callback to pending
 	                var iq:IQ = o as IQ;
 	                if (iq.callbackName != null && iq.callbackScope != null)
 	                {
@@ -415,8 +185,6 @@
 	                }		
 				}
 				var root:XMLNode = o.getNode().parentNode;
-	
-				//if (root == null || root == undefined) {
 				if (root == null) {
 					root = new XMLDocument();
 				}
@@ -484,14 +252,11 @@
 			for( var i:String in fieldMap ) {
 				ext[i] = fieldMap[i];
 			}
-	
-			//if (key != null && key != undefined) {
 			if (key != null) {
 				ext.key = key;
 			}
 	
 			regIQ.addExtension(ext);
-			
 			send( regIQ );
 		}
 		
@@ -552,7 +317,7 @@
 			return getJID().split( "/" )[0];
 		}
 		
-		private function changePassword_result( resultIQ:IQ ):void
+		protected function changePassword_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				var event:ChangePasswordSuccessEvent = new ChangePasswordSuccessEvent();
@@ -564,7 +329,7 @@
 			}
 		}
 		
-		private function getRegistrationFields_result( resultIQ:IQ ):void
+		protected function getRegistrationFields_result( resultIQ:IQ ):void
 		{
 			try
 			{
@@ -581,7 +346,7 @@
 			 }
 		}
 		
-		private function sendRegistrationFields_result( resultIQ:IQ ):void
+		protected function sendRegistrationFields_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 
@@ -595,18 +360,14 @@
 		}
 		
 		// Listener function from the ListenerXMLSocket
-		private function socketConnected(ev:Event):void
+		protected function socketConnected(ev:Event):void
 		{
 			sendXML( openingStreamTag );
 			active = true;
 			var event:ConnectionSuccessEvent = new ConnectionSuccessEvent();
 			dispatchEvent( event );
 		}
-		
-		// Listener function from the ListenerXMLSocket
-		//DataEvent
-		//private function socketReceivedData( data:String ):void
-		private function socketReceivedData( ev:DataEvent ):void
+		protected function socketReceivedData( ev:DataEvent ):void
 		{
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
@@ -671,13 +432,13 @@
 			}
 		}
 		
-		private function socketClosed(e:Event):void
+		protected function socketClosed(e:Event):void
 		{	
 			var event:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( event );
 		}
 		
-		private function handleStream( node:XMLNode ):void
+		protected function handleStream( node:XMLNode ):void
 		{
 			sessionID = node.attributes.id;
 			
@@ -693,7 +454,7 @@
 			}
 		}
 		
-		private function handleStreamError( node:XMLNode ):void
+		protected function handleStreamError( node:XMLNode ):void
 		{
 			dispatchError( "service-unavailable", "Remote Server Error", "cancel", 502 );
 			
@@ -705,7 +466,7 @@
 			dispatchEvent( event );
 		}
 		
-		private function handleIQ( node:XMLNode ):IQ
+		protected function handleIQ( node:XMLNode ):IQ
 		{
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
@@ -748,7 +509,7 @@
 	        return iq;
 		}
 		
-		private function handleMessage( node:XMLNode ):Message
+		protected function handleMessage( node:XMLNode ):Message
 		{
 			var msg:Message = new Message();
 			
@@ -769,7 +530,7 @@
 	        return msg;
 		}
 		
-		private function handlePresence( node:XMLNode ):Presence
+		protected function handlePresence( node:XMLNode ):Presence
 		{
 			var pres:Presence = new Presence();
 			
@@ -784,7 +545,7 @@
 	        return pres;
 		}
 		
-		private function updateJID():void
+		protected function updateJID():void
 		{
 			// Update the user ID with the latest server/user information
 			if(!_useAnonymousLogin) {
@@ -793,7 +554,7 @@
 				myJID = server + "/" + resource;
 			}
 		}
-		private function onIOError(event:IOErrorEvent):void{
+		protected function onIOError(event:IOErrorEvent):void{
 			/*
 			this fires the standard dispatchError method. need to add
 			the appropriate error code
@@ -801,12 +562,12 @@
 			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
 		}
 		
-		private function securityError(event:SecurityErrorEvent):void{
+		protected function securityError(event:SecurityErrorEvent):void{
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}
 		
-		private function dispatchError( condition:String, message:String, type:String, code:Number ):void
+		protected function dispatchError( condition:String, message:String, type:String, code:Number ):void
 		{
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
@@ -816,7 +577,7 @@
 			dispatchEvent( event );
 		}
 		
-		private function sendXML( someData:* ):void
+		protected function sendXML( someData:* ):void
 		{
 			// Data is untyped because it could be a string or XML
 			socket.send( someData );
@@ -826,14 +587,14 @@
 		}
 		
 		// anonymous login
-		private function sendAnonymousLogin():void {
+		protected function sendAnonymousLogin():void {
 			var anonIQ:IQ = new IQ(null, IQ.SET_TYPE, XMPPStanza.generateID("log_anom_"), "sendAnonymousLogin_result", this, null );
 			var authExt:AuthExtension = new AuthExtension(anonIQ.getNode());
 			anonIQ.addExtension(authExt);
 			send(anonIQ);
 		}
 		
-		private function sendAnonymousLogin_result(resultIQ:IQ):void {
+		protected function sendAnonymousLogin_result(resultIQ:IQ):void {
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				try
 				{
@@ -852,7 +613,7 @@
 			}
 		}
 		
-		private function beginAuthentication():void
+		protected function beginAuthentication():void
 		{
 			var authIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("log_user_"), "beginAuthentication_result", this, null );
 			var authExt:AuthExtension = new AuthExtension(authIQ.getNode());
@@ -862,7 +623,7 @@
 			send( authIQ );
 		}
 		
-		private function beginAuthentication_result( resultIQ:IQ ):void
+		protected function beginAuthentication_result( resultIQ:IQ ):void
 		{
 			var connectionType:String = "none";
 	
@@ -890,7 +651,7 @@
 			}
 		}
 		
-		private function sendAuthentication_result( resultIQ:IQ ):void
+		protected function sendAuthentication_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				loggedIn = true;
@@ -903,7 +664,7 @@
 			}
 		}
 		
-		private function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function ):void
+		protected function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function ):void
 		{
 			pendingIQs[id] = {methodName:callbackName, methodScope:callbackScope, func:callbackFunc};
 		}

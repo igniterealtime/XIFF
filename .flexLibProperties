@@ -4,8 +4,8 @@
     <classEntry path="org.jivesoftware.xiff.conference.InviteListener"/>
     <classEntry path="org.jivesoftware.xiff.conference.Room"/>
     <classEntry path="org.jivesoftware.xiff.core.Browser"/>
-    <classEntry path="org.jivesoftware.xiff.core.XMPPBinaryConnection"/>
     <classEntry path="org.jivesoftware.xiff.core.XMPPConnection"/>
+    <classEntry path="org.jivesoftware.xiff.core.XMPPSocketConnection"/>
     <classEntry path="org.jivesoftware.xiff.data.Extension"/>
     <classEntry path="org.jivesoftware.xiff.data.ExtensionClassRegistry"/>
     <classEntry path="org.jivesoftware.xiff.data.ExtensionContainer"/>
@@ -65,6 +65,8 @@
     <classEntry path="org.jivesoftware.xiff.events.XIFFErrorEvent"/>
     <classEntry path="org.jivesoftware.xiff.exception.SerializationException"/>
     <classEntry path="org.jivesoftware.xiff.im.Roster"/>
+    <classEntry path="org.jivesoftware.xiff.util.SocketConn"/>
+    <classEntry path="org.jivesoftware.xiff.util.SocketDataEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
