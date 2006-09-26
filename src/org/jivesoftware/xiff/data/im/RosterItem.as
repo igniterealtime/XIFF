@@ -1,9 +1,10 @@
 ﻿package org.jivesoftware.xiff.data.im{
 	/*
 	 * Copyright (C) 2003-2004 
+	 * Nick Velloff <nick.velloff@gmail.com>
+	 * Derrick Grigg <dgrigg@rogers.com>
 	 * Sean Voisen <sean@mediainsites.com>
 	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
 	 *
 	 * This library is free software; you can redistribute it and/or
 	 * modify it under the terms of the GNU Lesser General Public

@@ -1,8 +1,27 @@
 ﻿package org.jivesoftware.xiff.core{
 	
 	/*
-	New licensing and author information needed.
-	*/
+	 * Copyright (C) 2003-2004 
+	 * Nick Velloff <nick.velloff@gmail.com>
+	 * Derrick Grigg <dgrigg@rogers.com>
+	 * Sean Voisen <sean@mediainsites.com>
+	 * Sean Treadway <seant@oncotype.dk>
+	 *
+	 * This library is free software; you can redistribute it and/or
+	 * modify it under the terms of the GNU Lesser General Public
+	 * License as published by the Free Software Foundation; either
+	 * version 2.1 of the License, or (at your option) any later version.
+	 * 
+	 * This library is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	 * Lesser General Public License for more details.
+	 * 
+	 * You should have received a copy of the GNU Lesser General Public
+	 * License along with this library; if not, write to the Free Software
+	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+	 *
+	 */
 	 
 	import org.jivesoftware.xiff.data.IExtension;
 	 
@@ -64,7 +83,7 @@
 		 * that will handle all incoming event broadcasts. If <code>handleEvent</code> is implemented, the method
 		 * can examine the event object's <code>type</code> attribute to find out which type of event occured.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param event The name of the event to listen to
 		 * @param handler The class instance that is listening for events
 		 * @example This example adds a class instance called "listener" as a listener for all <code>incomingData</code> events.
@@ -106,7 +125,7 @@
 		/**
 		 * Connects to the server.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;. 
 		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from a Flash client instead of the standard &lt;stream:stream&gt;.
 		 * The options for this parameter are: "flash", "terminatedFlash", "standard" and "terminatedStandard". The default is "terminatedStandard".
@@ -149,7 +168,7 @@
 		/**
 		 * Disconnects from the server if currently connected. After disconnect, a <code>disconnection</code> event is broadcast.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @see #disconnection
 		 */
 		public function disconnect():void
@@ -167,7 +186,7 @@
 		/**
 		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a SerializeException.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param o The data to send. This must be an instance of a class that implements the ISerializable interface.
 		 * @see org.jivesoftware.xiff.data.ISerializable
 		 * @example The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".
@@ -201,7 +220,7 @@
 		 * Determines whether the connection with the server is currently active. (Not necessarily logged in.
 		 * For login status, use the <code>isLoggedIn()</code> method.)
 		 * 
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @return A boolean indicating whether the connection is active.
 		 * @see org.jivesoftware.xiff.core.XMPPConnection#isLoggedIn
 		 */
@@ -213,7 +232,7 @@
 		/**
 		 * Determines whether the user is connected and logged into the server.
 		 * 
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @return A boolean indicating whether the user is logged in.
 		 * @see org.jivesoftware.xiff.core.XMPPConnection#isActive
 		 */
@@ -226,7 +245,7 @@
 		 * Issues a request for the information that must be submitted for registration with the server.
 		 * When the data returns, an event of type "registrationFields" is broadcast containing the requested data.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function getRegistrationFields():void
 		{
@@ -242,7 +261,7 @@
 		 * @param fieldMap An object map containing the data to use for registration. The map should be composed of attribute:value pairs for each registration data item.
 		 * @param key (Optional) If a key was passed in the "data" field of the "registrationFields" event, that key must also be passed here.
 		 * required field needed for registration.
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
@@ -264,7 +283,7 @@
 		 * Changes the user's account password on the server. If the password change is successful, the class will broadcast a <code>changePasswordSuccess</code> event.
 		 *
 		 * @param newPassword The new password
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @see #changePasswordSuccess
 		 * @example The following example waits for a change password success, and updates the password stored in the XMPPConnection class, in case
 		 * the same class instance is used for future connections.
@@ -297,7 +316,7 @@
 		 *
 		 * @return The fully qualified JID
 		 * @see #getBareJID
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function getJID():String
 		{
@@ -309,7 +328,7 @@
 		 *
 		 * @return The bare JID
 		 * @see #getJID
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function getBareJID():String
 		{
@@ -672,7 +691,7 @@
 		/**
 		 * The XMPP server to use for connection.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get server():String
 		{
@@ -690,7 +709,7 @@
 		 * The username to use for connection. If this property is null when <code>connect()</code> is called,
 		 * the class will fetch registration field data rather than attempt to login.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get username():String
 		{
@@ -707,7 +726,7 @@
 		/**
 		 * The password to use when logging in.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get password():String
 		{
@@ -724,7 +743,7 @@
 		 * simultaneously (most likely from multiple machines). Typical examples of the resource include "Home" or "Office" to indicate
 		 * the user's current location.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 0
 		 */
 		public function get resource():String
 		{
@@ -752,7 +771,7 @@
 		/**
 		 * The port to use when connecting. The default XMPP port is 5222.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get port():Number
 		{
@@ -768,7 +787,7 @@
 		 * Determines whether whitespace will be ignored on incoming XML data.
 		 * Behaves the same as XML.ignoreWhite
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get ignoreWhite():Boolean
 		{

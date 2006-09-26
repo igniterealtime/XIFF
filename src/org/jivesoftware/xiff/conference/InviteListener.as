@@ -1,9 +1,10 @@
 ﻿package org.jivesoftware.xiff.conference{
 	/*
 	 * Copyright (C) 2003-2004 
+	 * Nick Velloff <nick.velloff@gmail.com>
+	 * Derrick Grigg <dgrigg@rogers.com>
 	 * Sean Voisen <sean@mediainsites.com>
 	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
 	 *
 	 * This library is free software; you can redistribute it and/or
 	 * modify it under the terms of the GNU Lesser General Public
@@ -47,7 +48,7 @@
 	 *
 	 * @see org.jivesoftware.xiff.conference.Room
 	 * @see org.jivesoftware.xiff.conference.Room.invite
-	 * @availability Flash Player 7
+	 * @availability Flash Player 9
 	 */
 	[Event("invited")]
 	
@@ -69,35 +70,17 @@
 	{
 		private var myConnection:XMPPConnection;
 		
-		// These are needed by the EventDispatcher
-		//private var dispatchEvent:Function;
-		//public var removeEventListener:Function;
-		//public var addEventListener:Function;
-		
-		// Used for static constructor with EventDispatcher and DataProvider
-		//private static var staticConstructorDependencies = [ mx.events.EventDispatcher ]
-	
-		//private static var isEnabled:Boolean = InviteListener.enable();
-		
 		public function InviteListener( aConnection:XMPPConnection=null )
 		{
 			if (aConnection != null)
 				setConnection( aConnection );	
 		}
 		
-		/*
-		private static function enable():Boolean
-		{
-			mx.events.EventDispatcher.initialize( InviteListener.prototype );
-			return true;
-		}
-		*/
-		
 		/**
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @param connection The XMPPConnection instance to use.
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function setConnection( connection:XMPPConnection ):void
@@ -113,7 +96,7 @@
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @returns The XMPPConnection used
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function getConnection():XMPPConnection

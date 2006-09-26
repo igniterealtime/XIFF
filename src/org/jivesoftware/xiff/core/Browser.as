@@ -1,9 +1,11 @@
 ﻿package org.jivesoftware.xiff.core{
+
 	/*
 	 * Copyright (C) 2003-2004 
+	 * Nick Velloff <nick.velloff@gmail.com>
+	 * Derrick Grigg <dgrigg@rogers.com>
 	 * Sean Voisen <sean@mediainsites.com>
 	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
 	 *
 	 * This library is free software; you can redistribute it and/or
 	 * modify it under the terms of the GNU Lesser General Public
@@ -91,7 +93,7 @@
 		 * the callback specified will be called and passed a single parameter containing
 		 * a reference to an <code>IQ</code> containing the query results.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param server The server to query for available service information
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -110,7 +112,7 @@
 		 * as available transports and user directories. On successful query, the callback specified in the will be 
 		 * called and passed a single parameter containing the query results.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param server The server to query for service items
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -127,7 +129,7 @@
 		/**
 		 * Use the BrowseExtension (jabber:iq:browse namespace) to query a resource for supported features and children.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 * @param id The full JabberID to query for service items
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -144,7 +146,7 @@
 		/**
 		 * The instance of the XMPPConnection class to use for sending and receiving data.
 		 *
-		 * @availability Flash Player 7
+		 * @availability Flash Player 9
 		 */
 		public function get connection():XMPPConnection { return _connection; }
 		public function set connection(val:XMPPConnection):void { _connection=val; }
