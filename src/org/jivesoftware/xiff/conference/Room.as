@@ -1,26 +1,28 @@
-﻿package org.jivesoftware.xiff.conference{
-	/*
-	 * Copyright (C) 2003-2004 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@mediainsites.com>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+﻿/*
+ * Copyright (C) 2003-2007
+ * Nick Velloff <nick.velloff@gmail.com>
+ * Derrick Grigg <dgrigg@rogers.com>
+ * Sean Voisen <sean@voisen.org>
+ * Sean Treadway <seant@oncotype.dk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ *
+ */
+ 
+package org.jivesoftware.xiff.conference
+{
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.*;
 	import org.jivesoftware.xiff.data.muc.*;
@@ -32,147 +34,141 @@
 	import mx.collections.ArrayCollection;
 	
 	/**
-	 * Broadcast when the room subject changes. The event object contains an attribute <code>subject</code> with the new subject as a String.
+	 * Dispatched when the room subject changes.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("subjectChange")]
+	[Event( name="subjectChange", type="org.jivesoftware.xiff.events.RoomEvent" )]
 	
 	/**
-	 * Broadcast whenever a new message intented for all room occupants is received. The event object contains an attribute <code>data</code>
-	 * with the message as an instance of the <code>Message</code> class.
+	 * Dispatched whenever a new message intented for all room occupants is received. The 
+	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the 
+	 * group message as an instance of the <code>Message</code> class.
 	 *
-	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.Message
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("groupMessage")]
+	[Event( name="groupMessage", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast whenever a new private message is received. The event object contains an attribute <code>data</code>
-	 * with the message as an instance of the <code>Message</code> class.
+	 * Dispatched whenever a new private message is received. The <code>RoomEvent</code> class
+	 * contains an attribute <code>data</code> with the private message as an instance of the 
+	 * <code>Message</code> class.
 	 *
-	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.Message
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("privateMessage")]
+	[Event(name="privateMessage", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when you have entered the room and messages that are sent
-	 * will be displayed to other users.  The room's role and affiliation will
-	 * be visible from this point on.
+	 * Dispatched when you have entered the room and messages that are sent
+	 * will be displayed to other users. The room's role and affiliation will
+	 * be visible from this point forward.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("roomJoin")]
+	[Event(name="roomJoin", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when the server acknoledges that you have the left the room
+	 * Dispatched when the server acknoledges that you have the left the room.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("roomLeave")]
+	[Event(name="roomLeave", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when an affiliation list has been requested. The event object contains an array of org.jivesoftware.xiff.data.muc.MUCItems containing the JID and affiliation properties.
+	 * Dispatched when an affiliation list has been requested. The event object contains an 
+	 * array of <code>MUCItems</code> containing the JID and affiliation properties.
 	 *
-	 * To grant or revoke permissions based on this list, only send the changes you wish to make, calling grant/revoke with the new affiliation and existing JID.
+	 * <p>To grant or revoke permissions based on this list, only send the changes you wish to 
+	 * make, calling grant/revoke with the new affiliation and existing JID.</p>
+	 * 
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("affiliations")]
+	[Event(name="affiliations", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when an administration action failed.  Contains the same fields as a
-	 * <code>XMPPConnection.error</code> event.
+	 * Dispatched when an administration action failed.
 	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 * @see org.jivesoftware.xiff.core.XMPPConnection.error
 	 */
-	[Event("adminError")]
+	[Event(name="adminError", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast whenever an occupant joins the room. The event object contains an attribute <code>nickname</code>
-	 * with the nickname of the occupant who joined.
+	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
+	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("userJoin")]
+	[Event(name="userJoin", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast whenever an occpant leaves the room. The event object contains an attribute <code>nickname</code>
-	 * with the nickname of the occupant who left.
+	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
+	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("userDeparture")]
+	[Event(name="userDeparture", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when the preferred nickname already exists in the room.  The event object contains an attribute 
-	 * <code>nickname</code> with the nickname already existing in the room.
+	 * Dispatched when the user's preferred nickname already exists in the room.  The 
+	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname 
+	 * already existing in the room.
 	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("nickConflict")]
+	[Event(name="nickConflict", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when a room configuration form is required to be completed.  This can occur during the creation of a room, or if a room configuration is requested.  The event object contains an attribute <code>data</code> which contains an objects that have the following attributes:
+	 * Dispatched when a room configuration form is required.  This can occur during the 
+	 * creation of a room, or if a room configuration is requested.  The <code>RoomEvent</code>
+	 * instance will contain an attribute <code>data</code> that is an instance of an object 
+	 * with the following attributes:
 	 * 
-	 * <code>instructions</code> - instruction for the use of form
-	 * <code>title</code> - title of the configuration form
-	
-	 * <code>getAllFields()</code> - returns an array that contains the following properties:
-	
-	 * <code>label</code> - a friendly name for the field
-	 * <code>name</code> - a computer readable identifier for the field used to identify this field in the result passed to <code>configure()</code>
-	 * <code>type</code> - the type of the field to be displayed
-	 * <code>getAllValues()</code> - an array of strings containing the default value(s)
-	 * <code>getAllOptions()</code> - an array of objects that have the properties <code>label</code> and <code>value</code> that are used to display available choices
-	 *
+	 * <p><code>instructions</code> - Instructions for the use of form<br />
+	 * <code>title</code>: Title of the configuration form<br />
+	 * <code>label</code>: A friendly name for the field<br />
+	 * <code>name</code>: A computer readable identifier for the field used to identify 
+	 * this field in the result passed to <code>configure()</code><br />
+	 * <code>type</code>: The type of the field to be displayed. Type will be a constant
+	 * from the <code>FormField</code> class.</p>
+	 * 
 	 * @see org.jivesoftware.xiff.data.forms.FormExtension
 	 * @see org.jivesoftware.xiff.data.forms.FormField
-	 * @see configure
-	 * @availability Flash Player 7
+	 * @see #configure
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("configureForm")]
+	[Event(name="configureForm", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Broadcast when an invite to this room has been declined by the invitee
+	 * Dispatched when an invite to this room has been declined by the invitee. The <code>RoomEvent</code>
+	 * <code>data</code> property that has the following attributes:
 	 *
-	 * The event object has the following properties:
+	 * <p><code>from</code>: The JID of the user initiating the invite<br />
+	 * <code>reason</code>: A string containing the reason to join the room<br />
+	 * <code>data</code>: The original message containing the decline</p>
 	 *
-	 * <code>from</code> - the JID of the user initiating the invite
-	 * <code>reason</code> - a string containing the reason to join the room
-	 * <code>data</code> - the original message containing the decline
-	 *
-	 * @availability Flash Player 7
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
-	[Event("declined")]
+	[Event(name="declined", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (JEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
 	 *
-	 * You can also use your own, external data provider if you choose, by using the
-	 * <code>setExternalDataProvider()</code> method. This is most useful for applications
-	 * where the data provider might need to be a class other than an array with the Data Provider
-	 * API decorations, like in the case of a Macromedia Central LCDataProvider. Overall,
-	 * however, its probably a rare occurence.
-	 *
-	 * @since 2.0.0
-	 * @author Sean Voisen
 	 * @param connection An XMPPConnection instance that is providing the primary server connection
-	 * @toc-path Conferencing
-	 * @toc-sort 1
 	 */
 	public class Room extends ArrayCollection
 	{
-		public static var NO_AFFILIATION:String = MUC.NO_AFFILIATION;
-		public static var MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
-		public static var ADMIN_AFFILIATION:String = MUC.ADMIN_AFFILIATION;
-		public static var OWNER_AFFILIATION:String = MUC.OWNER_AFFILIATION;
-		public static var OUTCAST_AFFILIATION:String = MUC.OUTCAST_AFFILIATION;
+		public static const NO_AFFILIATION:String = MUC.NO_AFFILIATION;
+		public static const MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
+		public static const ADMIN_AFFILIATION:String = MUC.ADMIN_AFFILIATION;
+		public static const OWNER_AFFILIATION:String = MUC.OWNER_AFFILIATION;
+		public static const OUTCAST_AFFILIATION:String = MUC.OUTCAST_AFFILIATION;
 		
-		public static var NO_ROLE:String = MUC.NO_ROLE;
-		public static var MODERATOR_ROLE:String = MUC.MODERATOR_ROLE;
-		public static var PARTICIPANT_ROLE:String = MUC.PARTICIPANT_ROLE;
-		public static var VISITOR_ROLE:String = MUC.VISITOR_ROLE;
+		public static const NO_ROLE:String = MUC.NO_ROLE;
+		public static const MODERATOR_ROLE:String = MUC.MODERATOR_ROLE;
+		public static const PARTICIPANT_ROLE:String = MUC.PARTICIPANT_ROLE;
+		public static const VISITOR_ROLE:String = MUC.VISITOR_ROLE;
 	
 		private var myConnection:XMPPConnection;
 	    private var myJID:String;
@@ -197,7 +193,6 @@
 		
 		public function Room( aConnection:XMPPConnection=null )
 		{
-			
 			active = false;
 			if (aConnection != null){
 				setConnection( aConnection );
@@ -216,7 +211,6 @@
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @param connection The XMPPConnection instance to use.
-		 * @availability Flash Player 7
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function setConnection( connection:XMPPConnection ):void
@@ -240,7 +234,6 @@
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @returns The XMPPConnection used
-		 * @availability Flash Player 7
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function getConnection():XMPPConnection
@@ -251,18 +244,18 @@
 	    /** 
 	     * Joins a conference room based on the parameters specified by the room
 	     * properties.  This call will create an instant room based on a default
-	     * server configuration if the room doesn't exist.  To create and begin the
-	     * configuration process of a reserved room, pass
+	     * server configuration if the room doesn't exist.  
+	     * 
+	     * <p>To create and begin the configuration process of a reserved room, pass
 	     * <code>true</code> to this method to begin the configuration process.  When
 	     * The configuration is complete, the room will be unlocked for others to join.
-	     * Listen to the <code>configureForm</code> event to handle and either return
-	     * or cancel the configuration of the room.
+	     * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and 
+	     * either return or cancel the configuration of the room.
 		 *
-	     * @param createReserved (optional) Set to true if you wish to create and configure a reserved room
-		 * @availability Flash Player 7
+	     * @param createReserved Set to true if you wish to create and configure a reserved room
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
-		public function join(createReserved:Boolean = false):Boolean
+		public function join( createReserved:Boolean = false ):Boolean
 		{
 			if( !isActive() && myConnection.isActive() ) {
 	            myIsReserved = createReserved == true ? true : false;
@@ -286,8 +279,6 @@
 		/**
 		 * Leaves the current conference room, assuming that the user has joined one.
 		 * If the user is not currently in a room, this method does nothing.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function leave():void
 		{
@@ -304,14 +295,15 @@
 		}
 		
 		/**
-		 * Gets a message object configured to be send from this room. 
-		 * Use this method to get a Message object in order to add extensions to outgoing room messages
+		 * Gets an instance of the <code>Message</code> class that has been pre-configured to be 
+		 * sent from this room. Use this method to get a <code>Message</code> in order to add extensions 
+		 * to outgoing room messages.
+		 * 
 		 * @param body The message body
-		 * @param htmlBody (Optional) The message body with HTML formatting
-		 * @return a Message configured to be send
-		 * @availability Flash Player 7
+		 * @param htmlBody The message body with HTML formatting
+		 * @return A <code>Message</code> class instance
 		 */
-		public function getMessage( body:String=null, htmlBody:String=null):Message
+		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
 			var tempMessage:Message = new Message( getRoomJID(), null, body, htmlBody, Message.GROUPCHAT_TYPE );
 			return tempMessage;
@@ -321,8 +313,7 @@
 		 * Sends a message to the conference room.
 		 *
 		 * @param body The message body
-		 * @param htmlBody (Optional) The message body with HTML formatting
-		 * @availability Flash Player 7
+		 * @param htmlBody The message body with HTML formatting
 		 */
 		public function sendMessage( body:String=null, htmlBody:String=null ):void
 		{
@@ -333,29 +324,27 @@
 		}
 		
 		/**
-		 * Sends a message to the conference room with an extension attached. Use this method in conjunction with
-		 * the getMessage method
+		 * Sends a message to the conference room with an extension attached. 
+		 * Use this method in conjunction with the <code>getMessage</code> method.
 		 *
-		 * @param msg  The message to send
-		 * @availability Flash Player 7
+		 * @param msg The message to send
 		 */
-		public function sendMessageWithExtension(msg:Message):void
+		public function sendMessageWithExtension( msg:Message ):void
 		{
-			if (isActive())
-			{
-				myConnection.send(msg);
+			if( isActive() ) {
+				myConnection.send( msg );
 			}
 		}
 		
 		/**
 		 * Sends a private message to a specific participant in the conference room.
 		 *
-		 * @param recipientNickname The conference room nickname of the recipient who should receive the private message
+		 * @param recipientNickname The conference room nickname of the recipient who should 
+		 * receive the private message
 		 * @param body The message body
-		 * @param htmlBody (Optional) The message body with HTML formatting
-		 * @availability Flash Player 7
+		 * @param htmlBody The message body with HTML formatting
 		 */
-		public function sendPrivateMessage( recipientNickname:String, body:String=null, htmlBody:String=null ) : void
+		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
 		{
 			if( isActive() ) {
 				var tempMessage:Message = new Message( getRoomJID() + "/" + recipientNickname, null, body, htmlBody, Message.CHAT_TYPE );
@@ -364,12 +353,10 @@
 		}
 		
 		/**
-		 * Changes the subject in the conference room.
-	     *
-	     * You must be joined to the room to change the subject
+		 * Changes the subject in the conference room. You must have already joined the 
+		 * room before you can change the subject.
 		 *
 		 * @param newSubject The new subject
-		 * @availability Flash Player 7
 		 */
 		public function changeSubject( newSubject:String ):void
 		{
@@ -380,11 +367,11 @@
 		}
 		
 		/**
-		 * Kicks an occupant out of the room, assuming that the user has necessary permissions to do so. If the user does not, the server will return an error.
+		 * Kicks an occupant out of the room, assuming that the user has necessary 
+		 * permissions in order to do so. If the user does not, the server will return an error.
 		 *
 		 * @param occupantNick The nickname of the room occupant to kick
 		 * @param reason The reason for the kick
-		 * @availability Flash Player 7
 		 */
 		public function kickOccupant( occupantNick:String, reason:String ):void
 		{
@@ -399,11 +386,12 @@
 		}
 		
 		/**
-		 * In a moderated room, sets voice status to a particular occupant, assuming the user has the necessary permissions to do so.
+		 * In a moderated room, sets voice status to a particular occupant, assuming the user 
+		 * has the necessary permissions to do so.
 		 *
 		 * @param occupantNick The nickname of the occupant to give voice
-		 * @param voice Whether to add voice (true) or remove voice (false)
-		 * @availability Flash Player 7
+		 * @param voice Whether to add voice (true) or remove voice (false). Having voice means
+		 * that the user is actually able to talk. Without voice the user is effectively muted.
 		 */
 		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
 		{
@@ -419,18 +407,17 @@
 	    /**
 	     * Invites a user that is not currently a member of this room to this room.
 	     *
-	     * You must be joined to the room and have appropriate permissions to invite 
-	     * other memebers, as the room will format and send the invite message to 
-	     * the destination user rather that you sending the invite directly to the user.
+	     * <p>You must have joined the room and have appropriate permissions to invite 
+	     * other memebers, because the server will format and send the invite message to 
+	     * as if it came from the room rather that you sending the invite directly from you.</p>
 	     *
-	     * To listen to events, add an event listener on your XMPPConnection on the
-	     * <code>invite</code> event.
+	     * <p>To listen to invite events, add an event listener on your XMPPConnection to the
+	     * <code>InviteEvent.INVITED</code> event.</p>
 	     *
-	     * @param jid A string JID of the user to invite
-	     * @param reason A string describing why you would like to invite the user
-		 * @availability Flash Player 7
+	     * @param jid A string JID of the user to invite.
+	     * @param reason A string describing why you would like to invite the user.
 	     */
-	    public function invite(jid:String, reason:String):void
+	    public function invite( jid:String, reason:String ):void
 	    {
 	        var msg:Message = new Message(getRoomJID())
 	        var muc:MUCUserExtension = new MUCUserExtension();
@@ -446,14 +433,13 @@
 	     * but if you choose to decline an invitation, you call this method on
 	     * a room instance that represents the room the invite originated from.
 	     *
-	     * You do not need to be joined to this room to decline an invitation
+	     * <p>You do not need to have joined this room to decline an invitation</p>
 	     *
-	     * Note: mu-conference-0.6 currently does not allow users to send decline
+	     * <p>Note: mu-conference-0.6 does not allow users to send decline
 	     * messages without joining first.  If using this version of conferencing
-	     * software, it is best to ignore invites.
+	     * software, it is best to ignore invites.</p>
 	     *
 	     * @param reason A string describing why the invitiation was declined
-		 * @availability Flash Player 7
 	     */
 	    public function decline(jid:String, reason:String):void
 	    {
@@ -467,11 +453,10 @@
 	    }
 	
 		/**
+		 * <strong>DEPRECATED! Use <code>getRoomJID</code> instead.</strong>
 		 * Gets the fully qualified room name (room@server) of the current room.
 		 *
-		 * @return The fully qualified room name
-		 * @availability Flash Player 7
-	     * @depreciated
+		 * @return The fully qualified room name.
 		 */
 		public function getFullRoomName():String
 		{
@@ -479,10 +464,9 @@
 		}
 	
 	    /**
-	     * Get the JID of the room like XMPPConnection.getJID() used to send room messages
+	     * Get the JID of the room.
 	     *
-	     * @return the room's JID
-		 * @availability Flash Player 7
+	     * @return The room's JID.
 	     */
 	    public function getRoomJID():String
 	    {
@@ -491,20 +475,16 @@
 		
 	    /**
 	     * Set the JID of the room in the form "room@conference.server"
-	     *
-	     * @return the room's JID
-		 * @availability Flash Player 7
 	     */
-	    public function setRoomJID(jid:String):void
+	    public function setRoomJID( jid:String ):void
 	    {
 	        myJID = jid;
 	    }
 		
 	    /**
-	     * Get the JID of the user in the room like XMPPConnection.getJID() used to receive messages
+	     * Get the JID of the conference room user.
 	     *
 	     * @return your JID in the room 
-		 * @availability Flash Player 7
 	     */
 	    public function getUserJID():String
 	    {
@@ -512,11 +492,10 @@
 	    }
 		
 		/**
-		 * Gets the users role in the conference room. 
+		 * Gets the user's role in the conference room. 
 		 * Possible roles are "visitor", "participant", "moderator" or no defined role.
 		 *
 		 * @return The user's role
-		 * @availability Flash Player 7
 		 */
 		public function getRole():String
 		{
@@ -525,10 +504,10 @@
 		
 		/**
 		 * Gets the user's affiliation for this room.
-		 * Possible affiliations are "owner", "admin", "member", and "outcast". It is also possible to have no defined affiliation.
+		 * Possible affiliations are "owner", "admin", "member", and "outcast". 
+		 * It is also possible to have no defined affiliation.
 		 *
 		 * @return The user's affiliation
-		 * @availability Flash Player 7
 		 */
 		public function getAffiliation():String
 		{
@@ -536,10 +515,10 @@
 		}
 	
 		/**
-		 * Determines whether the connection to the room is active - that is, the user is connected and has joined the room.
+		 * Determines whether the connection to the room is active - that is, the user 
+		 * is connected and has joined the room.
 		 *
-		 * @return True if the connection is active; false otherwise
-		 * @availability Flash Player 7
+		 * @return True if the connection is active; false otherwise.
 		 */
 		public function isActive():Boolean
 		{
@@ -706,10 +685,9 @@
 	     * You must be joined to the room and have the owner affiliation to request 
 	     * a configuration form
 		 *
-	     * @see configureForm
-	     * @see configure
-	     * @see cancelConfiguration
-		 * @availability Flash Player 7
+	     * @see #configureForm
+	     * @see #configure
+	     * @see #cancelConfiguration
 		 */
 	    public function requestConfiguration():void
 	    {
@@ -753,7 +731,7 @@
 	     *
 	     * You must be joined and have owner affiliation to configure the room
 	     *
-	     * @see configureForm
+	     * @see #configureForm
 		 * @availability Flash Player 7
 		 */
 	    public function configure(fieldmap:Object):void
@@ -784,8 +762,8 @@
 	     * You must be joined to the room and have the owner affiliation to 
 	     * configure the room
 	     *
-	     * @see configureForm
-	     * @see join
+	     * @see #configureForm
+	     * @see #join
 		 * @availability Flash Player 7
 		 */
 	    public function cancelConfiguration():void
@@ -817,8 +795,8 @@
 	     * adminError
 	     * 
 	     * @category Admin
-	     * @see revoke
-	     * @see ban
+	     * @see #revoke
+	     * @see #ban
 		 * @availability Flash Player 7
 	     */
 	    public function grant(affiliation:String, jids:Array, callback:Function):void
@@ -849,9 +827,9 @@
 	     * their banned status.
 	     * 
 	     * @category Admin
-	     * @see grant
-	     * @see ban
-	     * @see allow
+	     * @see #grant
+	     * @see #ban
+	     * @see #allow
 		 * @availability Flash Player 7
 	     */
 	    public function revoke(jids:Array, callback:Function):void
@@ -867,8 +845,8 @@
 	     * adminError
 	     * 
 	     * @category Admin
-	     * @see grant
-	     * @see allow
+	     * @see #grant
+	     * @see #allow
 		 * @availability Flash Player 7
 	     */
 	    public function ban(jids:Array, callback:Function):void
@@ -884,8 +862,8 @@
 	     * adminError
 	     * 
 	     * @category Admin
-	     * @see revoke
-	     * @see ban
+	     * @see #revoke
+	     * @see #ban
 		 * @availability Flash Player 7
 	     */
 	    public function allow(jids:Array, callback:Function):void
@@ -911,7 +889,7 @@
 	
 	    /**
 	     * Requests an affiliation list for a given affiliation with with room.
-	     * This will either broadcast the event <code>affiliations</code> or 
+	     * This will either dispatch the event <code>affiliations</code> or 
 	     * <code>adminError</code> depending on the result of the request
 	     *
 	     * Use one of the following affiliations:
@@ -923,9 +901,9 @@
 	     * <code>Room.OWNER_AFFILIATION</code>
 	     *
 	     * @category Admin
-	     * @see revoke
-	     * @see grant
-	     * @see affiliations
+	     * @see #revoke
+	     * @see #grant
+	     * @see #affiliations
 		 * @availability Flash Player 7
 	     */
 	    public function requestAffiliations(affiliation:String) : void

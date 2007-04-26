@@ -1,27 +1,28 @@
-﻿package org.jivesoftware.xiff.conference{
-	/*
-	 * Copyright (C) 2003-2004 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@mediainsites.com>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
-	
+﻿/*
+ * Copyright (C) 2003-20077
+ * Nick Velloff <nick.velloff@gmail.com>
+ * Derrick Grigg <dgrigg@rogers.com>
+ * Sean Voisen <sean@voisen.org>
+ * Sean Treadway <seant@oncotype.dk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ *
+ */
+	 
+package org.jivesoftware.xiff.conference
+{	
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.conference.Room;
 	import org.jivesoftware.xiff.data.Message;
@@ -31,40 +32,23 @@
 	import org.jivesoftware.xiff.events.InviteEvent;
 	
 	/**
-	 * Broadcast when an invite has been received to the connection user
-	 *
-	 * The event object has the following properties:
-	 *
-	 * <code>from</code> - the JID of the user initiating the invite
-	 *
-	 * <code>reason</code> - a string containing the reason to join the room
-	 *
-	 * <code>room</code> - a Room instance of an unjoined room.  Finish the configuration of the
-	 * room by adding your nickname then join to accept the invitation, or call the
-	 * <code>decline</code> method of this room instance.  If you join this room, remember
-	 * to keep a reference to it, and add your event listeners.
-	 *
-	 * <code>data</code> - the original message containing the invite request
-	 *
+	 * Dispatched when an invitations has been received.
+	 * 
 	 * @see org.jivesoftware.xiff.conference.Room
-	 * @see org.jivesoftware.xiff.conference.Room.invite
-	 * @availability Flash Player 9
+	 * @see org.jivesoftware.xiff.conference.Room.#invite
 	 */
-	[Event("invited")]
+	[Event( name="invited", type="org.jivesoftware.xiff.events.InviteEvent" )]
 	
 	/**
-	 * Manages the broadcasting of events during invitations.  Add event
+	 * Manages the dispatching of events during invitations.  Add event
 	 * listeners to an instance of this class to monitor invite and decline
-	 * events
+	 * events.
 	 *
-	 * You only need a single instance of this class to listen for all invite
-	 * or decline events.
+	 * <p>You only need a single instance of this class to listen for all invite
+	 * or decline events.</p>
 	 *
-	 * @since 2.0.0
-	 * @author Sean Treadway
-	 * @param connection An XMPPConnection instance that is providing the primary server connection
-	 * @toc-path Conferencing
-	 * @toc-sort 1
+	 * @param connection An XMPPConnection instance that is providing the primary server 
+	 * connection.
 	 */
 	public class InviteListener extends EventDispatcher
 	{

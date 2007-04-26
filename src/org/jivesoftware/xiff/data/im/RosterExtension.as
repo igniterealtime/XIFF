@@ -1,9 +1,9 @@
 ﻿package org.jivesoftware.xiff.data.im{
 	/*
-	 * Copyright (C) 2003-2004 
+	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
 	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@mediainsites.com>
+	 * Sean Voisen <sean@voisen.org>
 	 * Sean Treadway <seant@oncotype.dk>
 	 *
 	 * This library is free software; you can redistribute it and/or

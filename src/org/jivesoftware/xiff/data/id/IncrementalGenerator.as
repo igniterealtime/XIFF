@@ -1,7 +1,7 @@
 package org.jivesoftware.xiff.data.id{
 	/*
-	 * Copyright (C) 2003-2004 
-	 * Sean Voisen <sean@mediainsites.com>
+	 * Copyright (C) 2003-2007 
+	 * Sean Voisen <sean@voisen.org>
 	 * Sean Treadway <seant@oncotype.dk>
 	 * Media Insites, Inc.
 	 *
