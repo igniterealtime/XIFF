@@ -64,7 +64,6 @@ package org.jivesoftware.xiff.conference
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @param connection The XMPPConnection instance to use.
-		 * @availability Flash Player 9
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function setConnection( connection:XMPPConnection ):void
@@ -80,7 +79,6 @@ package org.jivesoftware.xiff.conference
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @returns The XMPPConnection used
-		 * @availability Flash Player 9
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
 		public function getConnection():XMPPConnection

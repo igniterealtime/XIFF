@@ -701,7 +701,9 @@ package org.jivesoftware.xiff.conference
 	        myConnection.send(iq);
 	    }
 	
-	    /*
+	    /**
+	     * @private
+	     *  
 	     * IQ callback when form is ready
 	     */
 	    public function finish_requestConfiguration(iq:IQ):void
@@ -725,14 +727,14 @@ package org.jivesoftware.xiff.conference
 	    }
 	
 		/**
-		 * Sends a configuration form to the room.  Accepts a fieldmap hash which
-	     * is an object with keys being the variables and the values being arrays.
-	     * For single value fields, use a single element array
+		 * Sends a configuration form to the room.
 	     *
 	     * You must be joined and have owner affiliation to configure the room
 	     *
+	     * @param fieldmap A hash that is an object with keys being the room configuration
+	     * form variables and the values being arrays. For single value fields, use a single 
+	     * element array.
 	     * @see #configureForm
-		 * @availability Flash Player 7
 		 */
 	    public function configure(fieldmap:Object):void
 	    {
@@ -759,12 +761,11 @@ package org.jivesoftware.xiff.conference
 	     * you cancel the configuration process when attempting to join a
 	     * reserved room.
 	     *
-	     * You must be joined to the room and have the owner affiliation to 
-	     * configure the room
+	     * <p>You must have joined the room and have the owner affiliation to 
+	     * configure the room.</p>
 	     *
 	     * @see #configureForm
 	     * @see #join
-		 * @availability Flash Player 7
 		 */
 	    public function cancelConfiguration():void
 	    {
@@ -781,23 +782,20 @@ package org.jivesoftware.xiff.conference
 	
 	    /**
 	     * Grants permissions on a room one or more JIDs by setting the 
-	     * affiliation of a user based * on their JID.  Use one of the 
-	     * following affiliations:
-	     * 
-	     * <code>Room.MEMBER_AFFILIATION</code>
-	     * <code>Room.ADMIN_AFFILIATION</code>
-	     * <code>Room.OWNER_AFFILIATION</code>
+	     * affiliation of a user based * on their JID.
 	     *
-	     * If the JID currenly has an existing affiliation, then the existing 
-	     * affiliation will be replaced with the one passed.
+	     * <p>If the JID currenly has an existing affiliation, then the existing 
+	     * affiliation will be replaced with the one passed. If the process could not be 
+	     * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.
 	     * 
-	     * If the process could not be completed, the room will dispatch the event
-	     * adminError
-	     * 
-	     * @category Admin
+	     * @param affiliation Use one of the 
+	     * following affiliations: <code>Room.MEMBER_AFFILIATION</code>,
+	     * <code>Room.ADMIN_AFFILIATION</code>,
+	     * <code>Room.OWNER_AFFILIATION</code>
+	     * @param jids An array of JIDs to grant these permissions to
+	     * @param callback The function to call once permission granting is complete
 	     * @see #revoke
 	     * @see #ban
-		 * @availability Flash Player 7
 	     */
 	    public function grant(affiliation:String, jids:Array, callback:Function):void
 	    {
@@ -817,20 +815,18 @@ package org.jivesoftware.xiff.conference
 	    }
 	
 	    /**
-	     * Revokes all affiliations from the JIDs.  This is the same as:
-	     * grant(Room.NO_AFFILIATION, jids)
+	     * Revokes all affiliations from the JIDs. This is the same as:
+	     * <code>grant( Room.NO_AFFILIATION, jids )</code>
 	     * 
-	     * If the process could not be completed, the room will dispatch the event
-	     * adminError
-	     *
-	     * Note: if the JID is banned from this room, then this will also revoke
-	     * their banned status.
+	     * <p>If the process could not be completed, the room will dispatch the event
+	     * <code>RoomEvent.ADMIN_ERROR</code>. Note: if the JID is banned from this room, 
+	     * then this will also revoke the banned status.</p>
 	     * 
-	     * @category Admin
+	     * @param jids An array of JIDs to revoke affiliations from
+	     * @param callback The function to call once revocation is complete
 	     * @see #grant
 	     * @see #ban
 	     * @see #allow
-		 * @availability Flash Player 7
 	     */
 	    public function revoke(jids:Array, callback:Function):void
 	    {
@@ -839,15 +835,15 @@ package org.jivesoftware.xiff.conference
 	
 	    /**
 	     * Bans an array of JIDs from entering the room.  This is the same as:
-	     * Room.grant(OUTCAST_AFFILIATION, jid)
+	     * <code>Room.grant( OUTCAST_AFFILIATION, jid )</code>
 	     *
-	     * If the process could not be completed, the room will dispatch the event
-	     * adminError
+	     * <p>If the process could not be completed, the room will dispatch the event
+	     * <code>RoomEvent.ADMIN_ERROR</code>.</p>
 	     * 
-	     * @category Admin
+	     * @param jids An arry of JIDs to ban
+	     * @param callback The function to call once banning is complete
 	     * @see #grant
 	     * @see #allow
-		 * @availability Flash Player 7
 	     */
 	    public function ban(jids:Array, callback:Function):void
 	    {
@@ -858,15 +854,15 @@ package org.jivesoftware.xiff.conference
 	     * Allow a previously banned JIDs to enter this room.  This is the same as:
 	     * Room.grant(NO_AFFILIATION, jid)
 	     *
-	     * If the process could not be completed, the room will dispatch the event
-	     * adminError
+	     * <p>If the process could not be completed, the room will dispatch the event
+	     * <code>RoomEvent.ADMIN_ERROR</code></p>
 	     * 
-	     * @category Admin
+	     * @param jids An array of JIDs to allow
+	     * @param callback The function to call once allowing is complete
 	     * @see #revoke
 	     * @see #ban
-		 * @availability Flash Player 7
 	     */
-	    public function allow(jids:Array, callback:Function):void
+	    public function allow( jids:Array, callback:Function ):void
 	    {
 	        grant(Room.NO_AFFILIATION, jids, callback);
 	    }
@@ -889,24 +885,19 @@ package org.jivesoftware.xiff.conference
 	
 	    /**
 	     * Requests an affiliation list for a given affiliation with with room.
-	     * This will either dispatch the event <code>affiliations</code> or 
-	     * <code>adminError</code> depending on the result of the request
+	     * This will either dispatch the event <code>RoomEvent.AFFILIATIONS</code> or 
+	     * <code>RoomEvent.ADMIN_ERROR</code> depending on the result of the request.
 	     *
-	     * Use one of the following affiliations:
-	     *
-	     * <code>Room.NO_AFFILIATION</code>
-	     * <code>Room.OUTCAST_AFFILIATION</code>
-	     * <code>Room.MEMBER_AFFILIATION</code>
-	     * <code>Room.ADMIN_AFFILIATION</code>
+	     * @param affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
+	     * <code>Room.OUTCAST_AFFILIATION</code>,
+	     * <code>Room.MEMBER_AFFILIATION</code>,
+	     * <code>Room.ADMIN_AFFILIATION</code>,
 	     * <code>Room.OWNER_AFFILIATION</code>
-	     *
-	     * @category Admin
 	     * @see #revoke
 	     * @see #grant
 	     * @see #affiliations
-		 * @availability Flash Player 7
 	     */
-	    public function requestAffiliations(affiliation:String) : void
+	    public function requestAffiliations( affiliation:String ):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.GET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -947,10 +938,10 @@ package org.jivesoftware.xiff.conference
 	     * then it is optional that the server will permanently remove the room.
 	     *
 	     * @param reason A short description of why the room is being destroyed
-	     * @param alternateJID A JID for current members to use as an alternate room to join after the room has been destroyed.  Like a postal forwarding address.
-		 * @availability Flash Player 7
+	     * @param alternateJID A JID for current members to use as an alternate room to join 
+	     * after the room has been destroyed. Like a postal forwarding address.
 		 */
-	    public function destroy(reason:String, alternateJID:String=null, callback:Function=null):void
+	    public function destroy( reason:String, alternateJID:String = null, callback:Function = null ):void
 	    {
 	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -1034,11 +1025,11 @@ package org.jivesoftware.xiff.conference
 		}
 		
 		/**
-		 * Tests if the parameter comes is the same as this room
+		 * Determines if the <code>sender</code> parameter is the same
+		 * as the room's JID.
 		 *
 		 * @param the room JID to test
 		 * @return true if the passed JID matches the getRoomJID
-		 * @availability Flash Player 7
 		 */
 		public function isThisRoom( sender:String ):Boolean
 		{
@@ -1047,11 +1038,11 @@ package org.jivesoftware.xiff.conference
 		}
 	
 		/**
-		 * Tests if the parameter comes is the same user as that connected to the room
+		 * Determines if the <code>sender</code> param is the
+		 * same as the user's JID.
 		 *
 		 * @param the room JID to test
 		 * @return true if the passed JID matches the getUserJID()
-		 * @availability Flash Player 7
 		 */
 		public function isThisUser( sender:String ):Boolean
 		{
@@ -1060,15 +1051,17 @@ package org.jivesoftware.xiff.conference
 		}
 		
 		/**
-		 * The conference server to use for this room. Usually, this is a subdomain of the primary XMPP server, like conference.myserver.com.
-		 *
-		 * @availability Flash Player 7
+		 * The conference server to use for this room. Usually, this is a subdomain of 
+		 * the primary XMPP server, like conference.myserver.com.
 		 */
 		public function get conferenceServer():String
 		{
 			return myJID.split("@")[1];
 		}
 		 
+		/**
+		 * @private
+		 */
 		public function set conferenceServer( aServer:String ):void
 		{
 			setRoomJID(roomName + "@" + aServer);
@@ -1076,14 +1069,15 @@ package org.jivesoftware.xiff.conference
 		
 		/**
 		 * The room name that should be used when joining.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function get roomName():String
 		{
 			return myJID.split("@")[0];
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set roomName( aName:String ):void
 		{
 			setRoomJID(aName + "@" + conferenceServer);
@@ -1091,14 +1085,15 @@ package org.jivesoftware.xiff.conference
 		
 		/**
 		 * The nickname to use when joining.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function get nickname():String
 		{
 			return myNickname == null ? myConnection.username : myNickname;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set nickname( theNickname:String ):void
 		{	
 			if( isActive() ) {
@@ -1111,23 +1106,35 @@ package org.jivesoftware.xiff.conference
 				myNickname = theNickname;
 			}
 		}
-	
+
+		/**
+		 * The password.
+		 */
 	    public function get password():String
 	    {
 	        return myPassword;
 	    }
 	
+		/**
+		 * @private
+		 */
 	    public function set password(aPassword:String):void
 	    {
 	        myPassword = aPassword;
 	    } 
 	
+		/**
+		 * The subject. (Read-only)
+		 */
 	    public function get subject():String
 	    {
 	        return mySubject;
 	    }
 	    
-	   override public function toString():String
+		/**
+	     * @private
+		 */ 
+		override public function toString():String
 	    {
 	    	return '[object Room]';
 	    }
