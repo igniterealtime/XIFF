@@ -1,28 +1,28 @@
-﻿package org.jivesoftware.xiff.core{
-	
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+﻿/*
+ * Copyright (C) 2003-2007 
+ * Nick Velloff <nick.velloff@gmail.com>
+ * Derrick Grigg <dgrigg@rogers.com>
+ * Sean Voisen <sean@voisen.org>
+ * Sean Treadway <seant@oncotype.dk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ *
+ */
 	 
+package org.jivesoftware.xiff.core
+{	 
 	import org.jivesoftware.xiff.data.IExtension;
 	 
 	import org.jivesoftware.xiff.data.XMPPStanza;
@@ -49,63 +49,161 @@
 	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
 
+	/**
+	 * Dispatched when a password change is successful.
+	 * 
+	 * @eventType org.jivesoftware.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
+	 */
     [Event(name="changePasswordSuccess", type="org.jivesoftware.xiff.events.ChangePasswordSuccessEvent")]
-    [Event(name="connection",            type="org.jivesoftware.xiff.events.ConnectionSuccessEvent")]
-    [Event(name="disconnection",         type="org.jivesoftware.xiff.events.DisconnectionEvent")]
-    [Event(name="error",                 type="org.jivesoftware.xiff.events.XIFFErrorEvent")]
-    [Event(name="incomingData",          type="org.jivesoftware.xiff.events.IncomingDataEvent")]
-    [Event(name="login",                 type="org.jivesoftware.xiff.events.LoginEvent")]
-    [Event(name="message",               type="org.jivesoftware.xiff.events.MessageEvent")]
-    [Event(name="outgoingData",          type="org.jivesoftware.xiff.events.OutgoingDataEvent")]
-    [Event(name="presence",              type="org.jivesoftware.xiff.events.PresenceEvent")]
-    [Event(name="registrationSuccess",   type="org.jivesoftware.xiff.events.RegistrationSuccessEvent")]
+    
+    /**
+     * Dispatched when the connection is successfully made to the server.
+     * 
+     * @eventType org.jivesoftware.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
+     */
+    [Event(name="connection", type="org.jivesoftware.xiff.events.ConnectionSuccessEvent")]
+    
+    /**
+     * Dispatched when there is a disconnection from the server.
+     * 
+     * @eventType org.jivesoftware.xiff.events.DisconnectionEvent.DISCONNECT
+     */
+    [Event(name="disconnection", type="org.jivesoftware.xiff.events.DisconnectionEvent")]
+    
+    /**
+     * Dispatched when there is some type of XMPP error.
+     * 
+     * @eventType org.jivesoftware.xiff.events.XIFFErrorEvent.XIFF_ERROR
+     */
+    [Event(name="error", type="org.jivesoftware.xiff.events.XIFFErrorEvent")]
+    
+    /**
+     * Dispatched whenever there is incoming XML data.
+     * 
+     * @eventType org.jivesoftware.xiff.events.IncomingDataEvent.INCOMING_DATA
+     */
+    [Event(name="incomingData", type="org.jivesoftware.xiff.events.IncomingDataEvent")]
+    
+    /**
+     * Dispatched on successful authentication (login) with the server.
+     * 
+     * @eventType org.jivesoftware.xiff.events.LoginEvent.LOGIN
+     */
+    [Event(name="login", type="org.jivesoftware.xiff.events.LoginEvent")]
+    
+    /**
+     * Dispatched on incoming messages.
+     * 
+     * @eventType org.jivesoftware.xiff.events.MessageEvent.MESSAGE
+     */
+    [Event(name="message", type="org.jivesoftware.xiff.events.MessageEvent")]
+    
+    /**
+     * Dispatched whenever data is sent to the server.
+     * 
+     * @eventType org.jivesoftware.xiff.events.OutgoingDataEvent.OUTGOING_DATA
+     */
+    [Event(name="outgoingData", type="org.jivesoftware.xiff.events.OutgoingDataEvent")]
+    
+    /**
+     * Dispatched on incoming presence data.
+     * 
+     * @eventType org.jivesoftware.xiff.events.PresenceEvent.PRESENCE
+     */
+    [Event(name="presence", type="org.jivesoftware.xiff.events.PresenceEvent")]
+    
+    /**
+     * Dispatched on when new user account registration is successful.
+     * 
+     * @eventType org.jivesoftware.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
+     */
+    [Event(name="registrationSuccess", type="org.jivesoftware.xiff.events.RegistrationSuccessEvent")]
+    
+    /**
+     * This class is used to connect to and manage data coming from an XMPP server. Use one instance
+     * of this class per connection.
+     */ 
 	public class XMPPConnection extends EventDispatcher
 	{
-		
+		/**
+		 * @private
+		 */
 		protected var _useAnonymousLogin:Boolean;
 		
+		/**
+		 * @private
+		 */
 		protected var socket:XMLSocket;
 		
+		/**
+		 * @private
+		 */
 		protected var myServer:String;
-		protected var myUsername:String;
-		protected var myResource:String;
-		protected var myPassword:String;
-		protected var myJID:String;
-	
-		protected var myPort:Number;
-		protected var active:Boolean;
-		protected var loggedIn:Boolean;
-		protected var ignoreWhitespace:Boolean;
-		
-		protected var openingStreamTag:String;
-		protected var closingStreamTag:String;
-		
-		protected var sessionID:String;
-		protected var pendingIQs:Object;
-		
-		protected var _expireTagSearch:Boolean;
-
 		
 		/**
-		 * Used to add listeners for certain events. Event dispatching is handled using Macromedia's
-		 * EventDispatcher class found in mx.events.EventDispatcher. Listeners can either implement a method
-		 * with the same name as the event they are listening to, or a method called <code>handleEvent</code>
-		 * that will handle all incoming event broadcasts. If <code>handleEvent</code> is implemented, the method
-		 * can examine the event object's <code>type</code> attribute to find out which type of event occured.
-		 *
-		 * @availability Flash Player 9
-		 * @param event The name of the event to listen to
-		 * @param handler The class instance that is listening for events
-		 * @example This example adds a class instance called "listener" as a listener for all <code>incomingData</code> events.
-		 * <pre>var listener = new Object();
-		 * listener.handleEvent = function( eventObject ) {
-		 *     if( eventObject.type == "incomingData" ) {
-		 *         trace( "INCOMING: " + eventObject.data );
-		 *     }
-		 * }
-		 * myXMPPConnection.addEventListener( "incomingData", listener );
-		 * </pre>
+		 * @private
 		 */
+		protected var myUsername:String;
+		
+		/**
+		 * @private
+		 */
+		protected var myResource:String;
+		
+		/**
+		 * @private
+		 */
+		protected var myPassword:String;
+		
+		/**
+		 * @private
+		 */
+		protected var myJID:String;
+	
+		/**
+		 * @private
+		 */
+		protected var myPort:Number;
+		
+		/**
+		 * @private
+		 */
+		protected var active:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var loggedIn:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var ignoreWhitespace:Boolean;
+		
+		/**
+		 * @private
+		 */
+		protected var openingStreamTag:String;
+		
+		/**
+		 * @private
+		 */
+		protected var closingStreamTag:String;
+
+		/**
+		 * @private
+		 */
+		protected var sessionID:String;
+		
+		/**
+		 * @private
+		 */
+		protected var pendingIQs:Object;
+		
+		/**
+		 * @private
+		 */
+		protected var _expireTagSearch:Boolean;
 		
 		public function XMPPConnection()
 		{	
@@ -135,14 +233,13 @@
 		/**
 		 * Connects to the server.
 		 *
-		 * @availability Flash Player 9
 		 * @param streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;. 
 		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from a Flash client instead of the standard &lt;stream:stream&gt;.
 		 * The options for this parameter are: "flash", "terminatedFlash", "standard" and "terminatedStandard". The default is "terminatedStandard".
 		 *
 		 * @return A boolean indicating whether the server was found.
 		 */
-		public function connect( streamType:String ):Boolean
+		public function connect( streamType:String = "terminatedStandard" ):Boolean
 		{
 			active = false;
 			loggedIn = false;
@@ -176,10 +273,8 @@
 		}
 		
 		/**
-		 * Disconnects from the server if currently connected. After disconnect, a <code>disconnection</code> event is broadcast.
-		 *
-		 * @availability Flash Player 9
-		 * @see #disconnection
+		 * Disconnects from the server if currently connected. After disconnect, 
+		 * a <code>DisconnectionEvent.DISCONNECT</code> event is broadcast.
 		 */
 		public function disconnect():void
 		{
@@ -194,12 +289,11 @@
 		}
 		
 		/**
-		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a SerializeException.
+		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a <code>SerializeException</code>.
 		 *
-		 * @availability Flash Player 9
 		 * @param o The data to send. This must be an instance of a class that implements the ISerializable interface.
 		 * @see org.jivesoftware.xiff.data.ISerializable
-		 * @example The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".
+		 * @example The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".<br />
 		 * <pre>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
 		 * myXMPPConnection.send( msg );</pre>
 		 */
@@ -231,7 +325,6 @@
 		 * Determines whether the connection with the server is currently active. (Not necessarily logged in.
 		 * For login status, use the <code>isLoggedIn()</code> method.)
 		 * 
-		 * @availability Flash Player 9
 		 * @return A boolean indicating whether the connection is active.
 		 * @see org.jivesoftware.xiff.core.XMPPConnection#isLoggedIn
 		 */
@@ -243,7 +336,6 @@
 		/**
 		 * Determines whether the user is connected and logged into the server.
 		 * 
-		 * @availability Flash Player 9
 		 * @return A boolean indicating whether the user is logged in.
 		 * @see org.jivesoftware.xiff.core.XMPPConnection#isActive
 		 */
@@ -254,9 +346,8 @@
 		
 		/**
 		 * Issues a request for the information that must be submitted for registration with the server.
-		 * When the data returns, an event of type "registrationFields" is broadcast containing the requested data.
-		 *
-		 * @availability Flash Player 9
+		 * When the data returns, a <code>RegistrationFieldsEvent.REG_FIELDS</code> event is dispatched 
+		 * containing the requested data.
 		 */
 		public function getRegistrationFields():void
 		{
@@ -269,10 +360,11 @@
 		/**
 		 * Registers a new account with the server, sending the registration data as specified in the fieldMap paramter.
 		 *
-		 * @param fieldMap An object map containing the data to use for registration. The map should be composed of attribute:value pairs for each registration data item.
-		 * @param key (Optional) If a key was passed in the "data" field of the "registrationFields" event, that key must also be passed here.
+		 * @param fieldMap An object map containing the data to use for registration. The map should be composed of 
+		 * attribute:value pairs for each registration data item.
+		 * @param key (Optional) If a key was passed in the "data" field of the "registrationFields" event, 
+		 * that key must also be passed here.
 		 * required field needed for registration.
-		 * @availability Flash Player 9
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
@@ -291,23 +383,10 @@
 		}
 		
 		/**
-		 * Changes the user's account password on the server. If the password change is successful, the class will broadcast a <code>changePasswordSuccess</code> event.
+		 * Changes the user's account password on the server. If the password change is successful, 
+		 * the class will broadcast a <code>ChangePasswordSuccessEvent.PASSWORD_SUCCESS</code> event.
 		 *
 		 * @param newPassword The new password
-		 * @availability Flash Player 9
-		 * @see #changePasswordSuccess
-		 * @example The following example waits for a change password success, and updates the password stored in the XMPPConnection class, in case
-		 * the same class instance is used for future connections.
-		 * <pre>var newPasswd:String = "12345";
-		 * listener = new Object();
-		 * listener.changePasswordSuccess = function( eventObject ) {
-		 *     trace( "Password changed!" );
-		 *     myXMPPConnection.password = newPasswd;
-		 * }
-		 * myXMPPConnection.addEventListener( "changePasswordSuccess", listener );
-		 *
-		 * myXMPPConnection.changePassword( newPasswd );
-		 * </pre>
 		 */
 		public function changePassword( newPassword:String ):void
 		{
@@ -322,12 +401,11 @@
 		}
 		
 		/**
-		 * Gets the fully qualified JID (user@server/resource) of the user. A fully-qualified JID includes the resource. A bare JID does not.
-		 * To get the bare JID, use the <code>getBareJID()</code> method.
+		 * Gets the fully qualified JID (user@server/resource) of the user. A fully-qualified JID includes 
+		 * the resource. A bare JID does not. To get the bare JID, use the <code>getBareJID()</code> method.
 		 *
 		 * @return The fully qualified JID
 		 * @see #getBareJID
-		 * @availability Flash Player 9
 		 */
 		public function getJID():String
 		{
@@ -339,7 +417,6 @@
 		 *
 		 * @return The bare JID
 		 * @see #getJID
-		 * @availability Flash Player 9
 		 */
 		public function getBareJID():String
 		{
@@ -347,6 +424,9 @@
 			return getJID().split( "/" )[0];
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function changePassword_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
@@ -359,6 +439,9 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function getRegistrationFields_result( resultIQ:IQ ):void
 		{
 			try
@@ -376,6 +459,9 @@
 			 }
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function sendRegistrationFields_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
@@ -390,6 +476,9 @@
 		}
 		
 		// Listener function from the ListenerXMLSocket
+		/**
+		 * @private
+		 */
 		protected function socketConnected(ev:Event):void
 		{
 			active = true;
@@ -397,6 +486,10 @@
 			var event:ConnectionSuccessEvent = new ConnectionSuccessEvent();
 			dispatchEvent( event );
 		}
+		
+		/**
+		 * @private
+		 */
 		protected function socketReceivedData( ev:DataEvent ):void
 		{
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
@@ -462,12 +555,18 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function socketClosed(e:Event):void
 		{	
 			var event:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( event );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function handleStream( node:XMLNode ):void
 		{
 			sessionID = node.attributes.id;
@@ -484,6 +583,9 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function handleStreamError( node:XMLNode ):void
 		{
 			dispatchError( "service-unavailable", "Remote Server Error", "cancel", 502 );
@@ -502,6 +604,9 @@
 			dispatchEvent( event );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function handleIQ( node:XMLNode ):IQ
 		{
 			var iq:IQ = new IQ();
@@ -545,6 +650,9 @@
 	        return iq;
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var msg:Message = new Message();
@@ -566,6 +674,9 @@
 	        return msg;
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function handlePresence( node:XMLNode ):Presence
 		{
 			var pres:Presence = new Presence();
@@ -581,6 +692,9 @@
 	        return pres;
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function updateJID():void
 		{
 			// Update the user ID with the latest server/user information
@@ -590,6 +704,10 @@
 				myJID = server + "/" + resource;
 			}
 		}
+		
+		/**
+		 * @private
+		 */
 		protected function onIOError(event:IOErrorEvent):void{
 			/*
 			this fires the standard dispatchError method. need to add
@@ -598,11 +716,17 @@
 			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function securityError(event:SecurityErrorEvent):void{
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function dispatchError( condition:String, message:String, type:String, code:Number ):void
 		{
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
@@ -613,6 +737,9 @@
 			dispatchEvent( event );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function sendXML( someData:* ):void
 		{
 			// Data is untyped because it could be a string or XML
@@ -623,14 +750,22 @@
 		}
 		
 		// anonymous login
-		protected function sendAnonymousLogin():void {
+		/**
+		 * @private
+		 */
+		protected function sendAnonymousLogin():void 
+		{
 			var anonIQ:IQ = new IQ(null, IQ.SET_TYPE, XMPPStanza.generateID("log_anom_"), "sendAnonymousLogin_result", this, null );
 			var authExt:AuthExtension = new AuthExtension(anonIQ.getNode());
 			anonIQ.addExtension(authExt);
 			send(anonIQ);
 		}
 		
-		protected function sendAnonymousLogin_result(resultIQ:IQ):void {
+		/**
+		 * @private
+		 */
+		protected function sendAnonymousLogin_result(resultIQ:IQ):void 
+		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				try
 				{
@@ -649,6 +784,9 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function beginAuthentication():void
 		{
 			var authIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("log_user_"), "beginAuthentication_result", this, null );
@@ -659,6 +797,9 @@
 			send( authIQ );
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function beginAuthentication_result( resultIQ:IQ ):void
 		{
 			var connectionType:String = "none";
@@ -687,6 +828,9 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function sendAuthentication_result( resultIQ:IQ ):void
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
@@ -700,6 +844,9 @@
 			}
 		}
 		
+		/**
+		 * @private
+		 */
 		protected function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function ):void
 		{
 			pendingIQs[id] = {methodName:callbackName, methodScope:callbackScope, func:callbackFunc};
@@ -707,14 +854,15 @@
 		
 		/**
 		 * The XMPP server to use for connection.
-		 *
-		 * @availability Flash Player 9
 		 */
 		public function get server():String
 		{
 			return myServer;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set server( theServer:String ):void
 		{
 			myServer = theServer;
@@ -725,14 +873,15 @@
 		/**
 		 * The username to use for connection. If this property is null when <code>connect()</code> is called,
 		 * the class will fetch registration field data rather than attempt to login.
-		 *
-		 * @availability Flash Player 9
 		 */
 		public function get username():String
 		{
 			return myUsername;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set username( theUsername:String ):void
 		{
 			myUsername = theUsername;
@@ -742,8 +891,6 @@
 		
 		/**
 		 * The password to use when logging in.
-		 *
-		 * @availability Flash Player 9
 		 */
 		public function get password():String
 		{
@@ -756,17 +903,18 @@
 		}
 		
 		/**
-		 * The resource to use when logging in. A resource is required (defaults to "XIFF") and allows a user to login using the same account
-		 * simultaneously (most likely from multiple machines). Typical examples of the resource include "Home" or "Office" to indicate
-		 * the user's current location.
-		 *
-		 * @availability Flash Player 0
+		 * The resource to use when logging in. A resource is required (defaults to "XIFF") and 
+		 * allows a user to login using the same account simultaneously (most likely from multiple machines). 
+		 * Typical examples of the resource include "Home" or "Office" to indicate the user's current location.
 		 */
 		public function get resource():String
 		{
 			return myResource;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set resource( theResource:String ):void
 		{
 			if( theResource.length > 0 )
@@ -777,18 +925,25 @@
 			}
 		}
 		
+		/**
+		 * Whether to use anonymous login or not.
+		 */
+		public function get useAnonymousLogin():Boolean 
+		{ 
+			return _useAnonymousLogin; 
+		}
 		
-		public function get useAnonymousLogin():Boolean { return _useAnonymousLogin; }
-		public function set useAnonymousLogin(value:Boolean):void {
+		/**
+		 * @private
+		 */
+		public function set useAnonymousLogin(value:Boolean):void 
+		{
 			// set only if not connected
 			if(!isActive()) _useAnonymousLogin = value;
 		}
-			
 		
 		/**
 		 * The port to use when connecting. The default XMPP port is 5222.
-		 *
-		 * @availability Flash Player 9
 		 */
 		public function get port():Number
 		{
@@ -802,9 +957,7 @@
 	
 		/**
 		 * Determines whether whitespace will be ignored on incoming XML data.
-		 * Behaves the same as XML.ignoreWhite
-		 *
-		 * @availability Flash Player 9
+		 * Behaves the same as <code>XML.ignoreWhite</code>
 		 */
 		public function get ignoreWhite():Boolean
 		{

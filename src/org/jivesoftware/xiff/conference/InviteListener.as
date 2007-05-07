@@ -34,6 +34,7 @@ package org.jivesoftware.xiff.conference
 	/**
 	 * Dispatched when an invitations has been received.
 	 * 
+	 * @eventType org.jivesoftware.xiff.InviteEvent.INVITED
 	 * @see org.jivesoftware.xiff.conference.Room
 	 * @see org.jivesoftware.xiff.conference.Room.#invite
 	 */

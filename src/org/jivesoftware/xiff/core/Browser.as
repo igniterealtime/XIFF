@@ -31,16 +31,11 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.data.IQ;
 	
 	/**
-	 * Provides a means of quering for available services on an XMPP server using
+	 * Provides a means of querying for available services on an XMPP server using
 	 * the Disco protocol extension. For more information on Disco, take a look at
 	 * <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030</a> and 
 	 * <a href="http://www.jabber.org/jeps/jep-0011.html">JEP-0011</a> for the
 	 * protocol enhancement specifications.
-	 *
-	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @toc-path Core
-	 * @toc-sort 1
 	 */
 	public class Browser
 	{
@@ -50,7 +45,11 @@ package org.jivesoftware.xiff.core
 		private static var _staticDepends:Array = [ ItemDiscoExtension, InfoDiscoExtension, BrowseExtension, ExtensionClassRegistry ];
 		private static var _isEventEnabled:Boolean = BrowserStaticConstructor();
 	
-		public function Browser(conn:XMPPConnection)
+		/**
+		 * @param conn A reference to the <code>XMPPConnection</code> instance
+		 * to use.
+		 */
+		public function Browser( conn:XMPPConnection )
 		{
 			connection = conn;
 			_pending = new Object();
@@ -93,7 +92,6 @@ package org.jivesoftware.xiff.core
 		 * the callback specified will be called and passed a single parameter containing
 		 * a reference to an <code>IQ</code> containing the query results.
 		 *
-		 * @availability Flash Player 9
 		 * @param server The server to query for available service information
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -112,7 +110,6 @@ package org.jivesoftware.xiff.core
 		 * as available transports and user directories. On successful query, the callback specified in the will be 
 		 * called and passed a single parameter containing the query results.
 		 *
-		 * @availability Flash Player 9
 		 * @param server The server to query for service items
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -127,9 +124,9 @@ package org.jivesoftware.xiff.core
 		}
 	
 		/**
-		 * Use the BrowseExtension (jabber:iq:browse namespace) to query a resource for supported features and children.
+		 * Use the <code>BrowseExtension</code> (jabber:iq:browse namespace) to query a 
+		 * resource for supported features and children.
 		 *
-		 * @availability Flash Player 9
 		 * @param id The full JabberID to query for service items
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
@@ -145,10 +142,12 @@ package org.jivesoftware.xiff.core
 	
 		/**
 		 * The instance of the XMPPConnection class to use for sending and receiving data.
-		 *
-		 * @availability Flash Player 9
 		 */
 		public function get connection():XMPPConnection { return _connection; }
+		
+		/**
+		 * @private
+		 */
 		public function set connection(val:XMPPConnection):void { _connection=val; }
 	}
 	

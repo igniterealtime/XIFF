@@ -36,7 +36,7 @@ package org.jivesoftware.xiff.conference
 	/**
 	 * Dispatched when the room subject changes.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent.SUBJECT_CHANGE
 	 */
 	[Event( name="subjectChange", type="org.jivesoftware.xiff.events.RoomEvent" )]
 	
@@ -124,7 +124,7 @@ package org.jivesoftware.xiff.conference
 	 * instance will contain an attribute <code>data</code> that is an instance of an object 
 	 * with the following attributes:
 	 * 
-	 * <p><code>instructions</code> - Instructions for the use of form<br />
+	 * <p><code>instructions</code>: Instructions for the use of form<br />
 	 * <code>title</code>: Title of the configuration form<br />
 	 * <code>label</code>: A friendly name for the field<br />
 	 * <code>name</code>: A computer readable identifier for the field used to identify 
