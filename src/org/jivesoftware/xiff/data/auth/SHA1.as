@@ -2,7 +2,6 @@
  * Copyright (C) 2003-2007 
  * Sean Voisen <sean@voisen.org>
  * Sean Treadway <seant@oncotype.dk>
- * Media Insites, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,14 +22,8 @@
 package org.jivesoftware.xiff.data.auth
 {
 	/**
-	 * A static class for SHA1 hash creation. Original ActionScript 1.0 version by
-	 * Branden Hall. Original ActionScript 2.0 translation by Ron Haberle.
-	 *
-	 * @availability Flash Player 6
-	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @toc-path Extensions/Authentication
-	 * @toc-sort 1/2
+	 * A static class for SHA1 hash creation. Original ActionScript 1.0 version 
+	 * by Branden Hall. Original ActionScript 2.0 translation by Ron Haberle.
 	 */
 	public class SHA1
 	{
@@ -39,7 +32,6 @@ package org.jivesoftware.xiff.data.auth
 		/**
 		 * Takes a string and returns the hex representation of its SHA1 hash.
 		 *
-		 * @availability Flash Player 6
 		 * @param str The string to use for calculating the hash
 		 * @return The SHA1 hash of the string passed to the function
 		 */

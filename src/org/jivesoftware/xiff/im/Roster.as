@@ -605,8 +605,6 @@ package org.jivesoftware.xiff.im
 		
 		private function updateRosterItemPresence( index:*, presence:Presence ):void
 		{
-			
-			
 			try
 			{
 				var item:RosterItemVO = getItemAt( index ) as RosterItemVO;	
@@ -625,8 +623,6 @@ package org.jivesoftware.xiff.im
 			{
 				trace("Error : null trapped. Resuming.");
 			}
-			
-
 		}
 		
 		

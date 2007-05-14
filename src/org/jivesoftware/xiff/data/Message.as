@@ -1,26 +1,28 @@
-﻿package org.jivesoftware.xiff.data{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+﻿/*
+ * Copyright (C) 2003-2007 
+ * Nick Velloff <nick.velloff@gmail.com>
+ * Derrick Grigg <dgrigg@rogers.com>
+ * Sean Voisen <sean@voisen.org>
+ * Sean Treadway <seant@oncotype.dk>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ *
+ */
+	 
+package org.jivesoftware.xiff.data
+{
 	 
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMPPStanza;
@@ -32,8 +34,6 @@
 	/**
 	 * A class for abstraction and encapsulation of message data.
 	 *
-	 * @author Sean Voisen
-	 # @since 2.0.0
 	 * @param recipient The JID of the message recipient
 	 * @param sender The JID of the message sender - the server should report an error if this is falsified
 	 * @param msgID The message ID
@@ -41,11 +41,7 @@
 	 * @param msgHTMLBody The message body in XHTML format
 	 * @param msgType The message type
 	 * @param msgSubject (Optional) The message subject
-	 * @availability Flash Player 7
-	 * @toc-path Data
-	 * @toc-sort 1
 	 */
-	
 	public class Message extends XMPPStanza implements ISerializable
 	{
 		
@@ -84,7 +80,6 @@
 		 * Serializes the Message into XML form for sending to a server.
 		 *
 		 * @return An indication as to whether serialization was successful
-		 * @availability Flash Player 7
 		 */
 		override public function serialize( parentNode:XMLNode ):Boolean
 		{
@@ -95,7 +90,6 @@
 		 * Deserializes an XML object and populates the Message instance with its data.
 		 *
 		 * @param xmlNode The XML to deserialize
-		 * @availability Flash Player 7
 		 * @return An indication as to whether deserialization was sucessful
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean
@@ -132,8 +126,6 @@
 		/**
 		 * The message body in plain-text format. If a client cannot render HTML-formatted
 		 * text, this text is typically used instead.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function get body():String
 		{
@@ -152,10 +144,11 @@
 				trace ('Error : null trapped. Resuming.');
 			}
 			return value;
-
-
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set body( bodyText:String ):void
 		{
 			myBodyNode = replaceTextNode(getNode(), myBodyNode, "body", bodyText);
@@ -165,7 +158,6 @@
 		 * The message body in XHTML format. Internally, this uses the XHTML data extension.
 		 *
 		 * @see org.jivesoftware.xiff.data.xhtml.XHTMLExtension
-		 * @availability Flash Player 7
 		 */
 		public function get htmlBody():String
 		{
@@ -181,6 +173,9 @@
 			return null;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set htmlBody( bodyHTML:String ):void
 		{
 			// Removes any existing HTML body text first
@@ -196,8 +191,6 @@
 		/**
 		 * The message subject. Typically chat and groupchat-type messages do not use
 		 * subjects. Rather, this is reserved for normal and headline-type messages.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function get subject():String
 		{
@@ -205,6 +198,9 @@
 			return mySubjectNode.firstChild.nodeValue;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set subject( aSubject:String ):void
 		{
 			mySubjectNode = replaceTextNode(getNode(), mySubjectNode, "subject", aSubject);
@@ -214,8 +210,6 @@
 		 * The message thread ID. Threading is used to group messages of the same discussion together.
 		 * The library does not perform message grouping, rather it is up to any client authors to
 		 * properly perform this task.
-		 *
-		 * @availability Flash Player 7
 		 */
 		public function get thread():String
 		{
@@ -223,6 +217,9 @@
 			return myThreadNode.firstChild.nodeValue;
 		}
 		
+		/**
+		 * @private
+		 */
 		public function set thread( theThread:String ):void
 		{
 			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", theThread);

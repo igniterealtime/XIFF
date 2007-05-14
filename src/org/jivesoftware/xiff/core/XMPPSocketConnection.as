@@ -34,16 +34,26 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLNode;
 	import org.jivesoftware.xiff.util.SocketDataEvent;
 	
+	/**
+	 * A child of <code>XMPPConnection</code>, this class makes use of the
+	 * Flash AVM2 binary socket instead of the older <code>XMLSocket</code>.
+	 * This gets rid of issues related to the <code>XMLSocket</code>'s appending
+	 * of a null-byte to all outgoing data.
+	 * 
+	 * @see org.jivesoftware.xiff.core.XMPPConnection
+	 */
 	public class XMPPSocketConnection extends XMPPConnection
 	{
 		private var _incompleteRawXML: String = '';
 		
 		protected var binarySocket:SocketConn;
+		
 		public function XMPPSocketConnection()
 		{
 			super();
 			configureSocket();
 		}
+		
 		private function configureSocket():void {
 			binarySocket = new SocketConn();
 			
@@ -53,6 +63,7 @@ package org.jivesoftware.xiff.core
 	        binarySocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityError);
 	        binarySocket.addEventListener(SocketDataEvent.SOCKET_DATA_RECEIVED, bSocketReceivedData);
 	    }
+	    
 	    override protected function sendXML( someData:* ):void
 		{
 			// Data is untyped because it could be a string or XML
@@ -62,6 +73,7 @@ package org.jivesoftware.xiff.core
 			event.data = someData;
 			dispatchEvent( event );
 		}
+		
 		override public function disconnect():void
 		{
 			if( isActive() ) {
@@ -73,6 +85,7 @@ package org.jivesoftware.xiff.core
 				dispatchEvent(event);
 			}
 		}
+		
 		override public function connect( streamType:String = "terminatedStandard" ):Boolean
 		{
 			active = false;
