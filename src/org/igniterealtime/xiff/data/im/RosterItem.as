@@ -128,7 +128,8 @@
 
 			for( var i:String in myGroupNodes )
 			{
-				returnArr.push(myGroupNodes[i].firstChild.nodeValue);
+                if(myGroupNodes[i].firstChild != null)
+                    returnArr.push(myGroupNodes[i].firstChild.nodeValue);
 
 			}
 			return returnArr;

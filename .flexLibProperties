@@ -1,41 +1,73 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties version="1">
-<includeClasses>
-<classEntry path="org.jivesoftware.xiff.events.RegistrationSuccessEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCUserExtension"/>
-<classEntry path="org.jivesoftware.xiff.data.whiteboard.Fill"/>
-<classEntry path="org.jivesoftware.xiff.data.register.RegisterExtension"/>
-<classEntry path="org.jivesoftware.xiff.events.IncomingDataEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.RosterEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCExtension"/>
-<classEntry path="org.jivesoftware.xiff.events.XIFFErrorEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCAdminExtension"/>
-<classEntry path="org.jivesoftware.xiff.events.DisconnectionEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCItem"/>
-<classEntry path="org.jivesoftware.xiff.events.ModelChangedEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.LoginEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.RoomEvent"/>
-<classEntry path="org.jivesoftware.xiff.exception.SerializationException"/>
-<classEntry path="org.jivesoftware.xiff.data.xhtml.XHTMLExtension"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCOwnerExtension"/>
-<classEntry path="org.jivesoftware.xiff.data.muc.MUCBaseExtension"/>
-<classEntry path="org.jivesoftware.xiff.data.rpc.XMLRPC"/>
-<classEntry path="org.jivesoftware.xiff.events.IQEvent"/>
-<classEntry path="org.jivesoftware.xiff.util.SocketDataEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.PresenceEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.ChangePasswordSuccessEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.whiteboard.WhiteboardExtension"/>
-<classEntry path="org.jivesoftware.xiff.events.MessageEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.whiteboard.Stroke"/>
-<classEntry path="org.jivesoftware.xiff.events.OutgoingDataEvent"/>
-<classEntry path="org.jivesoftware.xiff.util.SocketConn"/>
-<classEntry path="org.jivesoftware.xiff.events.InviteEvent"/>
-<classEntry path="org.jivesoftware.xiff.im.Roster"/>
-<classEntry path="org.jivesoftware.xiff.data.rpc.RPCExtension"/>
-<classEntry path="org.jivesoftware.xiff.events.ConnectionSuccessEvent"/>
-<classEntry path="org.jivesoftware.xiff.events.RegistrationFieldsEvent"/>
-<classEntry path="org.jivesoftware.xiff.data.whiteboard.Path"/>
-</includeClasses>
-<includeResources/>
-<namespaceManifests/>
+  <includeClasses>
+    <classEntry path="org.igniterealtime.xiff.conference.InviteListener"/>
+    <classEntry path="org.igniterealtime.xiff.conference.Room"/>
+    <classEntry path="org.igniterealtime.xiff.core.Browser"/>
+    <classEntry path="org.igniterealtime.xiff.core.XMPPConnection"/>
+    <classEntry path="org.igniterealtime.xiff.core.XMPPSocketConnection"/>
+    <classEntry path="org.igniterealtime.xiff.data.Extension"/>
+    <classEntry path="org.igniterealtime.xiff.data.ExtensionClassRegistry"/>
+    <classEntry path="org.igniterealtime.xiff.data.ExtensionContainer"/>
+    <classEntry path="org.igniterealtime.xiff.data.IExtendable"/>
+    <classEntry path="org.igniterealtime.xiff.data.IExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.INodeProxy"/>
+    <classEntry path="org.igniterealtime.xiff.data.IQ"/>
+    <classEntry path="org.igniterealtime.xiff.data.ISerializable"/>
+    <classEntry path="org.igniterealtime.xiff.data.Message"/>
+    <classEntry path="org.igniterealtime.xiff.data.Presence"/>
+    <classEntry path="org.igniterealtime.xiff.data.XMLStanza"/>
+    <classEntry path="org.igniterealtime.xiff.data.XMPPStanza"/>
+    <classEntry path="org.igniterealtime.xiff.data.auth.AuthExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.auth.SHA1"/>
+    <classEntry path="org.igniterealtime.xiff.data.browse.BrowseExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.browse.BrowseItem"/>
+    <classEntry path="org.igniterealtime.xiff.data.disco.DiscoExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.disco.InfoDiscoExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.disco.ItemDiscoExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.forms.FormExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.forms.FormField"/>
+    <classEntry path="org.igniterealtime.xiff.data.id.IIDGenerator"/>
+    <classEntry path="org.igniterealtime.xiff.data.id.IncrementalGenerator"/>
+    <classEntry path="org.igniterealtime.xiff.data.id.SharedObjectGenerator"/>
+    <classEntry path="org.igniterealtime.xiff.data.im.RosterExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.im.RosterItem"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUC"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCAdminExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCBaseExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCItem"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCOwnerExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.muc.MUCUserExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.register.RegisterExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.rpc.RPCExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.rpc.XMLRPC"/>
+    <classEntry path="org.igniterealtime.xiff.data.whiteboard.Fill"/>
+    <classEntry path="org.igniterealtime.xiff.data.whiteboard.Path"/>
+    <classEntry path="org.igniterealtime.xiff.data.whiteboard.Stroke"/>
+    <classEntry path="org.igniterealtime.xiff.data.whiteboard.WhiteboardExtension"/>
+    <classEntry path="org.igniterealtime.xiff.data.xhtml.XHTMLExtension"/>
+    <classEntry path="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.ConnectionSuccessEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.DisconnectionEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.IQEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.IncomingDataEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.InviteEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.LoginEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.MessageEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.ModelChangedEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.OutgoingDataEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.PresenceEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.RegistrationFieldsEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.RegistrationSuccessEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.RoomEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.RosterEvent"/>
+    <classEntry path="org.igniterealtime.xiff.events.XIFFErrorEvent"/>
+    <classEntry path="org.igniterealtime.xiff.exception.SerializationException"/>
+    <classEntry path="org.igniterealtime.xiff.im.Roster"/>
+    <classEntry path="org.igniterealtime.xiff.util.SocketConn"/>
+    <classEntry path="org.igniterealtime.xiff.util.SocketDataEvent"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
 </flexLibProperties>

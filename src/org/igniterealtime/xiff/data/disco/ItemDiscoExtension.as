@@ -44,7 +44,7 @@
 	
 		private var myItems:Array;
 		
-		public function ItemDiscoExtension(xmlNode:XMLNode)
+		public function ItemDiscoExtension(xmlNode:XMLNode = null)
 		{
 			super(xmlNode);
 		}

@@ -46,7 +46,7 @@
 		private var myIdentities:Array;
 		private var myFeatures:Array;
 		
-		public function InfoDiscoExtension(xmlNode:XMLNode)
+		public function InfoDiscoExtension(xmlNode:XMLNode=null)
 		{
 			super(xmlNode);
 		}

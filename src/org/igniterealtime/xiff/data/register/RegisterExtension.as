@@ -171,12 +171,15 @@
 	
 		public function get username():String { return getField("username"); }
 		public function set username(val:String):void { setField("username", val); }
-	
+		
 		public function get nick():String { return getField("nick"); }
 		public function set nick(val:String):void { setField("nick", val); }
 	
 		public function get password():String { return getField("password"); }
 		public function set password(val:String):void { setField("password", val); }
+	
+		public function get name():String { return getField("name"); }
+		public function set name(val:String):void { setField("name", val); }
 	
 		public function get first():String { return getField("first"); }
 		public function set first(val:String):void { setField("first", val); }
@@ -213,5 +216,6 @@
 	
 		public function get text():String { return getField("text"); }
 		public function set text(val:String):void { setField("text", val); }
+
 	}
 }

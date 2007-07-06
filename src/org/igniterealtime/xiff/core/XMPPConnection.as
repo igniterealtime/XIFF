@@ -359,6 +359,7 @@ package org.igniterealtime.xiff.core {
 				var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
 				event.fields = fields;
 				event.data = ext;
+				dispatchEvent(event);
 			}
 			catch (e:Error)
 			 {
@@ -637,7 +638,7 @@ package org.igniterealtime.xiff.core {
 		{
 			var authIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("log_user_"), "beginAuthentication_result", this, null );
 			var authExt:AuthExtension = new AuthExtension(authIQ.getNode());
-			authExt.username = username
+			authExt.username = username;
 			
 			authIQ.addExtension(authExt);
 			send( authIQ );
