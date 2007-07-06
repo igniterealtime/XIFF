@@ -93,13 +93,13 @@ package org.igniterealtime.xiff.core
 					break;
 					
 				case "standard":
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">";
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">";
 					closingStreamTag = "</stream:stream>";
 					break;
 			
 				case "terminatedStandard":
 				default:
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />";
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" />";
 					closingStreamTag = "</stream:stream>";
 					break;
 			}

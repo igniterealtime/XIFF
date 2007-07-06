@@ -152,14 +152,14 @@ package org.igniterealtime.xiff.core {
 					break;
 					
 				case "standard":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">" );
-					closingStreamTag = new String( "</stream:stream>" );
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\">";
+					closingStreamTag = "</stream:stream>";
 					break;
 			
 				case "terminatedStandard":
 				default:
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />" );
-					closingStreamTag = new String( "</stream:stream>" );
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" />";
+					closingStreamTag = "</stream:stream>";
 					break;
 			}
 			socket.connect( server, port );
