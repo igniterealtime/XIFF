@@ -115,6 +115,8 @@ package org.jivesoftware.xiff.im
 	{
 		private var myConnection:XMPPConnection;
 		private var pendingSubscriptionRequestJID:String;
+		private var _presenceMap:Array = new Array();
+		
 		
 		private static var staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
@@ -406,6 +408,10 @@ package org.jivesoftware.xiff.im
 						}				
 					}
 				}
+				
+				// Fire Roster Loaded Event
+				var ev: RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
+				dispatchEvent(ev);
 			}
 			catch (e:Error)
 			{
@@ -539,11 +545,10 @@ package org.jivesoftware.xiff.im
 					break;
 			}
 					
-					
-
-
-					
 		}
+		
+		
+		
 		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):Boolean
 		{
 			// If no displayName, use the jid
@@ -621,12 +626,17 @@ package org.jivesoftware.xiff.im
 				var event:RosterEvent = new RosterEvent(RosterEvent.USER_UPDATED);
 				event.jid = item.jid;
 				event.data = item;
+				_presenceMap[item.jid] = presence;
 				dispatchEvent(event);
 			}
 			catch (e:Error)
 			{
 				trace(e.getStackTrace());
 			}
+		}
+		
+		public function getPresence(jid:String):String {
+			return _presenceMap[jid];
 		}
 		
 		
