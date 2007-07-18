@@ -409,7 +409,7 @@ package org.jivesoftware.xiff.im
 			}
 			catch (e:Error)
 			{
-				trace(e.message);//"Error : null trapped. Resuming.");
+				trace(e.getStackTrace());
 			}
 		}
 	
@@ -489,7 +489,7 @@ package org.jivesoftware.xiff.im
 					}
 					catch (e:Error)
 					{
-						trace("Error : null trapped. Resuming.");
+						trace(e.getStackTrace());
 					}
 					break;
 			}
@@ -625,7 +625,7 @@ package org.jivesoftware.xiff.im
 			}
 			catch (e:Error)
 			{
-				trace("Error : null trapped. Resuming.");
+				trace(e.getStackTrace());
 			}
 		}
 		

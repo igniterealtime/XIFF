@@ -178,7 +178,7 @@
 	    	}
 	    	catch (error:Error)
 	    	{
-				trace("Error : null trapped. Resuming.");
+				trace(error.getStackTrace());
 		    }
 		    return null;
 	    }

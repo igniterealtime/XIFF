@@ -141,7 +141,7 @@ package org.jivesoftware.xiff.data
 			
 			catch (error:Error)
 			{
-				trace ('Error : null trapped. Resuming.');
+				trace (error.getStackTrace());
 			}
 			return value;
 		}

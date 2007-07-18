@@ -111,7 +111,7 @@ package org.jivesoftware.xiff.conference
     				 }
     				 catch (e:Error)
     				 {
-    				 	trace("Error : null trapped. Resuming.");
+    				 	trace(e.getStackTrace());
     				 }
                     
 					break;

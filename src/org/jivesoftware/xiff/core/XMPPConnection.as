@@ -456,7 +456,7 @@ package org.jivesoftware.xiff.core
 			}
 			catch (e:Error)
 			 {
-			 	trace("Error : null trapped. Resuming.");
+			 	trace(e.getStackTrace());
 			 }
 		}
 		
