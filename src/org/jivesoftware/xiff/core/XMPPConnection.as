@@ -48,6 +48,7 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.events.*;
 	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
+	import mx.controls.Alert;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -609,6 +610,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handleIQ( node:XMLNode ):IQ
 		{
+			//trace("Incoming: "+node);
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
 			if( !iq.deserialize( node ) ) {
@@ -656,7 +658,7 @@ package org.jivesoftware.xiff.core
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var msg:Message = new Message();
-			
+			//trace(msg);	
 			// Populate with data
 			if( !msg.deserialize( node ) ) {
 				throw new SerializationException();
@@ -720,6 +722,7 @@ package org.jivesoftware.xiff.core
 		 * @private
 		 */
 		protected function securityError(event:SecurityErrorEvent):void{
+			Alert.show("there was a security error of type: " + event.type + "\nError: " + event.text);
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}
@@ -742,6 +745,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
+			//trace(someData);
 			// Data is untyped because it could be a string or XML
 			socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();

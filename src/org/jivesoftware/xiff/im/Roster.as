@@ -409,7 +409,7 @@ package org.jivesoftware.xiff.im
 			}
 			catch (e:Error)
 			{
-				trace("Error : null trapped. Resuming.");
+				trace(e.message);//"Error : null trapped. Resuming.");
 			}
 		}
 	
@@ -561,17 +561,21 @@ package org.jivesoftware.xiff.im
 				
 				// we need to check if the item already exists (as in pending request)
 				for (var i:int=0; i<length; i++){
-					if (getItemAt(i).jid == jid)
-					{
+					var rosterItem:RosterItemVO = getItemAt(i) as RosterItemVO;
+					if (rosterItem.jid == jid && rosterItem.containsGroup(group)) {
 						// if so, do nothing.. item will update with presence information
 						return true;
+					}
+					else if(rosterItem.jid == jid && group != null) {
+						// If the user exists, but the group has yet to be used, then add the group.
+						rosterItem.addGroup(group);
 					}
 				}
 				
 				var item: RosterItemVO = new RosterItemVO();
 				item.jid = jid;
 				item.displayName = displayName;
-				item.group = group;
+				item.addGroup(group);
 				item.subscribeType = type;
 				item.status = status;
 				item.show = show;
@@ -592,7 +596,7 @@ package org.jivesoftware.xiff.im
 			var item: RosterItemVO = getItemAt(index) as RosterItemVO;
 
 			item.subscribeType = type;
-			item.group = group;
+			item.addGroup(group);
 			item.displayName = name != null ? name : item.jid;
 			
 			var event:RosterEvent = new RosterEvent(RosterEvent.USER_UPDATED);

@@ -9,7 +9,8 @@ package org.jivesoftware.xiff.data.im
 		[Bindable]
 		public var displayName: String;
 		
-		private var _group: String = '';
+		
+		private var _groups:Array = new Array();
 		
 		[Bindable]
 		public var subscribeType: String;
@@ -23,18 +24,29 @@ package org.jivesoftware.xiff.data.im
 		[Bindable]
 		public var priority: Number;
 		
+		public function RosterItemVO():void {
+			
+		}
+		
 		[Bindable]
-		public function set group(value:String):void
-		{
-			if (value != null)
-			{
-				_group = value;
+		public function addGroup(group:String):void {
+			if (group != null && !containsGroup(group)){
+				_groups.push(group);
 			}
 		}
 		
-		public function get group ():String
-		{
-			return _group;
+		public function get groups():Array {
+			return _groups;
+		}
+		
+		public function containsGroup(group:String):Boolean {
+			for(var i:int = 0; i<_groups.length; i++){
+				if(group == _groups[i]){
+					return true;
+				}
+			}
+			
+			return false;
 		}
 	}
 }
