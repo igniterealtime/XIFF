@@ -155,9 +155,8 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function get status():String 
-		{
-			if (myStatusNode == null) return null;
+		public function get status():String  {
+			if (myStatusNode == null || myStatusNode.firstChild == null) return null;
 			return myStatusNode.firstChild.nodeValue;
 		}
 		

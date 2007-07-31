@@ -129,9 +129,12 @@
 		{
 			var returnArr:Array = new Array();
 
-			for( var i:String in myGroupNodes )
-			{
-				returnArr.push(myGroupNodes[i].firstChild.nodeValue);
+			for( var i:String in myGroupNodes ) {
+				var node = myGroupNodes[i].firstChild;
+				if(node != null){
+					returnArr.push(node.nodeValue);
+				}
+				//returnArr.push(myGroupNodes[i].firstChild.nodeValue);
 
 			}
 			return returnArr;
