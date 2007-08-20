@@ -28,7 +28,6 @@ package org.jivesoftware.xiff.data.im
 			
 		}
 		
-		[Bindable]
 		public function addGroup(group:String):void {
 			if (group != null && !containsGroup(group)){
 				_groups.push(group);

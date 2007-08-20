@@ -56,7 +56,8 @@ package org.jivesoftware.xiff.data
 		private var myBodyNode:XMLNode;
 		private var mySubjectNode:XMLNode;
 		private var myThreadNode:XMLNode;
-	
+		private var myTimeStampNode:XMLNode;
+			
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
 	
@@ -99,7 +100,7 @@ package org.jivesoftware.xiff.data
 				var children:Array = xmlNode.childNodes;
 				for( var i:String in children )
 				{
-					
+					trace(children[i].nodeName);
 					switch( children[i].nodeName )
 					{
 						// Adding error handler for 404 sent back by server
@@ -116,6 +117,12 @@ package org.jivesoftware.xiff.data
 							
 						case "thread":
 							myThreadNode = children[i];
+							break;
+							
+						case "x":
+							if(children[i].attributes.xmlns == "jabber:x:delay")
+								myTimeStampNode = children[i];
+
 							break;
 					}
 				}
@@ -223,6 +230,31 @@ package org.jivesoftware.xiff.data
 		public function set thread( theThread:String ):void
 		{
 			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", theThread);
+		}
+		
+		public function set time( theTime:Date ): void
+		{
+			
+		}
+		
+		public function get time():Date 
+		{
+			if(myTimeStampNode == null) return null;
+			var stamp:String = myTimeStampNode.attributes.stamp;
+			
+			var t:Date = new Date();
+			//CCYYMMDDThh:mm:ss
+			//20020910T23:41:07
+			t.setUTCFullYear(stamp.slice(0, 4)); //2002
+			t.setUTCMonth(stamp.slice(4, 6)); //09
+			t.setUTCDate(stamp.slice(6, 8)); //10
+											 //T
+			t.setUTCHours(stamp.slice(9, 11)); //23
+												//:
+			t.setUTCMinutes(stamp.slice(12, 14)); //41
+												//:
+			t.setUTCSeconds(stamp.slice(15, 17)); //07
+			return t;
 		}
 	}
 }

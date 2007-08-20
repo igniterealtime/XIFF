@@ -39,7 +39,7 @@ package org.jivesoftware.xiff.data.disco
 	
 		private var myItems:Array;
 		
-		public function ItemDiscoExtension(xmlNode:XMLNode)
+		public function ItemDiscoExtension(xmlNode:XMLNode=null)
 		{
 			super(xmlNode);
 		}

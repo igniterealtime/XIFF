@@ -348,7 +348,7 @@ package org.jivesoftware.xiff.im
 					return i;
 				}
 			}
-			return null;
+			return -1;
 		}
 		
 		/**
@@ -471,6 +471,9 @@ package org.jivesoftware.xiff.im
 									break; 
 								case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
 									ev = new RosterEvent(RosterEvent.USER_REMOVED);
+									//TODO: is this the right thing to do here?
+									if(i < 0)
+										return; //couldn't find the contact
 									ev.data = removeItemAt(i);
 									ev.jid = item.jid;
 									dispatchEvent(ev);
@@ -526,6 +529,7 @@ package org.jivesoftware.xiff.im
 
 					aPresence.show = Presence.UNAVAILABLE_TYPE
 					var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
+					if(i < 0) return;
 					updateRosterItemPresence( i, aPresence );
 					
 					break;
@@ -539,6 +543,7 @@ package org.jivesoftware.xiff.im
 					
 					// Change the item on the roster
 					var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
+					if(i < 0) return;
 					updateRosterItemPresence( i, aPresence );
 					
 					

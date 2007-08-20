@@ -130,7 +130,7 @@
 			var returnArr:Array = new Array();
 
 			for( var i:String in myGroupNodes ) {
-				var node = myGroupNodes[i].firstChild;
+				var node:XMLNode = myGroupNodes[i].firstChild;
 				if(node != null){
 					returnArr.push(node.nodeValue);
 				}

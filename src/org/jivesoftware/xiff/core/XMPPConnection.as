@@ -610,7 +610,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handleIQ( node:XMLNode ):IQ
 		{
-			//trace("Incoming: "+node);
+			trace("Incoming: "+node);
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
 			if( !iq.deserialize( node ) ) {
@@ -745,7 +745,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			//trace(someData);
+			trace(someData);
 			// Data is untyped because it could be a string or XML
 			socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
