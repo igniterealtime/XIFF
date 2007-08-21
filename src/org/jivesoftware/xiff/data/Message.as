@@ -246,7 +246,7 @@ package org.jivesoftware.xiff.data
 			//CCYYMMDDThh:mm:ss
 			//20020910T23:41:07
 			t.setUTCFullYear(stamp.slice(0, 4)); //2002
-			t.setUTCMonth(stamp.slice(4, 6)); //09
+			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1); //09 
 			t.setUTCDate(stamp.slice(6, 8)); //10
 											 //T
 			t.setUTCHours(stamp.slice(9, 11)); //23
