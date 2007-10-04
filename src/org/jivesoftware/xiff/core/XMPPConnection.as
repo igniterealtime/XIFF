@@ -322,6 +322,13 @@ package org.jivesoftware.xiff.core
 			}
 		}
 		
+		public function sendKeepAlive():void
+		{
+			if( isActive() ) {
+				sendXML(" ");
+			}
+		}
+		
 		/**
 		 * Determines whether the connection with the server is currently active. (Not necessarily logged in.
 		 * For login status, use the <code>isLoggedIn()</code> method.)
