@@ -549,6 +549,9 @@ package org.jivesoftware.xiff.core
 					handlePresence( firstNode );
 					break;
 					
+				case "stream:features":
+					break;
+					
 				default:
 					// silently ignore lack of or unknown stanzas
 					// if the app designer wishes to handle raw data they
