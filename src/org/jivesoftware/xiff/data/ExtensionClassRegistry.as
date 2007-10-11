@@ -42,8 +42,7 @@
 		{
 			//trace ("ExtensionClassRegistry.register(" + extensionClass + ")");
 			
-			var dummyXML:XMLDocument = new XMLDocument();
-			var extensionInstance:IExtension = new extensionClass(dummyXML);
+			var extensionInstance:IExtension = new extensionClass();
 			
 			//if (extensionInstance instanceof IExtension) {
 			if (extensionInstance is IExtension) {

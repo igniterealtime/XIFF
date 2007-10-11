@@ -96,7 +96,11 @@ package org.jivesoftware.xiff.conference
 					try
 					{
 						var msg:Message = eventObj.data as Message;
-						var muc:MUCUserExtension =  msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+						var exts:Array = msg.getAllExtensionsByNS(MUCUserExtension.NS);
+						if(!exts || exts.length < 0) {
+							return;
+						}
+						var muc:MUCUserExtension =  exts[0];
 	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
 	                        var room:Room = new Room(myConnection);
 	                        room.setRoomJID(msg.from);

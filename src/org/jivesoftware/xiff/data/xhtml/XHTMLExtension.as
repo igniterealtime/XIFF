@@ -47,7 +47,7 @@
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
-		public function XHTMLExtension(parent:XMLNode)
+		public function XHTMLExtension(parent:XMLNode = null)
 		{
 			super(parent);
 		}

@@ -47,7 +47,7 @@ package org.jivesoftware.xiff.data.disco
 		private var myIdentities:Array;
 		private var myFeatures:Array;
 		
-		public function InfoDiscoExtension(xmlNode:XMLNode)
+		public function InfoDiscoExtension(xmlNode:XMLNode = null)
 		{
 			super(xmlNode);
 		}
