@@ -155,11 +155,6 @@ package org.jivesoftware.xiff.core
 		 * @private
 		 */
 		protected var myPassword:String;
-		
-		/**
-		 * @private
-		 */
-		protected var myJID:String;
 	
 		/**
 		 * @private
@@ -300,7 +295,6 @@ package org.jivesoftware.xiff.core
 		 */
 		public function send( o:XMPPStanza ):void
 		{
-			
 			if( isActive() ) {
 				if( o is IQ ) {
 	                var iq:IQ = o as IQ;
@@ -417,7 +411,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function getJID():String
 		{
-			return myJID;
+			return myUsername + "@" + myServer + "/" + myResource;
 		}
 		
 		/**
@@ -581,6 +575,7 @@ package org.jivesoftware.xiff.core
 		protected function handleStream( node:XMLNode ):void
 		{
 			sessionID = node.attributes.id;
+			myServer = node.attributes.from;
 			
 			if(_useAnonymousLogin) {
 				// Begin anonymous login
@@ -702,19 +697,6 @@ package org.jivesoftware.xiff.core
 			dispatchEvent( event );
 	
 	        return pres;
-		}
-		
-		/**
-		 * @private
-		 */
-		protected function updateJID():void
-		{
-			// Update the user ID with the latest server/user information
-			if(!_useAnonymousLogin) {
-				myJID = username + "@" + server + "/" + resource;
-			} else {
-				myJID = server + "/" + resource;
-			}
 		}
 		
 		/**
@@ -880,8 +862,6 @@ package org.jivesoftware.xiff.core
 		public function set server( theServer:String ):void
 		{
 			myServer = theServer;
-			
-			updateJID();
 		}
 		
 		/**
@@ -899,8 +879,6 @@ package org.jivesoftware.xiff.core
 		public function set username( theUsername:String ):void
 		{
 			myUsername = theUsername;
-			
-			updateJID();
 		}
 		
 		/**
@@ -934,8 +912,6 @@ package org.jivesoftware.xiff.core
 			if( theResource.length > 0 )
 			{
 				myResource = theResource;
-			
-				updateJID();
 			}
 		}
 		
