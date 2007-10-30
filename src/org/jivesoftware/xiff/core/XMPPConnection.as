@@ -575,7 +575,7 @@ package org.jivesoftware.xiff.core
 		protected function handleStream( node:XMLNode ):void
 		{
 			sessionID = node.attributes.id;
-			myServer = node.attributes.from;
+			server = node.attributes.from;
 			
 			if(_useAnonymousLogin) {
 				// Begin anonymous login

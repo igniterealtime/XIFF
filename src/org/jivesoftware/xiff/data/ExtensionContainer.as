@@ -1,4 +1,5 @@
-﻿package org.jivesoftware.xiff.data{
+﻿
+package org.jivesoftware.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -21,6 +22,7 @@
 	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 	 *
 	 */
+	
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.IExtendable;
 	 
@@ -75,6 +77,11 @@
 		public function getAllExtensionsByNS( ns:String ):Array
 		{
 			return _exts[ns];
+		}
+		
+		public function getExtension( name:String ):Extension
+		{
+			return getAllExtensions().filter(function(obj:IExtension, idx:int, arr:Array):Boolean { return obj.getElementName() == name; })[0];
 		}
 	
 		public function getAllExtensions():Array
