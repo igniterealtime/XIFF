@@ -763,20 +763,13 @@ package org.jivesoftware.xiff.core
 		protected function sendAnonymousLogin_result(resultIQ:IQ):void 
 		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
-				try
-				{
-					// update resource
-					var resultAuth:Array = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
-					resource = resultAuth.resource;
-					// dispatch login event
-					loggedIn = true;
-					var event:LoginEvent = new LoginEvent();
-					dispatchEvent( event );
-				}
-				catch (e:Error)
-				{
-					trace("Error : null trapped. Resuming.");
-				}
+				// update resource
+				var resultAuth:AuthExtension = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
+				resource = resultAuth.resource;
+				// dispatch login event
+				loggedIn = true;
+				var event:LoginEvent = new LoginEvent();
+				dispatchEvent( event );
 			}
 		}
 		
