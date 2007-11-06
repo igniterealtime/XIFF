@@ -22,14 +22,14 @@
 	 *
 	 */
 	 
+	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.ISerializable;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import flash.xml.XMLNode;
-	
 	/**
-	 * Implements the base MUC protocol schema from <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
+	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * This extension is typically used to test for the presence of MUC enabled conferencing service, or a MUC related error condition.
 	 *
@@ -66,9 +66,17 @@
 	
 		public function serialize( parent:XMLNode ):Boolean
 		{
-			if (!exists(getNode().parentNode)) {
-				parent.appendChild(getNode().cloneNode(true));
+			if (exists(getNode().parentNode)) {
+				return false;
 			}
+			var node:XMLNode = getNode().cloneNode(true);
+			var extensions:Array = getAllExtensions();
+			for (var i:int = 0; i < extensions.length; i++) {
+				if (extensions[i] is ISerializable) {
+					ISerializable(extensions[i]).serialize(node);
+				}
+			}
+			parent.appendChild(node);
 			return true;
 		}
 	
@@ -90,6 +98,10 @@
 				}
 			}
 			return true;
+		}
+		
+		public function addChildNode(childNode:XMLNode):void {
+			getNode().appendChild(childNode);
 		}
 	
 		/**

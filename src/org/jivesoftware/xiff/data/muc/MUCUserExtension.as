@@ -29,7 +29,7 @@
 	import flash.xml.XMLNode;
 	
 	/**
-	 * Implements the base MUC user protocol schema from <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
+	 * Implements the base MUC user protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * @author Sean Treadway
 	 * @since 2.0.0

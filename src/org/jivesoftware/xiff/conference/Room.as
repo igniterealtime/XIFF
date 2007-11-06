@@ -549,19 +549,13 @@ package org.jivesoftware.xiff.conference
 								dispatchEvent(e);
 							}
 						} else if ( msg.type == Message.NORMAL_TYPE ) {
-							try
-							{
 								var form:Array = msg.getAllExtensionsByNS(FormExtension.NS)[0];
 								if (form) {
 									e = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
 									e.data = form;
 									dispatchEvent(e);
 								}
-							}
-							catch (e:Error)
-							{
-								trace("Error : null trapped. Resuming.");
-							}
+
 						}
 					}
 	
@@ -574,8 +568,6 @@ package org.jivesoftware.xiff.conference
 	
 	                // Could be an decline to a previous invite
 	                else {
-	                	try
-	                	{
 	                		var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
 		                	if (muc && muc.type == MUCUserExtension.DECLINE_TYPE) 
 		                	{
@@ -585,11 +577,6 @@ package org.jivesoftware.xiff.conference
 		                    	e.data = msg;
 		                    	dispatchEvent(e);
 		                    }
-	                	}
-	                	catch (err:Error) 
-	                	{
-	                		trace("Error : null trapped. Resuming.");
-	                	}
 	                }
 					break;
 					
@@ -606,24 +593,19 @@ package org.jivesoftware.xiff.conference
 								dispatchEvent(e);
 								break;
 						}
-					} else if( isThisRoom( presence.from ) ) {
+					}
+					else if( isThisRoom( presence.from ) ) {
 						// If the presence has our pending nickname, nickname change went through
 						if( presence.from.split( "/" )[1] == pendingNickname ) {
 							myNickname = pendingNickname;
 							pendingNickname = null;
 						}
-						try
-						{
-							var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-		                    if( user.statusCode == 201 ) {
-		                        unlockRoom(myIsReserved);
-		                    }
-						}
-	                    catch (e:Error)
-	                    {
-	                    	trace("Error : null trapped. Resuming.");
-	                    }
-	
+						
+						var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+						if( user.statusCode == 201 ) {
+							unlockRoom(myIsReserved);
+		                }
+
 						updateRoomRoster( presence );
 	
 						if (presence.type == Presence.UNAVAILABLE_TYPE && isActive() && isThisUser(presence.from)) {
@@ -708,8 +690,6 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function finish_requestConfiguration(iq:IQ):void
 	    {
-	    	try
-			{
 				var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
 		        var form:FormExtension = owner.getAllExtensionsByNS(FormExtension.NS)[0];
 		
@@ -718,11 +698,6 @@ package org.jivesoftware.xiff.conference
 		        	e.data = form;
 		        	dispatchEvent(e);
 		        }
-			}
-            catch (e:Error)
-            {
-            	trace("Error : null trapped. Resuming.");
-            }
 	        
 	    }
 	
@@ -915,20 +890,14 @@ package org.jivesoftware.xiff.conference
 	    {
 	        finish_admin(iq);
 	        if (iq.type == IQ.RESULT_TYPE) {
-	        	
-	        	try
-	        	{
+	   
 		            var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
 		            var items:Array = owner.getAllItems();
 		            // trace("Affiliates: " + items);
 		            var e:RoomEvent = new RoomEvent(RoomEvent.AFFILIATIONS);
 		            e.data = items;
 		            dispatchEvent(e);
-	        	}
-	        	catch (e:Error)
-	        	{
-	        		trace("Error : null trapped. Resuming.");
-	        	}
+	        	
 
 	        }
 	    }
@@ -955,68 +924,59 @@ package org.jivesoftware.xiff.conference
 		
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
-			try
-			{
-				var userNickname:String = aPresence.from.split( "/" )[1];
-				var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
-		        var item:MUCItem = userExts[0].getAllItems()[0];
-				var e:RoomEvent;
+			var userNickname:String = aPresence.from.split( "/" )[1];
+			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
+			var item:MUCItem = userExts[0].getAllItems()[0];
+			var e:RoomEvent;
 				
-				if ( isThisUser( aPresence.from ) ) {
-		            myAffiliation = item.affiliation;
-		            myRole = item.role;
+			if ( isThisUser( aPresence.from ) ) {
+				myAffiliation = item.affiliation;
+				myRole = item.role;
 		
-					if (!isActive() && aPresence.type != Presence.UNAVAILABLE_TYPE) {
-						//trace("Room: becoming active: " + presence.getNode());
-						active = true;
-						e = new RoomEvent(RoomEvent.ROOM_JOIN);
-						dispatchEvent(e);
-					}
+				if (!isActive() && aPresence.type != Presence.UNAVAILABLE_TYPE) {
+					//trace("Room: becoming active: " + presence.getNode());
+					active = true;
+					e = new RoomEvent(RoomEvent.ROOM_JOIN);
+					dispatchEvent(e);
 				}
+			}
 		
-		        for( var i:int=0; i < length; i++ ) {
-					//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
+			for(var i:int=0; i < length; i++) {
+				//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
 		
-		            if( getItemAt( i ).nickname == userNickname ) {
+				if( getItemAt( i ).nickname == userNickname ) {
 		                
-		                // If the user left, remove the item
-		                if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
-							//trace("Room: updateRoomRoster: leaving room: " + userNickname);
+		    		// If the user left, remove the item
+		        	if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
+					//trace("Room: updateRoomRoster: leaving room: " + userNickname);
 		
-		                    // Notify listeners that a user has left the room
-		                    e = new RoomEvent(RoomEvent.USER_DEPARTURE);
-		                    e.nickname = userNickname;
-		                    dispatchEvent(e);
-		                    removeItemAt (i);
-		
-		                } else if (item != null) {
-		                	
-		                	var o:Object = getItemAt(i);
-		                	o.affiliation = item.affiliation;
-		                	o.role = item.role;
-		                	o.show = aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL;
-		                }
-		                return;
-		            }
-	        	}
-		        
-		        // Wasn't found, so add it
-		        if( aPresence.type != Presence.UNAVAILABLE_TYPE ) {
-					addToRoomRoster( userNickname, 
-						aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL, 
-						item.affiliation, item.role, item.jid );
-		
-		            if( userNickname != nickname ) {
-		            	e = new RoomEvent(RoomEvent.USER_JOIN);
-		            	e.nickname = userNickname;
+		           		// Notify listeners that a user has left the room
+		           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
+		            	e.nickname = userNickname
 		            	dispatchEvent(e);
-		            } 
+		            	removeItemAt (i);
+		            }
+		            else if (item != null) {
+		            	var o:Object = getItemAt(i);
+		            	o.affiliation = item.affiliation;
+		            	o.role = item.role;
+		            	o.show = aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL;
+		            }
+		            return;
 		        }
-			}
-			catch (e:Error)
-			{
-				trace("Error : null trapped. Resuming.");
-			}
+		 	}
+		        
+		 	// Wasn't found, so add it
+		 	if( aPresence.type != Presence.UNAVAILABLE_TYPE ) {
+		 		addToRoomRoster( userNickname, 
+		 		aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL, 
+		 			item.affiliation, item.role, item.jid );
+		
+				e = new RoomEvent(RoomEvent.USER_JOIN);
+				e.nickname = userNickname;
+				e.data = aPresence;
+				dispatchEvent(e);
+			}	
 		}
 		
 		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):void
