@@ -23,32 +23,28 @@
 	 
 package org.jivesoftware.xiff.core
 {	 
+	import flash.events.DataEvent;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.XMLSocket;
+	import flash.xml.XMLDocument;
+	import flash.xml.XMLNode;
+	
+	import mx.controls.Alert;
+	import mx.utils.StringUtil;
+	
 	import org.jivesoftware.xiff.data.IExtension;
-	 
-	import org.jivesoftware.xiff.data.XMPPStanza;
 	import org.jivesoftware.xiff.data.IQ;
 	import org.jivesoftware.xiff.data.Message;
 	import org.jivesoftware.xiff.data.Presence;
+	import org.jivesoftware.xiff.data.XMPPStanza;
 	import org.jivesoftware.xiff.data.auth.AuthExtension;
-	import org.jivesoftware.xiff.data.register.RegisterExtension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.exception.SerializationException;
-	
-	import flash.xml.XMLNode;
-	import flash.xml.XMLDocument;
-	import flash.net.XMLSocket;
-	import flash.events.Event;
-	import flash.events.ProgressEvent;
-	import flash.events.IOErrorEvent;
-	import flash.events.DataEvent;
-	import flash.events.SecurityErrorEvent;
-	
-	import flash.events.EventDispatcher;
-	import flash.events.Event;
-	import org.jivesoftware.xiff.events.*;
-	import org.jivesoftware.xiff.data.im.RosterExtension;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
-	import mx.controls.Alert;
+	import org.jivesoftware.xiff.data.register.RegisterExtension;
+	import org.jivesoftware.xiff.events.*;
+	import org.jivesoftware.xiff.exception.SerializationException;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -737,7 +733,9 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			trace(someData);
+			if (StringUtil.trim(someData).length > 0) {
+				trace(someData);
+			}
 			// Data is untyped because it could be a string or XML
 			socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
