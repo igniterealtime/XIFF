@@ -22,6 +22,7 @@ package org.jivesoftware.xiff.data
 		
 		public function deserialize(node:XMLNode):Boolean
 		{
+			setNode(node);
 			var childNodes:Array = node.childNodes;
 			for (var i:int = 0; i < childNodes.length; i++) {
 				var extClass:Class = ExtensionClassRegistry.lookup(childNodes[i].attributes.xmlns);
