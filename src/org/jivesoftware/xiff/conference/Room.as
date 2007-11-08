@@ -23,15 +23,16 @@
  
 package org.jivesoftware.xiff.conference
 {
+	import mx.collections.ArrayCollection;
+	
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.*;
-	import org.jivesoftware.xiff.data.muc.*;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
+	import org.jivesoftware.xiff.data.muc.*;
+	import org.jivesoftware.xiff.events.DisconnectionEvent;
 	import org.jivesoftware.xiff.events.MessageEvent;
 	import org.jivesoftware.xiff.events.PresenceEvent;
-	import org.jivesoftware.xiff.events.DisconnectionEvent;
 	import org.jivesoftware.xiff.events.RoomEvent;
-	import mx.collections.ArrayCollection;
 	
 	/**
 	 * Dispatched when the room subject changes.
@@ -255,25 +256,30 @@ package org.jivesoftware.xiff.conference
 	     * @param createReserved Set to true if you wish to create and configure a reserved room
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
-		public function join( createReserved:Boolean = false ):Boolean
+		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
 		{
-			if( !isActive() && myConnection.isActive() ) {
-	            myIsReserved = createReserved == true ? true : false;
-	
-				var joinPresence:Presence = new Presence( getUserJID() );
-
-	            var muc:MUCExtension = new MUCExtension();
-	           
-	            if( password != null ) {
-	                muc.password = password;
-	            }
-	
-				joinPresence.addExtension(muc);
-				myConnection.send( joinPresence );
-				return true;
+			if(!myConnection.isActive() || isActive()) {
+				return false;
 			}
 			
-			return false;
+			myIsReserved = createReserved == true ? true : false;
+
+			var joinPresence:Presence = new Presence( getUserJID() );
+			if (joinPresenceExtensions != null) {
+				for (var i:int = 0; i < joinPresenceExtensions.length; i++) {
+					joinPresence.addExtension(joinPresenceExtensions[i]);
+				}
+			}
+
+			var muc:MUCExtension = new MUCExtension();
+	        
+	        if( password != null ) {
+	        	muc.password = password;
+	        }
+	
+			joinPresence.addExtension(muc);
+			myConnection.send( joinPresence );
+			return true;
 		}
 		 
 		/**

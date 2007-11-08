@@ -542,9 +542,9 @@ package org.jivesoftware.xiff.im
 					dispatchEvent(availEv);
 					
 					// Change the item on the roster
-					var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
+					var j:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
 					if(i < 0) return;
-					updateRosterItemPresence( i, aPresence );
+					updateRosterItemPresence( j, aPresence );
 					
 					
 					break;
