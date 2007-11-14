@@ -23,22 +23,17 @@
 	 
 package org.jivesoftware.xiff.im
 {	
-	import org.jivesoftware.xiff.data.Presence;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.im.RosterExtension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	
-	import org.jivesoftware.xiff.data.im.RosterItemVO;
-	
-	import org.jivesoftware.xiff.events.*;
-	import flash.events.Event;
-	import flash.utils.describeType;
-	import org.jivesoftware.xiff.data.XMLStanza;
-	import flash.xml.XMLDocument;
-	
 	import mx.collections.ArrayCollection;
+	
+	import org.jivesoftware.xiff.core.XMPPConnection;
+	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
+	import org.jivesoftware.xiff.data.IQ;
+	import org.jivesoftware.xiff.data.Presence;
+	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.jivesoftware.xiff.data.XMPPStanza;
+	import org.jivesoftware.xiff.data.im.RosterExtension;
+	import org.jivesoftware.xiff.data.im.RosterItemVO;
+	import org.jivesoftware.xiff.events.*;
 	
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
@@ -164,12 +159,14 @@ package org.jivesoftware.xiff.im
 			var callbackObj:Roster = null;
 			var callbackMethod:String = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
+			var askType:String = RosterExtension.ASK_TYPE_NONE;
 			
 			if( requestSubscription == true ) {
 				callbackObj = this;
 				callbackMethod = "addContact_result";
 				pendingSubscriptionRequestJID = id;
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
+				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
 				
 			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
@@ -179,7 +176,7 @@ package org.jivesoftware.xiff.im
 			myConnection.send( tempIQ );
 	
 			
-			addRosterItem( id, displayName, RosterExtension.SHOW_UNAVAILABLE, "Pending", group, subscription );
+			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, group, subscription, askType );
 		}
 		
 		/**
@@ -400,10 +397,10 @@ package org.jivesoftware.xiff.im
 							var gLen:int = groups.length;
 							if( gLen > 0 ){
 								for (var j:int=0; j < gLen;j++) {
-									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase() );
+									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}	
 							}else{
-								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase() );
+								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 							}
 						}				
 					}
@@ -490,7 +487,7 @@ package org.jivesoftware.xiff.im
 						} else {
 							if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) {
 								// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[0], item.subscription.toLowerCase() );
+								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[0], item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 							}
 						}
 						return;
@@ -543,7 +540,7 @@ package org.jivesoftware.xiff.im
 					
 					// Change the item on the roster
 					var j:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
-					if(i < 0) return;
+					if(j < 0) return;
 					updateRosterItemPresence( j, aPresence );
 					
 					
@@ -554,7 +551,7 @@ package org.jivesoftware.xiff.im
 		
 		
 		
-		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String ):Boolean
+		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String, askType:String="none" ):Boolean
 		{
 			// If no displayName, use the jid
 			if( displayName == null ){
@@ -587,6 +584,7 @@ package org.jivesoftware.xiff.im
 				item.displayName = displayName;
 				item.addGroup(group);
 				item.subscribeType = type;
+				item.askType = askType;
 				item.status = status;
 				item.show = show;
 				

@@ -13,6 +13,9 @@ package org.jivesoftware.xiff.data.im
 		private var _groups:Array = new Array();
 		
 		[Bindable]
+		public var askType: String;
+		
+		[Bindable]
 		public var subscribeType: String;
 		
 		[Bindable]

@@ -22,9 +22,10 @@
 	 *
 	 */
 	 
-	import org.jivesoftware.xiff.data.XMLStanza;
-	import org.jivesoftware.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.ISerializable;
+	import org.jivesoftware.xiff.data.XMLStanza;
 	
 	/**
 	 * This class is used internally by the RosterExtension class for managing items
@@ -220,6 +221,27 @@
 		{
 			getNode().attributes.subscription = newSubscription;
 		}
+		
+		/**
+		 * The ask type for this roster item.  Ask types have
+		 * been enumerated by static variables in the RosterExtension:
+		 * <ul>
+		 * <li>RosterExtension.ASK_TYPE_NONE</li>
+		 * <li>RosterExtension.ASK_TYPE_SUBSCRIBE</li>
+		 * <li>RosterExtension.ASK_TYPE_UNSUBSCRIBE</li>
+		 * </ul>
+		 * 
+		 * @availability Flash Player 7
+		 */
+		 public function get askType():String
+		 {
+		 	return getNode().attributes.ask;
+		 }
+		 
+		 public function set askType( newAskType:String ):void
+		 {
+		 	getNode().attributes.ask = newAskType;
+		 }
 	}
 	
 }

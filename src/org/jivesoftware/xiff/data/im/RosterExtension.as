@@ -22,13 +22,12 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import flash.xml.XMLNode;
 	
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.im.RosterItem;
-	import flash.xml.XMLNode;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
 	 
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
@@ -53,7 +52,11 @@
 		public static var SUBSCRIBE_TYPE_FROM:String = "from";
 		public static var SUBSCRIBE_TYPE_BOTH:String = "both";
 		public static var SUBSCRIBE_TYPE_REMOVE:String = "remove";
+		public static var ASK_TYPE_NONE:String = "none";
+		public static var ASK_TYPE_SUBSCRIBE:String = "subscribe";
+		public static var ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
 		public static var SHOW_UNAVAILABLE:String = "unavailable";
+		public static var SHOW_PENDING:String = "Pending";
 		
 	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
