@@ -571,10 +571,12 @@ package org.jivesoftware.xiff.conference
 						e.data = msg;
 						dispatchEvent(e);
 	                } 
-	
+	                
 	                // Could be an decline to a previous invite
 	                else {
-	                		var muc:MUCUserExtension = msg.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+	                	var mucExtensions:Array = msg.getAllExtensionsByNS(MUCUserExtension.NS);
+	                	if (mucExtensions != null && mucExtensions.length > 0) {
+	                		var muc:MUCUserExtension = mucExtensions[0];
 		                	if (muc && muc.type == MUCUserExtension.DECLINE_TYPE) 
 		                	{
 		                    	e = new RoomEvent(RoomEvent.DECLINED);
@@ -583,6 +585,7 @@ package org.jivesoftware.xiff.conference
 		                    	e.data = msg;
 		                    	dispatchEvent(e);
 		                    }
+		                }
 	                }
 					break;
 					
