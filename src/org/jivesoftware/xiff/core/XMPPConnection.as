@@ -32,7 +32,6 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
-	import mx.controls.Alert;
 	import mx.utils.StringUtil;
 	
 	import org.jivesoftware.xiff.data.IExtension;
@@ -130,7 +129,7 @@ package org.jivesoftware.xiff.core
 		/**
 		 * @private
 		 */
-		protected var socket:XMLSocket;
+		protected var _socket:XMLSocket;
 		
 		/**
 		 * @private
@@ -199,13 +198,6 @@ package org.jivesoftware.xiff.core
 		
 		public function XMPPConnection()
 		{	
-			// Create the socket
-			socket = new XMLSocket();
-			socket.addEventListener(Event.CONNECT,socketConnected);
-			socket.addEventListener(IOErrorEvent.IO_ERROR,onIOError);
-			socket.addEventListener(Event.CLOSE,socketClosed);
-			socket.addEventListener(DataEvent.DATA,socketReceivedData);
-			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityError);
 			
 			// Hash to hold callbacks for IQs
 			pendingIQs = new Object();
@@ -233,6 +225,10 @@ package org.jivesoftware.xiff.core
 		 */
 		public function connect( streamType:String = "terminatedStandard" ):Boolean
 		{
+			
+			// Create the socket
+			_socket = _createXmlSocket(); 
+			
 			active = false;
 			loggedIn = false;
 			
@@ -260,7 +256,7 @@ package org.jivesoftware.xiff.core
 					closingStreamTag = new String( "</stream:stream>" );
 					break;
 			}
-			socket.connect( server, port );
+			_socket.connect( server, port );
 			return true;
 		}
 		
@@ -272,7 +268,7 @@ package org.jivesoftware.xiff.core
 		{
 			if( isActive() ) {
 				sendXML( closingStreamTag );
-				socket.close();
+				_socket.close();
 				active = false;
 				loggedIn = false;
 				var event:DisconnectionEvent = new DisconnectionEvent();
@@ -294,7 +290,7 @@ package org.jivesoftware.xiff.core
 			if( isActive() ) {
 				if( o is IQ ) {
 	                var iq:IQ = o as IQ;
-	                if (iq.callbackName != null && iq.callbackScope != null)
+	                if ((iq.callbackName != null && iq.callbackScope != null) || iq.callback != null)
 	                {
 	                	addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
 	                }		
@@ -594,7 +590,7 @@ package org.jivesoftware.xiff.core
 			
 			// Cancel everything by closing connection
 			try {
-				socket.close();
+				_socket.close();
 			}
 			catch (error:Error){
 				
@@ -620,7 +616,7 @@ package org.jivesoftware.xiff.core
 			
 			// If it's an error, handle it
 			
-			if( iq.type == IQ.ERROR_TYPE ) {
+			if( iq.type == IQ.ERROR_TYPE && !pendingIQs[iq.id]) {
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
 			else {
@@ -629,7 +625,9 @@ package org.jivesoftware.xiff.core
 				if( pendingIQs[iq.id] !== undefined ) {
 					var callbackInfo:* = pendingIQs[iq.id];
 					
-					callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );			
+					if(callbackInfo.methodScope && callbackInfo.methodName) {
+						callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );
+					}			
 					if (callbackInfo.func != null) { 
 						callbackInfo.func( iq );
 					}
@@ -710,7 +708,6 @@ package org.jivesoftware.xiff.core
 		 * @private
 		 */
 		protected function securityError(event:SecurityErrorEvent):void{
-			Alert.show("there was a security error of type: " + event.type + "\nError: " + event.text);
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}
@@ -737,7 +734,7 @@ package org.jivesoftware.xiff.core
 				trace(someData);
 			}
 			// Data is untyped because it could be a string or XML
-			socket.send( someData );
+			_socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
 			event.data = someData;
 			dispatchEvent( event );
@@ -948,6 +945,16 @@ package org.jivesoftware.xiff.core
 		public function set ignoreWhite( val:Boolean ):void
 		{
 			ignoreWhitespace = val;
+		}
+		
+		private function _createXmlSocket():XMLSocket {
+			var socket:XMLSocket = new XMLSocket(server, port);
+			socket.addEventListener(Event.CONNECT,socketConnected);
+			socket.addEventListener(IOErrorEvent.IO_ERROR,onIOError);
+			socket.addEventListener(Event.CLOSE,socketClosed);
+			socket.addEventListener(DataEvent.DATA,socketReceivedData);
+			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityError);
+			return socket;
 		}
 	}
 }
