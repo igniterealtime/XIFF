@@ -962,6 +962,7 @@ package org.jivesoftware.xiff.conference
 		           		// Notify listeners that a user has left the room
 		           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
 		            	e.nickname = userNickname
+		            	e.data = aPresence;
 		            	dispatchEvent(e);
 		            	removeItemAt (i);
 		            }
