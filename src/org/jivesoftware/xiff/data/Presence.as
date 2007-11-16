@@ -43,23 +43,23 @@
 	 */
 	public class Presence extends XMPPStanza implements ISerializable 
 	{
-		// Static variables for specific type strings
-		public static var AVAILABLE_TYPE:String = "available";
-		public static var UNAVAILABLE_TYPE:String = "unavailable";
-		public static var PROBE_TYPE:String = "probe";
-		public static var SUBSCRIBE_TYPE:String = "subscribe";
-		public static var UNSUBSCRIBE_TYPE:String = "unsubscribe";
-		public static var SUBSCRIBED_TYPE:String = "subscribed";
-		public static var UNSUBSCRIBED_TYPE:String = "unsubscribed";
-		public static var ERROR_TYPE:String = "error";
+		// Static constants for specific type strings
+		public static const AVAILABLE_TYPE:String = "available";
+		public static const UNAVAILABLE_TYPE:String = "unavailable";
+		public static const PROBE_TYPE:String = "probe";
+		public static const SUBSCRIBE_TYPE:String = "subscribe";
+		public static const UNSUBSCRIBE_TYPE:String = "unsubscribe";
+		public static const SUBSCRIBED_TYPE:String = "subscribed";
+		public static const UNSUBSCRIBED_TYPE:String = "unsubscribed";
+		public static const ERROR_TYPE:String = "error";
 		
-		// Static variables for show values
-		public static var SHOW_AWAY:String = "away";
-		public static var SHOW_CHAT:String = "chat";
-		public static var SHOW_DND:String = "dnd";
-		public static var SHOW_NORMAL:String = "normal";
-		public static var SHOW_XA:String = "xa";
-		public static var SHOW_OFFLINE:String = "offline";
+		// Static constants for show values
+		public static const SHOW_AWAY:String = "away";
+		public static const SHOW_CHAT:String = "chat";
+		public static const SHOW_DND:String = "dnd";
+		public static const SHOW_NORMAL:String = "normal";
+		public static const SHOW_XA:String = "xa";
+		public static const SHOW_OFFLINE:String = "offline";
 	
 		// Private node references for property lookups
 		private var myShowNode:XMLNode;
