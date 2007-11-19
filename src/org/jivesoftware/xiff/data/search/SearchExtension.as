@@ -1,23 +1,4 @@
 package org.jivesoftware.xiff.data.search{
-	/*
-	 * Copyright (C) 2007 
-	 * Daniel Henninger <daniel.henninger@jivesoftware.com>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
 	
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.IExtension;
@@ -45,9 +26,8 @@ package org.jivesoftware.xiff.data.search{
 		public static var ELEMENT:String = "query";
 	
 		private var myFields:Object;
-		private var myKeyNode:XMLNode;
 		private var myInstructionsNode:XMLNode;
-		private var myRemoveNode:XMLNode;
+		private var myItems:Array = [];
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
@@ -96,6 +76,12 @@ package org.jivesoftware.xiff.data.search{
 					case "instructions":
 						myInstructionsNode = children[i];
 						break;
+						
+					case "item":
+						var item:SearchItem = new SearchItem(getNode());
+						item.deserialize(children[i]);
+						myItems.push(item);
+						break;
 	
 					default:
 						myFields[children[i].nodeName] = children[i];
@@ -115,6 +101,11 @@ package org.jivesoftware.xiff.data.search{
 			}
 	
 			return fields;
+		}
+		
+		public function getAllItems():Array
+		{
+			return myItems;
 		}
 	
 		public function get instructions():String 
@@ -136,7 +127,7 @@ package org.jivesoftware.xiff.data.search{
 		{
 			myFields[name] = replaceTextNode(getNode(), myFields[name], name, val);
 		}
-	
+		
 		public function get username():String { return getField("jid"); }
 		public function set username(val:String):void { setField("jid", val); }
 	
@@ -151,6 +142,6 @@ package org.jivesoftware.xiff.data.search{
 	
 		public function get email():String { return getField("email"); }
 		public function set email(val:String):void { setField("email", val); }
-	
+		
 	}
 }
