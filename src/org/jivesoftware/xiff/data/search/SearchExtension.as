@@ -77,6 +77,10 @@ package org.jivesoftware.xiff.data.search{
 						myInstructionsNode = children[i];
 						break;
 						
+					case "x":
+						// Not handling data forms yet.
+						break;
+						
 					case "item":
 						var item:SearchItem = new SearchItem(getNode());
 						item.deserialize(children[i]);
@@ -127,21 +131,6 @@ package org.jivesoftware.xiff.data.search{
 		{
 			myFields[name] = replaceTextNode(getNode(), myFields[name], name, val);
 		}
-		
-		public function get username():String { return getField("jid"); }
-		public function set username(val:String):void { setField("jid", val); }
-	
-		public function get nick():String { return getField("nick"); }
-		public function set nick(val:String):void { setField("nick", val); }
-	
-		public function get first():String { return getField("first"); }
-		public function set first(val:String):void { setField("first", val); }
-	
-		public function get last():String { return getField("last"); }
-		public function set last(val:String):void { setField("last", val); }
-	
-		public function get email():String { return getField("email"); }
-		public function set email(val:String):void { setField("email", val); }
-		
+				
 	}
 }

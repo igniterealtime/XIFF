@@ -47,7 +47,7 @@ package org.jivesoftware.xiff.data.search{
 	
 			var children:Array = node.childNodes;
 			for( var i:String in children ) {
-				myFields[children[i].nodeName] = children[i];
+				myFields[children[i].nodeName.toLowerCase()] = children[i];
 			}
 			return true;
 		}
@@ -89,5 +89,8 @@ package org.jivesoftware.xiff.data.search{
 	
 		public function get email():String { return getField("email"); }
 		public function set email(val:String):void { setField("email", val); }
+		
+		public function get name():String { return getField("name"); }
+		public function set name(val:String):void { setField("name", val); }
 	}
 }
