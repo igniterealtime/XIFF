@@ -758,11 +758,12 @@ package org.jivesoftware.xiff.core
 		 * @private
 		 */
 		protected function sendAnonymousLogin_result(resultIQ:IQ):void 
-		{
+		{resultIQ
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				// update resource
-				var resultAuth:AuthExtension = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
-				resource = resultAuth.resource;
+				var jid:JID = new JID(resultIQ.to);
+				resource = jid.resource;
+				username = jid.node;
 				// dispatch login event
 				loggedIn = true;
 				var event:LoginEvent = new LoginEvent();
