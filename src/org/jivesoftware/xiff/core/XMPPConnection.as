@@ -656,6 +656,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handleMessage( node:XMLNode ):Message
 		{
+			trace("Incoming: "+node);
 			var msg:Message = new Message();
 			//trace(msg);	
 			// Populate with data
@@ -680,6 +681,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handlePresence( node:XMLNode ):Presence
 		{
+			trace("Incoming: "+node);
 			var pres:Presence = new Presence();
 			
 			// Populate
