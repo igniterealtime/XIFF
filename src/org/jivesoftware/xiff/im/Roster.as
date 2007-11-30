@@ -383,26 +383,19 @@ package org.jivesoftware.xiff.im
 			removeAll();
 			try
 			{
-				var exts:Array = resultIQ.getAllExtensionsByNS( RosterExtension.NS );
-				var len:int = exts.length;
-				for (var x:int; x < len; x++){
-					var ext:RosterExtension = exts[x];
-					var newItems:Array = ext.getAllItems();
-					var eLen:int = newItems.length;
-					for( var i:int=0; i < eLen; i++ ) {
-						var item:* = newItems[ i ];
+				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS )) {
+					for each(var item:* in ext.getAllItems()) {
 						//var classInfo:XML = flash.utils.describeType(item);
-						if (item is XMLStanza){
-							var groups:Array = item.getGroups();
-							var gLen:int = groups.length;
-							if( gLen > 0 ){
-								for (var j:int=0; j < gLen;j++) {
-									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[j], item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
-								}	
-							}else{
-								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", "General", item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
-							}
-						}				
+						if (!item is XMLStanza)
+							continue;
+						
+						var groups:Array = item.getGroups();
+						if(groups.length == 0)
+							groups = ["General"];
+						
+						for each(var group:String in groups) {
+							addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+						}		
 					}
 				}
 				
@@ -452,46 +445,49 @@ package org.jivesoftware.xiff.im
 					{
 						var tempIQ:IQ = eventObj.iq as IQ;
 						var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
-						var item:* = ext.getAllItems()[0];
-						var i:int = getContactIndex(item.jid);
-						var rosterItemVO:RosterItemVO = getContactInformation(item.jid.toLowerCase());
-						var ev: RosterEvent;
-						
-						if (rosterItemVO != null)
+						for each(var item:* in ext.getAllItems())
 						{
-							switch (item.subscription.toLowerCase())
+							var i:int = getContactIndex(item.jid);
+							var rosterItemVO:RosterItemVO = getContactInformation(item.jid.toLowerCase());
+							var ev: RosterEvent;
+							
+							if (rosterItemVO)
 							{
-								case RosterExtension.SUBSCRIBE_TYPE_NONE:
-									ev = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
-									ev.jid = item.jid;
-									dispatchEvent( ev );
-									break; 
-								case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
-									ev = new RosterEvent(RosterEvent.USER_REMOVED);
-									//TODO: is this the right thing to do here?
-									if(i < 0)
-										return; //couldn't find the contact
-									ev.data = removeItemAt(i);
-									ev.jid = item.jid;
-									dispatchEvent(ev);
-									break;
-													
-								default:
-									updateRosterItemSubscription(i, item.subscription.toLowerCase(), item.name, item.getGroups()[0] );
-									break;
-							}
-
-
-							
-							
-						} else {
-							if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) {
+								switch (item.subscription.toLowerCase())
+								{
+									case RosterExtension.SUBSCRIBE_TYPE_NONE:
+										ev = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
+										ev.jid = item.jid;
+										dispatchEvent( ev );
+										break;
+									
+									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
+										//TODO: is this the right thing to do here?
+										if(i < 0)
+											return; //couldn't find the contact
+										ev = new RosterEvent(RosterEvent.USER_REMOVED);
+										ev.data = removeItemAt(i);
+										ev.jid = item.jid;
+										dispatchEvent(ev);
+										break;
+														
+									default:
+										for each(var group:String in item.getGroups())
+										{
+											updateRosterItemSubscription(i, item.subscription.toLowerCase(), item.name, group );
+										}
+										break;
+								}
+							} 
+							else if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
+							{
 								// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-								addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups()[0], item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+								for each(var group:String in item.getGroups())
+								{
+									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+								}
 							}
 						}
-						return;
-
 					}
 					catch (e:Error)
 					{
@@ -504,7 +500,8 @@ package org.jivesoftware.xiff.im
 		private function handlePresence( aPresence:Presence ):void
 		{
 			// Handle based on the type of the presence received
-			aPresence.type = (aPresence.type == null)?(Presence.AVAILABLE_TYPE):(aPresence.type);
+			if(!aPresence.type)
+				aPresence.type = Presence.AVAILABLE_TYPE;
 			switch( aPresence.type.toLowerCase() )
 			{
 				case Presence.SUBSCRIBE_TYPE:
