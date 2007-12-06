@@ -479,12 +479,22 @@ package org.jivesoftware.xiff.im
 										break;
 								}
 							} 
-							else if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
-							{
-								// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-								for each(var group:String in item.getGroups())
+							else {
+								var groups:Array = item.getGroups();
+								if(groups.length == 0)
 								{
-									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									groups.push("General");
+								}
+								for each(var group:String in groups)
+								{
+									if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) {
+										// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
+										addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									}
+									else if( item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) {
+										// A contact was added to the roster, and its authorization is still pending.
+										addRosterItem( item.jid, item.name, RosterExtension.SHOW_PENDING, "Pending", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									}
 								}
 							}
 						}
