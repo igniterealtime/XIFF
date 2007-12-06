@@ -42,13 +42,7 @@ package org.jivesoftware.xiff.data.im
 		}
 		
 		public function containsGroup(group:String):Boolean {
-			for(var i:int = 0; i<_groups.length; i++){
-				if(group == _groups[i]){
-					return true;
-				}
-			}
-			
-			return false;
+			return groups.indexOf(group) >= 0;
 		}
 		
 		public function isPending():Boolean {
