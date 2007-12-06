@@ -242,6 +242,19 @@
 		 {
 		 	getNode().attributes.ask = newAskType;
 		 }
+		 
+		 /**
+		 * Convenience routine to determine if a roster item is considered "pending" or not.
+		 */
+		 public function isPending():Boolean
+		 {
+		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || subscription == RosterExtension.SUBSCRIBE_TYPE_FROM)) {
+		 		return true;
+		 	}
+		 	else {
+		 		return false;
+		 	}
+		 }
 	}
 	
 }

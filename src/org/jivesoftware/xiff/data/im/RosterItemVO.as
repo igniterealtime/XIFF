@@ -50,5 +50,14 @@ package org.jivesoftware.xiff.data.im
 			
 			return false;
 		}
+		
+		public function isPending():Boolean {
+			if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 }
