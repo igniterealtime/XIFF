@@ -491,7 +491,7 @@ package org.jivesoftware.xiff.im
 										// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
 										addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 									}
-									else if( item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) {
+									else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) {
 										// A contact was added to the roster, and its authorization is still pending.
 										addRosterItem( item.jid, item.name, RosterExtension.SHOW_PENDING, "Pending", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 									}
