@@ -246,7 +246,7 @@
 		 /**
 		 * Convenience routine to determine if a roster item is considered "pending" or not.
 		 */
-		 public function isPending():Boolean
+		 public function get pending():Boolean
 		 {
 		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || subscription == RosterExtension.SUBSCRIBE_TYPE_FROM)) {
 		 		return true;
