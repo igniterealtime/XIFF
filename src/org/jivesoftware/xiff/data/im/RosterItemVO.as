@@ -10,22 +10,13 @@ package org.jivesoftware.xiff.data.im
 	{
 		//var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
 		private var _jid: String;
-		
 		private var _displayName: String;
-		
-		private var _groups:Array = new Array();
-		
+		private var _groups:Array = [];
 		private var _askType: String;
-		
-		[Bindable]
-		public var subscribeType: String;
-		
+		private var _subscribeType: String;
 		private var _status: String;
-		
 		private var _show: String;
-		
-		[Bindable]
-		public var priority: Number;
+		private var _priority: Number;
 		
 		public function RosterItemVO():void {
 			
@@ -41,6 +32,32 @@ package org.jivesoftware.xiff.data.im
 			return jid;
 		}
 		
+		public function set subscribeType(newSub:String):void
+		{
+			var oldSub:String = subscribeType;
+			_subscribeType = newSub;
+			PropertyChangeEvent.createUpdateEvent(this, "subscribeType", oldSub, subscribeType);
+		}
+		
+		[Bindable]
+		public function get subscribeType():String
+		{
+			return _subscribeType;
+		}
+		
+		public function set priority(newPriority:Number):void
+		{
+			var oldPriority:Number = priority;
+			_priority = newPriority;
+			PropertyChangeEvent.createUpdateEvent(this, "priority", oldPriority, priority);
+		}
+		
+		[Bindable]
+		public function get priority():Number
+		{
+			return _priority;
+		}
+		
 		public function set askType(aT:String):void
 		{
 			var oldasktype:String = askType;
@@ -49,6 +66,12 @@ package org.jivesoftware.xiff.data.im
 			dispatchEvent(new Event("changeAskType"));
 			PropertyChangeEvent.createUpdateEvent(this, "askType", oldasktype, askType);
 			PropertyChangeEvent.createUpdateEvent(this, "pending", oldPending, pending);
+		}
+		
+		[Bindable]
+		public function get askType():String
+		{
+			return _askType;	
 		}
 		
 		public function set status(newStatus:String):void
@@ -75,12 +98,6 @@ package org.jivesoftware.xiff.data.im
 		public function get show():String
 		{
 			return _show;
-		}
-		
-		[Bindable]
-		public function get askType():String
-		{
-			return _askType;	
 		}
 		
 		public function set jid(j:String):void
