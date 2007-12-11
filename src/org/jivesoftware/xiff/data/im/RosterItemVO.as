@@ -122,6 +122,7 @@ package org.jivesoftware.xiff.data.im
 			var olddisplayname:String = displayName;
 			_displayName = name;
 			PropertyChangeEvent.createUpdateEvent(this, "displayName", olddisplayname, displayName);
+			dispatchEvent(new Event("changeDisplayName"));
 		}
 		
 		[Bindable(event=changeDisplayName)]
