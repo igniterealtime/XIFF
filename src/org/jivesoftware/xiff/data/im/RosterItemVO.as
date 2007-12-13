@@ -137,11 +137,18 @@ package org.jivesoftware.xiff.data.im
 		{
 			if (group && !containsGroup(group))
 				_groups.push(group);
-			dispatchEvent(new Event("groupAdded"));
+			dispatchEvent(new Event("groupsModified"));
 			PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
 		}
 		
-		[Bindable(event=groupAdded)]
+		public function set groups(newGroups:Array):void
+		{
+			_groups = newGroups;
+			dispatchEvent(new Event("groupsModified"));
+			PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
+		}
+		
+		[Bindable(event=groupsModified)]
 		public function get groups():Array {
 			return _groups;
 		}

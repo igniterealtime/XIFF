@@ -295,9 +295,9 @@ package org.jivesoftware.xiff.im
 		 * @availability Flash Player 7
 		 * @param id The JID of the contact to update
 		 * @param newName The new display name for this contact
-		 * @param newGroup The new group to associate the contact with
+		 * @param newGroups The new groups to associate the contact with
 		 */
-		public function updateContact( id:String, newName:String, newGroup:String ):void
+		private function updateContact( id:String, newName:String, newGroups:Array ):void
 		{
 			// Make sure we already subscribe
 			var l:uint = length;
@@ -305,11 +305,48 @@ package org.jivesoftware.xiff.im
 				if( id.toLowerCase() == getItemAt( i ).jid.toLowerCase() ) {
 					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-					ext.addItem( id, null, newName, [newGroup] );
+					var rosterItem:RosterItemVO = getContactInformation( id );
+					
+					ext.addItem( id, rosterItem.subscribeType, newName, newGroups );
 					tempIQ.addExtension( ext );
+					trace("updateContact: ", tempIQ);
 					myConnection.send( tempIQ );
 					break;
 				}
+			}
+		}
+		
+		/**
+		 * Updates the display name for an existing contact.
+		 *
+		 * @availability Flash Player 7
+		 * @param id The JID of the contact to update
+		 * @param newName The new display name for this contact
+		 */
+		public function updateContactName( id:String, newName:String ):void
+		{
+			var rosterItem:RosterItemVO = getContactInformation( id );
+			
+			if ( rosterItem )
+			{
+				updateContact( id, newName, rosterItem.groups );
+			}
+		}
+		
+		/**
+		 * Updates the groups associated with an existing contact.
+		 *
+		 * @availability Flash Player 7
+		 * @param id The JID of the contact to update
+		 * @param newGroups The new groups to associate the contact with
+		 */
+		public function updateContactGroups( id:String, newGroups:Array ):void
+		{
+			var rosterItem:RosterItemVO = getContactInformation( id );
+			
+			if ( rosterItem )
+			{
+				updateContact( id, rosterItem.displayName, newGroups );
 			}
 		}
 		
@@ -472,10 +509,7 @@ package org.jivesoftware.xiff.im
 										break;
 														
 									default:
-										for each(var group:String in item.getGroups())
-										{
-											updateRosterItemSubscription(i, item.subscription.toLowerCase(), item.name, group );
-										}
+										updateRosterItemSubscription(i, item.subscription.toLowerCase(), item.name, item.getGroups());
 										break;
 								}
 							} 
@@ -605,13 +639,18 @@ package org.jivesoftware.xiff.im
 			return true;
 		}
 		
-		private function updateRosterItemSubscription( index:int, type:String, name:String, group:String ):void
+		private function updateRosterItemSubscription( index:int, type:String, name:String, newGroups:Array ):void
 		{
 			// Update this appropriately
 			var item: RosterItemVO = getItemAt(index) as RosterItemVO;
 
 			item.subscribeType = type;
-			item.addGroup(group);
+			
+			if (newGroups.length == 0) {
+				newGroups.push("General");
+			}
+			item.groups = newGroups;
+
 			item.displayName = name != null ? name : item.jid;
 			
 			var event:RosterEvent = new RosterEvent(RosterEvent.USER_UPDATED);
