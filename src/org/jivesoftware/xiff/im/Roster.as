@@ -309,7 +309,6 @@ package org.jivesoftware.xiff.im
 					
 					ext.addItem( id, rosterItem.subscribeType, newName, newGroups );
 					tempIQ.addExtension( ext );
-					trace("updateContact: ", tempIQ);
 					myConnection.send( tempIQ );
 					break;
 				}
