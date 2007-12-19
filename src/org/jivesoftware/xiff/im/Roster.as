@@ -300,18 +300,15 @@ package org.jivesoftware.xiff.im
 		private function updateContact( id:String, newName:String, newGroups:Array ):void
 		{
 			// Make sure we already subscribe
-			var l:uint = length;
-			for( var i:uint = 0; i < l; i++ ) {
-				if( id.toLowerCase() == getItemAt( i ).jid.toLowerCase() ) {
-					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
-					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-					var rosterItem:RosterItemVO = getContactInformation( id );
+			var contact:RosterItemVO = getContactInformation(id);
+			if(contact)
+			{
+				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
+				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 					
-					ext.addItem( id, rosterItem.subscribeType, newName, newGroups );
-					tempIQ.addExtension( ext );
-					myConnection.send( tempIQ );
-					break;
-				}
+				ext.addItem( id, contact.subscribeType, newName, newGroups );
+				tempIQ.addExtension( ext );
+				myConnection.send( tempIQ );
 			}
 		}
 		
