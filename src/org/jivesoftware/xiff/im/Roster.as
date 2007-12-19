@@ -412,6 +412,7 @@ package org.jivesoftware.xiff.im
 		
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
+			disableAutoUpdate()
 			// Clear out the old roster
 			removeAll();
 			try
@@ -432,12 +433,14 @@ package org.jivesoftware.xiff.im
 					}
 				}
 				
+				enableAutoUpdate();
 				// Fire Roster Loaded Event
 				var ev: RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
 				dispatchEvent(ev);
 			}
 			catch (e:Error)
 			{
+				enableAutoUpdate();
 				trace(e.getStackTrace());
 			}
 		}
