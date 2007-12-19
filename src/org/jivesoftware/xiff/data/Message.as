@@ -100,7 +100,6 @@ package org.jivesoftware.xiff.data
 				var children:Array = xmlNode.childNodes;
 				for( var i:String in children )
 				{
-					trace(children[i].nodeName);
 					switch( children[i].nodeName )
 					{
 						// Adding error handler for 404 sent back by server

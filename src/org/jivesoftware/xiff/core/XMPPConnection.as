@@ -607,7 +607,6 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handleIQ( node:XMLNode ):IQ
 		{
-			trace("Incoming: "+node);
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
 			if( !iq.deserialize( node ) ) {
@@ -656,7 +655,6 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handleMessage( node:XMLNode ):Message
 		{
-			trace("Incoming: "+node);
 			var msg:Message = new Message();
 			//trace(msg);	
 			// Populate with data
@@ -681,7 +679,6 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function handlePresence( node:XMLNode ):Presence
 		{
-			trace("Incoming: "+node);
 			var pres:Presence = new Presence();
 			
 			// Populate
@@ -732,9 +729,6 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			if (StringUtil.trim(someData).length > 0) {
-				trace(someData);
-			}
 			// Data is untyped because it could be a string or XML
 			_socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();

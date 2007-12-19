@@ -128,8 +128,6 @@ package org.jivesoftware.xiff.data.im
 		[Bindable(event=changeDisplayName)]
 		public function get displayName():String
 		{
-			if(!_displayName)
-			trace(node);
 			return _displayName ? _displayName : node;
 		}
 
