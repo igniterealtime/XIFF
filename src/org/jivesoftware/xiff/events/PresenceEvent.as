@@ -30,17 +30,17 @@ package org.jivesoftware.xiff.events
 	{
 		
 		public static var PRESENCE:String = "presence";
-		private var _data:Presence;
+		private var _data:Array;
 		
 		public function PresenceEvent()
 		{
 			super(PresenceEvent.PRESENCE, bubbles, cancelable);
 		}
-		public function get data():Presence
+		public function get data():Array
 		{
 			return _data;
 		}
-		public function set data(p:Presence):void
+		public function set data(p:Array):void
 		{
 			_data = p;
 		}

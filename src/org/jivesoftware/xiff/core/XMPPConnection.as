@@ -28,7 +28,9 @@ package org.jivesoftware.xiff.core
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.events.TimerEvent;
 	import flash.net.XMLSocket;
+	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
@@ -677,19 +679,38 @@ package org.jivesoftware.xiff.core
 		/**
 		 * @private
 		 */
+		private var presenceQueue:Array = [];
+		private var presenceQueueTimer:Timer;
 		protected function handlePresence( node:XMLNode ):Presence
 		{
+			if(!presenceQueueTimer)
+			{
+				presenceQueueTimer = new Timer(1, 1);
+				presenceQueueTimer.addEventListener(TimerEvent.TIMER_COMPLETE, flushPresenceQueue);
+			}
+			
 			var pres:Presence = new Presence();
 			
 			// Populate
 			if( !pres.deserialize( node ) ) {
 				throw new SerializationException();
 			}
-			var event:PresenceEvent = new PresenceEvent();
-			event.data = pres;
-			dispatchEvent( event );
-	
+			
+			presenceQueue.push(pres);
+			
+			presenceQueueTimer.reset();
+			presenceQueueTimer.start();
+
 	        return pres;
+		}
+		
+		protected function flushPresenceQueue(evt:TimerEvent):void
+		{
+			trace("Presence queue size is: " + presenceQueue.length);
+			var event:PresenceEvent = new PresenceEvent();
+			event.data = presenceQueue;
+			dispatchEvent( event );
+			presenceQueue = [];
 		}
 		
 		/**

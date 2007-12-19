@@ -465,7 +465,7 @@ package org.jivesoftware.xiff.im
 			{	
 				// Handle any incoming presence items
 				case "presence":
-					handlePresence( eventObj.data );
+					handlePresences( eventObj.data );
 					break;
 				
 				// Fetch the roster immediately after login
@@ -540,53 +540,55 @@ package org.jivesoftware.xiff.im
 			}
 		}
 		
-		private function handlePresence( aPresence:Presence ):void
+		private function handlePresences( presenceArray:Array):void
 		{
-			// Handle based on the type of the presence received
-			if(!aPresence.type)
-				aPresence.type = Presence.AVAILABLE_TYPE;
-			switch( aPresence.type.toLowerCase() )
+			for each(var aPresence:Presence in presenceArray)
 			{
-				case Presence.SUBSCRIBE_TYPE:
-					var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
-					sReq.jid = aPresence.from;
-					dispatchEvent(sReq);
-					break;
+				// Handle based on the type of the presence received
+				if(!aPresence.type)
+					aPresence.type = Presence.AVAILABLE_TYPE;
+				switch( aPresence.type.toLowerCase() )
+				{
+					case Presence.SUBSCRIBE_TYPE:
+						var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
+						sReq.jid = aPresence.from;
+						dispatchEvent(sReq);
+						break;
+						
+					case Presence.UNSUBSCRIBED_TYPE:
+						var sDeny:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
+						sDeny.jid = aPresence.from;
+						dispatchEvent(sDeny);
+						break;
+						
+					case Presence.UNAVAILABLE_TYPE:
+						var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
+						unavailEv.jid = aPresence.from;
+						dispatchEvent(unavailEv);
+	
+						aPresence.show = Presence.UNAVAILABLE_TYPE
+						var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
+						if(i < 0) return;
+						updateRosterItemPresence( i, aPresence );
+						
+						break;
 					
-				case Presence.UNSUBSCRIBED_TYPE:
-					var sDeny:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
-					sDeny.jid = aPresence.from;
-					dispatchEvent(sDeny);
-					break;
-					
-				case Presence.UNAVAILABLE_TYPE:
-					var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
-					unavailEv.jid = aPresence.from;
-					dispatchEvent(unavailEv);
-
-					aPresence.show = Presence.UNAVAILABLE_TYPE
-					var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
-					if(i < 0) return;
-					updateRosterItemPresence( i, aPresence );
-					
-					break;
-				
-				// AVAILABLE is the default type, so undefined is also possible
-				case Presence.AVAILABLE_TYPE:
-					var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-					availEv.jid =  aPresence.from;
-					availEv.data = aPresence;
-					dispatchEvent(availEv);
-					
-					// Change the item on the roster
-					var j:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
-					if(j < 0) return;
-					updateRosterItemPresence( j, aPresence );
-					
-					
-					break;
-			}
-					
+					// AVAILABLE is the default type, so undefined is also possible
+					case Presence.AVAILABLE_TYPE:
+						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
+						availEv.jid =  aPresence.from;
+						availEv.data = aPresence;
+						dispatchEvent(availEv);
+						
+						// Change the item on the roster
+						var j:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
+						if(j < 0) return;
+						updateRosterItemPresence( j, aPresence );
+						
+						
+						break;
+				}
+			}	
 		}
 		
 		
