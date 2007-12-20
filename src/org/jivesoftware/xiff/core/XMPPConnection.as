@@ -512,7 +512,7 @@ package org.jivesoftware.xiff.core
 			// Read the data and send it to the appropriate parser
 			var firstNode:XMLNode = xmlData.firstChild;
 			var nodeName:String = firstNode.nodeName.toLowerCase();
-			
+			//trace("RECV: " + firstNode);
 			switch( nodeName )
 			{
 				case "stream:stream":
@@ -750,6 +750,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
+			//trace("SEND: " + someData);
 			// Data is untyped because it could be a string or XML
 			_socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
