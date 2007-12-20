@@ -590,38 +590,38 @@ package org.jivesoftware.xiff.conference
 					break;
 					
 				case "presence":
-					var presence:Presence = eventObj.data;
-	
 	                //trace("ROOM presence: " + presence.from + " : " + nickname);
+					for each(var presence:Presence in eventObj.data)
+					{
+						if (presence.type == Presence.ERROR_TYPE) {
+							switch (presence.errorCode) {
+								case 409:
+									e = new RoomEvent(RoomEvent.NICK_CONFLICT);
+									e.nickname = nickname;
+									dispatchEvent(e);
+									break;
+							}
+						}
+						else if( isThisRoom( presence.from ) ) {
+							// If the presence has our pending nickname, nickname change went through
+							if( presence.from.split( "/" )[1] == pendingNickname ) {
+								myNickname = pendingNickname;
+								pendingNickname = null;
+							}
+							
+							var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+							if( user.statusCode == 201 ) {
+								unlockRoom(myIsReserved);
+			                }
 	
-					if (presence.type == Presence.ERROR_TYPE) {
-						switch (presence.errorCode) {
-							case 409:
-								e = new RoomEvent(RoomEvent.NICK_CONFLICT);
-								e.nickname = nickname;
+							updateRoomRoster( presence );
+		
+							if (presence.type == Presence.UNAVAILABLE_TYPE && isActive() && isThisUser(presence.from)) {
+								//trace("Room: becoming inactive: " + presence.getNode());
+								active = false;
+								e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 								dispatchEvent(e);
-								break;
-						}
-					}
-					else if( isThisRoom( presence.from ) ) {
-						// If the presence has our pending nickname, nickname change went through
-						if( presence.from.split( "/" )[1] == pendingNickname ) {
-							myNickname = pendingNickname;
-							pendingNickname = null;
-						}
-						
-						var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-						if( user.statusCode == 201 ) {
-							unlockRoom(myIsReserved);
-		                }
-
-						updateRoomRoster( presence );
-	
-						if (presence.type == Presence.UNAVAILABLE_TYPE && isActive() && isThisUser(presence.from)) {
-							//trace("Room: becoming inactive: " + presence.getNode());
-							active = false;
-							e = new RoomEvent(RoomEvent.ROOM_LEAVE);
-							dispatchEvent(e);
+							}
 						}
 					}
 					break;
