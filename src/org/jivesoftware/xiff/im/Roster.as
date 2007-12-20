@@ -176,7 +176,7 @@ package org.jivesoftware.xiff.im
 			myConnection.send( tempIQ );
 	
 			
-			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, group, subscription, askType );
+			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, [group], subscription, askType );
 		}
 		
 		/**
@@ -199,13 +199,10 @@ package org.jivesoftware.xiff.im
 				return;
 			}
 			// Only request for items in the roster
-			var l:int = length;
-			for( var i:int = 0; i < l; i++ ) {
-				if( getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
-					tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
-					myConnection.send( tempPresence );
-					return;
-				}
+			if(getContactInformation(id))
+			{
+				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
+				myConnection.send( tempPresence );
 			}
 		}
 		
@@ -219,21 +216,16 @@ package org.jivesoftware.xiff.im
 		 */
 		public function removeContact( id:String ):void
 		{
-			var l:uint = length;
-			for( var i:uint = 0; i < l; i++ ) {
-				// Only attempt unsubscribe to users that we are currently subscribed to
-				if( getItemAt( i ).jid.toLowerCase() == id.toLowerCase() ) {
-					var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
-					var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-					ext.addItem( id, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
-					tempIQ.addExtension( ext );
-					myConnection.send( tempIQ );
-					
-					//the roster item is not actually removed from the roster
-					//until confirmation comes back from the XMPP server
-
-					return;
-				}
+			if(getContactInformation( id ))
+			{
+				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
+				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+				ext.addItem( id, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
+				tempIQ.addExtension( ext );
+				myConnection.send( tempIQ );
+				
+				//the roster item is not actually removed from the roster
+				//until confirmation comes back from the XMPP server
 			}
 		}
 		
@@ -297,19 +289,14 @@ package org.jivesoftware.xiff.im
 		 * @param newName The new display name for this contact
 		 * @param newGroups The new groups to associate the contact with
 		 */
-		private function updateContact( id:String, newName:String, newGroups:Array ):void
+		private function updateContact( contact:RosterItemVO, newName:String, newGroups:Array ):void
 		{
-			// Make sure we already subscribe
-			var contact:RosterItemVO = getContactInformation(id);
-			if(contact)
-			{
-				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
-				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
+			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 					
-				ext.addItem( id, contact.subscribeType, newName, newGroups );
-				tempIQ.addExtension( ext );
-				myConnection.send( tempIQ );
-			}
+			ext.addItem( contact.jid, contact.subscribeType, newName, newGroups );
+			tempIQ.addExtension( ext );
+			myConnection.send( tempIQ );
 		}
 		
 		/**
@@ -325,7 +312,7 @@ package org.jivesoftware.xiff.im
 			
 			if ( rosterItem )
 			{
-				updateContact( id, newName, rosterItem.groups );
+				updateContact( rosterItem, newName, rosterItem.groups );
 			}
 		}
 		
@@ -342,7 +329,7 @@ package org.jivesoftware.xiff.im
 			
 			if ( rosterItem )
 			{
-				updateContact( id, rosterItem.displayName, newGroups );
+				updateContact( rosterItem, rosterItem.displayName, newGroups );
 			}
 		}
 		
@@ -355,30 +342,13 @@ package org.jivesoftware.xiff.im
 		 */
 		public function getContactInformation( jid:String ):RosterItemVO
 		{
-			var l:uint = length;
-			for( var i:uint = 0; i < l; i++ ) 
+			jid = jid.toLowerCase();
+			for each(var rosterItem:RosterItemVO in this)
 			{
-				if( jid.toLowerCase() == getItemAt( i ).jid.toLowerCase() )
-				{
-					return getItemAt( i ) as RosterItemVO;
-				}
-					
+				if( jid == rosterItem.jid.toLowerCase() )
+					return rosterItem;
 			}
-			
 			return null;
-		}
-		
-		private function getContactIndex(jid:String):int
-		{
-			var l:int = length;
-			for( var i:int = 0; i < l; i++ ) 
-			{
-				if( jid.toLowerCase() == getItemAt( i ).jid.toLowerCase() )
-				{
-					return i;
-				}
-			}
-			return -1;
 		}
 		
 		/**
@@ -412,35 +382,30 @@ package org.jivesoftware.xiff.im
 		
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
-			disableAutoUpdate()
 			// Clear out the old roster
 			removeAll();
 			try
 			{
-				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS )) {
-					for each(var item:* in ext.getAllItems()) {
+				disableAutoUpdate()
+				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS )) 
+				{
+					for each(var item:* in ext.getAllItems()) 
+					{
 						//var classInfo:XML = flash.utils.describeType(item);
 						if (!item is XMLStanza)
 							continue;
 						
-						var groups:Array = item.getGroups();
-						if(groups.length == 0)
-							groups = ["General"];
-						
-						for each(var group:String in groups) {
-							addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
-						}		
+						addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups(), item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
 					}
 				}
-				
 				enableAutoUpdate();
+				
 				// Fire Roster Loaded Event
 				var ev: RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
 				dispatchEvent(ev);
 			}
 			catch (e:Error)
 			{
-				enableAutoUpdate();
 				trace(e.getStackTrace());
 			}
 		}
@@ -479,12 +444,10 @@ package org.jivesoftware.xiff.im
 				case RosterExtension.NS:
 					try
 					{
-						var tempIQ:IQ = eventObj.iq as IQ;
-						var ext:RosterExtension = tempIQ.getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
+						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var i:int = getContactIndex(item.jid);
-							var rosterItemVO:RosterItemVO = getContactInformation(item.jid.toLowerCase());
+							var rosterItemVO:RosterItemVO = getContactInformation(item.jid);
 							var ev: RosterEvent;
 							
 							if (rosterItemVO)
@@ -498,36 +461,31 @@ package org.jivesoftware.xiff.im
 										break;
 									
 									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
-										//TODO: is this the right thing to do here?
-										if(i < 0)
-											return; //couldn't find the contact
 										ev = new RosterEvent(RosterEvent.USER_REMOVED);
-										ev.data = removeItemAt(i);
+										//should be impossible for getItemIndex to return -1, since we just looked it up
+										ev.data = removeItemAt(getItemIndex(rosterItemVO));
 										ev.jid = item.jid;
 										dispatchEvent(ev);
 										break;
 														
 									default:
-										updateRosterItemSubscription(i, item.subscription.toLowerCase(), item.name, item.getGroups());
+										updateRosterItemSubscription(rosterItemVO, item.subscription.toLowerCase(), item.name, item.getGroups());
 										break;
 								}
 							} 
-							else {
+							else 
+							{
 								var groups:Array = item.getGroups();
-								if(groups.length == 0)
+
+								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
 								{
-									groups.push("General");
+									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
+									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}
-								for each(var group:String in groups)
+								else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) 
 								{
-									if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) {
-										// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-										addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
-									}
-									else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) {
-										// A contact was added to the roster, and its authorization is still pending.
-										addRosterItem( item.jid, item.name, RosterExtension.SHOW_PENDING, "Pending", group, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
-									}
+									// A contact was added to the roster, and its authorization is still pending.
+									addRosterItem( item.jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}
 							}
 						}
@@ -567,9 +525,9 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(unavailEv);
 	
 						aPresence.show = Presence.UNAVAILABLE_TYPE
-						var i:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
-						if(i < 0) return;
-						updateRosterItemPresence( i, aPresence );
+						var item:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						if(!item) return;
+						updateRosterItemPresence( item, aPresence );
 						
 						break;
 					
@@ -581,9 +539,9 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var j:int = this.getContactIndex(aPresence.from.split("/")[0].toLowerCase());
-						if(j < 0) return;
-						updateRosterItemPresence( j, aPresence );
+						var item:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						if(!item) return;
+						updateRosterItemPresence( item, aPresence );
 						
 						
 						break;
@@ -593,87 +551,61 @@ package org.jivesoftware.xiff.im
 		
 		
 		
-		private function addRosterItem( jid:String, displayName:String, show:String, status:String, group:String, type:String, askType:String="none" ):Boolean
+		private function addRosterItem( jid:String, displayName:String, show:String, status:String, groups:Array, type:String, askType:String="none" ):Boolean
 		{
-			// If no displayName, use the jid
-			if( displayName == null ){
-				displayName = jid;
+			if(!jid) 
+				return false;
+			
+			var rosterItem:RosterItemVO = getContactInformation(jid);
+			if(!rosterItem)
+			{
+				rosterItem = new RosterItemVO();
+				rosterItem.jid = jid;
+				if(displayName)
+					rosterItem.displayName = displayName;
+				rosterItem.subscribeType = type;
+				rosterItem.askType = askType;
+				rosterItem.status = status;
+				rosterItem.show = show;
+			
+				addItem( rosterItem );
 			}
 			
-			//*************
-			//consider updating this to use a proper typed value object
-			//*************
-				
-			//var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
-			// XIFF-10
-			if(jid != null) {
-				
-				// we need to check if the item already exists (as in pending request)
-				for (var i:int=0; i<length; i++){
-					var rosterItem:RosterItemVO = getItemAt(i) as RosterItemVO;
-					if (rosterItem.jid == jid && rosterItem.containsGroup(group)) {
-						// if so, do nothing.. item will update with presence information
-						return true;
-					}
-					else if(rosterItem.jid == jid && group != null) {
-						// If the user exists, but the group has yet to be used, then add the group.
-						rosterItem.addGroup(group);
-					}
-				}
-				
-				var item: RosterItemVO = new RosterItemVO();
-				item.jid = jid;
-				item.displayName = displayName;
-				item.addGroup(group);
-				item.subscribeType = type;
-				item.askType = askType;
-				item.status = status;
-				item.show = show;
-				
-				addItem( item );
-				
-				var event:RosterEvent = new RosterEvent(RosterEvent.USER_ADDED);
-				event.jid = item.jid;
-				event.data = item;
-				dispatchEvent(event);
-			}
+			rosterItem.groups = groups;
+			
+			var event:RosterEvent = new RosterEvent(RosterEvent.USER_ADDED);
+			event.jid = jid;
+			event.data = rosterItem;
+			dispatchEvent(event);
+
 			return true;
 		}
 		
-		private function updateRosterItemSubscription( index:int, type:String, name:String, newGroups:Array ):void
+		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroups:Array ):void
 		{
-			// Update this appropriately
-			var item: RosterItemVO = getItemAt(index) as RosterItemVO;
-
 			item.subscribeType = type;
 			
-			if (newGroups.length == 0) {
-				newGroups.push("General");
-			}
 			item.groups = newGroups;
 
-			item.displayName = name != null ? name : item.jid;
+			if(name)
+				item.displayName = name;
 			
-			var event:RosterEvent = new RosterEvent(RosterEvent.USER_UPDATED);
+			var event:RosterEvent = new RosterEvent(RosterEvent.USER_SUBSCRIPTION_UPDATED);
 			event.jid = item.jid;
 			event.data = item;
 			dispatchEvent(event);
-				
-
 		}
 		
-		private function updateRosterItemPresence( index:*, presence:Presence ):void
+		private function updateRosterItemPresence( item:RosterItemVO, presence:Presence ):void
 		{
 			try
-			{
-				var item:RosterItemVO = getItemAt( index ) as RosterItemVO;	
+			{	
 				item.status = presence.status != null ? presence.status : Presence.SHOW_OFFLINE;
 				// By default, normal isn't specified, so if null, we will use NORMAL
 				item.show = presence.show != null ? presence.show : Presence.SHOW_NORMAL;
 				item.priority = presence.priority;
 				
-				
-				var event:RosterEvent = new RosterEvent(RosterEvent.USER_UPDATED);
+				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
 				event.jid = item.jid;
 				event.data = item;
 				_presenceMap[item.jid] = presence;

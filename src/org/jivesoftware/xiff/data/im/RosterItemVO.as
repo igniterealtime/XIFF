@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.data.im
 		
 		public function get uid():String
 		{
-			return jid;
+			return _jid;
 		}
 		
 		public function set subscribeType(newSub:String):void
@@ -102,7 +102,7 @@ package org.jivesoftware.xiff.data.im
 		
 		public function set jid(j:String):void
 		{
-			var oldjid:String = jid;
+			var oldjid:String = _jid;
 			_jid = j;
 			//if we aren't using a custom display name, then settings the jid updates the display name
 			if(!_displayName)
@@ -134,13 +134,17 @@ package org.jivesoftware.xiff.data.im
 		public function addGroup(group:String):void 
 		{
 			if (group && !containsGroup(group))
+			{
 				_groups.push(group);
-			dispatchEvent(new Event("groupsModified"));
-			PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
+				dispatchEvent(new Event("groupsModified"));
+				PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
+			}
 		}
 		
 		public function set groups(newGroups:Array):void
 		{
+			if(!newGroups || newGroups.length == 0)
+				newGroups = ["General"];
 			_groups = newGroups;
 			dispatchEvent(new Event("groupsModified"));
 			PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
@@ -162,50 +166,50 @@ package org.jivesoftware.xiff.data.im
 		
 	    public function get node():String 
 	    {
-	        var atIndex:int = jid.lastIndexOf("@");
+	        var atIndex:int = _jid.lastIndexOf("@");
 	        if (atIndex <= 0)
 	            return "";
 	        else
-	            return jid.substring(0, atIndex);
+	            return _jid.substring(0, atIndex);
 	    }
 
 	    public function get server():String 
 	    {
-	        var atIndex:int = jid.lastIndexOf("@");
+	        var atIndex:int = _jid.lastIndexOf("@");
 	        // If the String ends with '@', return the empty string.
-	        if (atIndex + 1 > jid.length)
+	        if (atIndex + 1 > _jid.length)
 	            return "";
-	        var slashIndex:int = jid.indexOf("/");
+	        var slashIndex:int = _jid.indexOf("/");
 	        if (slashIndex > 0 && slashIndex > atIndex)
-	            return jid.substring(atIndex + 1, slashIndex);
+	            return _jid.substring(atIndex + 1, slashIndex);
 	        else
-	            return jid.substring(atIndex + 1);
+	            return _jid.substring(atIndex + 1);
 	    }
 
 	    public function get resource():String 
 	    {
-	        var slashIndex:int = jid.indexOf("/");
-	        if (slashIndex + 1 > jid.length || slashIndex < 0)
+	        var slashIndex:int = _jid.indexOf("/");
+	        if (slashIndex + 1 > _jid.length || slashIndex < 0)
 	            return "";
 	        else
-	            return jid.substring(slashIndex + 1);
+	            return _jid.substring(slashIndex + 1);
 	    }
 
 	    public function get bareAddress():String 
 	    {
-	        var slashIndex:int = jid.indexOf("/");
+	        var slashIndex:int = _jid.indexOf("/");
 	        if (slashIndex < 0)
-	            return jid;
+	            return _jid;
 	        else if (slashIndex == 0)
 	            return "";
 	        else
-	            return jid.substring(0, slashIndex);
+	            return _jid.substring(0, slashIndex);
 	    }
 	    
-	    public static function parseBareAddress(jid:String):String
+	    public static function parseBareAddress(inJid:String):String
 	    {
 	    	var temp:RosterItemVO = new RosterItemVO();
-	    	temp.jid = jid;
+	    	temp.jid = inJid;
 	    	return temp.bareAddress;
 	    }
 	}

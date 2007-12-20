@@ -34,7 +34,8 @@ package org.jivesoftware.xiff.events
 		public static const USER_UNAVAILABLE:String = "userUnavailable";
 		public static const USER_ADDED:String = 'userAdded';
 		public static const USER_REMOVED:String = 'userRemoved';
-		public static const USER_UPDATED:String = 'userUpdated';
+		public static const USER_PRESENCE_UPDATED:String = 'userPresenceUpdated';
+		public static const USER_SUBSCRIPTION_UPDATED:String = 'userSubscriptionUpdated';
 		public static const ROSTER_LOADED:String = "rosterLoaded";
 		
 		private var _data:*;
