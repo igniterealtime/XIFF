@@ -501,6 +501,12 @@ package org.jivesoftware.xiff.core
 				}
 			}
 			
+			if(ev.data == "</flash:stream>")
+			{
+				socketClosed(null);
+				return;	
+			}	
+			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
 			xmlData.parseXML( ev.data );
