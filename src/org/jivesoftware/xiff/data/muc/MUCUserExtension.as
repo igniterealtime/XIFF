@@ -137,7 +137,12 @@
 	     */
 	    public function get reason():String
 	    {
-	        return myActionNode.firstChild.firstChild.nodeValue;
+	    	if (myActionNode.firstChild != null) {
+	    		if (myActionNode.firstChild.firstChild != null) {
+	    			return myActionNode.firstChild.firstChild.nodeValue;
+	    		}
+	    	}
+	        return null;
 	    }
 	
 		/**

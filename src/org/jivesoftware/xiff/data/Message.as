@@ -24,12 +24,10 @@
 package org.jivesoftware.xiff.data
 {
 	 
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.xhtml.XHTMLExtension;
 	import flash.xml.XMLNode;
-	import org.jivesoftware.xiff.events.XIFFErrorEvent;
+	
+	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
+	import org.jivesoftware.xiff.data.xhtml.XHTMLExtension;
 	
 	/**
 	 * A class for abstraction and encapsulation of message data.
@@ -121,7 +119,11 @@ package org.jivesoftware.xiff.data
 						case "x":
 							if(children[i].attributes.xmlns == "jabber:x:delay")
 								myTimeStampNode = children[i];
-
+							if(children[i].attributes.xmlns == "http://jabber.org/protocol/muc#user") {
+								var mucUserExtension:MUCUserExtension = new MUCUserExtension(getNode());
+								mucUserExtension.deserialize(children[i]);
+								addExtension(mucUserExtension);
+							}
 							break;
 					}
 				}
