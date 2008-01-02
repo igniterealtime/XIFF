@@ -21,15 +21,12 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import flash.xml.XMLNode;
 	
 	import org.jivesoftware.xiff.data.Extension;
-	//import org.jivesoftware.xiff.data.ExtensionContainer;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	
-	import org.jivesoftware.xiff.data.forms.FormField;
-	import flash.xml.XMLNode;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -76,6 +73,9 @@
 		public function FormExtension( parent:XMLNode=null )
 		{
 			super(parent);
+			myItems = new Array();
+			myFields = new Array();
+			myReportedFields = new Array();
 		}
 	
 		public function getNS():String
@@ -128,23 +128,24 @@
 				{
 	                case "instructions": myInstructionsNode = c; break;
 	                case "title": myTitleNode = c; break;
-	                case "reported": 
-	                    field = new FormField();
-	                    field.deserialize(c);
-	                    myReportedFields.push(field);
+	                case "reported":
+	                	for (var j:String in c.childNodes) {
+	                		var fieldXML:XMLNode = c.childNodes[j];
+	                		field = new FormField();
+	                		field.deserialize(fieldXML);
+	                		myReportedFields.push(field);
+	                	}
 	                    break;
 	
 					case "item":
-	                    var newItem:Array = [];
+						var itemFields:Array = new Array();
 	                    for (var j:String in c.childNodes) {
 	                        var fieldXML:XMLNode = c.childNodes[j];
-	                        //var field = new FormField(c);
-	                        field = c as FormField;
+	                        field = new FormField();
 	                        field.deserialize(fieldXML);
-	                        newItem.push(field);
+	                        itemFields.push(field);
 	                    }
-	                    // TODO sort out problem with syncing XML model and array model
-	                    myItems.push(newItem)
+	                    myItems.push(itemFields);
 						break;
 	
 	                case "field":

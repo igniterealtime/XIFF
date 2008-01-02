@@ -1,10 +1,12 @@
 package org.jivesoftware.xiff.data.search{
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.IExtension;
+	import flash.xml.XMLNode;
+	
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import flash.xml.XMLNode;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
+	import org.jivesoftware.xiff.data.forms.FormExtension;
 		
 	/**
 	 * Implements jabber:iq:search namespace.  Use this to perform user searches.
@@ -78,7 +80,11 @@ package org.jivesoftware.xiff.data.search{
 						break;
 						
 					case "x":
-						// Not handling data forms yet.
+						if (children[i].namespaceURI == FormExtension.NS) {
+							var dataFormExt:FormExtension = new FormExtension(getNode());
+							dataFormExt.deserialize(children[i]);
+							this.addExtension(dataFormExt);
+						}
 						break;
 						
 					case "item":

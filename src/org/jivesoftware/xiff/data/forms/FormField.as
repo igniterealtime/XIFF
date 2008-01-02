@@ -21,9 +21,10 @@
 	 *
 	 */
 	 
-	import org.jivesoftware.xiff.data.XMLStanza;
-	import org.jivesoftware.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.ISerializable;
+	import org.jivesoftware.xiff.data.XMLStanza;
 	
 	/**
 	 * This class is used by the FormExtension class for managing fields
@@ -171,10 +172,11 @@
 	     *
 		 * @availability Flash Player 7
 	     */
-	    public function get value():String { 
+	    public function get value():String {
 	    	try 
 	    	{
-	    		return myValueNodes[0].firstChild.nodeValue; 
+	    		if (myValueNodes[0] != null && myValueNodes[0].firstChild != null)
+	    			return myValueNodes[0].firstChild.nodeValue; 
 	    	}
 	    	catch (error:Error)
 	    	{
@@ -185,6 +187,9 @@
 	    
 	    public function set value(val:String) :void
 	    {
+	    	if (myValueNodes == null)
+	    		myValueNodes = new Array();
+
 	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", val);
 	    }
 	

@@ -119,7 +119,7 @@ package org.jivesoftware.xiff.data
 						case "x":
 							if(children[i].attributes.xmlns == "jabber:x:delay")
 								myTimeStampNode = children[i];
-							if(children[i].attributes.xmlns == "http://jabber.org/protocol/muc#user") {
+							if(children[i].attributes.xmlns == MUCUserExtension.NS) {
 								var mucUserExtension:MUCUserExtension = new MUCUserExtension(getNode());
 								mucUserExtension.deserialize(children[i]);
 								addExtension(mucUserExtension);
