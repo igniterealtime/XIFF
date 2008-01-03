@@ -78,7 +78,6 @@ package org.jivesoftware.xiff.data.im
 		
 		public function set status(newStatus:String):void
 		{
-			newStatus = newStatus != null ? newStatus : Presence.SHOW_OFFLINE;
 			var oldStatus:String = status;
 			_status = newStatus;
 			PropertyChangeEvent.createUpdateEvent(this, "status", oldStatus, status);
@@ -87,7 +86,9 @@ package org.jivesoftware.xiff.data.im
 		[Bindable]
 		public function get status():String
 		{
-			return _status;
+			if(show == Presence.SHOW_OFFLINE)
+				return Presence.SHOW_OFFLINE;
+			return _status ? _status : "Available";
 		}
 		
 		public function set show(newShow:String):void
