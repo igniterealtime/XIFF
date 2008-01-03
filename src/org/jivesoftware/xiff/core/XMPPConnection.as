@@ -34,8 +34,6 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
-	import mx.utils.StringUtil;
-	
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.IQ;
 	import org.jivesoftware.xiff.data.Message;
@@ -712,7 +710,6 @@ package org.jivesoftware.xiff.core
 		
 		protected function flushPresenceQueue(evt:TimerEvent):void
 		{
-			trace("Presence queue size is: " + presenceQueue.length);
 			var event:PresenceEvent = new PresenceEvent();
 			event.data = presenceQueue;
 			dispatchEvent( event );

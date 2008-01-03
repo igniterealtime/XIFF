@@ -6,6 +6,8 @@ package org.jivesoftware.xiff.data.im
 	import mx.core.IPropertyChangeNotifier;
 	import mx.events.PropertyChangeEvent;
 	
+	import org.jivesoftware.xiff.data.Presence;
+	
 	public class RosterItemVO extends EventDispatcher implements IPropertyChangeNotifier
 	{
 		//var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
@@ -76,6 +78,7 @@ package org.jivesoftware.xiff.data.im
 		
 		public function set status(newStatus:String):void
 		{
+			newStatus = newStatus != null ? newStatus : Presence.SHOW_OFFLINE;
 			var oldStatus:String = status;
 			_status = newStatus;
 			PropertyChangeEvent.createUpdateEvent(this, "status", oldStatus, status);
@@ -89,6 +92,8 @@ package org.jivesoftware.xiff.data.im
 		
 		public function set show(newShow:String):void
 		{
+			// By default, normal isn't specified, so if null, we will use NORMAL
+			newShow = newShow != null ? newShow : Presence.SHOW_NORMAL;
 			var oldShow:String = show;
 			_show = newShow;
 			PropertyChangeEvent.createUpdateEvent(this, "show", oldShow, show);

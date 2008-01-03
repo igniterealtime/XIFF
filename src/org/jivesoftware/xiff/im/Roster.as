@@ -112,6 +112,7 @@ package org.jivesoftware.xiff.im
 		private var pendingSubscriptionRequestJID:String;
 		private var _presenceMap:Array = new Array();
 		
+		private var _me:RosterItemVO;
 		
 		private static var staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
@@ -343,6 +344,8 @@ package org.jivesoftware.xiff.im
 		public function getContactInformation( jid:String ):RosterItemVO
 		{
 			jid = jid.toLowerCase();
+			if(jid == me.jid.toLowerCase())
+				return me;
 			for each(var rosterItem:RosterItemVO in this)
 			{
 				if( jid == rosterItem.jid.toLowerCase() )
@@ -560,17 +563,16 @@ package org.jivesoftware.xiff.im
 			if(!rosterItem)
 			{
 				rosterItem = new RosterItemVO();
-				rosterItem.jid = jid;
-				if(displayName)
-					rosterItem.displayName = displayName;
-				rosterItem.subscribeType = type;
-				rosterItem.askType = askType;
-				rosterItem.status = status;
-				rosterItem.show = show;
-			
 				addItem( rosterItem );
 			}
 			
+			rosterItem.jid = jid;
+			if(displayName)
+				rosterItem.displayName = displayName;
+			rosterItem.subscribeType = type;
+			rosterItem.askType = askType;
+			rosterItem.status = status;
+			rosterItem.show = show;	
 			rosterItem.groups = groups;
 			
 			var event:RosterEvent = new RosterEvent(RosterEvent.USER_ADDED);
@@ -600,9 +602,8 @@ package org.jivesoftware.xiff.im
 		{
 			try
 			{	
-				item.status = presence.status != null ? presence.status : Presence.SHOW_OFFLINE;
-				// By default, normal isn't specified, so if null, we will use NORMAL
-				item.show = presence.show != null ? presence.show : Presence.SHOW_NORMAL;
+				item.status = presence.status;
+				item.show = presence.show;
 				item.priority = presence.priority;
 				
 				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
@@ -621,6 +622,15 @@ package org.jivesoftware.xiff.im
 			return _presenceMap[jid];
 		}
 		
+		public function changePresence(show:String, status:String):void
+		{
+			var presence:Presence = new Presence();
+			presence.type = Presence.AVAILABLE_TYPE;
+			presence.show = show;
+			presence.status = status;
+			connection.send(presence);
+			updateRosterItemPresence(me, presence);
+		}
 		
 		/**
 		 * The instance of the XMPPConnection class to use for the roster to use for
@@ -640,6 +650,19 @@ package org.jivesoftware.xiff.im
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
 			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
 			myConnection.addEventListener( RosterExtension.NS, handleEvent );
+			me = new RosterItemVO();
+			me.jid = aConnection.getJID();
+		}
+		
+		[Bindable]
+		public function get me():RosterItemVO
+		{
+			return _me;
+		}
+		
+		public function set me(item:RosterItemVO):void
+		{
+			_me = item;	
 		}
 	}
 }

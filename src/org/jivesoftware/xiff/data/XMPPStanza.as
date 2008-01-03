@@ -22,19 +22,10 @@
 	 *
 	 */
 	 
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.IExtendable;
-	import org.jivesoftware.xiff.data.IExtension;
-	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionContainer;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	
-	import org.jivesoftware.xiff.data.XMLStanza;
-	
-	import org.jivesoftware.xiff.data.id.IncrementalGenerator;
-	import org.jivesoftware.xiff.data.id.IIDGenerator;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.id.IIDGenerator;
+	import org.jivesoftware.xiff.data.id.IncrementalGenerator;
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
@@ -121,8 +112,8 @@
 			var node:XMLNode = getNode();
 			var exts:Array = getAllExtensions();
 	
-			for (var i:String in exts) {
-				ISerializable(exts[i]).serialize(node);
+			for each(var ext:ISerializable in exts) {
+				ext.serialize(node);
 			}
 	
 			if (!exists(node.parentNode)) {
