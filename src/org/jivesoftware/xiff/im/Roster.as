@@ -622,11 +622,12 @@ package org.jivesoftware.xiff.im
 			return _presenceMap[jid];
 		}
 		
-		public function changePresence(show:String, status:String):void
+		public function changePresence(show:String, status:String, priority:Number):void
 		{
 			var presence:Presence = new Presence();
 			presence.type = Presence.AVAILABLE_TYPE;
 			presence.show = show;
+			presence.priority = priority;
 			presence.status = status;
 			connection.send(presence);
 			updateRosterItemPresence(me, presence);
