@@ -381,8 +381,6 @@ package org.jivesoftware.xiff.im
 			myConnection.send( tempPresence );
 		}
 		
-
-		
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
 			// Clear out the old roster
@@ -412,7 +410,6 @@ package org.jivesoftware.xiff.im
 				trace(e.getStackTrace());
 			}
 		}
-	
 	
 		public function addContact_result( resultIQ:IQ ):void
 		{
@@ -546,13 +543,10 @@ package org.jivesoftware.xiff.im
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						
-						
 						break;
 				}
 			}	
 		}
-		
-		
 		
 		private function addRosterItem( jid:String, displayName:String, show:String, status:String, groups:Array, type:String, askType:String="none" ):Boolean
 		{
