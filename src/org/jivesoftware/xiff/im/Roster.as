@@ -528,9 +528,9 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(unavailEv);
 	
 						aPresence.show = Presence.UNAVAILABLE_TYPE
-						var item:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
-						if(!item) return;
-						updateRosterItemPresence( item, aPresence );
+						var unavailableItem:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						if(!unavailableItem) return;
+						updateRosterItemPresence( unavailableItem, aPresence );
 						
 						break;
 					
@@ -542,9 +542,9 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var item:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
-						if(!item) return;
-						updateRosterItemPresence( item, aPresence );
+						var availableItem:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						if(!availableItem) return;
+						updateRosterItemPresence( availableItem, aPresence );
 						
 						
 						break;

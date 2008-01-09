@@ -129,20 +129,20 @@
 	                case "instructions": myInstructionsNode = c; break;
 	                case "title": myTitleNode = c; break;
 	                case "reported":
-	                	for (var j:String in c.childNodes) {
-	                		var fieldXML:XMLNode = c.childNodes[j];
+	                	for each(var reportedFieldXML:XMLNode in c.childNodes) 
+	                	{
 	                		field = new FormField();
-	                		field.deserialize(fieldXML);
+	                		field.deserialize(reportedFieldXML);
 	                		myReportedFields.push(field);
 	                	}
 	                    break;
 	
 					case "item":
 						var itemFields:Array = new Array();
-	                    for (var j:String in c.childNodes) {
-	                        var fieldXML:XMLNode = c.childNodes[j];
+	                    for each(var itemFieldXML:XMLNode in c.childNodes) 
+	                    {
 	                        field = new FormField();
-	                        field.deserialize(fieldXML);
+	                        field.deserialize(itemFieldXML);
 	                        itemFields.push(field);
 	                    }
 	                    myItems.push(itemFields);
