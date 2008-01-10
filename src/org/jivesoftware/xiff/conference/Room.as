@@ -699,15 +699,19 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function finish_requestConfiguration(iq:IQ):void
 	    {
-				var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
-		        var form:FormExtension = owner.getAllExtensionsByNS(FormExtension.NS)[0];
-		
-		        if( form.type == FormExtension.REQUEST_TYPE ) {
-		        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
-		        	e.data = form;
-		        	dispatchEvent(e);
-		        }
-	        
+			if( iq.type == IQ.ERROR_TYPE ) {
+				finish_admin(iq);
+				return;
+			}
+	
+			var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
+	        var form:FormExtension = owner.getAllExtensionsByNS(FormExtension.NS)[0];
+	
+	        if( form.type == FormExtension.REQUEST_TYPE ) {
+	        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
+	        	e.data = form;
+	        	dispatchEvent(e);
+	        }
 	    }
 	
 		/**

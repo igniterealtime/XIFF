@@ -255,7 +255,7 @@
 	        for (var i:int=0; i < myOptionNodes.length; i++) {
 	            res.push({
 	                label: myOptionNodes[i].attributes.label,
-	                value: myOptionNodes[i].firstChild.nodeValue
+	                value: myOptionNodes[i].firstChild.firstChild.nodeValue
 	            });
 	        }
 	        return res;
