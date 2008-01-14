@@ -211,12 +211,5 @@ package org.jivesoftware.xiff.data.im
 	        else
 	            return _jid.substring(0, slashIndex);
 	    }
-	    
-	    public static function parseBareAddress(inJid:String):String
-	    {
-	    	var temp:RosterItemVO = new RosterItemVO();
-	    	temp.jid = inJid;
-	    	return temp.bareAddress;
-	    }
 	}
 }
