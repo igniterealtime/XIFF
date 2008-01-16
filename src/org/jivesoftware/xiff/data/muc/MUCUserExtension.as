@@ -22,11 +22,9 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
-	
-	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
 	 * Implements the base MUC user protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
@@ -105,6 +103,8 @@
 		 */
 		public function get type():String
 		{
+			if (myActionNode == null)
+				return null;
 			return myActionNode.nodeName == null ? OTHER_TYPE : myActionNode.nodeName;
 		}
 	
