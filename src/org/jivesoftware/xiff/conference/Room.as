@@ -95,6 +95,14 @@ package org.jivesoftware.xiff.conference
 	[Event(name="adminError", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
+	 * Dispatched when the room requires a password and the user did not supply one (or
+	 * the password provided is incorrect).
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="passwordError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
@@ -595,6 +603,11 @@ package org.jivesoftware.xiff.conference
 					{
 						if (presence.type == Presence.ERROR_TYPE) {
 							switch (presence.errorCode) {
+								case 401:
+									e = new RoomEvent(RoomEvent.PASSWORD_ERROR);
+									dispatchEvent(e);
+									break;
+								
 								case 409:
 									e = new RoomEvent(RoomEvent.NICK_CONFLICT);
 									e.nickname = nickname;
