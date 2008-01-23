@@ -38,6 +38,9 @@ package org.jivesoftware.xiff.events
 		public static const ADMIN_ERROR:String = "adminError";
 		public static const PASSWORD_ERROR:String = "passwordError";
 		public static const REGISTRATION_REQ_ERROR:String = "registrationReqError";
+		public static const BANNED_ERROR:String = "bannedError";
+		public static const MAX_USERS_ERROR:String = "maxUsersError";
+		public static const LOCKED_ERROR:String = "lockedError";
 		public static const USER_JOIN:String = "userJoin";
 		public static const USER_DEPARTURE:String = "userDeparture";
 		public static const NICK_CONFLICT:String = "nickConflict";

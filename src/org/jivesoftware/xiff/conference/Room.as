@@ -110,6 +110,28 @@ package org.jivesoftware.xiff.conference
 	[Event(name="registrationReqError", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
+	 * Dispatched if the user has been banned from the room (i.e., has an affiliation of "outcast").
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="bannedError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
+	 * Dispatched if the room has reached its maximum number of occupants.
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="maxUsersError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
+	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
+	 * creator provides an initial configuration and therefore before the room officially exists).
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="lockedError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
@@ -608,10 +630,21 @@ package org.jivesoftware.xiff.conference
 	                //trace("ROOM presence: " + presence.from + " : " + nickname);
 					for each(var presence:Presence in eventObj.data)
 					{
+						trace(presence.getNode());
 						if (presence.type == Presence.ERROR_TYPE) {
 							switch (presence.errorCode) {
 								case 401:
 									e = new RoomEvent(RoomEvent.PASSWORD_ERROR);
+									dispatchEvent(e);
+									break;
+								
+								case 403:
+									e = new RoomEvent(RoomEvent.BANNED_ERROR);
+									dispatchEvent(e);
+									break;
+								
+								case 404:
+									e = new RoomEvent(RoomEvent.LOCKED_ERROR);
 									dispatchEvent(e);
 									break;
 									
@@ -623,6 +656,11 @@ package org.jivesoftware.xiff.conference
 								case 409:
 									e = new RoomEvent(RoomEvent.NICK_CONFLICT);
 									e.nickname = nickname;
+									dispatchEvent(e);
+									break;
+								
+								case 503:
+									e = new RoomEvent(RoomEvent.MAX_USERS_ERROR);
 									dispatchEvent(e);
 									break;
 							}
