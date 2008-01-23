@@ -630,7 +630,6 @@ package org.jivesoftware.xiff.conference
 	                //trace("ROOM presence: " + presence.from + " : " + nickname);
 					for each(var presence:Presence in eventObj.data)
 					{
-						trace(presence.getNode());
 						if (presence.type == Presence.ERROR_TYPE) {
 							switch (presence.errorCode) {
 								case 401:
