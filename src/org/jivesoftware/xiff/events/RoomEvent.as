@@ -37,6 +37,7 @@ package org.jivesoftware.xiff.events
 		public static const AFFILIATIONS:String = "affiliations";
 		public static const ADMIN_ERROR:String = "adminError";
 		public static const PASSWORD_ERROR:String = "passwordError";
+		public static const REGISTRATION_REQ_ERROR:String = "registrationReqError";
 		public static const USER_JOIN:String = "userJoin";
 		public static const USER_DEPARTURE:String = "userDeparture";
 		public static const NICK_CONFLICT:String = "nickConflict";

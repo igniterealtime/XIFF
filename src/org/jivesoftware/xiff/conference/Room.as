@@ -103,6 +103,13 @@ package org.jivesoftware.xiff.conference
 	[Event(name="passwordError", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
+	 * Dispatched when the room is members-only and the user is not on the member list.
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="registrationReqError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
@@ -605,6 +612,11 @@ package org.jivesoftware.xiff.conference
 							switch (presence.errorCode) {
 								case 401:
 									e = new RoomEvent(RoomEvent.PASSWORD_ERROR);
+									dispatchEvent(e);
+									break;
+									
+								case 407:
+									e = new RoomEvent(RoomEvent.REGISTRATION_REQ_ERROR);
 									dispatchEvent(e);
 									break;
 								
