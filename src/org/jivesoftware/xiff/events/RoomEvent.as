@@ -43,6 +43,8 @@ package org.jivesoftware.xiff.events
 		public static const LOCKED_ERROR:String = "lockedError";
 		public static const USER_JOIN:String = "userJoin";
 		public static const USER_DEPARTURE:String = "userDeparture";
+		public static const USER_KICKED:String = "userKicked";
+		public static const USER_BANNED:String = "userBanned";
 		public static const NICK_CONFLICT:String = "nickConflict";
 		public static const CONFIGURE_ROOM:String = "configureForm";
 		public static const DECLINED:String = "declined";

@@ -25,6 +25,7 @@ package org.jivesoftware.xiff.conference
 {
 	import mx.collections.ArrayCollection;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.*;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
@@ -110,7 +111,8 @@ package org.jivesoftware.xiff.conference
 	[Event(name="registrationReqError", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
-	 * Dispatched if the user has been banned from the room (i.e., has an affiliation of "outcast").
+	 * Dispatched if the user attempted to join the room but was not allowed to do so because
+	 * they are banned (i.e., has an affiliation of "outcast").
 	 *
 	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
@@ -146,6 +148,20 @@ package org.jivesoftware.xiff.conference
 	 * @eventType org.jivesoftware.xiff.events.RoomEvent
 	 */
 	[Event(name="userDeparture", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
+	 * Dispatched when a user is kicked from the room.
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="userKicked", type="org.jivesoftware.xiff.events.RoomEvent")]
+	
+	/**
+	 * Dispatched when a user is banned from the room.
+	 *
+	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 */
+	[Event(name="userBanned", type="org.jivesoftware.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the user's preferred nickname already exists in the room.  The 
@@ -672,9 +688,21 @@ package org.jivesoftware.xiff.conference
 							}
 							
 							var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-							if( user.statusCode == 201 ) {
-								unlockRoom(myIsReserved);
-			                }
+							switch (user.statusCode) {
+								case 201:
+									unlockRoom(myIsReserved);
+									break;
+								case 307:
+									e = new RoomEvent(RoomEvent.USER_KICKED);
+									e.nickname = new JID(presence.from).resource;
+									dispatchEvent(e);
+									break;
+								case 301:
+									e = new RoomEvent(RoomEvent.USER_BANNED);
+									e.nickname = new JID(presence.from).resource;
+									dispatchEvent(e);
+									break;
+							}
 	
 							updateRoomRoster( presence );
 		
@@ -1023,9 +1051,9 @@ package org.jivesoftware.xiff.conference
 		                
 		    		// If the user left, remove the item
 		        	if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
-					//trace("Room: updateRoomRoster: leaving room: " + userNickname);
-		
-		           		// Notify listeners that a user has left the room
+						//trace("Room: updateRoomRoster: leaving room: " + userNickname);
+						
+                        // Notify listeners that a user has left the room
 		           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
 		            	e.nickname = userNickname
 		            	e.data = aPresence;
