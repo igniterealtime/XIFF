@@ -348,7 +348,6 @@ package org.jivesoftware.xiff.conference
 				// Clear out the roster items
 				removeAll();
 				myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
-				myConnection.removeEventListener(PresenceEvent.PRESENCE, handleEvent);
 				myConnection.removeEventListener(DisconnectionEvent.DISCONNECT, handleEvent);
 			}
 		}
@@ -711,6 +710,7 @@ package org.jivesoftware.xiff.conference
 								active = false;
 								e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 								dispatchEvent(e);
+								myConnection.removeEventListener(PresenceEvent.PRESENCE, handleEvent);
 							}
 						}
 					}
