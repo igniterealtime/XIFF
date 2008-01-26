@@ -645,49 +645,53 @@ package org.jivesoftware.xiff.conference
 	                //trace("ROOM presence: " + presence.from + " : " + nickname);
 					for each(var presence:Presence in eventObj.data)
 					{
-						if (presence.type == Presence.ERROR_TYPE) {
-							switch (presence.errorCode) {
+						if (presence.type == Presence.ERROR_TYPE) 
+						{
+							switch (presence.errorCode) 
+							{
 								case 401:
 									e = new RoomEvent(RoomEvent.PASSWORD_ERROR);
-									dispatchEvent(e);
 									break;
 								
 								case 403:
 									e = new RoomEvent(RoomEvent.BANNED_ERROR);
-									dispatchEvent(e);
 									break;
 								
 								case 404:
 									e = new RoomEvent(RoomEvent.LOCKED_ERROR);
-									dispatchEvent(e);
 									break;
 									
 								case 407:
 									e = new RoomEvent(RoomEvent.REGISTRATION_REQ_ERROR);
-									dispatchEvent(e);
 									break;
 								
 								case 409:
 									e = new RoomEvent(RoomEvent.NICK_CONFLICT);
 									e.nickname = nickname;
-									dispatchEvent(e);
 									break;
 								
 								case 503:
 									e = new RoomEvent(RoomEvent.MAX_USERS_ERROR);
-									dispatchEvent(e);
+									break;
+									
+								default:
+									e = new RoomEvent("MUC Error of type: " + presence.errorCode);
 									break;
 							}
+							dispatchEvent(e);
 						}
-						else if( isThisRoom( presence.from ) ) {
+						else if( isThisRoom( presence.from ) ) 
+						{
 							// If the presence has our pending nickname, nickname change went through
-							if( presence.from.split( "/" )[1] == pendingNickname ) {
+							if( presence.from.split( "/" )[1] == pendingNickname ) 
+							{
 								myNickname = pendingNickname;
 								pendingNickname = null;
 							}
 							
 							var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-							switch (user.statusCode) {
+							switch (user.statusCode) 
+							{
 								case 201:
 									unlockRoom(myIsReserved);
 									break;
