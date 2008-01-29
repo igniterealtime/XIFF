@@ -1057,6 +1057,13 @@ package org.jivesoftware.xiff.conference
 		        	if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
 						//trace("Room: updateRoomRoster: leaving room: " + userNickname);
 						
+						var user:MUCUserExtension = aPresence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+						if (user.statusCode == 307) {
+							// User left as a result of a kick, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED
+							removeItemAt(i);
+							return;
+						}
+						
                         // Notify listeners that a user has left the room
 		           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
 		            	e.nickname = userNickname
@@ -1089,7 +1096,8 @@ package org.jivesoftware.xiff.conference
 		
 		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):void
 		{
-			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid});
+			// Here we add roomJid:myJID to facilitate clients in correlating room occupants with rooms.
+			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID});
 		}
 		
 		/**
