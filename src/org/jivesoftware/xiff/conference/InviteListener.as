@@ -103,7 +103,7 @@ package org.jivesoftware.xiff.conference
 						var muc:MUCUserExtension =  exts[0];
 	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
 	                        var room:Room = new Room(myConnection);
-	                        room.setRoomJID(msg.from);
+	                        room.roomJID = msg.from;
 	                        room.password = muc.password;
 							var e:InviteEvent = new InviteEvent();
 							e.from = muc.from;

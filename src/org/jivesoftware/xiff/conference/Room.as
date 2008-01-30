@@ -249,7 +249,7 @@ package org.jivesoftware.xiff.conference
 		{
 			active = false;
 			if (aConnection != null){
-				setConnection( aConnection );
+				connection = aConnection ;
 			}
 		}
 		
@@ -267,7 +267,7 @@ package org.jivesoftware.xiff.conference
 		 * @param connection The XMPPConnection instance to use.
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
-		public function setConnection( connection:XMPPConnection ):void
+		public function set connection( connection:XMPPConnection ):void
 		{
 			if (myConnection != null)
 			{
@@ -290,7 +290,7 @@ package org.jivesoftware.xiff.conference
 		 * @returns The XMPPConnection used
 		 * @see org.jivesoftware.xiff.core.XMPPConnection
 		 */
-		public function getConnection():XMPPConnection
+		public function get connection():XMPPConnection
 		{
 			return myConnection;
 		}
@@ -317,7 +317,7 @@ package org.jivesoftware.xiff.conference
 			
 			myIsReserved = createReserved == true ? true : false;
 
-			var joinPresence:Presence = new Presence( getUserJID() );
+			var joinPresence:Presence = new Presence( userJID );
 			if (joinPresenceExtensions != null) {
 				for (var i:int = 0; i < joinPresenceExtensions.length; i++) {
 					joinPresence.addExtension(joinPresenceExtensions[i]);
@@ -342,7 +342,7 @@ package org.jivesoftware.xiff.conference
 		public function leave():void
 		{
 			if( isActive ) {
-				var leavePresence:Presence = new Presence( getUserJID(), null, Presence.UNAVAILABLE_TYPE );
+				var leavePresence:Presence = new Presence( userJID, null, Presence.UNAVAILABLE_TYPE );
 				myConnection.send( leavePresence );
 				
 				// Clear out the roster items
@@ -516,7 +516,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return The fully qualified room name.
 		 */
-		public function getFullRoomName():String
+		public function get fullRoomName():String
 		{
 	        return roomJID;
 		}
@@ -534,7 +534,7 @@ package org.jivesoftware.xiff.conference
 	    /**
 	     * Set the JID of the room in the form "room@conference.server"
 	     */
-	    public function setRoomJID( jid:String ):void
+	    public function set roomJID( jid:String ):void
 	    {
 	        myJID = jid;
 	    }
@@ -544,7 +544,7 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * @return your JID in the room 
 	     */
-	    public function getUserJID():String
+	    public function get userJID():String
 	    {
 	        return roomJID + "/" + nickname;
 	    }
@@ -555,7 +555,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return The user's role
 		 */
-		public function getRole():String
+		public function get role():String
 		{
 			return myRole;
 		}
@@ -567,7 +567,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return The user's affiliation
 		 */
-		public function getAffiliation():String
+		public function get affiliation():String
 		{
 			return myAffiliation;
 		}
@@ -893,7 +893,7 @@ package org.jivesoftware.xiff.conference
 	        }
 	
 	        iq.addExtension(owner);
-	        getConnection().send(iq);
+	        connection.send(iq);
 	    }
 	
 	    /**
@@ -990,7 +990,7 @@ package org.jivesoftware.xiff.conference
 	        owner.addItem(affiliation);
 	
 	        iq.addExtension(owner);
-	        getConnection().send(iq);
+	        connection.send(iq);
 	    }
 	
 	    private function finish_requestAffiliates(iq:IQ):void
@@ -1118,12 +1118,12 @@ package org.jivesoftware.xiff.conference
 		 * same as the user's JID.
 		 *
 		 * @param the room JID to test
-		 * @return true if the passed JID matches the getUserJID()
+		 * @return true if the passed JID matches the userJID
 		 */
 		public function isThisUser( sender:String ):Boolean
 		{
 			// Case insensitive check that the sender is the same as the user
-			return sender.toLowerCase() == getUserJID().toLowerCase();
+			return sender.toLowerCase() == userJID.toLowerCase();
 		}
 		
 		/**
@@ -1140,7 +1140,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function set conferenceServer( aServer:String ):void
 		{
-			setRoomJID(roomName + "@" + aServer);
+			roomJID = roomName + "@" + aServer;
 		}
 		
 		/**
@@ -1156,7 +1156,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function set roomName( aName:String ):void
 		{
-			setRoomJID(aName + "@" + conferenceServer);
+			roomJID = aName + "@" + conferenceServer;
 		}
 		
 		/**
@@ -1174,8 +1174,8 @@ package org.jivesoftware.xiff.conference
 		{	
 			if( isActive ) {
 				pendingNickname = theNickname;
-				// var tempPresence:Presence = new Presence( getUserJID() );
-				var tempPresence:Presence = new Presence( getUserJID() + "/" + pendingNickname );
+				// var tempPresence:Presence = new Presence( userJID );
+				var tempPresence:Presence = new Presence( userJID + "/" + pendingNickname );
 				myConnection.send( tempPresence );
 			}
 			else {
