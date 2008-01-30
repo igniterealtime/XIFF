@@ -311,7 +311,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
 		{
-			if(!myConnection.isActive() || isActive()) {
+			if(!myConnection.isActive() || isActive) {
 				return false;
 			}
 			
@@ -341,7 +341,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function leave():void
 		{
-			if( isActive() ) {
+			if( isActive ) {
 				var leavePresence:Presence = new Presence( getUserJID(), null, Presence.UNAVAILABLE_TYPE );
 				myConnection.send( leavePresence );
 				
@@ -363,7 +363,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
-			var tempMessage:Message = new Message( getRoomJID(), null, body, htmlBody, Message.GROUPCHAT_TYPE );
+			var tempMessage:Message = new Message( roomJID, null, body, htmlBody, Message.GROUPCHAT_TYPE );
 			return tempMessage;
 		}
 		
@@ -375,8 +375,8 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function sendMessage( body:String=null, htmlBody:String=null ):void
 		{
-			if( isActive() ) {
-				var tempMessage:Message = new Message( getRoomJID(), null, body, htmlBody, Message.GROUPCHAT_TYPE );
+			if( isActive ) {
+				var tempMessage:Message = new Message( roomJID, null, body, htmlBody, Message.GROUPCHAT_TYPE );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -389,7 +389,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function sendMessageWithExtension( msg:Message ):void
 		{
-			if( isActive() ) {
+			if( isActive ) {
 				myConnection.send( msg );
 			}
 		}
@@ -404,8 +404,8 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
 		{
-			if( isActive() ) {
-				var tempMessage:Message = new Message( getRoomJID() + "/" + recipientNickname, null, body, htmlBody, Message.CHAT_TYPE );
+			if( isActive ) {
+				var tempMessage:Message = new Message( roomJID + "/" + recipientNickname, null, body, htmlBody, Message.CHAT_TYPE );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -418,8 +418,8 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function changeSubject( newSubject:String ):void
 		{
-			if( isActive() ) {
-				var tempMessage:Message = new Message( getRoomJID(), null, null, null, Message.GROUPCHAT_TYPE, newSubject );
+			if( isActive ) {
+				var tempMessage:Message = new Message( roomJID, null, null, null, Message.GROUPCHAT_TYPE, newSubject );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -433,8 +433,8 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function kickOccupant( occupantNick:String, reason:String ):void
 		{
-			if( isActive() ) {
-				var tempIQ:IQ = new IQ( getRoomJID(), IQ.SET_TYPE, XMPPStanza.generateID("kick_occupant_") );
+			if( isActive ) {
+				var tempIQ:IQ = new IQ( roomJID, IQ.SET_TYPE, XMPPStanza.generateID("kick_occupant_") );
 				var ext:MUCAdminExtension = new MUCAdminExtension(tempIQ.getNode());
 				//ext.addItem(null, MUC.NO_ROLE, null, null, null, reason);
 				ext.addItem(null, MUC.NO_ROLE, occupantNick, null, null, reason); 
@@ -453,8 +453,8 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
 		{
-			if( isActive() ) {
-				var tempIQ:IQ = new IQ( getRoomJID(), IQ.SET_TYPE, XMPPStanza.generateID("voice_") );
+			if( isActive ) {
+				var tempIQ:IQ = new IQ( roomJID, IQ.SET_TYPE, XMPPStanza.generateID("voice_") );
 				var ext:MUCAdminExtension = new MUCAdminExtension(tempIQ.getNode());
 				ext.addItem(null, voice ? MUC.PARTICIPANT_ROLE : MUC.VISITOR_ROLE);
 				tempIQ.addExtension(ext);
@@ -477,7 +477,7 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function invite( jid:String, reason:String ):void
 	    {
-	        var msg:Message = new Message(getRoomJID())
+	        var msg:Message = new Message(roomJID)
 	        var muc:MUCUserExtension = new MUCUserExtension();
 	
 	        muc.invite(jid, undefined, reason);
@@ -501,7 +501,7 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function decline(jid:String, reason:String):void
 	    {
-	        var msg:Message = new Message(getRoomJID())
+	        var msg:Message = new Message(roomJID)
 	        var muc:MUCUserExtension = new MUCUserExtension();
 	
 	        muc.decline(jid, undefined, reason);
@@ -518,7 +518,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function getFullRoomName():String
 		{
-	        return getRoomJID();
+	        return roomJID;
 		}
 	
 	    /**
@@ -526,7 +526,7 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * @return The room's JID.
 	     */
-	    public function getRoomJID():String
+	    public function get roomJID():String
 	    {
 	        return myJID;
 	    }
@@ -546,7 +546,7 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function getUserJID():String
 	    {
-	        return getRoomJID() + "/" + nickname;
+	        return roomJID + "/" + nickname;
 	    }
 		
 		/**
@@ -578,7 +578,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return True if the connection is active; false otherwise.
 		 */
-		public function isActive():Boolean
+		public function get isActive():Boolean
 		{
 			return active;
 		}
@@ -709,7 +709,7 @@ package org.jivesoftware.xiff.conference
 	
 							updateRoomRoster( presence );
 		
-							if (presence.type == Presence.UNAVAILABLE_TYPE && isActive() && isThisUser(presence.from)) {
+							if (presence.type == Presence.UNAVAILABLE_TYPE && isActive && isThisUser(presence.from)) {
 								//trace("Room: becoming inactive: " + presence.getNode());
 								active = false;
 								e = new RoomEvent(RoomEvent.ROOM_LEAVE);
@@ -750,7 +750,7 @@ package org.jivesoftware.xiff.conference
 	            // messages, or provide 2 events "beginConfiguration" and "endConfiguration"
 	            // so the application can decide to block configuration messages
 	
-	            var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
+	            var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	            var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	            var form:FormExtension = new FormExtension();
 	
@@ -776,7 +776,7 @@ package org.jivesoftware.xiff.conference
 		 */
 	    public function requestConfiguration():void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.GET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.GET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	
 	        iq.callbackScope = this;
@@ -820,7 +820,7 @@ package org.jivesoftware.xiff.conference
 		 */
 	    public function configure(fieldmap:Object):void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension;
 	
@@ -851,7 +851,7 @@ package org.jivesoftware.xiff.conference
 		 */
 	    public function cancelConfiguration():void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	        var form:FormExtension = new FormExtension();
 	
@@ -881,7 +881,7 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function grant(affiliation:String, jids:Array, callback:Function):void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	
 	        iq.callbackScope = this;
@@ -981,7 +981,7 @@ package org.jivesoftware.xiff.conference
 	     */
 	    public function requestAffiliations( affiliation:String ):void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.GET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.GET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	
 	        iq.callbackScope = this;
@@ -1019,7 +1019,7 @@ package org.jivesoftware.xiff.conference
 		 */
 	    public function destroy( reason:String, alternateJID:String = null, callback:Function = null ):void
 	    {
-	        var iq:IQ = new IQ(getRoomJID(), IQ.SET_TYPE);
+	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	
 	        iq.callback = callback;
@@ -1040,7 +1040,7 @@ package org.jivesoftware.xiff.conference
 				myAffiliation = item.affiliation;
 				myRole = item.role;
 		
-				if (!isActive() && aPresence.type != Presence.UNAVAILABLE_TYPE) {
+				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) {
 					//trace("Room: becoming active: " + presence.getNode());
 					active = true;
 					e = new RoomEvent(RoomEvent.ROOM_JOIN);
@@ -1110,7 +1110,7 @@ package org.jivesoftware.xiff.conference
 		public function isThisRoom( sender:String ):Boolean
 		{
 			// Checks to see that sender is this room
-			return sender.split( "/" )[0].toLowerCase() == getRoomJID().toLowerCase();
+			return active && sender.split( "/" )[0].toLowerCase() == roomJID.toLowerCase();
 		}
 	
 		/**
@@ -1172,7 +1172,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function set nickname( theNickname:String ):void
 		{	
-			if( isActive() ) {
+			if( isActive ) {
 				pendingNickname = theNickname;
 				// var tempPresence:Presence = new Presence( getUserJID() );
 				var tempPresence:Presence = new Presence( getUserJID() + "/" + pendingNickname );
