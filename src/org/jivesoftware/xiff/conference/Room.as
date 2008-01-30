@@ -1110,7 +1110,7 @@ package org.jivesoftware.xiff.conference
 		public function isThisRoom( sender:String ):Boolean
 		{
 			// Checks to see that sender is this room
-			return active && sender.split( "/" )[0].toLowerCase() == roomJID.toLowerCase();
+			return roomJID && sender.split( "/" )[0].toLowerCase() == roomJID.toLowerCase();
 		}
 	
 		/**
