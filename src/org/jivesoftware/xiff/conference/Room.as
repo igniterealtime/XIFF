@@ -875,18 +875,16 @@ package org.jivesoftware.xiff.conference
 	     * <code>Room.ADMIN_AFFILIATION</code>,
 	     * <code>Room.OWNER_AFFILIATION</code>
 	     * @param jids An array of JIDs to grant these permissions to
-	     * @param callback The function to call once permission granting is complete
 	     * @see #revoke
-	     * @see #ban
+	     * @see #allow
 	     */
-	    public function grant(affiliation:String, jids:Array, callback:Function):void
+	    public function grant(affiliation:String, jids:Array):void
 	    {
 	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
 	
-	        iq.callbackScope = this;
-	        iq.callbackName = "finish_admin";
-	        iq.callback = callback;
+		    iq.callbackScope = this;
+		    iq.callback = finish_admin;
 	
 	        for (var i:int=0; i < jids.length; i++) {
 	            owner.addItem(affiliation, null, null, jids[i], null, null);
@@ -905,31 +903,36 @@ package org.jivesoftware.xiff.conference
 	     * then this will also revoke the banned status.</p>
 	     * 
 	     * @param jids An array of JIDs to revoke affiliations from
-	     * @param callback The function to call once revocation is complete
 	     * @see #grant
-	     * @see #ban
 	     * @see #allow
 	     */
-	    public function revoke(jids:Array, callback:Function):void
+	    public function revoke(jids:Array):void
 	    {
-	        grant(Room.NO_AFFILIATION, jids, callback);
+	        grant(Room.NO_AFFILIATION, jids);
 	    }
 	
 	    /**
-	     * Bans an array of JIDs from entering the room.  This is the same as:
-	     * <code>Room.grant( OUTCAST_AFFILIATION, jid )</code>
+	     * Bans an array of JIDs from entering the room.
 	     *
 	     * <p>If the process could not be completed, the room will dispatch the event
 	     * <code>RoomEvent.ADMIN_ERROR</code>.</p>
 	     * 
 	     * @param jids An arry of JIDs to ban
-	     * @param callback The function to call once banning is complete
-	     * @see #grant
-	     * @see #allow
 	     */
-	    public function ban(jids:Array, callback:Function):void
+	    public function ban(jids:Array):void
 	    {
-	        grant(Room.OUTCAST_AFFILIATION, jids, callback);
+	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
+	        var adminExt:MUCAdminExtension = new MUCAdminExtension();
+
+		    iq.callbackScope = this;
+		    iq.callback = finish_admin;
+	
+	        for (var i:int=0; i < jids.length; i++) {
+	            adminExt.addItem(Room.OUTCAST_AFFILIATION, null, null, jids[i], null, null);
+	        }
+	
+	        iq.addExtension(adminExt);
+	        connection.send(iq);
 	    }
 	
 	    /**
@@ -940,13 +943,12 @@ package org.jivesoftware.xiff.conference
 	     * <code>RoomEvent.ADMIN_ERROR</code></p>
 	     * 
 	     * @param jids An array of JIDs to allow
-	     * @param callback The function to call once allowing is complete
+	     * @see #grant
 	     * @see #revoke
-	     * @see #ban
 	     */
-	    public function allow( jids:Array, callback:Function ):void
+	    public function allow( jids:Array ):void
 	    {
-	        grant(Room.NO_AFFILIATION, jids, callback);
+	        grant(Room.NO_AFFILIATION, jids);
 	    }
 	
 	    /*
@@ -1060,6 +1062,11 @@ package org.jivesoftware.xiff.conference
 						var user:MUCUserExtension = aPresence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
 						if (user.statusCode == 307) {
 							// User left as a result of a kick, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED
+							removeItemAt(i);
+							return;
+						}
+						else if (user.statusCode == 301) {
+							// User left as a result of a ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_BANNED
 							removeItemAt(i);
 							return;
 						}
