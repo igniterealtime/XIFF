@@ -22,10 +22,10 @@
 package org.jivesoftware.xiff.data.disco
 {
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.disco.DiscoExtension;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
+	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
 	 * Implements <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030<a> for service info discovery.
@@ -42,7 +42,7 @@ package org.jivesoftware.xiff.data.disco
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/disco#info";
+		public static const NS:String = "http://jabber.org/protocol/disco#info";
 	
 		private var myIdentities:Array;
 		private var myFeatures:Array;
@@ -103,25 +103,26 @@ package org.jivesoftware.xiff.data.disco
 	
 		override public function deserialize(node:XMLNode):Boolean
 		{
-			if (super.deserialize(node)) {
-				myIdentities = new Array();
-				myFeatures = new Array();
-	
-				var children:Array = getNode().childNodes;
-				for (var i:int = 0; i < children.length; i++) {
-					switch (children[i].nodeName) {
-						case "identity":
-							myIdentities.push(children[i].attributes);
-							break;
-	
-						case "feature":
-							myFeatures.push(children[i].attributes["var"]);
-							break;
-					}
+			if (!super.deserialize(node))
+				return false;
+			
+			myIdentities = [];
+			myFeatures = [];
+			
+			for each(var child:XMLNode in getNode().childNodes) 
+			{
+				switch (child.nodeName) 
+				{
+					case "identity":
+						myIdentities.push(child.attributes);
+						break;
+
+					case "feature":
+						myFeatures.push(child.attributes["var"]);
+						break;
 				}
-				return true;
 			}
-			return false;
+			return true;
 		}
 	}
 }

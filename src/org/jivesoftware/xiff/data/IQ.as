@@ -24,9 +24,9 @@
 package org.jivesoftware.xiff.data
 {
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMPPStanza;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.core.JID;
 	
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
@@ -53,7 +53,7 @@ package org.jivesoftware.xiff.data
 		public static var RESULT_TYPE:String = "result";
 		public static var ERROR_TYPE:String = "error";
 	
-		public function IQ( recipient:String=null, iqType:String=null, iqID:String=null, iqCallback:String=null, iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
+		public function IQ( recipient:JID=null, iqType:String=null, iqID:String=null, iqCallback:String=null, iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
 		{
 			var id:String = exists( iqID ) ? iqID : generateID("iq_");
 			

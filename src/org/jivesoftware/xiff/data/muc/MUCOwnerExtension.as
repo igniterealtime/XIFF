@@ -22,12 +22,10 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.IExtendable;
-	import org.jivesoftware.xiff.data.ISerializable;
-	
-	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
 	 * Implements the administration command data model in <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
@@ -91,7 +89,7 @@
 	     * @param alternateJID A string containing a JID that room members can use instead of this room
 	     * @availability Flash Player 7
 	     */
-	    public function destroy(reason:String, alternateJID:String):void
+	    public function destroy(reason:String, alternateJID:JID):void
 	    {
 	        myDestroyNode = ensureNode(myDestroyNode, "destroy");
 	        for (var i:String in myDestroyNode.childNodes) {
@@ -99,7 +97,7 @@
 	        }
 	
 	        if( exists(reason) ) { replaceTextNode(myDestroyNode, undefined, "reason", reason); }
-	        if( exists(alternateJID) ) { myDestroyNode.attributes.jid = alternateJID; }
+	        if( exists(alternateJID) ) { myDestroyNode.attributes.jid = alternateJID.toString(); }
 	    }
 	}
 }

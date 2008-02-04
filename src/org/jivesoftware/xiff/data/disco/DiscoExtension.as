@@ -22,9 +22,11 @@
 package org.jivesoftware.xiff.data.disco
 {
 
+	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ISerializable;
-	import flash.xml.XMLNode;
 	
 	/**
 	 * Base class for service discovery extensions.
@@ -35,7 +37,7 @@ package org.jivesoftware.xiff.data.disco
 		public static var NS:String = "http://jabber.org/protocol/disco";
 		public static var ELEMENT:String = "query";
 		
-		public var myService:String;
+		public var myService:JID
 	
 		/**
 		 * The name of the resource of the service queried if the resource 
@@ -64,28 +66,28 @@ package org.jivesoftware.xiff.data.disco
 		/**
 		 * The service name of the discovery procedure
 		 */
-		public function get service():String
+		public function get service():JID
 		{
 			var parent:XMLNode = getNode().parentNode;
 	
 			if (parent.attributes.type == "result") {
-				return parent.attributes.from;
+				return new JID(parent.attributes.from);
 			} else {
-				return parent.attributes.to;
+				return new JID(parent.attributes.to);
 			}
 		}
 		
 		/**
 		 * @private
 		 */
-		public function set service(val:String):void
+		public function set service(val:JID):void
 		{
 			var parent:XMLNode = getNode().parentNode;
 	
 			if (parent.attributes.type == "result") {
-				parent.attributes.from = val;
+				parent.attributes.from = val.toString();
 			} else {
-				parent.attributes.to = val;
+				parent.attributes.to = val.toString();
 			}
 		}
 	

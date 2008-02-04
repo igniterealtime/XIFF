@@ -345,7 +345,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function getRegistrationFields():void
 		{
-			var regIQ:IQ = new IQ( server, IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
+			var regIQ:IQ = new IQ( new JID(server), IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 	
 			send( regIQ );
@@ -362,7 +362,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
-			var regIQ:IQ = new IQ( server, IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+			var regIQ:IQ = new IQ( new JID(server), IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 	
 			for( var i:String in fieldMap ) {
@@ -384,10 +384,10 @@ package org.jivesoftware.xiff.core
 		 */
 		public function changePassword( newPassword:String ):void
 		{
-			var passwdIQ:IQ = new IQ( server, IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
+			var passwdIQ:IQ = new IQ( new JID(server), IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 	
-			ext.username = getBareJID();
+			ext.username = jid.toBareJID();
 			ext.password = newPassword;
 	
 			passwdIQ.addExtension(ext);
@@ -401,21 +401,9 @@ package org.jivesoftware.xiff.core
 		 * @return The fully qualified JID
 		 * @see #getBareJID
 		 */
-		public function getJID():String
+		public function get jid():JID
 		{
-			return myUsername + "@" + myServer + "/" + myResource;
-		}
-		
-		/**
-		 * Gets the bare JID (non-fully qualified: user@server) of the user. The bare JID does not include the resource.
-		 *
-		 * @return The bare JID
-		 * @see #getJID
-		 */
-		public function getBareJID():String
-		{
-			// NOTE: what happens with anonymous login?
-			return getJID().split( "/" )[0];
+			return new JID(myUsername + "@" + myServer + "/" + myResource);
 		}
 		
 		/**
@@ -516,7 +504,7 @@ package org.jivesoftware.xiff.core
 			// Read the data and send it to the appropriate parser
 			var firstNode:XMLNode = xmlData.firstChild;
 			var nodeName:String = firstNode.nodeName.toLowerCase();
-		//	trace("RECV: " + firstNode);
+			//trace("RECV: " + firstNode);
 			switch( nodeName )
 			{
 				case "stream:stream":
@@ -780,7 +768,7 @@ package org.jivesoftware.xiff.core
 		{resultIQ
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				// update resource
-				var jid:JID = new JID(resultIQ.to);
+				var jid:JID = resultIQ.to;
 				resource = jid.resource;
 				username = jid.node;
 				// dispatch login event

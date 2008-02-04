@@ -24,13 +24,15 @@
 package org.jivesoftware.xiff.events
 {
 	import flash.events.Event;
+	
 	import org.jivesoftware.xiff.conference.Room;
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.Message;
 
 	public class InviteEvent extends Event
 	{
 		public static var INVITED:String = "invited";
-		private var _from:String;
+		private var _from:JID;
 		private var _reason:String;
 		private var _room:Room;
 		private var _data:Message;
@@ -38,11 +40,11 @@ package org.jivesoftware.xiff.events
 		{
 			super(INVITED);
 		}
-		public function get from() : String
+		public function get from():JID
 		{
 			return _from;
 		}
-		public function set from(s:String) : void
+		public function set from(s:JID) : void
 		{
 			_from = s;
 		}

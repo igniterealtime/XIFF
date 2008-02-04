@@ -22,11 +22,10 @@
 package org.jivesoftware.xiff.data.disco
 {
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.disco.DiscoExtension;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
+	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
 	 * Implements <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030<a> 
@@ -35,7 +34,7 @@ package org.jivesoftware.xiff.data.disco
 	public class ItemDiscoExtension extends DiscoExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/disco#items";
+		public static const NS:String = "http://jabber.org/protocol/disco#items";
 	
 		private var myItems:Array;
 		
@@ -85,16 +84,16 @@ package org.jivesoftware.xiff.data.disco
 	
 		override public function deserialize(node:XMLNode):Boolean
 		{
-			if (super.deserialize(node)) {
-				myItems = new Array();
-	
-				var children:Array = getNode().childNodes;
-				for (var i:int = 0; i < children.length; i++) {
-					myItems.push(children[i].attributes);
-				}
-				return true;
+			if (!super.deserialize(node))
+				return false;
+				
+			myItems = [];
+			
+			for each(var item:XMLNode in getNode().childNodes) 
+			{
+				myItems.push(item.attributes);
 			}
-			return false;
+			return true;
 		}
 	}
 }

@@ -22,9 +22,9 @@
 	 *
 	 */
 	 
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMPPStanza;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.core.JID;
 	
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
@@ -67,7 +67,7 @@
 		private var myPriorityNode:XMLNode;
 	
 	
-		public function Presence( recipient:String=null, sender:String=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
+		public function Presence( recipient:JID=null, sender:JID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
 		{		
 			super( recipient, sender, presenceType, null, "presence" );
 			
@@ -136,8 +136,9 @@
 		 */
 		public function get show():String 
 		{
-			if (myShowNode == null) return null;
+			if (!myShowNode) return null;
 			
+			//is this right?
 			if (!exists(myShowNode.firstChild)){
 				return Presence.SHOW_NORMAL;
 			}

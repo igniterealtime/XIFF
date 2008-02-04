@@ -24,6 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IExtension;
@@ -191,11 +192,11 @@
 		 * @param groups An array of strings of the group names that this contact should be placed in.
 		 * @availability Flash Player 7
 		 */
-		public function addItem( jid:String="", subscription:String="", displayName:String="", groups:Array=null ):void
+		public function addItem( jid:JID=null, subscription:String="", displayName:String="", groups:Array=null ):void
 		{
 			var item:RosterItem = new RosterItem( getNode() );
 			
-			if( exists( jid ) ) { item.jid = jid; }
+			if( exists( jid ) ) { item.jid = jid ? jid.toString() : ""; }
 			if( exists( subscription ) ) { item.subscription = subscription; }
 			if( exists( displayName ) ) { item.name = displayName; }
 			if( exists( groups ) ) {

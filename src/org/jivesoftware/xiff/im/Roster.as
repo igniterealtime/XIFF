@@ -25,6 +25,7 @@ package org.jivesoftware.xiff.im
 {	
 	import mx.collections.ArrayCollection;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IQ;
@@ -109,7 +110,8 @@ package org.jivesoftware.xiff.im
 	public class Roster extends ArrayCollection
 	{
 		private var myConnection:XMPPConnection;
-		private var pendingSubscriptionRequestJID:String;
+		//FIXME: does not support multiple pending requests
+		private var pendingSubscriptionRequestJID:JID;
 		private var _presenceMap:Array = new Array();
 		
 		private var _me:RosterItemVO;
@@ -152,10 +154,10 @@ package org.jivesoftware.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:String, displayName:String, group:String, requestSubscription:Boolean=true ):void
+		public function addContact( id:JID, displayName:String, group:String, requestSubscription:Boolean=true ):void
 		{
 			if( displayName == null )
-				displayName = id;
+				displayName = id.toString();
 				
 			var callbackObj:Roster = null;
 			var callbackMethod:String = null;
@@ -189,7 +191,7 @@ package org.jivesoftware.xiff.im
 		 * @availability Flash Player 7
 		 * @see #subscriptionDenial
 		 */
-		public function requestSubscription( id:String, isResponse:Boolean=false):void
+		public function requestSubscription( id:JID, isResponse:Boolean=false):void
 		{
 			// Roster length is 0 if it a response to a user request. we must handle this event.
 			var tempPresence:Presence;
@@ -200,7 +202,7 @@ package org.jivesoftware.xiff.im
 				return;
 			}
 			// Only request for items in the roster
-			if(getContactInformation(id))
+			if(contains(RosterItemVO.get(id, false)))
 			{
 				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
@@ -215,9 +217,9 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to remove
 		 * @availability Flash Player 7
 		 */
-		public function removeContact( id:String ):void
+		public function removeContact( id:JID ):void
 		{
-			if(getContactInformation( id ))
+			if(contains(RosterItemVO.get(id, false)))
 			{
 				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
@@ -255,7 +257,7 @@ package org.jivesoftware.xiff.im
 		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
-		public function grantSubscription( tojid:String, requestAfterGrant:Boolean = true ):void
+		public function grantSubscription( tojid:JID, requestAfterGrant:Boolean = true ):void
 		{
 			var tempPresence:Presence = new Presence( tojid, null, Presence.SUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
@@ -275,7 +277,7 @@ package org.jivesoftware.xiff.im
 		 * @availability Flash Player 7
 		 * @param to The JID of the user or service that you are denying subscription
 		 */
-		public function denySubscription( tojid:String ):void
+		public function denySubscription( tojid:JID ):void
 		{
 			var tempPresence:Presence = new Presence( tojid, null, Presence.UNSUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
@@ -307,9 +309,9 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to update
 		 * @param newName The new display name for this contact
 		 */
-		public function updateContactName( id:String, newName:String ):void
+		public function updateContactName( id:JID, newName:String ):void
 		{
-			var rosterItem:RosterItemVO = getContactInformation( id );
+			var rosterItem:RosterItemVO = RosterItemVO.get( id , false);
 			
 			if ( rosterItem )
 			{
@@ -324,34 +326,14 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to update
 		 * @param newGroups The new groups to associate the contact with
 		 */
-		public function updateContactGroups( id:String, newGroups:Array ):void
+		public function updateContactGroups( id:JID, newGroups:Array ):void
 		{
-			var rosterItem:RosterItemVO = getContactInformation( id );
+			var rosterItem:RosterItemVO = RosterItemVO.get( id , false);
 			
 			if ( rosterItem )
 			{
 				updateContact( rosterItem, rosterItem.displayName, newGroups );
 			}
-		}
-		
-		/**
-		 * Gets all of the locally-cached information for a certain contact by in the roster.
-		 *
-		 * @availability Flash Player 7
-		 * @param jid The JID of the contact to lookup.
-		 * @return a RosterItemVO .
-		 */
-		public function getContactInformation( jid:String ):RosterItemVO
-		{
-			jid = jid.toLowerCase();
-			if(jid == me.jid.toLowerCase())
-				return me;
-			for each(var rosterItem:RosterItemVO in this)
-			{
-				if( jid == rosterItem.jid.toLowerCase() )
-					return rosterItem;
-			}
-			return null;
 		}
 		
 		/**
@@ -396,7 +378,7 @@ package org.jivesoftware.xiff.im
 						if (!item is XMLStanza)
 							continue;
 						
-						addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups(), item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
+						addRosterItem( new JID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups(), item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
 					}
 				}
 				enableAutoUpdate();
@@ -447,10 +429,10 @@ package org.jivesoftware.xiff.im
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var rosterItemVO:RosterItemVO = getContactInformation(item.jid);
+							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true);
 							var ev: RosterEvent;
 							
-							if (rosterItemVO)
+							if (contains(rosterItemVO))
 							{
 								switch (item.subscription.toLowerCase())
 								{
@@ -525,7 +507,7 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(unavailEv);
 	
 						aPresence.show = Presence.UNAVAILABLE_TYPE
-						var unavailableItem:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
 						if(!unavailableItem) return;
 						updateRosterItemPresence( unavailableItem, aPresence );
 						
@@ -534,12 +516,12 @@ package org.jivesoftware.xiff.im
 					// AVAILABLE is the default type, so undefined is also possible
 					case Presence.AVAILABLE_TYPE:
 						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-						availEv.jid =  aPresence.from;
+						availEv.jid = aPresence.from;
 						availEv.data = aPresence;
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var availableItem:RosterItemVO = getContactInformation(aPresence.from.split("/")[0]);
+						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						
@@ -548,19 +530,14 @@ package org.jivesoftware.xiff.im
 			}	
 		}
 		
-		private function addRosterItem( jid:String, displayName:String, show:String, status:String, groups:Array, type:String, askType:String="none" ):Boolean
+		private function addRosterItem( jid:JID, displayName:String, show:String, status:String, groups:Array, type:String, askType:String="none" ):Boolean
 		{
 			if(!jid) 
 				return false;
 			
-			var rosterItem:RosterItemVO = getContactInformation(jid);
-			if(!rosterItem)
-			{
-				rosterItem = new RosterItemVO();
+			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
+			if(!contains(rosterItem))
 				addItem( rosterItem );
-			}
-			
-			rosterItem.jid = jid;
 			if(displayName)
 				rosterItem.displayName = displayName;
 			rosterItem.subscribeType = type;
@@ -645,8 +622,7 @@ package org.jivesoftware.xiff.im
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
 			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
 			myConnection.addEventListener( RosterExtension.NS, handleEvent );
-			me = new RosterItemVO();
-			me.jid = aConnection.getJID();
+			me = RosterItemVO.get(aConnection.jid, true);
 		}
 		
 		[Bindable]

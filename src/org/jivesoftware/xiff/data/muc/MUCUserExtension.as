@@ -24,6 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
@@ -111,25 +112,25 @@
 		/**
 		 * The to property for invite and decline action types
 		 */
-		public function get to():String
+		public function get to():JID
 		{
-			return myActionNode.attributes.to;
+			return new JID(myActionNode.attributes.to);
 		}
 	
 		/**
 		 * The from property for invite and decline action types
 		 */
-		public function get from():String
+		public function get from():JID
 		{
-			return myActionNode.attributes.from;
+			return new JID(myActionNode.attributes.from);
 		}
 	
 		/**
 		 * The jid property for destroy the action type
 		 */
-		public function get jid():String
+		public function get jid():JID
 		{
-			return myActionNode.attributes.jid;
+			return new JID(myActionNode.attributes.jid);
 		}
 	
 	    /**
@@ -156,17 +157,17 @@
 		/**
 		 * Use this extension to destroy a room
 		 */
-		public function destroy(room:String, reason:String):void
+		public function destroy(room:JID, reason:String):void
 		{
-			updateActionNode(DESTROY_TYPE, {jid: room}, reason);
+			updateActionNode(DESTROY_TYPE, {jid: room.toString()}, reason);
 		}
 	
 		/**
 		 * Use this extension to decline an invitation
 		 */
-		public function decline(to:String, from:String, reason:String):void
+		public function decline(to:JID, from:JID, reason:String):void
 		{
-			updateActionNode(DECLINE_TYPE, {to:to, from:from}, reason);
+			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from.toString()}, reason);
 		}
 	
 		/**

@@ -22,16 +22,14 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.IExtendable;
-	import org.jivesoftware.xiff.data.ISerializable;
-	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionContainer;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	
-	import org.jivesoftware.xiff.data.muc.MUCItem;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.data.Extension;
+	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
+	import org.jivesoftware.xiff.data.IExtendable;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -134,7 +132,7 @@
 		 * @return The newly created MUCItem
 		 * @availability Flash Player 7
 		 */
-		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:String=null, actor:String=null, reason:String=null):MUCItem
+		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:JID=null, actor:String=null, reason:String=null):MUCItem
 		{
 			var item:MUCItem = new MUCItem(getNode());
 	

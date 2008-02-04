@@ -225,7 +225,7 @@ package org.jivesoftware.xiff.conference
 		public static const VISITOR_ROLE:String = MUC.VISITOR_ROLE;
 	
 		private var myConnection:XMPPConnection;
-	    private var myJID:String;
+	    private var myJID:JID
 		private var myNickname:String;
 	    private var myPassword:String;
 		private var myRole:String;
@@ -319,8 +319,8 @@ package org.jivesoftware.xiff.conference
 
 			var joinPresence:Presence = new Presence( userJID );
 			if (joinPresenceExtensions != null) {
-				for (var i:int = 0; i < joinPresenceExtensions.length; i++) {
-					joinPresence.addExtension(joinPresenceExtensions[i]);
+				for each(var joinExt:* in joinPresenceExtensions) {
+					joinPresence.addExtension(joinExt);
 				}
 			}
 
@@ -405,7 +405,7 @@ package org.jivesoftware.xiff.conference
 		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
 		{
 			if( isActive ) {
-				var tempMessage:Message = new Message( roomJID + "/" + recipientNickname, null, body, htmlBody, Message.CHAT_TYPE );
+				var tempMessage:Message = new Message( new JID(roomJID + "/" + recipientNickname), null, body, htmlBody, Message.CHAT_TYPE );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -499,7 +499,7 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * @param reason A string describing why the invitiation was declined
 	     */
-	    public function decline(jid:String, reason:String):void
+	    public function decline(jid:JID, reason:String):void
 	    {
 	        var msg:Message = new Message(roomJID)
 	        var muc:MUCUserExtension = new MUCUserExtension();
@@ -518,7 +518,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function get fullRoomName():String
 		{
-	        return roomJID;
+	        return roomJID.toString();
 		}
 	
 	    /**
@@ -526,7 +526,7 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * @return The room's JID.
 	     */
-	    public function get roomJID():String
+	    public function get roomJID():JID
 	    {
 	        return myJID;
 	    }
@@ -534,7 +534,7 @@ package org.jivesoftware.xiff.conference
 	    /**
 	     * Set the JID of the room in the form "room@conference.server"
 	     */
-	    public function set roomJID( jid:String ):void
+	    public function set roomJID( jid:JID ):void
 	    {
 	        myJID = jid;
 	    }
@@ -544,9 +544,9 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * @return your JID in the room 
 	     */
-	    public function get userJID():String
+	    public function get userJID():JID
 	    {
-	        return roomJID + "/" + nickname;
+	        return new JID(roomJID.toBareJID() + "/" + nickname);
 	    }
 		
 		/**
@@ -683,7 +683,7 @@ package org.jivesoftware.xiff.conference
 						else if( isThisRoom( presence.from ) ) 
 						{
 							// If the presence has our pending nickname, nickname change went through
-							if( presence.from.split( "/" )[1] == pendingNickname ) 
+							if( presence.from.resource == pendingNickname ) 
 							{
 								myNickname = pendingNickname;
 								pendingNickname = null;
@@ -697,12 +697,12 @@ package org.jivesoftware.xiff.conference
 									break;
 								case 307:
 									e = new RoomEvent(RoomEvent.USER_KICKED);
-									e.nickname = new JID(presence.from).resource;
+									e.nickname = presence.from.resource;
 									dispatchEvent(e);
 									break;
 								case 301:
 									e = new RoomEvent(RoomEvent.USER_BANNED);
-									e.nickname = new JID(presence.from).resource;
+									e.nickname = presence.from.resource;
 									dispatchEvent(e);
 									break;
 							}
@@ -927,8 +927,8 @@ package org.jivesoftware.xiff.conference
 		    iq.callbackScope = this;
 		    iq.callback = finish_admin;
 	
-	        for (var i:int=0; i < jids.length; i++) {
-	            adminExt.addItem(Room.OUTCAST_AFFILIATION, null, null, jids[i], null, null);
+	        for each(var banJID:JID in jids) {
+	            adminExt.addItem(Room.OUTCAST_AFFILIATION, null, null, banJID, null, null);
 	        }
 	
 	        iq.addExtension(adminExt);
@@ -1019,7 +1019,7 @@ package org.jivesoftware.xiff.conference
 	     * @param alternateJID A JID for current members to use as an alternate room to join 
 	     * after the room has been destroyed. Like a postal forwarding address.
 		 */
-	    public function destroy( reason:String, alternateJID:String = null, callback:Function = null ):void
+	    public function destroy( reason:String, alternateJID:JID = null, callback:Function = null ):void
 	    {
 	        var iq:IQ = new IQ(roomJID, IQ.SET_TYPE);
 	        var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -1033,7 +1033,7 @@ package org.jivesoftware.xiff.conference
 		
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
-			var userNickname:String = aPresence.from.split( "/" )[1];
+			var userNickname:String = aPresence.from.resource;
 			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
 			var item:MUCItem = userExts[0].getAllItems()[0];
 			var e:RoomEvent;
@@ -1101,10 +1101,10 @@ package org.jivesoftware.xiff.conference
 			}	
 		}
 		
-		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:String ):void
+		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:JID ):void
 		{
 			// Here we add roomJid:myJID to facilitate clients in correlating room occupants with rooms.
-			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID});
+			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID.toString()});
 		}
 		
 		/**
@@ -1114,10 +1114,10 @@ package org.jivesoftware.xiff.conference
 		 * @param the room JID to test
 		 * @return true if the passed JID matches the getRoomJID
 		 */
-		public function isThisRoom( sender:String ):Boolean
+		public function isThisRoom( sender:JID ):Boolean
 		{
 			// Checks to see that sender is this room
-			return roomJID && sender.split( "/" )[0].toLowerCase() == roomJID.toLowerCase();
+			return roomJID && sender.toBareJID().toLowerCase() == roomJID.toBareJID().toLowerCase();
 		}
 	
 		/**
@@ -1127,10 +1127,10 @@ package org.jivesoftware.xiff.conference
 		 * @param the room JID to test
 		 * @return true if the passed JID matches the userJID
 		 */
-		public function isThisUser( sender:String ):Boolean
+		public function isThisUser( sender:JID ):Boolean
 		{
 			// Case insensitive check that the sender is the same as the user
-			return sender.toLowerCase() == userJID.toLowerCase();
+			return sender.toString().toLowerCase() == userJID.toString().toLowerCase();
 		}
 		
 		/**
@@ -1139,7 +1139,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function get conferenceServer():String
 		{
-			return myJID.split("@")[1];
+			return myJID.domain;
 		}
 		 
 		/**
@@ -1147,7 +1147,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function set conferenceServer( aServer:String ):void
 		{
-			roomJID = roomName + "@" + aServer;
+			roomJID = new JID(roomName + "@" + aServer);
 		}
 		
 		/**
@@ -1155,7 +1155,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function get roomName():String
 		{
-			return myJID.split("@")[0];
+			return myJID.node;
 		}
 		
 		/**
@@ -1163,7 +1163,7 @@ package org.jivesoftware.xiff.conference
 		 */
 		public function set roomName( aName:String ):void
 		{
-			roomJID = aName + "@" + conferenceServer;
+			roomJID = new JID(aName + "@" + conferenceServer);
 		}
 		
 		/**
@@ -1182,7 +1182,7 @@ package org.jivesoftware.xiff.conference
 			if( isActive ) {
 				pendingNickname = theNickname;
 				// var tempPresence:Presence = new Presence( userJID );
-				var tempPresence:Presence = new Presence( userJID + "/" + pendingNickname );
+				var tempPresence:Presence = new Presence( new JID(userJID + "/" + pendingNickname) );
 				myConnection.send( tempPresence );
 			}
 			else {

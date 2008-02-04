@@ -23,12 +23,11 @@
  
 package org.jivesoftware.xiff.core
 {	
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.browse.BrowseExtension;
-	import org.jivesoftware.xiff.data.disco.ItemDiscoExtension;
-	import org.jivesoftware.xiff.data.disco.InfoDiscoExtension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IQ;
+	import org.jivesoftware.xiff.data.browse.BrowseExtension;
+	import org.jivesoftware.xiff.data.disco.InfoDiscoExtension;
+	import org.jivesoftware.xiff.data.disco.ItemDiscoExtension;
 	
 	/**
 	 * Provides a means of querying for available services on an XMPP server using
@@ -63,7 +62,7 @@ package org.jivesoftware.xiff.core
 			return true;
 		}
 	
-		public function getNodeInfo(service:String, node:String, callback:String, scope:Object):void
+		public function getNodeInfo(service:JID, node:String, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(service, IQ.GET_TYPE);
 			var ext:InfoDiscoExtension = new InfoDiscoExtension(iq.getNode());
@@ -75,7 +74,7 @@ package org.jivesoftware.xiff.core
 			connection.send(iq);
 		}
 	
-		public function getNodeItems(service:String, node:String, callback:String, scope:Object):void
+		public function getNodeItems(service:JID, node:String, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(service, IQ.GET_TYPE);
 			var ext:ItemDiscoExtension = new ItemDiscoExtension(iq.getNode());
@@ -96,7 +95,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function getServiceInfo(server:String, callback:String, scope:Object):void
+		public function getServiceInfo(server:JID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(server, IQ.GET_TYPE);
 			iq.callbackName = callback;
@@ -114,7 +113,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function getServiceItems(server:String, callback:String, scope:Object):void
+		public function getServiceItems(server:JID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(server, IQ.GET_TYPE);
 			iq.callbackName = callback;
@@ -131,7 +130,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function browseItem(id:String, callback:String, scope:Object):void
+		public function browseItem(id:JID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(id, IQ.GET_TYPE);
 			iq.callbackName = callback;

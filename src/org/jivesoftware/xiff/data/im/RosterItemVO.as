@@ -6,22 +6,34 @@ package org.jivesoftware.xiff.data.im
 	import mx.core.IPropertyChangeNotifier;
 	import mx.events.PropertyChangeEvent;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.Presence;
 	
 	public class RosterItemVO extends EventDispatcher implements IPropertyChangeNotifier
 	{
+		private static var allContacts:Object = {};
 		//var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
-		private var _jid: String;
-		private var _displayName: String;
+		private var _jid:JID;
+		private var _displayName:String;
 		private var _groups:Array = [];
-		private var _askType: String;
-		private var _subscribeType: String;
-		private var _status: String;
-		private var _show: String;
-		private var _priority: Number;
+		private var _askType:String;
+		private var _subscribeType:String;
+		private var _status:String;
+		private var _show:String;
+		private var _priority:Number;
 		
-		public function RosterItemVO():void {
-			
+		public function RosterItemVO(newJID:JID):void 
+		{
+			jid = newJID;
+		}
+		
+		public static function get(jid:JID, create:Boolean):RosterItemVO
+		{
+			var bareJID:String = jid.toBareJID();
+			var item:RosterItemVO = allContacts[bareJID];
+			if(!item && create)
+				allContacts[bareJID] = item = new RosterItemVO(jid);
+			return item;
 		}
 		
 		public function set uid(i:String):void
@@ -31,7 +43,7 @@ package org.jivesoftware.xiff.data.im
 		
 		public function get uid():String
 		{
-			return _jid;
+			return _jid.toString();
 		}
 		
 		public function set subscribeType(newSub:String):void
@@ -106,9 +118,9 @@ package org.jivesoftware.xiff.data.im
 			return _show;
 		}
 		
-		public function set jid(j:String):void
+		public function set jid(j:JID):void
 		{
-			var oldjid:String = _jid;
+			var oldjid:JID = _jid;
 			_jid = j;
 			//if we aren't using a custom display name, then settings the jid updates the display name
 			if(!_displayName)
@@ -118,7 +130,7 @@ package org.jivesoftware.xiff.data.im
 		}
 		
 		[Bindable]
-		public function get jid():String
+		public function get jid():JID
 		{
 			return _jid;
 		}
@@ -134,7 +146,7 @@ package org.jivesoftware.xiff.data.im
 		[Bindable(event=changeDisplayName)]
 		public function get displayName():String
 		{
-			return _displayName ? _displayName : node;
+			return _displayName ? _displayName : _jid.node;
 		}
 
 		public function addGroup(group:String):void 
@@ -169,47 +181,10 @@ package org.jivesoftware.xiff.data.im
 		public function get pending():Boolean {
 			return askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM);
 		}
-		
-	    public function get node():String 
+	    
+	    public override function toString():String
 	    {
-	        var atIndex:int = _jid.lastIndexOf("@");
-	        if (atIndex <= 0)
-	            return "";
-	        else
-	            return _jid.substring(0, atIndex);
-	    }
-
-	    public function get server():String 
-	    {
-	        var atIndex:int = _jid.lastIndexOf("@");
-	        // If the String ends with '@', return the empty string.
-	        if (atIndex + 1 > _jid.length)
-	            return "";
-	        var slashIndex:int = _jid.indexOf("/");
-	        if (slashIndex > 0 && slashIndex > atIndex)
-	            return _jid.substring(atIndex + 1, slashIndex);
-	        else
-	            return _jid.substring(atIndex + 1);
-	    }
-
-	    public function get resource():String 
-	    {
-	        var slashIndex:int = _jid.indexOf("/");
-	        if (slashIndex + 1 > _jid.length || slashIndex < 0)
-	            return "";
-	        else
-	            return _jid.substring(slashIndex + 1);
-	    }
-
-	    public function get bareAddress():String 
-	    {
-	        var slashIndex:int = _jid.indexOf("/");
-	        if (slashIndex < 0)
-	            return _jid;
-	        else if (slashIndex == 0)
-	            return "";
-	        else
-	            return _jid.substring(0, slashIndex);
+	    	return jid.toString();
 	    }
 	}
 }

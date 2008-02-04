@@ -23,13 +23,14 @@
 	 
 package org.jivesoftware.xiff.conference
 {	
+	import flash.events.EventDispatcher;
+	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.conference.Room;
 	import org.jivesoftware.xiff.data.Message;
 	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
-	import flash.events.EventDispatcher;
-	import org.jivesoftware.xiff.events.MessageEvent;
 	import org.jivesoftware.xiff.events.InviteEvent;
+	import org.jivesoftware.xiff.events.MessageEvent;
 	
 	/**
 	 * Dispatched when an invitations has been received.
