@@ -63,14 +63,12 @@ package org.jivesoftware.xiff.core
         	var i:int = jid.indexOf("@");
         	var j:int = jid.indexOf("/");
         	if (i < 0)
-            	return null;
-        	else 
-        	{
-            	if (j < 0)
-                	return jid.slice(i + 1);
-            	else
-                	return jid.slice(i + 1, j);
-        	}
+            	i = -1;
+        	
+            if (j < 0)
+                return jid.slice(i + 1);
+            else
+                return jid.slice(i + 1, j);
     	}
     	
     	public function equals(testJID:JID, shouldTestBareJID:Boolean):Boolean 

@@ -1104,7 +1104,7 @@ package org.jivesoftware.xiff.conference
 		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:JID ):void
 		{
 			// Here we add roomJid:myJID to facilitate clients in correlating room occupants with rooms.
-			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID.toString()});
+			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID});
 		}
 		
 		/**
