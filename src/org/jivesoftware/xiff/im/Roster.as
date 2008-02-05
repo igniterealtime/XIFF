@@ -218,13 +218,13 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to remove
 		 * @availability Flash Player 7
 		 */
-		public function removeContact( id:JID ):void
+		public function removeContact( rosterItem:RosterItemVO):void
 		{
-			if(contains(RosterItemVO.get(id, false)))
+			if(contains(rosterItem))
 			{
 				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-				ext.addItem( id, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
+				ext.addItem( rosterItem.jid.bareJid, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				tempIQ.addExtension( ext );
 				myConnection.send( tempIQ );
 				

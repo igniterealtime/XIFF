@@ -151,7 +151,7 @@
 		 */
 		public function invite(to:JID, from:JID, reason:String):void
 		{
-			updateActionNode(INVITE_TYPE, {to:to.toString(), from:from.toString()}, reason);
+			updateActionNode(INVITE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
 	
 		/**
@@ -167,7 +167,7 @@
 		 */
 		public function decline(to:JID, from:JID, reason:String):void
 		{
-			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from.toString()}, reason);
+			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
 	
 		/**
