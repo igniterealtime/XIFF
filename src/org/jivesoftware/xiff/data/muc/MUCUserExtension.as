@@ -149,9 +149,9 @@
 		/**
 		 * Use this extension to invite another user
 		 */
-		public function invite(to:String, from:String, reason:String):void
+		public function invite(to:JID, from:JID, reason:String):void
 		{
-			updateActionNode(INVITE_TYPE, {to:to, from:from}, reason);
+			updateActionNode(INVITE_TYPE, {to:to.toString(), from:from.toString()}, reason);
 		}
 	
 		/**

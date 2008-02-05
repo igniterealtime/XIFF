@@ -475,7 +475,7 @@ package org.jivesoftware.xiff.conference
 	     * @param jid A string JID of the user to invite.
 	     * @param reason A string describing why you would like to invite the user.
 	     */
-	    public function invite( jid:String, reason:String ):void
+	    public function invite( jid:JID, reason:String ):void
 	    {
 	        var msg:Message = new Message(roomJID)
 	        var muc:MUCUserExtension = new MUCUserExtension();

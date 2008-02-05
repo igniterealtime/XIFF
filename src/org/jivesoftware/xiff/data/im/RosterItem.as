@@ -24,6 +24,7 @@
 	 
 	import flash.xml.XMLNode;
 	
+	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMLStanza;
 	
@@ -174,14 +175,14 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function get jid():String
+		public function get jid():JID
 		{
-			return getNode().attributes.jid;
+			return new JID(getNode().attributes.jid);
 		}
 		
-		public function set jid( newJID:String ):void
+		public function set jid( newJID:JID ):void
 		{
-			getNode().attributes.jid = newJID;
+			getNode().attributes.jid = newJID.toString();
 		}
 		
 		/**

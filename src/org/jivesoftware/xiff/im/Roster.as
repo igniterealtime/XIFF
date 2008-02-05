@@ -112,6 +112,7 @@ package org.jivesoftware.xiff.im
 		private var myConnection:XMPPConnection;
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:JID;
+		//FIXME: maps should not be arrays
 		private var _presenceMap:Array = new Array();
 		
 		private var _me:RosterItemVO;
@@ -580,7 +581,7 @@ package org.jivesoftware.xiff.im
 				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
 				event.jid = item.jid;
 				event.data = item;
-				_presenceMap[item.jid] = presence;
+				_presenceMap[item.jid.toString()] = presence;
 				dispatchEvent(event);
 			}
 			catch (e:Error)
@@ -589,8 +590,8 @@ package org.jivesoftware.xiff.im
 			}
 		}
 		
-		public function getPresence(jid:String):String {
-			return _presenceMap[jid];
+		public function getPresence(jid:JID):String {
+			return _presenceMap[jid.toString()];
 		}
 		
 		public function changePresence(show:String, status:String, priority:Number):void
