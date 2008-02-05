@@ -504,7 +504,7 @@ package org.jivesoftware.xiff.core
 			// Read the data and send it to the appropriate parser
 			var firstNode:XMLNode = xmlData.firstChild;
 			var nodeName:String = firstNode.nodeName.toLowerCase();
-			//trace("RECV: " + firstNode);
+			trace("RECV: " + firstNode);
 			switch( nodeName )
 			{
 				case "stream:stream":

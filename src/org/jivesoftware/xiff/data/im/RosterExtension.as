@@ -172,10 +172,10 @@
 		 * @return A roster item object with the following attributes: "jid", "subscription", "displayName", and "groups".
 		 * @availability Flash Player 7
 		 */
-		public function getItemByJID( jid:String ):RosterItem
+		public function getItemByJID( jid:JID ):RosterItem
 		{
 			for( var i:String in myItems ) {
-				if( myItems[i].jid == jid ) {
+				if( myItems[i].jid == jid.toString() ) {
 					return myItems[i];
 				}
 			}

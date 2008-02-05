@@ -801,7 +801,8 @@ package org.jivesoftware.xiff.conference
 			var owner:MUCOwnerExtension = iq.getAllExtensionsByNS(MUCOwnerExtension.NS)[0];
 	        var form:FormExtension = owner.getAllExtensionsByNS(FormExtension.NS)[0];
 	
-	        if( form.type == FormExtension.REQUEST_TYPE ) {
+	        if( form.type == FormExtension.REQUEST_TYPE ) 
+	        {
 	        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
 	        	e.data = form;
 	        	dispatchEvent(e);
@@ -886,8 +887,9 @@ package org.jivesoftware.xiff.conference
 		    iq.callbackScope = this;
 		    iq.callback = finish_admin;
 	
-	        for (var i:int=0; i < jids.length; i++) {
-	            owner.addItem(affiliation, null, null, jids[i], null, null);
+	        for each(var jid:JID in jids) 
+	        {
+	            owner.addItem(affiliation, null, null, jid, null, null);
 	        }
 	
 	        iq.addExtension(owner);
@@ -927,7 +929,8 @@ package org.jivesoftware.xiff.conference
 		    iq.callbackScope = this;
 		    iq.callback = finish_admin;
 	
-	        for each(var banJID:JID in jids) {
+	        for each(var banJID:JID in jids) 
+	        {
 	            adminExt.addItem(Room.OUTCAST_AFFILIATION, null, null, banJID, null, null);
 	        }
 	
@@ -957,7 +960,8 @@ package org.jivesoftware.xiff.conference
 	     */
 	    private function finish_admin(iq:IQ):void
 	    {
-	        if (iq.type == IQ.ERROR_TYPE) {
+	        if (iq.type == IQ.ERROR_TYPE) 
+	        {
 	        	var e:RoomEvent = new RoomEvent(RoomEvent.ADMIN_ERROR);
 	        	e.errorCondition = iq.errorCondition;
 	        	e.errorMessage = iq.errorMessage;
