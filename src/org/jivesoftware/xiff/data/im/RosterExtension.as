@@ -200,8 +200,8 @@
 			if( exists( subscription ) ) { item.subscription = subscription; }
 			if( exists( displayName ) ) { item.name = displayName; }
 			if( exists( groups ) ) {
-				for( var i:String in groups ) {
-					item.addGroup( groups[i] );
+				for each( var group:RosterGroup in groups ) {
+					item.addGroupNamed( group.label );
 				}
 			}
 		}

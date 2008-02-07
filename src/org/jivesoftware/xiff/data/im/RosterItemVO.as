@@ -7,12 +7,12 @@ package org.jivesoftware.xiff.data.im
 	import mx.events.PropertyChangeEvent;
 	
 	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.Presence;
 	
 	public class RosterItemVO extends EventDispatcher implements IPropertyChangeNotifier
 	{
 		private static var allContacts:Object = {};
-		//var tempRI:Object = {jid:jid, displayName:displayName, group:group, subscribeType:type, status:status, show:show, priority:null};
 		private var _jid:JID;
 		private var _displayName:String;
 		private var _groups:Array = [];
@@ -27,12 +27,20 @@ package org.jivesoftware.xiff.data.im
 			jid = newJID;
 		}
 		
-		public static function get(jid:JID, create:Boolean):RosterItemVO
+		public static function get(jid:JID, create:Boolean, connection:XMPPConnection=null):RosterItemVO
 		{
+			if(!connection)
+			{
+				var connections:Array = XMPPConnection.openConnections;
+				if(connections.length > 0)
+					connection = connections[0]; //default to the first open connection
+				else
+					throw new Error("Can't create RosterItemVOs with no active connection");
+			}
 			var bareJID:String = jid.toBareJID();
-			var item:RosterItemVO = allContacts[bareJID];
+			var item:RosterItemVO = allContacts[connection.jid.toBareJID() + bareJID];
 			if(!item && create)
-				allContacts[bareJID] = item = new RosterItemVO(jid);
+				allContacts[connection.jid.toBareJID() + bareJID] = item = new RosterItemVO(jid);
 			return item;
 		}
 		
@@ -147,34 +155,6 @@ package org.jivesoftware.xiff.data.im
 		public function get displayName():String
 		{
 			return _displayName ? _displayName : _jid.node;
-		}
-
-		public function addGroup(group:String):void 
-		{
-			if (group && !containsGroup(group))
-			{
-				_groups.push(group);
-				dispatchEvent(new Event("groupsModified"));
-				PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
-			}
-		}
-		
-		public function set groups(newGroups:Array):void
-		{
-			if(!newGroups || newGroups.length == 0)
-				newGroups = ["General"];
-			_groups = newGroups;
-			dispatchEvent(new Event("groupsModified"));
-			PropertyChangeEvent.createUpdateEvent(this, "groups", null, groups);
-		}
-		
-		[Bindable(event=groupsModified)]
-		public function get groups():Array {
-			return _groups;
-		}
-		
-		public function containsGroup(group:String):Boolean {
-			return groups.indexOf(group) >= 0;
 		}
 		
 		[Bindable(event=changeAskType)]

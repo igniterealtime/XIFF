@@ -114,7 +114,7 @@
 		 * @availability Flash Player 7
 		 * @param groupName The name of the group to add
 		 */
-		public function addGroup( groupName:String ):void
+		public function addGroupNamed( groupName:String ):void
 		{
 			var node:XMLNode = addTextNode( getNode(), "group", groupName );
 			
@@ -127,7 +127,7 @@
 		 * @availability Flash Player 7
 		 * @return An array of strings containing the name of each group
 		 */
-		public function getGroups():Array
+		public function get groupNames():Array
 		{
 			var returnArr:Array = new Array();
 
@@ -142,7 +142,7 @@
 			return returnArr;
 		}
 		
-		public function getGroupCount():Number
+		public function get groupCount():Number
 		{
 			return myGroupNodes.length;
 		}

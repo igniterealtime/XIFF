@@ -33,6 +33,7 @@ package org.jivesoftware.xiff.im
 	import org.jivesoftware.xiff.data.XMLStanza;
 	import org.jivesoftware.xiff.data.XMPPStanza;
 	import org.jivesoftware.xiff.data.im.RosterExtension;
+	import org.jivesoftware.xiff.data.im.RosterGroup;
 	import org.jivesoftware.xiff.data.im.RosterItemVO;
 	import org.jivesoftware.xiff.events.*;
 	
@@ -117,7 +118,9 @@ package org.jivesoftware.xiff.im
 		
 		private var _me:RosterItemVO;
 		
-		private static var staticConstructorDependencies:Array = [			
+		private var _groups:ArrayCollection = new ArrayCollection();
+		
+		private static const staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
 			RosterExtension
 		]
@@ -155,7 +158,7 @@ package org.jivesoftware.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:JID, displayName:String, group:String, requestSubscription:Boolean=true ):void
+		public function addContact( id:JID, displayName:String, groupName:String, requestSubscription:Boolean=true ):void
 		{
 			if( displayName == null )
 				displayName = id.toString();
@@ -175,12 +178,12 @@ package org.jivesoftware.xiff.im
 				
 			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-			ext.addItem( id, null, displayName, [group] );
+			ext.addItem( id, null, displayName, [groupName] );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 	
 			
-			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, [group], subscription, askType );
+			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, [groupName], subscription, askType );
 		}
 		
 		/**
@@ -203,7 +206,7 @@ package org.jivesoftware.xiff.im
 				return;
 			}
 			// Only request for items in the roster
-			if(contains(RosterItemVO.get(id, false)))
+			if(contains(RosterItemVO.get(id, false, myConnection)))
 			{
 				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
@@ -310,14 +313,20 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to update
 		 * @param newName The new display name for this contact
 		 */
-		public function updateContactName( id:JID, newName:String ):void
+		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
 		{
-			var rosterItem:RosterItemVO = RosterItemVO.get( id , false);
-			
-			if ( rosterItem )
+			updateContact( rosterItem, newName, getContainingGroups(rosterItem) );
+		}
+		
+		public function getContainingGroups(item:RosterItemVO):Array
+		{
+			var result:Array = [];
+			for each(var group:RosterGroup in _groups)
 			{
-				updateContact( rosterItem, newName, rosterItem.groups );
+				if(group.contains(item))
+					result.push(group);
 			}
+			return result;
 		}
 		
 		/**
@@ -327,14 +336,9 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to update
 		 * @param newGroups The new groups to associate the contact with
 		 */
-		public function updateContactGroups( id:JID, newGroups:Array ):void
+		public function updateContactGroups( rosterItem:RosterItemVO, newGroups:Array ):void
 		{
-			var rosterItem:RosterItemVO = RosterItemVO.get( id , false);
-			
-			if ( rosterItem )
-			{
-				updateContact( rosterItem, rosterItem.displayName, newGroups );
-			}
+			updateContact( rosterItem, rosterItem.displayName, newGroups );
 		}
 		
 		/**
@@ -379,7 +383,7 @@ package org.jivesoftware.xiff.im
 						if (!item is XMLStanza)
 							continue;
 						
-						addRosterItem( new JID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.getGroups(), item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
+						addRosterItem( new JID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
 					}
 				}
 				enableAutoUpdate();
@@ -430,7 +434,7 @@ package org.jivesoftware.xiff.im
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true);
+							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true, myConnection);
 							var ev: RosterEvent;
 							
 							if (contains(rosterItemVO))
@@ -452,13 +456,13 @@ package org.jivesoftware.xiff.im
 										break;
 														
 									default:
-										updateRosterItemSubscription(rosterItemVO, item.subscription.toLowerCase(), item.name, item.getGroups());
+										updateRosterItemSubscription(rosterItemVO, item.subscription.toLowerCase(), item.name, item.groupNames);
 										break;
 								}
 							} 
 							else 
 							{
-								var groups:Array = item.getGroups();
+								var groups:Array = item.groupNames;
 
 								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
 								{
@@ -508,7 +512,7 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(unavailEv);
 	
 						aPresence.show = Presence.UNAVAILABLE_TYPE
-						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
+						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false, myConnection);
 						if(!unavailableItem) return;
 						updateRosterItemPresence( unavailableItem, aPresence );
 						
@@ -522,7 +526,7 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
+						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false, myConnection);
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						
@@ -531,21 +535,21 @@ package org.jivesoftware.xiff.im
 			}	
 		}
 		
-		private function addRosterItem( jid:JID, displayName:String, show:String, status:String, groups:Array, type:String, askType:String="none" ):Boolean
+		private function addRosterItem( jid:JID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String="none" ):Boolean
 		{
 			if(!jid) 
 				return false;
 			
-			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
-			if(!contains(rosterItem))
+			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true, connection);
+			if(source.indexOf(rosterItem) < 0)
 				addItem( rosterItem );
 			if(displayName)
 				rosterItem.displayName = displayName;
 			rosterItem.subscribeType = type;
 			rosterItem.askType = askType;
 			rosterItem.status = status;
-			rosterItem.show = show;	
-			rosterItem.groups = groups;
+			rosterItem.show = show;
+			setContactGroups(rosterItem, groupNames);
 			
 			var event:RosterEvent = new RosterEvent(RosterEvent.USER_ADDED);
 			event.jid = jid;
@@ -555,11 +559,30 @@ package org.jivesoftware.xiff.im
 			return true;
 		}
 		
-		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroups:Array ):void
+		private function setContactGroups(contact:RosterItemVO, groupNames:Array):void
+		{
+			_groups.disableAutoUpdate();
+			for each(var name:String in groupNames)
+			{
+				//if there's no group by this name already, we need to make one
+				if(!getGroup(name))
+					_groups.addItem(new RosterGroup(name));
+			}
+			for each(var group:RosterGroup in _groups)
+			{
+				if(groupNames.indexOf(group.label) >= 0)
+					group.addItem(contact);
+				else
+					group.removeItem(contact);
+			}
+			_groups.enableAutoUpdate();
+		}
+		
+		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
 		{
 			item.subscribeType = type;
 			
-			item.groups = newGroups;
+			setContactGroups(item, newGroupNames);
 
 			if(name)
 				item.displayName = name;
@@ -623,7 +646,7 @@ package org.jivesoftware.xiff.im
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
 			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
 			myConnection.addEventListener( RosterExtension.NS, handleEvent );
-			me = RosterItemVO.get(aConnection.jid, true);
+			me = RosterItemVO.get(aConnection.jid, true, myConnection);
 		}
 		
 		[Bindable]
@@ -635,6 +658,21 @@ package org.jivesoftware.xiff.im
 		public function set me(item:RosterItemVO):void
 		{
 			_me = item;	
+		}
+		
+		public function getGroup(name:String):RosterGroup
+		{
+			for each(var group:RosterGroup in _groups)
+			{
+				if(group.label == name)
+					return group;
+			}
+			return null;
+		}
+		
+		public function get groups():ArrayCollection
+		{
+			return _groups;
 		}
 	}
 }
