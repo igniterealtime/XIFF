@@ -116,8 +116,6 @@ package org.jivesoftware.xiff.im
 		//FIXME: maps should not be arrays
 		private var _presenceMap:Array = new Array();
 		
-		private var _me:RosterItemVO;
-		
 		[Bindable]
 		public var groups:ArrayCollection = new ArrayCollection();
 		
@@ -618,17 +616,6 @@ package org.jivesoftware.xiff.im
 			return _presenceMap[jid.toString()];
 		}
 		
-		public function changePresence(show:String, status:String, priority:Number):void
-		{
-			var presence:Presence = new Presence();
-			presence.type = Presence.AVAILABLE_TYPE;
-			presence.show = show;
-			presence.priority = priority;
-			presence.status = status;
-			connection.send(presence);
-			updateRosterItemPresence(me, presence);
-		}
-		
 		/**
 		 * The instance of the XMPPConnection class to use for the roster to use for
 		 * sending and receiving data.
@@ -647,18 +634,6 @@ package org.jivesoftware.xiff.im
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
 			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
 			myConnection.addEventListener( RosterExtension.NS, handleEvent );
-			me = RosterItemVO.get(aConnection.jid, true, myConnection);
-		}
-		
-		[Bindable]
-		public function get me():RosterItemVO
-		{
-			return _me;
-		}
-		
-		public function set me(item:RosterItemVO):void
-		{
-			_me = item;	
 		}
 		
 		public function getGroup(name:String):RosterGroup
