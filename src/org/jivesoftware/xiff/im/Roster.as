@@ -118,7 +118,8 @@ package org.jivesoftware.xiff.im
 		
 		private var _me:RosterItemVO;
 		
-		private var _groups:ArrayCollection = new ArrayCollection();
+		[Bindable]
+		public var groups:ArrayCollection = new ArrayCollection();
 		
 		private static const staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
@@ -321,7 +322,7 @@ package org.jivesoftware.xiff.im
 		public function getContainingGroups(item:RosterItemVO):Array
 		{
 			var result:Array = [];
-			for each(var group:RosterGroup in _groups)
+			for each(var group:RosterGroup in groups)
 			{
 				if(group.contains(item))
 					result.push(group);
@@ -561,21 +562,21 @@ package org.jivesoftware.xiff.im
 		
 		private function setContactGroups(contact:RosterItemVO, groupNames:Array):void
 		{
-			_groups.disableAutoUpdate();
+			groups.disableAutoUpdate();
 			for each(var name:String in groupNames)
 			{
 				//if there's no group by this name already, we need to make one
 				if(!getGroup(name))
-					_groups.addItem(new RosterGroup(name));
+					groups.addItem(new RosterGroup(name));
 			}
-			for each(var group:RosterGroup in _groups)
+			for each(var group:RosterGroup in groups)
 			{
 				if(groupNames.indexOf(group.label) >= 0)
 					group.addItem(contact);
 				else
 					group.removeItem(contact);
 			}
-			_groups.enableAutoUpdate();
+			groups.enableAutoUpdate();
 		}
 		
 		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
@@ -662,17 +663,12 @@ package org.jivesoftware.xiff.im
 		
 		public function getGroup(name:String):RosterGroup
 		{
-			for each(var group:RosterGroup in _groups)
+			for each(var group:RosterGroup in groups)
 			{
 				if(group.label == name)
 					return group;
 			}
 			return null;
-		}
-		
-		public function get groups():ArrayCollection
-		{
-			return _groups;
 		}
 	}
 }
