@@ -205,7 +205,7 @@ package org.jivesoftware.xiff.im
 				return;
 			}
 			// Only request for items in the roster
-			if(contains(RosterItemVO.get(id, false, myConnection)))
+			if(contains(RosterItemVO.get(id, false)))
 			{
 				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
@@ -433,7 +433,7 @@ package org.jivesoftware.xiff.im
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true, myConnection);
+							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true);
 							var ev: RosterEvent;
 							
 							if (contains(rosterItemVO))
@@ -511,7 +511,7 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(unavailEv);
 	
 						aPresence.show = Presence.UNAVAILABLE_TYPE
-						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false, myConnection);
+						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
 						if(!unavailableItem) return;
 						updateRosterItemPresence( unavailableItem, aPresence );
 						
@@ -525,7 +525,7 @@ package org.jivesoftware.xiff.im
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false, myConnection);
+						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						
@@ -539,7 +539,7 @@ package org.jivesoftware.xiff.im
 			if(!jid) 
 				return false;
 			
-			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true, connection);
+			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
 			if(source.indexOf(rosterItem) < 0)
 				addItem( rosterItem );
 			if(displayName)

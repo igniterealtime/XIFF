@@ -27,20 +27,12 @@ package org.jivesoftware.xiff.data.im
 			jid = newJID;
 		}
 		
-		public static function get(jid:JID, create:Boolean, connection:XMPPConnection=null):RosterItemVO
+		public static function get(jid:JID, create:Boolean):RosterItemVO
 		{
-			if(!connection)
-			{
-				var connections:Array = XMPPConnection.openConnections;
-				if(connections.length > 0)
-					connection = connections[0]; //default to the first open connection
-				else
-					throw new Error("Can't create RosterItemVOs with no active connection");
-			}
 			var bareJID:String = jid.toBareJID();
-			var item:RosterItemVO = allContacts[connection.jid.toBareJID() + bareJID];
+			var item:RosterItemVO = allContacts[bareJID];
 			if(!item && create)
-				allContacts[connection.jid.toBareJID() + bareJID] = item = new RosterItemVO(jid);
+				allContacts[bareJID] = item = new RosterItemVO(jid);
 			return item;
 		}
 		
