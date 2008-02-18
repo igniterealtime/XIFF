@@ -1,17 +1,22 @@
 package org.jivesoftware.xiff.auth
 {
 	import flash.xml.XMLNode;
+	
 	import mx.utils.Base64Encoder;
+	
+	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.XMPPConnection;
 	
 	public class Plain extends SASLAuth
 	{
-		public function Plain(username:String, password:String, domain:String):void
+		public function Plain(connection:XMPPConnection):void
 		{
-			var authContent:String = username + "@" + domain;
+			var jid:JID = connection.jid;
+			var authContent:String = jid.toBareJID();
 		    authContent += '\u0000';
-		    authContent += username;
+		    authContent += jid.node;
 		    authContent += '\u0000';
-		    authContent += password;
+		    authContent += connection.password;
 		
 			var b64coder:Base64Encoder = new Base64Encoder();
 			b64coder.insertNewLines = false;

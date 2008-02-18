@@ -23,6 +23,10 @@ package org.jivesoftware.xiff.core
 	
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
+		private static var saslMechanisms:Object = {
+			"PLAIN":Plain
+		};
+		
 		private var maxConcurrentRequests:uint = 2;
 		private var boshVersion:Number = 1.6;
 		private var headers:Object = {
@@ -70,6 +74,11 @@ package org.jivesoftware.xiff.core
 	        sendRequests(result);
 	
 	        return true;
+		}
+		
+		public static function registerSASLMechanism(name:String, authClass:Class):void
+		{
+			saslMechanisms[name] = authClass;
 		}
 		
 		public function set secure(flag:Boolean):void
@@ -318,21 +327,6 @@ package org.jivesoftware.xiff.core
     		
     		return req;
     	}
-    	
-    	private function login(username:String, password:String, resource:String):void 
-		{
-	        
-	//        if (!myUsername) {
-	//            auth = new XMPP.SASLAuth.Anonymous();
-	 //       }
-	 //       else {
-	 		if(!auth)
-	        	auth = new Plain(username, password, server);
-	  //      }
-	
-	        authHandler = handleAuthentication;
-	        sendXML(auth.request);
-	    }
 	    
 	    private function handleAuthentication(responseBody:XMLNode):void
 	    {
@@ -367,19 +361,19 @@ package org.jivesoftware.xiff.core
 	        }
 	        auth = authentication.auth;
 	        dispatchEvent(new ConnectionSuccessEvent());
-	        login(myUsername, myPassword, myResource);
+	        authHandler = handleAuthentication;
+	        sendXML(auth.request);
 	    }
 	    
 	    private function configureAuthMechanisms(mechanisms:XMLNode):SASLAuth
 	    {
 	        var authMechanism:SASLAuth;
+	        var authClass:Class;
 	        for each(var mechanism:XMLNode in mechanisms.childNodes) 
 	        {
-	            if (mechanism.firstChild.nodeValue == "PLAIN")
-	                return new Plain(myUsername, myPassword, server);
-	         //   else if (mechanism.firstChild.nodeValue == "ANONYMOUS") {
-	         //       authMechanism["anonymous"] = true;
-	          //  }
+	        	authClass = saslMechanisms[mechanism.firstChild.nodeValue];
+	   			if(authClass)
+	   				return new authClass(this);
 	        }
 	
 	        if (!authMechanism) {
