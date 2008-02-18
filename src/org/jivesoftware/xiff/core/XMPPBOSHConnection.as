@@ -326,7 +326,8 @@ package org.jivesoftware.xiff.core
 	//            auth = new XMPP.SASLAuth.Anonymous();
 	 //       }
 	 //       else {
-	        auth = new Plain(username, password, server);
+	 		if(!auth)
+	        	auth = new Plain(username, password, server);
 	  //      }
 	
 	        authHandler = handleAuthentication;
