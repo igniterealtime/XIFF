@@ -10,6 +10,7 @@ package org.jivesoftware.xiff.core
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 	
+	import org.jivesoftware.xiff.auth.Anonymous;
 	import org.jivesoftware.xiff.auth.Plain;
 	import org.jivesoftware.xiff.auth.SASLAuth;
 	import org.jivesoftware.xiff.data.IQ;
@@ -24,7 +25,8 @@ package org.jivesoftware.xiff.core
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
 		private static var saslMechanisms:Object = {
-			"PLAIN":Plain
+			"PLAIN":Plain,
+			"ANONYMOUS":Anonymous
 		};
 		
 		private var maxConcurrentRequests:uint = 2;
@@ -79,6 +81,11 @@ package org.jivesoftware.xiff.core
 		public static function registerSASLMechanism(name:String, authClass:Class):void
 		{
 			saslMechanisms[name] = authClass;
+		}
+		
+		public static function disableSASLMechanism(name:String):void
+		{
+			saslMechanisms[name] = null;
 		}
 		
 		public function set secure(flag:Boolean):void
