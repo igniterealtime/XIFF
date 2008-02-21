@@ -151,6 +151,13 @@
 			myShowNode = replaceTextNode(getNode(), myShowNode, "show", showVal);
 		}
 		
+		public override function set type(theType:String):void
+		{
+			if(theType == AVAILABLE_TYPE)
+				theType = null;
+			super.type = theType;
+		}
+		
 		/**
 		 * The status; usually used for "away messages."
 		 *
