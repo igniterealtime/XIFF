@@ -50,7 +50,7 @@
 	
 		private var myActionNode:XMLNode;
 		private var myPasswordNode:XMLNode;
-		private var myStatusNode:XMLNode;
+		private var myStatuses:Array = [];
 	
 		public function MUCUserExtension( parent:XMLNode=null )
 		{
@@ -88,7 +88,7 @@
 						break;
 						
 					case "status":
-						myStatusNode = children[i];
+						myStatuses.push(new MUCStatus(children[i], this));
 						break;
 						
 					case "password":
@@ -184,35 +184,27 @@
 			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
 		}
 	
-		/**
-		 * Property used to add or retrieve a status code describing the condition that occurs.
-		 */
-		public function get statusCode():Number
+		
+		public function get statuses():Array
 		{
-			if (myStatusNode == null) return NaN;
-			return Number(myStatusNode.attributes.code);
+			return myStatuses;
 		}
-	
-		public function set statusCode(val:Number):void
+		
+		public function set statuses(newStatuses:Array):void
 		{
-			myStatusNode = ensureNode(myStatusNode, "status");
-			myStatusNode.attributes.code = val.toString();
+			myStatuses = newStatuses;
 		}
-	
-		/**
-		 * Property that contains some text with a description of a condition.
-		 */
-		public function get statusMessage():String
+		
+		public function hasStatusCode(code:Number):Boolean
 		{
-			if (myStatusNode == null) return null;
-			return myStatusNode.firstChild.nodeValue;
+			for each(var status:MUCStatus in statuses)
+			{
+				if(status.code == code)
+					return true;
+			}
+			return false;
 		}
-	
-		public function set statusMessage(val:String):void
-		{
-			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", val);
-		}
-	
+			
 		/**
 		 * Internal method that manages the type of node that we will use for invite/destroy/decline messages
 		 */

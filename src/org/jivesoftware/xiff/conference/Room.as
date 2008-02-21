@@ -232,6 +232,7 @@ package org.jivesoftware.xiff.conference
 		private var myAffiliation:String;
 	    private var myIsReserved:Boolean;
 	    private var mySubject:String;
+	    private var _anonymous:Boolean = true;
 		
 		private var active:Boolean;
 		
@@ -690,21 +691,31 @@ package org.jivesoftware.xiff.conference
 							}
 							
 							var user:MUCUserExtension = presence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-							switch (user.statusCode) 
+							for each(var status:MUCStatus in user.statuses)
 							{
-								case 201:
-									unlockRoom(myIsReserved);
-									break;
-								case 307:
-									e = new RoomEvent(RoomEvent.USER_KICKED);
-									e.nickname = presence.from.resource;
-									dispatchEvent(e);
-									break;
-								case 301:
-									e = new RoomEvent(RoomEvent.USER_BANNED);
-									e.nickname = presence.from.resource;
-									dispatchEvent(e);
-									break;
+								switch (status.code) 
+								{
+									case 100:
+									case 172:
+										anonymous = false;
+										break;
+									case 174:
+										anonymous = true;
+										break;
+									case 201:
+										unlockRoom(myIsReserved);
+										break;
+									case 307:
+										e = new RoomEvent(RoomEvent.USER_KICKED);
+										e.nickname = presence.from.resource;
+										dispatchEvent(e);
+										break;
+									case 301:
+										e = new RoomEvent(RoomEvent.USER_BANNED);
+										e.nickname = presence.from.resource;
+										dispatchEvent(e);
+										break;
+								}
 							}
 	
 							updateRoomRoster( presence );
@@ -1064,15 +1075,13 @@ package org.jivesoftware.xiff.conference
 						//trace("Room: updateRoomRoster: leaving room: " + userNickname);
 						
 						var user:MUCUserExtension = aPresence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-						if (user.statusCode == 307) {
-							// User left as a result of a kick, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED
-							removeItemAt(i);
-							return;
-						}
-						else if (user.statusCode == 301) {
-							// User left as a result of a ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_BANNED
-							removeItemAt(i);
-							return;
+						for each(var status:MUCStatus in user.statuses)
+						{
+							if (status.code == 307 || status.code == 301) {
+								// User left as a result of a kick or ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED/USER_BANNED
+								removeItemAt(i);
+								return;
+							}
 						}
 						
                         // Notify listeners that a user has left the room
@@ -1216,6 +1225,22 @@ package org.jivesoftware.xiff.conference
 	    public function get subject():String
 	    {
 	        return mySubject;
+	    }
+	    
+	    /**
+	     * Whether the room shows full JIDs or not; (Read-only) 
+	     */
+	    public function get anonymous():Boolean
+	    {
+	    	return _anonymous;
+	    }
+	    
+	    /**
+	     * Don't call this; it would be private, but ActionScript apparently doesn't like mixed-visibility properties
+	     */
+	    public function set anonymous(newState:Boolean):void
+	    {
+	    	_anonymous = newState;
 	    }
 	    
 		/**

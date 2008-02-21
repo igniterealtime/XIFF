@@ -255,6 +255,9 @@ package org.jivesoftware.xiff.core
 			if(requestCount >= maxConcurrentRequests)
 				return false;
 				
+			if(isPoll)
+				trace("Polling at: " + new Date().getSeconds());
+				
 			requestCount++;
 			
 			if(!data)
@@ -287,6 +290,8 @@ package org.jivesoftware.xiff.core
 	        
 	        request.addEventListener(ResultEvent.RESULT, responseCallback.call, false);
 	        request.addEventListener(FaultEvent.FAULT, errorCallback.call, false);
+	       
+	       trace(data);
 	       
 			request.send(data);
 
