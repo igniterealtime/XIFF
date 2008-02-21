@@ -488,10 +488,9 @@ package org.jivesoftware.xiff.im
 		{
 			for each(var aPresence:Presence in presenceArray)
 			{
-				// Handle based on the type of the presence received
-				if(!aPresence.type)
-					aPresence.type = Presence.AVAILABLE_TYPE;
-				switch( aPresence.type.toLowerCase() )
+				var type:String = aPresence.type != null ? aPresence.type : Presence.AVAILABLE_TYPE;
+
+				switch( type.toLowerCase() )
 				{
 					case Presence.SUBSCRIBE_TYPE:
 						var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
