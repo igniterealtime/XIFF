@@ -414,7 +414,11 @@ package org.jivesoftware.xiff.core
 	    {
 	    	var bindIQ:IQ = new IQ(null, "set");
 	
-	        bindIQ.addExtension(new BindExtension());
+			var bindExt:BindExtension = new BindExtension();
+			if(resource)
+	        	bindExt.resource = resource;
+	        
+	        bindIQ.addExtension(bindExt);
 	
 			//this is laaaaaame, it should be a function
 			bindIQ.callbackName = "handleBindResponse";

@@ -13,6 +13,7 @@ package org.jivesoftware.xiff.data.bind
 		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
 		public static var ELEMENT_NAME:String = "bind";
 		private var jid:String;
+		private var _resource:String;
 		
 		public function getNS():String
 		{
@@ -34,7 +35,7 @@ package org.jivesoftware.xiff.data.bind
 			if (!exists(getNode().parentNode)) {
 				var child:XMLNode = getNode().cloneNode(true);
 				var resourceNode:XMLNode = new XMLNode(1, "resource");
-				resourceNode.appendChild(XMLStanza.XMLFactory.createTextNode("xiff"));
+				resourceNode.appendChild(XMLStanza.XMLFactory.createTextNode(resource ? resource : "xiff"));
 				child.appendChild(resourceNode);
 				parent.appendChild(child);
 			}
@@ -69,6 +70,16 @@ package org.jivesoftware.xiff.data.bind
 				}
 			}
 			return true;
+		}
+		
+		public function set resource(newResource:String):void
+		{
+			_resource = newResource;
+		}
+		
+		public function get resource():String
+		{
+			return _resource;
 		}
 		
 	}
