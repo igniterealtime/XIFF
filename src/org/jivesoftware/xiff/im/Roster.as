@@ -295,12 +295,12 @@ package org.jivesoftware.xiff.im
 		 * @param newName The new display name for this contact
 		 * @param newGroups The new groups to associate the contact with
 		 */
-		private function updateContact( contact:RosterItemVO, newName:String, newGroups:Array ):void
+		private function updateContact( contact:RosterItemVO, newName:String, groupNames:Array ):void
 		{
 			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-					
-			ext.addItem( contact.jid, contact.subscribeType, newName, newGroups );
+			
+			ext.addItem( contact.jid, contact.subscribeType, newName, groupNames );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 		}
@@ -314,7 +314,12 @@ package org.jivesoftware.xiff.im
 		 */
 		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
 		{
-			updateContact( rosterItem, newName, getContainingGroups(rosterItem) );
+			var groupNames:Array = [];
+			for each(var group:RosterGroup in getContainingGroups(rosterItem))
+			{
+				groupNames.push(group.label);
+			}
+			updateContact( rosterItem, newName, groupNames);
 		}
 		
 		public function getContainingGroups(item:RosterItemVO):Array
@@ -335,9 +340,9 @@ package org.jivesoftware.xiff.im
 		 * @param id The JID of the contact to update
 		 * @param newGroups The new groups to associate the contact with
 		 */
-		public function updateContactGroups( rosterItem:RosterItemVO, newGroups:Array ):void
+		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
 		{
-			updateContact( rosterItem, rosterItem.displayName, newGroups );
+			updateContact( rosterItem, rosterItem.displayName, newGroupNames );
 		}
 		
 		/**
@@ -409,6 +414,11 @@ package org.jivesoftware.xiff.im
 			// Does nothing for now
 		}
 		
+		public override function set filterFunction(f:Function):void
+		{
+			throw new Error("Setting the filterFunction on Roster is not allowed.");
+		}
+		
 		private function handleEvent( eventObj:* ):void
 		{
 
@@ -448,6 +458,10 @@ package org.jivesoftware.xiff.im
 									
 									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
 										ev = new RosterEvent(RosterEvent.USER_REMOVED);
+										for each(var group:RosterGroup in getContainingGroups(rosterItemVO))
+										{
+											group.removeItem(rosterItemVO);
+										}
 										//should be impossible for getItemIndex to return -1, since we just looked it up
 										ev.data = removeItemAt(getItemIndex(rosterItemVO));
 										ev.jid = item.jid;
@@ -539,7 +553,7 @@ package org.jivesoftware.xiff.im
 				return false;
 			
 			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
-			if(source.indexOf(rosterItem) < 0)
+			if(!contains(rosterItem))
 				addItem( rosterItem );
 			if(displayName)
 				rosterItem.displayName = displayName;

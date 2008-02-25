@@ -32,7 +32,7 @@ package org.jivesoftware.xiff.data.im
 			var bareJID:String = jid.toBareJID();
 			var item:RosterItemVO = allContacts[bareJID];
 			if(!item && create)
-				allContacts[bareJID] = item = new RosterItemVO(jid);
+				allContacts[bareJID] = item = new RosterItemVO(jid.bareJid);
 			return item;
 		}
 		
