@@ -574,6 +574,10 @@ package org.jivesoftware.xiff.im
 		private function setContactGroups(contact:RosterItemVO, groupNames:Array):void
 		{
 			groups.disableAutoUpdate();
+			if(!groupNames || groupNames.length == 0)
+			{
+				groupNames = ["General"];
+			}
 			for each(var name:String in groupNames)
 			{
 				//if there's no group by this name already, we need to make one
