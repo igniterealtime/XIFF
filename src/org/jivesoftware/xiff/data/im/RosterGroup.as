@@ -22,8 +22,7 @@ package org.jivesoftware.xiff.data.im
 	 
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
-	
-	import org.jivesoftware.xiff.core.XMPPConnection;
+	import mx.collections.SortField;
 	
 	public class RosterGroup extends ArrayCollection
 	{
@@ -33,7 +32,7 @@ package org.jivesoftware.xiff.data.im
 		public function RosterGroup(l:String)
 		{
 			var s:Sort = new Sort();
-		    s.compareFunction = sortContacts;
+		    s.fields = [new SortField("displayName", true)];
 		    sort = s;
 		    refresh();
 			label = l;
@@ -58,6 +57,11 @@ package org.jivesoftware.xiff.data.im
 				if(itemIndex >= 0)
 					source.splice(itemIndex, 1);
 			}
+		}
+		
+		public override function set filterFunction(f:Function):void
+		{
+			throw new Error("Setting the filterFunction on RosterGroup is not allowed; Wrap it in a ListCollectionView and filter that.");
 		}
 
 		private function sortContacts(item1:RosterItemVO, item2:RosterItemVO, fields:Array = null):int

@@ -44,7 +44,6 @@
 	public class Presence extends XMPPStanza implements ISerializable 
 	{
 		// Static constants for specific type strings
-		public static const AVAILABLE_TYPE:String = "available";
 		public static const UNAVAILABLE_TYPE:String = "unavailable";
 		public static const PROBE_TYPE:String = "probe";
 		public static const SUBSCRIBE_TYPE:String = "subscribe";
@@ -57,9 +56,7 @@
 		public static const SHOW_AWAY:String = "away";
 		public static const SHOW_CHAT:String = "chat";
 		public static const SHOW_DND:String = "dnd";
-		public static const SHOW_NORMAL:String = "normal";
 		public static const SHOW_XA:String = "xa";
-		public static const SHOW_OFFLINE:String = "offline";
 	
 		// Private node references for property lookups
 		private var myShowNode:XMLNode;
@@ -128,7 +125,6 @@
 		 * <li>Presence.SHOW_AWAY</li>
 		 * <li>Presence.SHOW_CHAT</li>
 		 * <li>Presence.SHOW_DND</li>
-		 * <li>Presence.SHOW_NORMAL</li>
 		 * <li>Presence.SHOW_XA</li>
 		 * </ul>
 		 *
@@ -136,26 +132,27 @@
 		 */
 		public function get show():String 
 		{
-			if (!myShowNode) return null;
+			if (!myShowNode || !exists(myShowNode.firstChild)) return null;
 			
-			//is this right?
-			if (!exists(myShowNode.firstChild)){
-				return Presence.SHOW_NORMAL;
-			}
 			return myShowNode.firstChild.nodeValue;
 		}
 		
 		public function set show( showVal:String ):void 
 		{
+			if(showVal != SHOW_AWAY
+			&& showVal != SHOW_CHAT
+			&& showVal != SHOW_DND
+			&& showVal != SHOW_XA
+			&& showVal != null
+			&& showVal != "")
+				throw new Error("Invalid show value: " + showVal + " for presence");
 			
+			if(myShowNode && (showVal == null || showVal == ""))
+			{
+				myShowNode.removeNode();
+				myShowNode = null;
+			}
 			myShowNode = replaceTextNode(getNode(), myShowNode, "show", showVal);
-		}
-		
-		public override function set type(theType:String):void
-		{
-			if(theType == AVAILABLE_TYPE)
-				theType = null;
-			super.type = theType;
 		}
 		
 		/**

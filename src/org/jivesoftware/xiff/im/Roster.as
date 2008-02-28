@@ -416,7 +416,7 @@ package org.jivesoftware.xiff.im
 		
 		public override function set filterFunction(f:Function):void
 		{
-			throw new Error("Setting the filterFunction on Roster is not allowed.");
+			throw new Error("Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that.");
 		}
 		
 		private function handleEvent( eventObj:* ):void
@@ -502,9 +502,9 @@ package org.jivesoftware.xiff.im
 		{
 			for each(var aPresence:Presence in presenceArray)
 			{
-				var type:String = aPresence.type != null ? aPresence.type : Presence.AVAILABLE_TYPE;
-
-				switch( type.toLowerCase() )
+				var type:String = aPresence.type ? aPresence.type.toLowerCase() : null;
+				
+				switch( type )
 				{
 					case Presence.SUBSCRIBE_TYPE:
 						var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
@@ -517,21 +517,20 @@ package org.jivesoftware.xiff.im
 						sDeny.jid = aPresence.from;
 						dispatchEvent(sDeny);
 						break;
-						
+					
 					case Presence.UNAVAILABLE_TYPE:
 						var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
 						unavailEv.jid = aPresence.from;
 						dispatchEvent(unavailEv);
 	
-						aPresence.show = Presence.UNAVAILABLE_TYPE
 						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
 						if(!unavailableItem) return;
 						updateRosterItemPresence( unavailableItem, aPresence );
 						
 						break;
 					
-					// AVAILABLE is the default type, so undefined is also possible
-					case Presence.AVAILABLE_TYPE:
+					// null means available
+					default:
 						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
 						availEv.jid = aPresence.from;
 						availEv.data = aPresence;
@@ -616,6 +615,10 @@ package org.jivesoftware.xiff.im
 				item.status = presence.status;
 				item.show = presence.show;
 				item.priority = presence.priority;
+				if(!presence.type)
+					item.online = true;
+				else if(presence.type == Presence.UNAVAILABLE_TYPE)
+					item.online = false;
 				
 				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
 				event.jid = item.jid;
