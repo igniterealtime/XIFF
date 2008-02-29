@@ -37,7 +37,6 @@ package org.jivesoftware.xiff.core
 		};
 		private var requestCount:int = 0;
 		private var failedRequests:Array = [];
-		private var lastPollTime:int = 0;
 		private var requestQueue:Array = [];
 		private var responseQueue:Array = [];
 		private const responseTimer:Timer = new Timer(0.0, 1);
@@ -56,6 +55,19 @@ package org.jivesoftware.xiff.core
 		private var _port:Number = -1;
 		
 		private var callbacks:Object = {};
+		
+		public function resumeExistingConnection(existingSID:String, lastRID:Number, pollTime:Date, secureSetting:Boolean, holdSetting:Number, portSetting:Number, pollingInterval:Number):void
+		{
+			BindExtension.enable();
+			sid = existingSID;
+			rid = lastRID;
+			secure = secureSetting;
+			port = portSetting;
+			boshPollingInterval = pollingInterval;
+			
+			active = true;
+			loggedIn = true;
+		}
 			
 		public override function connect(streamType:String=null):Boolean
 		{

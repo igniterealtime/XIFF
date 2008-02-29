@@ -7,8 +7,6 @@ package org.jivesoftware.xiff.data.im
 	import mx.events.PropertyChangeEvent;
 	
 	import org.jivesoftware.xiff.core.JID;
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.Presence;
 	
 	public class RosterItemVO extends EventDispatcher implements IPropertyChangeNotifier
 	{
@@ -21,6 +19,7 @@ package org.jivesoftware.xiff.data.im
 		private var _status:String;
 		private var _show:String;
 		private var _priority:Number;
+		private var _online:Boolean = false;
 		
 		public function RosterItemVO(newJID:JID):void 
 		{
@@ -51,6 +50,7 @@ package org.jivesoftware.xiff.data.im
 			var oldSub:String = subscribeType;
 			_subscribeType = newSub;
 			PropertyChangeEvent.createUpdateEvent(this, "subscribeType", oldSub, subscribeType);
+			dispatchEvent(new Event("changeSubscription"));
 		}
 		
 		[Bindable]
@@ -77,9 +77,10 @@ package org.jivesoftware.xiff.data.im
 			var oldasktype:String = askType;
 			var oldPending:Boolean = pending;
 			_askType = aT;
-			dispatchEvent(new Event("changeAskType"));
 			PropertyChangeEvent.createUpdateEvent(this, "askType", oldasktype, askType);
 			PropertyChangeEvent.createUpdateEvent(this, "pending", oldPending, pending);
+			
+			dispatchEvent(new Event("changeAskType"));
 		}
 		
 		[Bindable]
@@ -98,15 +99,28 @@ package org.jivesoftware.xiff.data.im
 		[Bindable]
 		public function get status():String
 		{
-			if(show == Presence.SHOW_OFFLINE)
-				return Presence.SHOW_OFFLINE;
+			if(!online)
+				return "Offline";
 			return _status ? _status : "Available";
+		}
+		
+		public function set online(newState:Boolean):void
+		{
+			if(newState == online)
+				return;
+			var oldOnline:Boolean = online;
+			_online = newState;
+			PropertyChangeEvent.createUpdateEvent(this, "online", oldOnline, online);
+		}
+		
+		[Bindable]
+		public function get online():Boolean
+		{
+			return _online;
 		}
 		
 		public function set show(newShow:String):void
 		{
-			// By default, normal isn't specified, so if null, we will use NORMAL
-			newShow = newShow != null ? newShow : Presence.SHOW_NORMAL;
 			var oldShow:String = show;
 			_show = newShow;
 			PropertyChangeEvent.createUpdateEvent(this, "show", oldShow, show);
@@ -150,6 +164,7 @@ package org.jivesoftware.xiff.data.im
 		}
 		
 		[Bindable(event=changeAskType)]
+		[Bindable(event=changeSubscription)]
 		public function get pending():Boolean {
 			return askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM);
 		}

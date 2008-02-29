@@ -1095,7 +1095,7 @@ package org.jivesoftware.xiff.conference
 		            	var o:Object = getItemAt(i);
 		            	o.affiliation = item.affiliation;
 		            	o.role = item.role;
-		            	o.show = aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL;
+		            	o.show = aPresence.show;
 		            }
 		            return;
 		        }
@@ -1103,9 +1103,7 @@ package org.jivesoftware.xiff.conference
 		        
 		 	// Wasn't found, so add it
 		 	if( aPresence.type != Presence.UNAVAILABLE_TYPE ) {
-		 		addToRoomRoster( userNickname, 
-		 		aPresence.show != null ? aPresence.show : Presence.SHOW_NORMAL, 
-		 			item.affiliation, item.role, item.jid );
+		 		addToRoomRoster( userNickname, aPresence.show, item.affiliation, item.role, item.jid );
 		
 				e = new RoomEvent(RoomEvent.USER_JOIN);
 				e.nickname = userNickname;
