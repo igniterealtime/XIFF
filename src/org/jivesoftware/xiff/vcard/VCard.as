@@ -426,8 +426,6 @@ package org.jivesoftware.xiff.vcard
 			if (resultIQ.type == IQ.ERROR_TYPE)
 			{
 				dispatchEvent(new VCardEvent(VCardEvent.ERROR, cache[resultIQ.to.toBareJID()], true, true));
-				
-				//AlertWindow.show(Localizator.getText('vcard.error.save'), Localizator.getText('title.error'));
 			}
 			else
 				delete cache[resultIQ.to.toBareJID()];		// Force profile refresh on next view
