@@ -56,17 +56,38 @@ package org.jivesoftware.xiff.core
 		
 		private var callbacks:Object = {};
 		
-		public function resumeExistingConnection(existingSID:String, lastRID:Number, pollTime:Date, secureSetting:Boolean, holdSetting:Number, portSetting:Number, pollingInterval:Number):void
+		private static const stateVersion:String = "1";
+		
+		public function set serializedState (state:XML):void
 		{
+			if(active)
+				throw new Error("Can't unserialize into an already active connection");
+				
 			BindExtension.enable();
-			sid = existingSID;
-			rid = lastRID;
-			secure = secureSetting;
-			port = portSetting;
-			boshPollingInterval = pollingInterval;
+			sid = state.sid;
+			rid = state.rid;
+			var tempJID:JID = new JID(state.jid);
+			myUsername = tempJID.node;
+			port = state.port;
+			server = state.domain;
+			boshPollingInterval = state.pollingInterval;
+			secure = state.secure;
 			
 			active = true;
 			loggedIn = true;
+		}
+		
+		public function get serializedState ():XML
+		{
+			return <state version={stateVersion}>
+						<sid>{sid}</sid>
+						<rid>{rid}</rid>
+						<secure>{https}</secure>
+						<port>{port}</port>
+						<domain>{server}</domain>
+						<jid>{jid}</jid>
+						<pollingInterval>{boshPollingInterval}</pollingInterval>
+					</state>;
 		}
 			
 		public override function connect(streamType:String=null):Boolean
