@@ -270,7 +270,8 @@ package org.jivesoftware.xiff.core
 		{
 			if( isActive() ) {
 				sendXML( closingStreamTag );
-				_socket.close();
+				if(_socket)
+					_socket.close();
 				active = false;
 				loggedIn = false;
 				var event:DisconnectionEvent = new DisconnectionEvent();

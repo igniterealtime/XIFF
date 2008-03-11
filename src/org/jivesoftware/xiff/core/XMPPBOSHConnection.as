@@ -17,9 +17,9 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.data.bind.BindExtension;
 	import org.jivesoftware.xiff.data.session.SessionExtension;
 	import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
-	import org.jivesoftware.xiff.events.DisconnectionEvent;
 	import org.jivesoftware.xiff.events.IncomingDataEvent;
 	import org.jivesoftware.xiff.events.LoginEvent;
+	import org.jivesoftware.xiff.events.XIFFErrorEvent;
 	import org.jivesoftware.xiff.util.Callback;
 	
 	public class XMPPBOSHConnection extends XMPPConnection
@@ -56,42 +56,12 @@ package org.jivesoftware.xiff.core
 		
 		private var callbacks:Object = {};
 		
-		private static const stateVersion:String = "1";
-		
-		public function set serializedState (state:XML):void
-		{
-			if(active)
-				throw new Error("Can't unserialize into an already active connection");
-				
-			BindExtension.enable();
-			sid = state.sid;
-			rid = state.rid;
-			var tempJID:JID = new JID(state.jid);
-			myUsername = tempJID.node;
-			port = state.port;
-			server = state.domain;
-			boshPollingInterval = state.pollingInterval;
-			secure = state.secure;
-			
-			active = true;
-			loggedIn = true;
-		}
-		
-		public function get serializedState ():XML
-		{
-			return <state version={stateVersion}>
-						<sid>{sid}</sid>
-						<rid>{rid}</rid>
-						<secure>{https}</secure>
-						<port>{port}</port>
-						<domain>{server}</domain>
-						<jid>{jid}</jid>
-						<pollingInterval>{boshPollingInterval}</pollingInterval>
-					</state>;
-		}
+		public static var logger:Object = null;
 			
 		public override function connect(streamType:String=null):Boolean
 		{
+			if(logger)
+				logger.log("CONNECT()", "INFO");
 			BindExtension.enable();
 			active = false;
 			loggedIn = false;
@@ -145,7 +115,9 @@ package org.jivesoftware.xiff.core
 		
 		public override function disconnect():void
 		{
-			dispatchEvent(new DisconnectionEvent());
+			super.disconnect();
+			pollTimer.stop();
+			pollTimer = null;
 		}
 		
 		public function processConnectionResponse(responseBody:XMLNode):void
@@ -223,6 +195,9 @@ package org.jivesoftware.xiff.core
 			requestCount--;
 			var rawXML:String = evt.result as String;
 			
+			if(logger)
+	       		logger.log(rawXML, "INCOMING");
+			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
 			xmlData.parseXML( rawXML );
@@ -257,14 +232,16 @@ package org.jivesoftware.xiff.core
 			
 			//if we have queued requests we want to send them before attempting to poll again
 			//otherwise, if we don't already have a countdown going for the next poll, start one
-	        if (!sendQueuedRequests() && !pollTimer.running)
+	        if (!sendQueuedRequests() && (!pollTimer || !pollTimer.running))
 	        	resetPollTimer();
 		}
 		
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
 		{
 			active = false;
-			trace("ERROR: " + req + ", \n" + evt.message);
+			var err:XIFFErrorEvent = new XIFFErrorEvent();
+			err.errorMessage = "HTTP Error";
+			dispatchEvent(err);
 		}
 		
 		protected override function sendXML(body:*):void
@@ -325,6 +302,8 @@ package org.jivesoftware.xiff.core
 	        request.addEventListener(FaultEvent.FAULT, errorCallback.call, false);
 	       
 	       trace(data);
+	       if(logger)
+	       	logger.log(data, "OUTGOING");
 	       
 			request.send(data);
 
