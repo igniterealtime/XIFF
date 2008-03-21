@@ -1068,7 +1068,7 @@ package org.jivesoftware.xiff.conference
 			for(var i:int=0; i < length; i++) {
 				//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
 		
-				if( getItemAt( i ).nickname == userNickname ) {
+				if( getItemAt( i ).displayName == userNickname ) {
 		                
 		    		// If the user left, remove the item
 		        	if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
@@ -1103,19 +1103,13 @@ package org.jivesoftware.xiff.conference
 		        
 		 	// Wasn't found, so add it
 		 	if( aPresence.type != Presence.UNAVAILABLE_TYPE ) {
-		 		addToRoomRoster( userNickname, aPresence.show, item.affiliation, item.role, item.jid );
+		 		addItem( new RoomOccupant(userNickname, aPresence.show, item.affiliation, item.role, item.jid, this) );
 		
 				e = new RoomEvent(RoomEvent.USER_JOIN);
 				e.nickname = userNickname;
 				e.data = aPresence;
 				dispatchEvent(e);
 			}	
-		}
-		
-		private function addToRoomRoster( nickname:String, show:String, affiliation:String, role:String, jid:JID ):void
-		{
-			// Here we add roomJid:myJID to facilitate clients in correlating room occupants with rooms.
-			addItem({nickname:nickname, show:show, affiliation:affiliation, role:role, jid:jid, roomJid:myJID});
 		}
 		
 		/**
@@ -1220,6 +1214,7 @@ package org.jivesoftware.xiff.conference
 		/**
 		 * The subject. (Read-only)
 		 */
+		[Bindable(event=subjectChange)]
 	    public function get subject():String
 	    {
 	        return mySubject;

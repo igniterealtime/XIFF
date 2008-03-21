@@ -16,7 +16,7 @@ package org.jivesoftware.xiff.core
         			throw "Invalid JID";
     			}
    			}
-    		jid = inJID;
+    		jid = inJID ? inJID : "";
 		}
 		
     	public function toString():String {

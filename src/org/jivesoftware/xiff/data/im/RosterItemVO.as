@@ -8,7 +8,7 @@ package org.jivesoftware.xiff.data.im
 	
 	import org.jivesoftware.xiff.core.JID;
 	
-	public class RosterItemVO extends EventDispatcher implements IPropertyChangeNotifier
+	public class RosterItemVO extends EventDispatcher implements Contact
 	{
 		private static var allContacts:Object = {};
 		private var _jid:JID;
