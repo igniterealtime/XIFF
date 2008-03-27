@@ -26,6 +26,17 @@ package org.jivesoftware.xiff.conference
 			this.room = room;
 		}
 		
+		public function set online(newOnline:Boolean):void
+		{
+			//RoomOccupants can't exist unless they're online
+		}
+		
+		[Bindable]
+		public function get online():Boolean
+		{
+			return true;
+		}
+		
 		public function set uid(i:String):void
 		{
 			_uid = i;

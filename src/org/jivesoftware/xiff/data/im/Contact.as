@@ -14,5 +14,8 @@ package org.jivesoftware.xiff.data.im
 		
 		function get show():String;
 		function set show(newShow:String):void;
+		
+		function get online():Boolean;
+		function set online(newOnline:Boolean):void;
 	}
 }
