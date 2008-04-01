@@ -1045,6 +1045,18 @@ package org.jivesoftware.xiff.conference
 	        iq.addExtension(owner);
 	        myConnection.send(iq);
 	    }
+	    
+	    private function getOccupantNamed(inName:String):RoomOccupant
+	    {
+	    	for each(var occ:RoomOccupant in this)
+			{
+				if(occ.displayName == inName)
+				{
+					return occ;
+				}
+			}
+			return null;
+	    }
 		
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
@@ -1052,57 +1064,55 @@ package org.jivesoftware.xiff.conference
 			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
 			var item:MUCItem = userExts[0].getAllItems()[0];
 			var e:RoomEvent;
-				
-			if ( isThisUser( aPresence.from ) ) {
+			
+			//if we receive a presence about ourselves, it means we've joined the room; tell everyone, then proceed as usual	
+			if ( isThisUser( aPresence.from ) ) 
+			{
 				myAffiliation = item.affiliation;
 				myRole = item.role;
 		
-				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) {
+				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) 
+				{
 					//trace("Room: becoming active: " + presence.getNode());
 					active = true;
 					e = new RoomEvent(RoomEvent.ROOM_JOIN);
 					dispatchEvent(e);
 				}
 			}
-		
-			for(var i:int=0; i < length; i++) {
-				//trace("Room: updateRoomRoster: checking: " + getItemAt(i).nickname);
-		
-				if( getItemAt( i ).displayName == userNickname ) {
-		                
-		    		// If the user left, remove the item
-		        	if( aPresence.type == Presence.UNAVAILABLE_TYPE ) {
-						//trace("Room: updateRoomRoster: leaving room: " + userNickname);
-						
-						var user:MUCUserExtension = aPresence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
-						for each(var status:MUCStatus in user.statuses)
-						{
-							if (status.code == 307 || status.code == 301) {
-								// User left as a result of a kick or ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED/USER_BANNED
-								removeItemAt(i);
-								return;
-							}
-						}
-						
-                        // Notify listeners that a user has left the room
-		           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
-		            	e.nickname = userNickname
-		            	e.data = aPresence;
-		            	dispatchEvent(e);
-		            	removeItemAt (i);
-		            }
-		            else if (item != null) {
-		            	var o:Object = getItemAt(i);
-		            	o.affiliation = item.affiliation;
-		            	o.role = item.role;
-		            	o.show = aPresence.show;
-		            }
-		            return;
-		        }
-		 	}
-		        
-		 	// Wasn't found, so add it
-		 	if( aPresence.type != Presence.UNAVAILABLE_TYPE ) {
+			
+			var occupant:RoomOccupant = getOccupantNamed(userNickname);		
+			
+			//if we already know about this occupant, we're either being told about them leaving, or about a presence update
+			if(occupant)
+			{
+				if( aPresence.type == Presence.UNAVAILABLE_TYPE ) 
+				{
+					removeItemAt(getItemIndex(occupant));
+					
+					var user:MUCUserExtension = aPresence.getAllExtensionsByNS(MUCUserExtension.NS)[0];
+					for each(var status:MUCStatus in user.statuses)
+					{
+						// If the user left as a result of a kick or ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED/USER_BANNED
+						if (status.code == 307 || status.code == 301)
+							return;
+					}
+					
+	                // Notify listeners that a user has left the room
+	           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
+	            	e.nickname = userNickname
+	            	e.data = aPresence;
+	            	dispatchEvent(e);
+	            }
+	            else 
+	            {
+	            	occupant.affiliation = item.affiliation;
+	            	occupant.role = item.role;
+	            	occupant.show = aPresence.show;
+	            }
+	  		}
+	  		else if( aPresence.type != Presence.UNAVAILABLE_TYPE ) 
+	  		{
+		 		// We didn't know about this occupant yet, so we add them, then let everyone know that we did.
 		 		addItem( new RoomOccupant(userNickname, aPresence.show, item.affiliation, item.role, item.jid, this) );
 		
 				e = new RoomEvent(RoomEvent.USER_JOIN);

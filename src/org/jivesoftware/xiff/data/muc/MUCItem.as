@@ -118,6 +118,8 @@
 	
 		public function get jid():JID
 		{
+			if(getNode().attributes.jid == null)
+				return null;
 			return new JID(getNode().attributes.jid);
 		}
 	

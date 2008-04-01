@@ -50,7 +50,9 @@ package org.jivesoftware.xiff.conference
 		//If there isn't a roster item associated with this room occupant (for example, if the room is anonymous), this will return null
 		public function get rosterItem():RosterItemVO
 		{
-			return RosterItemVO.get(jid, false);
+			if(!jid)
+				return null;
+			return RosterItemVO.get(jid, true);
 		}
 
 		[Bindable]
