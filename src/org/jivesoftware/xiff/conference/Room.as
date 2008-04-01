@@ -1073,7 +1073,6 @@ package org.jivesoftware.xiff.conference
 		
 				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) 
 				{
-					//trace("Room: becoming active: " + presence.getNode());
 					active = true;
 					e = new RoomEvent(RoomEvent.ROOM_JOIN);
 					dispatchEvent(e);
