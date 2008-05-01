@@ -23,6 +23,8 @@
  
 package org.jivesoftware.xiff.conference
 {
+	import flash.events.Event;
+	
 	import mx.collections.ArrayCollection;
 	
 	import org.jivesoftware.xiff.core.JID;
@@ -556,6 +558,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return The user's role
 		 */
+		[Bindable(event=roleSet)]
 		public function get role():String
 		{
 			return myRole;
@@ -568,6 +571,7 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return The user's affiliation
 		 */
+		[Bindable(event=affiliationSet)]
 		public function get affiliation():String
 		{
 			return myAffiliation;
@@ -1069,7 +1073,9 @@ package org.jivesoftware.xiff.conference
 			if ( isThisUser( aPresence.from ) ) 
 			{
 				myAffiliation = item.affiliation;
+				dispatchEvent(new Event("affiliationSet")); //update bindings
 				myRole = item.role;
+				dispatchEvent(new Event("roleSet")); //update bindings
 		
 				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) 
 				{
