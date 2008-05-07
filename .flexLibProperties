@@ -26,6 +26,7 @@
 <classEntry path="org.jivesoftware.xiff.events.OutgoingDataEvent"/>
 <classEntry path="org.jivesoftware.xiff.data.IQ"/>
 <classEntry path="org.jivesoftware.xiff.data.id.IIDGenerator"/>
+<classEntry path="org.jivesoftware.xiff.conference.RoomFile"/>
 <classEntry path="org.jivesoftware.xiff.data.forms.FormField"/>
 <classEntry path="org.jivesoftware.xiff.data.whiteboard.Path"/>
 <classEntry path="org.jivesoftware.xiff.bookmark.GroupChatBookmark"/>
@@ -50,6 +51,7 @@
 <classEntry path="org.jivesoftware.xiff.data.im.RosterGroup"/>
 <classEntry path="org.jivesoftware.xiff.data.whiteboard.Stroke"/>
 <classEntry path="org.jivesoftware.xiff.util.SocketConn"/>
+<classEntry path="org.jivesoftware.xiff.conference.RoomFileRepository"/>
 <classEntry path="org.jivesoftware.xiff.events.BookmarkRetrievedEvent"/>
 <classEntry path="org.jivesoftware.xiff.data.disco.InfoDiscoExtension"/>
 <classEntry path="org.jivesoftware.xiff.events.RegistrationFieldsEvent"/>

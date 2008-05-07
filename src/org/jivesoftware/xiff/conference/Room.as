@@ -235,6 +235,7 @@ package org.jivesoftware.xiff.conference
 	    private var myIsReserved:Boolean;
 	    private var mySubject:String;
 	    private var _anonymous:Boolean = true;
+//	    private var _fileRepo:RoomFileRepository;
 		
 		private var active:Boolean;
 		
@@ -252,7 +253,7 @@ package org.jivesoftware.xiff.conference
 		{
 			active = false;
 			if (aConnection != null){
-				connection = aConnection ;
+				connection = aConnection;
 			}
 		}
 		
@@ -279,12 +280,14 @@ package org.jivesoftware.xiff.conference
 				myConnection.removeEventListener(DisconnectionEvent.DISCONNECT, handleEvent);	
 			}
 			
-			
 			myConnection = connection;
 			
 			myConnection.addEventListener(MessageEvent.MESSAGE, handleEvent, false, 0, true);
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent, false, 0, true);
 			myConnection.addEventListener(DisconnectionEvent.DISCONNECT, handleEvent, false, 0, true);
+			
+//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+this.conferenceServer.replace("."+myConnection.server,"")+"/"+this.roomName+"/";
+//			_fileRepo = new RoomFileRepository(baserepo);
 		}
 	
 		/**
