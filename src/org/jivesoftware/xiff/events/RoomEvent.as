@@ -51,7 +51,6 @@ package org.jivesoftware.xiff.events
 		public static const DECLINED:String = "declined";
 		
 		private var _subject:String;
-		private var _message:Message;
 		private var _data:*;
 		private var _errorCondition:String;
 		private var _errorMessage:String;
@@ -72,14 +71,6 @@ package org.jivesoftware.xiff.events
 		public function get subject() : String
 		{
 			return _subject;
-		}
-		public function set message(s:Message) : void
-		{
-			_message = s;
-		}
-		public function get message() : Message
-		{
-			return _message;
 		}
 		public function set data(s:*) : void
 		{

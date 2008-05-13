@@ -605,24 +605,37 @@ package org.jivesoftware.xiff.conference
 					var msg:Message = eventObj.data;
 					
 					// Check to see that the message is from this room
-					if( isThisRoom( msg.from ) ) {
+					if( isThisRoom( msg.from ) ) 
+					{
 						var e:RoomEvent;
-						if ( msg.type == Message.GROUPCHAT_TYPE ) {
+						if ( msg.type == Message.GROUPCHAT_TYPE ) 
+						{
 							// Check for a subject change
-							if( msg.subject != null ) {
+							if( msg.subject != null ) 
+							{
 								mySubject = msg.subject;
 								e = new RoomEvent(RoomEvent.SUBJECT_CHANGE);
 								e.subject = msg.subject;
 								dispatchEvent(e);
 							}
-							else {
-								e = new RoomEvent(RoomEvent.GROUP_MESSAGE);
-								e.data = msg;
-								dispatchEvent(e);
+							else 
+							{
+								//silently ignore "room is not anonymous" message, identified by status code 100
+								//Clients should display that information in their UI based on the appropriate room property
+								var userexts:Array = msg.getAllExtensionsByNS(MUCUserExtension.NS);
+								if(!userexts || userexts.length == 0 || !(userexts[0].hasStatusCode(100)))
+								{
+									e = new RoomEvent(RoomEvent.GROUP_MESSAGE);
+									e.data = msg;
+									dispatchEvent(e);
+								}
 							}
-						} else if ( msg.type == Message.NORMAL_TYPE ) {
+						} 
+						else if ( msg.type == Message.NORMAL_TYPE ) 
+						{
 								var form:Array = msg.getAllExtensionsByNS(FormExtension.NS)[0];
-								if (form) {
+								if (form) 
+								{
 									e = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
 									e.data = form;
 									dispatchEvent(e);
@@ -630,16 +643,14 @@ package org.jivesoftware.xiff.conference
 
 						}
 					}
-	
-					// It could be a private message via the conference
-					else if( isThisUser(msg.to) && msg.type == Message.CHAT_TYPE ) {
+					else if( isThisUser(msg.to) && msg.type == Message.CHAT_TYPE ) 
+					{ // It could be a private message via the conference
 						e = new RoomEvent(RoomEvent.PRIVATE_MESSAGE);
 						e.data = msg;
 						dispatchEvent(e);
-	                } 
-	                
-	                // Could be an decline to a previous invite
-	                else {
+	                }
+	                else 
+	                { // Could be an decline to a previous invite
 	                	var mucExtensions:Array = msg.getAllExtensionsByNS(MUCUserExtension.NS);
 	                	if (mucExtensions != null && mucExtensions.length > 0) {
 	                		var muc:MUCUserExtension = mucExtensions[0];
