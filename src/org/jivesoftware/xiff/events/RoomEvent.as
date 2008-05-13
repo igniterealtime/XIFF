@@ -34,6 +34,7 @@ package org.jivesoftware.xiff.events
 		public static const PRIVATE_MESSAGE:String = "privateMessage";
 		public static const ROOM_JOIN:String = "roomJoin";
 		public static const ROOM_LEAVE:String = "roomLeave";
+		public static const ROOM_DESTROYED:String = "roomDestroyed";
 		public static const AFFILIATIONS:String = "affiliations";
 		public static const ADMIN_ERROR:String = "adminError";
 		public static const PASSWORD_ERROR:String = "passwordError";

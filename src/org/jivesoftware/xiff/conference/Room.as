@@ -237,7 +237,7 @@ package org.jivesoftware.xiff.conference
 	    private var _anonymous:Boolean = true;
 //	    private var _fileRepo:RoomFileRepository;
 		
-		private var active:Boolean;
+		private var _active:Boolean;
 		
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
@@ -251,10 +251,9 @@ package org.jivesoftware.xiff.conference
 		
 		public function Room( aConnection:XMPPConnection=null )
 		{
-			active = false;
-			if (aConnection != null){
+			setActive(false);
+			if (aConnection)
 				connection = aConnection;
-			}
 		}
 		
 		private static function RoomStaticConstructor():Boolean
@@ -586,9 +585,16 @@ package org.jivesoftware.xiff.conference
 		 *
 		 * @return True if the connection is active; false otherwise.
 		 */
+		[Bindable(event=activeStateUpdated)]
 		public function get isActive():Boolean
 		{
-			return active;
+			return _active;
+		}
+		
+		private function setActive(state:Boolean):void
+		{
+			_active = state;
+			dispatchEvent(new Event("activeStateUpdated"));
 		}
 
 		private function handleEvent( eventObj:Object ):void
@@ -727,10 +733,14 @@ package org.jivesoftware.xiff.conference
 	
 							updateRoomRoster( presence );
 		
-							if (presence.type == Presence.UNAVAILABLE_TYPE && isActive && isThisUser(presence.from)) {
+							if (presence.type == Presence.UNAVAILABLE_TYPE && isActive && isThisUser(presence.from)) 
+							{
 								//trace("Room: becoming inactive: " + presence.getNode());
-								active = false;
-								e = new RoomEvent(RoomEvent.ROOM_LEAVE);
+								setActive(false);
+								if(user.type == MUCUserExtension.DESTROY_TYPE)
+									e = new RoomEvent(RoomEvent.ROOM_DESTROYED);
+								else
+									e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 								dispatchEvent(e);
 								myConnection.removeEventListener(PresenceEvent.PRESENCE, handleEvent);
 							}
@@ -741,7 +751,7 @@ package org.jivesoftware.xiff.conference
 					
 				case "disconnection":
 					// The server disconnected, so we are no longer active
-					active = false;
+					setActive(false);
 					removeAll();
 					e = new RoomEvent(RoomEvent.ROOM_LEAVE);
 					dispatchEvent(e);
@@ -1072,7 +1082,10 @@ package org.jivesoftware.xiff.conference
 			var item:MUCItem = userExts[0].getAllItems()[0];
 			var e:RoomEvent;
 			
-			//if we receive a presence about ourselves, it means we've joined the room; tell everyone, then proceed as usual	
+			/*if we receive a presence about ourselves, it means 
+			 *a) we've joined the room; tell everyone, then proceed as usual
+			 *b) we're being told we left, which we handle in the caller
+			 */	
 			if ( isThisUser( aPresence.from ) ) 
 			{
 				myAffiliation = item.affiliation;
@@ -1082,7 +1095,7 @@ package org.jivesoftware.xiff.conference
 		
 				if (!isActive && aPresence.type != Presence.UNAVAILABLE_TYPE) 
 				{
-					active = true;
+					setActive(true);
 					e = new RoomEvent(RoomEvent.ROOM_JOIN);
 					dispatchEvent(e);
 				}
