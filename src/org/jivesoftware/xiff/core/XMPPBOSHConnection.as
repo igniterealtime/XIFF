@@ -301,9 +301,8 @@ package org.jivesoftware.xiff.core
 	        request.addEventListener(ResultEvent.RESULT, responseCallback.call, false);
 	        request.addEventListener(FaultEvent.FAULT, errorCallback.call, false);
 	       
-	       trace(data);
-	       if(logger)
-	       	logger.log(data, "OUTGOING");
+	       	if(logger)
+	       		logger.log(data, "OUTGOING");
 	       
 			request.send(data);
 
