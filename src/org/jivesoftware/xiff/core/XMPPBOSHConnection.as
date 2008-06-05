@@ -11,6 +11,7 @@ package org.jivesoftware.xiff.core
 	import mx.rpc.http.HTTPService;
 	
 	import org.jivesoftware.xiff.auth.Anonymous;
+	import org.jivesoftware.xiff.auth.External;
 	import org.jivesoftware.xiff.auth.Plain;
 	import org.jivesoftware.xiff.auth.SASLAuth;
 	import org.jivesoftware.xiff.data.IQ;
@@ -26,7 +27,8 @@ package org.jivesoftware.xiff.core
 	{
 		private static var saslMechanisms:Object = {
 			"PLAIN":Plain,
-			"ANONYMOUS":Anonymous
+			"ANONYMOUS":Anonymous,
+                        "EXTERNAL":External
 		};
 		
 		private var maxConcurrentRequests:uint = 2;
