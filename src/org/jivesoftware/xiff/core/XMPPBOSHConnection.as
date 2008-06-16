@@ -241,9 +241,7 @@ package org.jivesoftware.xiff.core
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
 		{
 			active = false;
-			var err:XIFFErrorEvent = new XIFFErrorEvent();
-			err.errorMessage = "HTTP Error";
-			dispatchEvent(err);
+			dispatchError("Unknown HTTP Error", "A BOSH error occurred", "sasl", -1);
 		}
 		
 		protected override function sendXML(body:*):void
@@ -398,14 +396,15 @@ package org.jivesoftware.xiff.core
 	        {
 	        	authClass = saslMechanisms[mechanism.firstChild.nodeValue];
 	   			if(authClass)
-	   				return new authClass(this);
+	   				break;
 	        }
 	
-	        if (!authMechanism) {
-	            throw new Error("No auth mechanisms found");
+	        if (!authClass) {
+	        	dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
+	        	return null;
 	        }
 	
-	        return authMechanism;
+	   		return new authClass(this);
 	    }
 	    
 	    public function handleBindResponse(packet:IQ):void
