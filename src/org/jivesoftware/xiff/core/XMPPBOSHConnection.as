@@ -28,7 +28,7 @@ package org.jivesoftware.xiff.core
 		private static var saslMechanisms:Object = {
 			"PLAIN":Plain,
 			"ANONYMOUS":Anonymous,
-                        "EXTERNAL":External
+            "EXTERNAL":External
 		};
 		
 		private var maxConcurrentRequests:uint = 2;
