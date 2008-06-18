@@ -241,7 +241,7 @@ package org.jivesoftware.xiff.core
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
 		{
 			active = false;
-			dispatchError("Unknown HTTP Error", "A BOSH error occurred", "sasl", -1);
+			dispatchError("Unknown HTTP Error", evt.fault.rootCause.text, "", -1);
 		}
 		
 		protected override function sendXML(body:*):void
@@ -382,6 +382,7 @@ package org.jivesoftware.xiff.core
 	            else if (feature.nodeName == "session")
 	                authentication.session = true;
 	        }
+	        
 	        auth = authentication.auth;
 	        dispatchEvent(new ConnectionSuccessEvent());
 	        authHandler = handleAuthentication;
