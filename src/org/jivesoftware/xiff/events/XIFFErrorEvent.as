@@ -24,6 +24,8 @@
 package org.jivesoftware.xiff.events
 {
 	import flash.events.Event;
+	
+	import org.jivesoftware.xiff.data.Extension;
 
 	public class XIFFErrorEvent extends Event
 	{
@@ -32,6 +34,7 @@ package org.jivesoftware.xiff.events
 		private var _errorMessage:String;
 		private var _errorType:String;
 		private var _errorCode:Number;
+		private var _errorExt:Extension;
 		
 		public function XIFFErrorEvent()
 		{
@@ -68,6 +71,14 @@ package org.jivesoftware.xiff.events
 		public function get errorCode():Number
 		{
 			return _errorCode;
+		}
+		public function set errorExt(ext:Extension):void
+		{
+			_errorExt = ext;
+		}
+		public function get errorExt():Extension
+		{
+			return _errorExt;
 		}
 	}
 }

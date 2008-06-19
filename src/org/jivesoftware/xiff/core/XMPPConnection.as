@@ -34,6 +34,7 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
+	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.IQ;
 	import org.jivesoftware.xiff.data.Message;
@@ -683,7 +684,8 @@ package org.jivesoftware.xiff.core
 			}
 			// ADDED in error handling for messages
 			if( msg.type == Message.ERROR_TYPE ) {
-				dispatchError( msg.errorCondition, msg.errorMessage, msg.errorType, msg.errorCode );
+				var exts:Array = msg.getAllExtensions();
+				dispatchError( msg.errorCondition, msg.errorMessage, msg.errorType, msg.errorCode, exts.length > 0 ? exts[0] : null);
 			}
 			else
 			{
@@ -752,13 +754,14 @@ package org.jivesoftware.xiff.core
 		/**
 		 * @private
 		 */
-		protected function dispatchError( condition:String, message:String, type:String, code:Number ):void
+		protected function dispatchError( condition:String, message:String, type:String, code:Number, extension:Extension = null ):void
 		{
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
 			event.errorMessage = message;
 			event.errorType = type;
 			event.errorCode = code;
+			event.errorExt = extension;
 			dispatchEvent( event );
 		}
 		
