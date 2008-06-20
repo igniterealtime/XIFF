@@ -140,6 +140,11 @@ package org.jivesoftware.xiff.core
 		/**
 		 * @private
 		 */
+	 	protected var myDomain:String;
+		
+		/**
+		 * @private
+		 */
 		protected var myUsername:String;
 		
 		/**
@@ -239,23 +244,23 @@ package org.jivesoftware.xiff.core
 			// <stream:stream>
 			switch( streamType ) {
 				case "flash":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">" );
+					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">" );
 					closingStreamTag = new String( "</flash:stream>" );
 					break;
 					
 				case "terminatedFlash":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />" );
+					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />" );
 					closingStreamTag = new String( "</flash:stream>" );
 					break;
 					
 				case "standard":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">" );
+					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">" );
 					closingStreamTag = new String( "</stream:stream>" );
 					break;
 			
 				case "terminatedStandard":
 				default:
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />" );
+					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />" );
 					closingStreamTag = new String( "</stream:stream>" );
 					break;
 			}
@@ -349,7 +354,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function getRegistrationFields():void
 		{
-			var regIQ:IQ = new IQ( new JID(server), IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
+			var regIQ:IQ = new IQ( new JID(domain), IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 	
 			send( regIQ );
@@ -366,7 +371,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
-			var regIQ:IQ = new IQ( new JID(server), IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+			var regIQ:IQ = new IQ( new JID(domain), IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 	
 			for( var i:String in fieldMap ) {
@@ -388,7 +393,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function changePassword( newPassword:String ):void
 		{
-			var passwdIQ:IQ = new IQ( new JID(server), IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
+			var passwdIQ:IQ = new IQ( new JID(domain), IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 	
 			ext.username = jid.toBareJID();
@@ -407,7 +412,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function get jid():JID
 		{
-			return new JID(myUsername + "@" + myServer + "/" + myResource);
+			return new JID(myUsername + "@" + myDomain + "/" + myResource);
 		}
 		
 		/**
@@ -565,7 +570,7 @@ package org.jivesoftware.xiff.core
 		protected function handleStream( node:XMLNode ):void
 		{
 			sessionID = node.attributes.id;
-			server = node.attributes.from;
+			domain = node.attributes.from;
 			
 			if(_useAnonymousLogin) {
 				// Begin anonymous login
@@ -880,6 +885,8 @@ package org.jivesoftware.xiff.core
 		 */
 		public function get server():String
 		{
+			if (!myServer)
+				return myDomain;
 			return myServer;
 		}
 		
@@ -889,6 +896,24 @@ package org.jivesoftware.xiff.core
 		public function set server( theServer:String ):void
 		{
 			myServer = theServer;
+		}
+		
+		/**
+		 * The XMPP domain to use with the server.
+		 */
+		public function get domain():String
+		{
+			if (!myDomain)
+				return myServer;
+			return myDomain;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set domain( theDomain:String ):void
+		{
+			myDomain = theDomain;
 		}
 		
 		/**

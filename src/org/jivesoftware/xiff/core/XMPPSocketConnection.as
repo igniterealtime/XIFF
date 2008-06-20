@@ -95,23 +95,23 @@ package org.jivesoftware.xiff.core
 			// <stream:stream>
 			switch( streamType ) {
 				case "flash":
-					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">";
+					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">";
 					closingStreamTag = "</flash:stream>";
 					break;
 					
 				case "terminatedFlash":
-					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />";
+					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />";
 					closingStreamTag = "</flash:stream>";
 					break;
 					
 				case "standard":
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">";
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">";
 					closingStreamTag = "</stream:stream>";
 					break;
 			
 				case "terminatedStandard":
 				default:
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + server + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />";
+					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />";
 					closingStreamTag = "</stream:stream>";
 					break;
 			}

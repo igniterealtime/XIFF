@@ -418,7 +418,7 @@ package org.jivesoftware.xiff.core
             myResource = parts[1];
             parts = parts[0].split("@");
             myUsername = parts[0];
-            server = parts[1];
+            domain = parts[1];
             
             establishSession();
 	    }
