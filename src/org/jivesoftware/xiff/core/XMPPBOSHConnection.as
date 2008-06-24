@@ -127,13 +127,14 @@ package org.jivesoftware.xiff.core
 			var attributes:Object = responseBody.attributes;
 			sid = attributes.sid;
 	        boshPollingInterval = attributes.polling * 1000;
-	        // if we have a polling interval of 1, we want to add an extra second for a little bit of
-	        // padding.
-	        if(boshPollingInterval <= 1000 && boshPollingInterval > 0)
-	            boshPollingInterval += 1000;
 	        
 	        wait = attributes.wait;
-	        inactivity = attributes.inactivity;
+	        inactivity = attributes.inactivity * 1000;
+	        if(inactivity - 2000 >= boshPollingInterval || (boshPollingInterval <= 1000 && boshPollingInterval > 0))
+	        {
+	        	boshPollingInterval += 1000;
+	        }
+	        
 	        var serverRequests:int = attributes.requests;
 	        if (serverRequests)
 	            maxConcurrentRequests = Math.min(serverRequests, maxConcurrentRequests);
