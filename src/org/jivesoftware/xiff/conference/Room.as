@@ -703,6 +703,8 @@ package org.jivesoftware.xiff.conference
 									e = new RoomEvent("MUC Error of type: " + presence.errorCode);
 									break;
 							}
+							e.errorCode = presence.errorCode;
+							e.errorMessage = presence.errorMessage;
 							dispatchEvent(e);
 						}
 						else if( isThisRoom( presence.from ) ) 

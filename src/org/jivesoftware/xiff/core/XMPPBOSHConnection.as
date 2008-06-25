@@ -20,7 +20,6 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
 	import org.jivesoftware.xiff.events.IncomingDataEvent;
 	import org.jivesoftware.xiff.events.LoginEvent;
-	import org.jivesoftware.xiff.events.XIFFErrorEvent;
 	import org.jivesoftware.xiff.util.Callback;
 	
 	public class XMPPBOSHConnection extends XMPPConnection
@@ -49,6 +48,7 @@ package org.jivesoftware.xiff.core
 		private var wait:int;
 		private var inactivity:int;
 		private var pollTimer:Timer;
+		private var pollTimeoutTimer:Timer;
 		private var isCurrentlyPolling:Boolean = false;
 		
 		private var auth:SASLAuth;
@@ -120,6 +120,11 @@ package org.jivesoftware.xiff.core
 			super.disconnect();
 			pollTimer.stop();
 			pollTimer = null;
+			if(pollTimeoutTimer)
+			{
+				pollTimeoutTimer.stop();
+				pollTimeoutTimer = null;
+			}
 		}
 		
 		public function processConnectionResponse(responseBody:XMLNode):void
@@ -135,12 +140,15 @@ package org.jivesoftware.xiff.core
 	        	boshPollingInterval += 1000;
 	        }
 	        
+	        inactivity -= 1000;
+	        
 	        var serverRequests:int = attributes.requests;
 	        if (serverRequests)
 	            maxConcurrentRequests = Math.min(serverRequests, maxConcurrentRequests);
 	        active = true;
 	        configureConnection(responseBody);
 	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
+	        trace(boshPollingInterval);
 	        pollTimer = new Timer(boshPollingInterval, 1);
 	        pollTimer.addEventListener(TimerEvent.TIMER, pollServer);
 		}
@@ -230,18 +238,19 @@ package org.jivesoftware.xiff.core
 			resetResponseProcessor();
 			
 			//if we just processed a poll response, we're no longer in mid-poll
-			if(isPollResponse)
+			if(isPollResponse) {
 				isCurrentlyPolling = false;
 			
-			//if we have queued requests we want to send them before attempting to poll again
-			//otherwise, if we don't already have a countdown going for the next poll, start one
-	        if (!sendQueuedRequests() && (!pollTimer || !pollTimer.running))
-	        	resetPollTimer();
+				//if we have queued requests we want to send them before attempting to poll again
+				//otherwise, if we don't already have a countdown going for the next poll, start one
+	        	if (!sendQueuedRequests() && (!pollTimer || !pollTimer.running))
+	        		resetPollTimer();
+	  		}
 		}
 		
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
 		{
-			active = false;
+			disconnect();
 			dispatchError("Unknown HTTP Error", evt.fault.rootCause.text, "", -1);
 		}
 		
@@ -261,13 +270,15 @@ package org.jivesoftware.xiff.core
 		}
 		
 		//returns true if any requests were sent
-		private function sendRequests(data:XMLNode = null, isPoll:Boolean=false):Boolean
+		private function sendRequests(data:XMLNode = null, isPoll:Boolean = false):Boolean
 		{
 			if(requestCount >= maxConcurrentRequests)
 				return false;
 				
-			if(isPoll)
-				trace("Polling at: " + new Date().getSeconds());
+			if(isPoll) {
+				var time:Date = new Date();
+				trace("Polling at: " + time.getMinutes() + ":" + time.getSeconds());
+			}
 				
 			requestCount++;
 			
@@ -307,7 +318,8 @@ package org.jivesoftware.xiff.core
 	       
 			request.send(data);
 
-			resetPollTimer();
+			if(!pollTimeoutTimer && (!pollTimer || !pollTimer.running))
+				resetPollTimer();
 			
 			return true;
 		}
@@ -316,18 +328,30 @@ package org.jivesoftware.xiff.core
     	{
     		if(!pollTimer)
     			return;
+    			//TODO: reuse one timer
+    		if(pollTimeoutTimer) {
+    			pollTimeoutTimer.stop();
+    			pollTimeoutTimer = null;
+    		}
     		pollTimer.reset();
     		pollTimer.start();
     	}
     	
-    	private function pollServer(evt:TimerEvent):void 
+    	private function pollServer(evt:TimerEvent, force:Boolean=false):void 
     	{
+    		if(force)
+    			trace("Forcing poll!");
     		//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
-    		if(!isActive() || sendQueuedRequests() || isCurrentlyPolling)
+    		if(!isActive() || ((sendQueuedRequests() || isCurrentlyPolling) && !force))
     			return;
     		
     		//this should be safe since sendRequests checks to be sure it's not over the concurrent requests limit, and we just ensured that the queue is empty by calling sendQueuedRequests()
     		isCurrentlyPolling = sendRequests(null, true);
+    		pollTimeoutTimer = new Timer(inactivity, 1);
+    		pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
+    			trace("Poll timed out, resuming");
+    			pollServer(evt, true);
+    		});
     	}
     	
     	private function get nextRID():Number {
