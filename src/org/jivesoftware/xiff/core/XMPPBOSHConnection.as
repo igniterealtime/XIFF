@@ -184,6 +184,10 @@ package org.jivesoftware.xiff.core
 				case "success":
 					handleAuthentication( currentNode );
 					break;
+
+				case "failure":
+					handleAuthentication( currentNode );
+					break;
 				default:
 					dispatchError( "undefined-condition", "Unknown Error", "modify", 500 );
 					break;
@@ -387,7 +391,7 @@ package org.jivesoftware.xiff.core
 	                bindConnection();
 	            }
 	            else {
-	                dispatchEvent(new ErrorEvent(ErrorEvent.ERROR));
+					dispatchError("Authentication Error", "", "", 401);
 	                disconnect();
 	            }
 	        }
