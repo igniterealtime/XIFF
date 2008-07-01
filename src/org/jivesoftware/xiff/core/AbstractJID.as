@@ -21,8 +21,7 @@ package org.jivesoftware.xiff.core
    			var slashIndex:int = inJID.lastIndexOf("/");
    			if(slashIndex >= 0) 
    				_resource = inJID.substring(slashIndex + 1);
-   			if(separatorIndex >= 0)
-   				_domain = inJID.substring(separatorIndex + 1, slashIndex >= 0 ? slashIndex : inJID.length);
+   			_domain = inJID.substring(separatorIndex + 1, slashIndex >= 0 ? slashIndex : inJID.length);
    			if(separatorIndex >= 1)
    				_node = inJID.substring(0, separatorIndex);
 		}
