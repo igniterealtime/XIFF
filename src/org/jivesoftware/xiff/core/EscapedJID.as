@@ -5,7 +5,7 @@ package org.jivesoftware.xiff.core
 		public function EscapedJID(inJID:String, validate:Boolean=false)
 		{
 			super(inJID, validate);
-			if(
+			if( node && (
 				node.indexOf("@") >= 0 ||
 				node.indexOf(" ") >= 0 ||
 				node.indexOf("\\")>= 0 ||
@@ -15,7 +15,7 @@ package org.jivesoftware.xiff.core
 				node.indexOf('"') >= 0 ||
 				node.indexOf(":") >= 0 ||
 				node.indexOf("<") >= 0 ||
-				node.indexOf(">") >= 0)
+				node.indexOf(">") >= 0))
 			{
 				_node = escapedNode;
 			}
