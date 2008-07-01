@@ -25,7 +25,6 @@ package org.jivesoftware.xiff.conference
 {	
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.JID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.Message;
 	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
@@ -104,10 +103,10 @@ package org.jivesoftware.xiff.conference
 						var muc:MUCUserExtension =  exts[0];
 	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
 	                        var room:Room = new Room(myConnection);
-	                        room.roomJID = msg.from;
+	                        room.roomJID = msg.from.unescaped;
 	                        room.password = muc.password;
 							var e:InviteEvent = new InviteEvent();
-							e.from = muc.from;
+							e.from = muc.from.unescaped;
 							e.reason = muc.reason;
 							e.room = room;
 							e.data = msg;

@@ -1,18 +1,20 @@
 package org.jivesoftware.xiff.auth
 {
+	import flash.utils.ByteArray;
 	import flash.xml.XMLNode;
 	
 	import mx.utils.Base64Encoder;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	
 	public class Plain extends SASLAuth
 	{
 		public function Plain(connection:XMPPConnection):void
 		{
-			var jid:JID = connection.jid;
-			var authContent:String = jid.toBareJID();
+			//should probably use the escaped form, but flex/as handles \\ weirdly for unknown reasons
+			var jid:UnescapedJID = connection.jid;
+			var authContent:String = jid.bareJID;
 		    authContent += '\u0000';
 		    authContent += jid.node;
 		    authContent += '\u0000';
@@ -20,7 +22,7 @@ package org.jivesoftware.xiff.auth
 		
 			var b64coder:Base64Encoder = new Base64Encoder();
 			b64coder.insertNewLines = false;
-			b64coder.encode(authContent);
+			b64coder.encodeUTFBytes(authContent);
 			authContent = b64coder.flush();
 
 		    var attrs:Object = {

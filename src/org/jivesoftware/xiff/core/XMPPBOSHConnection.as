@@ -6,6 +6,7 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
+	import mx.messaging.messages.HTTPRequestMessage;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
@@ -47,9 +48,8 @@ package org.jivesoftware.xiff.core
 		private var rid:Number;
 		private var wait:int;
 		private var inactivity:int;
-		private var pollTimer:Timer;
-		private var pollTimeoutTimer:Timer;
-		private var isCurrentlyPolling:Boolean = false;
+		private var pollTimer:Timer = new Timer(1, 1);
+		private var pollTimeoutTimer:Timer = new Timer(1, 1);
 		
 		private var auth:SASLAuth;
 		private var authHandler:Function;
@@ -59,6 +59,7 @@ package org.jivesoftware.xiff.core
 		private var callbacks:Object = {};
 		
 		public static var logger:Object = null;
+		private var lastPollTime:Date = null;
 			
 		public override function connect(streamType:String=null):Boolean
 		{
@@ -120,11 +121,8 @@ package org.jivesoftware.xiff.core
 			super.disconnect();
 			pollTimer.stop();
 			pollTimer = null;
-			if(pollTimeoutTimer)
-			{
-				pollTimeoutTimer.stop();
-				pollTimeoutTimer = null;
-			}
+			pollTimeoutTimer.stop();
+			pollTimeoutTimer = null;
 		}
 		
 		public function processConnectionResponse(responseBody:XMLNode):void
@@ -149,8 +147,15 @@ package org.jivesoftware.xiff.core
 	        configureConnection(responseBody);
 	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
 	        trace(boshPollingInterval);
-	        pollTimer = new Timer(boshPollingInterval, 1);
-	        pollTimer.addEventListener(TimerEvent.TIMER, pollServer);
+	        pollTimer.delay = boshPollingInterval;
+	        pollTimer.addEventListener(TimerEvent.TIMER_COMPLETE, pollServer);
+	        pollTimer.start();
+	        
+	        pollTimeoutTimer.delay = inactivity;
+	        pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
+				trace("Poll timed out, resuming");
+				pollServer(evt, true);
+			});
 		}
 		
 		private function processResponse(event:TimerEvent=null):void
@@ -241,15 +246,9 @@ package org.jivesoftware.xiff.core
 			
 			resetResponseProcessor();
 			
-			//if we just processed a poll response, we're no longer in mid-poll
-			if(isPollResponse) {
-				isCurrentlyPolling = false;
-			
-				//if we have queued requests we want to send them before attempting to poll again
-				//otherwise, if we don't already have a countdown going for the next poll, start one
-	        	if (!sendQueuedRequests() && (!pollTimer || !pollTimer.running))
-	        		resetPollTimer();
-	  		}
+			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
+			if(requestCount == 0 && !sendQueuedRequests())
+				resetPollTimer();
 		}
 		
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
@@ -278,12 +277,7 @@ package org.jivesoftware.xiff.core
 		{
 			if(requestCount >= maxConcurrentRequests)
 				return false;
-				
-			if(isPoll) {
-				var time:Date = new Date();
-				trace("Polling at: " + time.getMinutes() + ":" + time.getSeconds());
-			}
-				
+			
 			requestCount++;
 			
 			if(!data)
@@ -321,9 +315,17 @@ package org.jivesoftware.xiff.core
 	       		logger.log(data, "OUTGOING");
 	       
 			request.send(data);
-
-			if(!pollTimeoutTimer && (!pollTimer || !pollTimer.running))
-				resetPollTimer();
+			
+			
+			
+			if(isPoll) {
+				lastPollTime = new Date();
+				pollTimeoutTimer.reset();
+				pollTimeoutTimer.start();
+				trace("Polling at: " + lastPollTime.getMinutes() + ":" + lastPollTime.getSeconds());
+			}
+			
+			pollTimer.stop();
 			
 			return true;
 		}
@@ -332,12 +334,18 @@ package org.jivesoftware.xiff.core
     	{
     		if(!pollTimer)
     			return;
-    			//TODO: reuse one timer
-    		if(pollTimeoutTimer) {
-    			pollTimeoutTimer.stop();
-    			pollTimeoutTimer = null;
-    		}
+
+    		pollTimeoutTimer.stop();
+    		
     		pollTimer.reset();
+    		var timeSinceLastPoll:Number = 0;
+    		if(lastPollTime)
+    			 timeSinceLastPoll = new Date().time - lastPollTime.time;
+    			
+    		if(timeSinceLastPoll >= boshPollingInterval)
+    			timeSinceLastPoll = 0;
+    		
+    		pollTimer.delay = boshPollingInterval - timeSinceLastPoll;
     		pollTimer.start();
     	}
     	
@@ -346,16 +354,11 @@ package org.jivesoftware.xiff.core
     		if(force)
     			trace("Forcing poll!");
     		//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
-    		if(!isActive() || ((sendQueuedRequests() || isCurrentlyPolling) && !force))
+    		if(!isActive() || ((sendQueuedRequests() || requestCount > 0) && !force))
     			return;
     		
     		//this should be safe since sendRequests checks to be sure it's not over the concurrent requests limit, and we just ensured that the queue is empty by calling sendQueuedRequests()
-    		isCurrentlyPolling = sendRequests(null, true);
-    		pollTimeoutTimer = new Timer(inactivity, 1);
-    		pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
-    			trace("Poll timed out, resuming");
-    			pollServer(evt, true);
-    		});
+    		sendRequests(null, true);
     	}
     	
     	private function get nextRID():Number {
@@ -441,13 +444,11 @@ package org.jivesoftware.xiff.core
 	    {
 	    	var bind:BindExtension = packet.getExtension("bind") as BindExtension;
 	
-            var jid:String = bind.getJID();
+            var jid:UnescapedJID = bind.jid.unescaped;
             
-            var parts:Array = jid.split("/");
-            myResource = parts[1];
-            parts = parts[0].split("@");
-            myUsername = parts[0];
-            domain = parts[1];
+            myResource = jid.resource;
+            myUsername = jid.node;
+            domain = jid.domain;
             
             establishSession();
 	    }

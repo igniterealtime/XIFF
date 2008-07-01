@@ -62,7 +62,7 @@ package org.jivesoftware.xiff.core
 			return true;
 		}
 	
-		public function getNodeInfo(service:JID, node:String, callback:String, scope:Object):void
+		public function getNodeInfo(service:EscapedJID, node:String, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(service, IQ.GET_TYPE);
 			var ext:InfoDiscoExtension = new InfoDiscoExtension(iq.getNode());
@@ -74,7 +74,7 @@ package org.jivesoftware.xiff.core
 			connection.send(iq);
 		}
 	
-		public function getNodeItems(service:JID, node:String, callback:String, scope:Object):void
+		public function getNodeItems(service:EscapedJID, node:String, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(service, IQ.GET_TYPE);
 			var ext:ItemDiscoExtension = new ItemDiscoExtension(iq.getNode());
@@ -95,7 +95,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function getServiceInfo(server:JID, callback:String, scope:Object):void
+		public function getServiceInfo(server:EscapedJID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(server, IQ.GET_TYPE);
 			iq.callbackName = callback;
@@ -113,7 +113,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function getServiceItems(server:JID, callback:String, scope:Object):void
+		public function getServiceItems(server:EscapedJID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(server, IQ.GET_TYPE);
 			iq.callbackName = callback;
@@ -130,7 +130,7 @@ package org.jivesoftware.xiff.core
 		 * @param callback The name of a callback function to call when results are retrieved
 		 * @param scope The scope of the callback function
 		 */
-		public function browseItem(id:JID, callback:String, scope:Object):void
+		public function browseItem(id:EscapedJID, callback:String, scope:Object):void
 		{
 			var iq:IQ = new IQ(id, IQ.GET_TYPE);
 			iq.callbackName = callback;

@@ -2,7 +2,7 @@ package org.jivesoftware.xiff.conference
 {
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.data.im.Contact;
 	import org.jivesoftware.xiff.data.im.RosterItemVO;
 
@@ -12,11 +12,11 @@ package org.jivesoftware.xiff.conference
 		private var _show:String;
 		private var _affiliation:String;
 		private var _role:String;
-		private var _jid:JID;
+		private var _jid:UnescapedJID;
 		private var _uid:String;
 		private var _room:Room;
 		
-		public function RoomOccupant(nickname:String, show:String, affiliation:String, role:String, jid:JID, room:Room)
+		public function RoomOccupant(nickname:String, show:String, affiliation:String, role:String, jid:UnescapedJID, room:Room)
 		{
 			this.displayName = nickname;
 			this.show = show;
@@ -56,12 +56,12 @@ package org.jivesoftware.xiff.conference
 		}
 
 		[Bindable]
-		public function get jid():JID
+		public function get jid():UnescapedJID
 		{
 			return _jid;
 		}
 		
-		public function set jid(newJID:JID):void
+		public function set jid(newJID:UnescapedJID):void
 		{
 			_jid = newJID;
 		}

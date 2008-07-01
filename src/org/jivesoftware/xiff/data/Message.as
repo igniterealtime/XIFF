@@ -26,7 +26,7 @@ package org.jivesoftware.xiff.data
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
 	import org.jivesoftware.xiff.data.xhtml.XHTMLExtension;
 	
@@ -60,7 +60,7 @@ package org.jivesoftware.xiff.data
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
 	
-		public function Message( recipient:JID=null, msgID:String=null, msgBody:String=null, msgHTMLBody:String=null, msgType:String=null, msgSubject:String=null )
+		public function Message( recipient:EscapedJID=null, msgID:String=null, msgBody:String=null, msgHTMLBody:String=null, msgType:String=null, msgSubject:String=null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
 			var msgId:String = exists( msgID ) ? msgID : generateID("m_");

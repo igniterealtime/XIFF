@@ -24,7 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMLStanza;
 	
@@ -116,14 +116,14 @@
 			getNode().attributes.affiliation = val;
 		}
 	
-		public function get jid():JID
+		public function get jid():EscapedJID
 		{
 			if(getNode().attributes.jid == null)
 				return null;
-			return new JID(getNode().attributes.jid);
+			return new EscapedJID(getNode().attributes.jid);
 		}
 	
-		public function set jid(val:JID):void
+		public function set jid(val:EscapedJID):void
 		{
 			getNode().attributes.jid = val.toString();
 		}

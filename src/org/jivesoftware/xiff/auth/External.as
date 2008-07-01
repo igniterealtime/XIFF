@@ -4,14 +4,14 @@ package org.jivesoftware.xiff.auth
 	
 	import mx.utils.Base64Encoder;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	
 	public class External extends SASLAuth
 	{
 		public function External(connection:XMPPConnection):void
 		{
-			var jid:JID = connection.jid;
+			var jid:UnescapedJID = connection.jid;
 			var authContent:String = jid.node;
 		
 			var b64coder:Base64Encoder = new Base64Encoder();

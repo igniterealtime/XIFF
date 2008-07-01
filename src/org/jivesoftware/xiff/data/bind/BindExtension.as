@@ -2,6 +2,7 @@ package org.jivesoftware.xiff.data.bind
 {
 	import flash.xml.XMLNode;
 	
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IExtension;
@@ -12,7 +13,7 @@ package org.jivesoftware.xiff.data.bind
 	{
 		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
 		public static var ELEMENT_NAME:String = "bind";
-		private var jid:String;
+		private var _jid:EscapedJID;
 		private var _resource:String;
 		
 		public function getNS():String
@@ -25,9 +26,9 @@ package org.jivesoftware.xiff.data.bind
 			return BindExtension.ELEMENT_NAME;
 		}
 		
-		public function getJID():String
+		public function get jid():EscapedJID
 		{
-			return jid;
+			return _jid;
 		}
 		
 		public function serialize(parent:XMLNode):Boolean
@@ -63,7 +64,7 @@ package org.jivesoftware.xiff.data.bind
 				switch( children[i].nodeName )
 				{
 					case "jid":
-						jid = children[i].firstChild.nodeValue;
+						_jid = new EscapedJID(children[i].firstChild.nodeValue);
 						break;
 					default:
 						throw "Unknown element: " + children[i].nodeName;

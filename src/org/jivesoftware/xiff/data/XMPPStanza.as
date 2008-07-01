@@ -24,7 +24,7 @@
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.id.IIDGenerator;
 	import org.jivesoftware.xiff.data.id.IncrementalGenerator;
 	
@@ -49,7 +49,7 @@
 		private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
-		public function XMPPStanza( recipient:JID, sender:JID, theType:String, theID:String, nName:String )
+		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nName:String )
 		{
 			super();
 			
@@ -162,12 +162,12 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function get to():JID
+		public function get to():EscapedJID
 		{
-			return new JID(getNode().attributes.to);
+			return new EscapedJID(getNode().attributes.to);
 		}
 		
-		public function set to( recipient:JID ):void
+		public function set to( recipient:EscapedJID ):void
 		{
 			delete getNode().attributes.to;
 			if (exists(recipient)) { getNode().attributes.to = recipient.toString(); }
@@ -180,12 +180,12 @@
 		 *
 		 * @availability Flash Player 7
 		 */
-		public function get from():JID
+		public function get from():EscapedJID
 		{
-			return new JID(getNode().attributes.from);
+			return new EscapedJID(getNode().attributes.from);
 		}
 		
-		public function set from( sender:JID ):void
+		public function set from( sender:EscapedJID ):void
 		{
 			delete getNode().attributes.from;
 			if (exists(sender)) { getNode().attributes.from = sender.toString(); }

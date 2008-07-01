@@ -354,7 +354,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function getRegistrationFields():void
 		{
-			var regIQ:IQ = new IQ( new JID(domain), IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
+			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.GET_TYPE, XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 	
 			send( regIQ );
@@ -371,7 +371,7 @@ package org.jivesoftware.xiff.core
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
-			var regIQ:IQ = new IQ( new JID(domain), IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE, XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 	
 			for( var i:String in fieldMap ) {
@@ -393,10 +393,10 @@ package org.jivesoftware.xiff.core
 		 */
 		public function changePassword( newPassword:String ):void
 		{
-			var passwdIQ:IQ = new IQ( new JID(domain), IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
+			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE, XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 	
-			ext.username = jid.toBareJID();
+			ext.username = jid.escaped.bareJID;
 			ext.password = newPassword;
 	
 			passwdIQ.addExtension(ext);
@@ -410,9 +410,9 @@ package org.jivesoftware.xiff.core
 		 * @return The fully qualified JID
 		 * @see #getBareJID
 		 */
-		public function get jid():JID
+		public function get jid():UnescapedJID
 		{
-			return new JID(myUsername + "@" + myDomain + "/" + myResource);
+			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
 		}
 		
 		/**
@@ -799,10 +799,10 @@ package org.jivesoftware.xiff.core
 		 * @private
 		 */
 		protected function sendAnonymousLogin_result(resultIQ:IQ):void 
-		{resultIQ
+		{
 			if( resultIQ.type == IQ.RESULT_TYPE ) {
 				// update resource
-				var jid:JID = resultIQ.to;
+				var jid:UnescapedJID = resultIQ.to.unescaped;
 				resource = jid.resource;
 				username = jid.node;
 				// dispatch login event

@@ -8,7 +8,7 @@ package org.jivesoftware.xiff.vcard
 	
 	import mx.utils.Base64Decoder;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.IQ;
 	import org.jivesoftware.xiff.data.XMPPStanza;
@@ -21,7 +21,7 @@ package org.jivesoftware.xiff.vcard
 		private var _loader:Loader;
 		
 		private var contact:RosterItemVO;
-		public var jid:JID;
+		public var jid:UnescapedJID;
 		public var firstName:String;
 		public var middleName:String;
 		public var lastName:String;
@@ -74,13 +74,15 @@ package org.jivesoftware.xiff.vcard
 				});
 			}
 			
-			var cachedCard:VCard = cache[user.jid.toBareJID()];
+			var jidString:String = user.jid.toString();
+			
+			var cachedCard:VCard = cache[jidString];
 			if(cachedCard)
 				return cachedCard;
 			
 			var vcard:VCard = new VCard();
 			vcard.contact = user;
-			cache[user.jid.toBareJID()] = vcard;
+			cache[jidString] = vcard;
 			
 			pushRequest(con, vcard);
 
@@ -108,7 +110,7 @@ package org.jivesoftware.xiff.vcard
 			var vcard:VCard = req.card;
 			var user:RosterItemVO = vcard.contact;	
 			
-			var iq:IQ = new IQ(user.jid.bareJid, IQ.GET_TYPE);
+			var iq:IQ = new IQ(user.jid.escaped, IQ.GET_TYPE);
 			vcard.jid = user.jid;
 			
 			iq.callbackName = "handleVCard";
@@ -425,10 +427,10 @@ package org.jivesoftware.xiff.vcard
 		{
 			if (resultIQ.type == IQ.ERROR_TYPE)
 			{
-				dispatchEvent(new VCardEvent(VCardEvent.ERROR, cache[resultIQ.to.toBareJID()], true, true));
+				dispatchEvent(new VCardEvent(VCardEvent.ERROR, cache[resultIQ.to.unescaped.toString()], true, true));
 			}
 			else
-				delete cache[resultIQ.to.toBareJID()];		// Force profile refresh on next view
+				delete cache[resultIQ.to.unescaped.toString()];		// Force profile refresh on next view
 		}
 		
 		public function handleVCard(iq:IQ):void 

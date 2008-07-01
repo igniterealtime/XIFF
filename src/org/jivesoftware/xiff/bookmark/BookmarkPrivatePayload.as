@@ -2,7 +2,7 @@ package org.jivesoftware.xiff.bookmark
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.privatedata.IPrivatePayload;
 
@@ -44,11 +44,11 @@ package org.jivesoftware.xiff.bookmark
 		}
 		
 		//removes the bookmark from the list, and returns it
-		public function removeGroupChatBookmark(jid:JID):GroupChatBookmark {
+		public function removeGroupChatBookmark(jid:UnescapedJID):GroupChatBookmark {
 			var removedItem:GroupChatBookmark = null;
 			var newBookmarks:Array = [];
 			for each(var bookmark:GroupChatBookmark in _groupChatBookmarks) {
-				if (!bookmark.jid.equals(jid, false))
+				if (!bookmark.jid.unescaped.equals(jid, false))
 					newBookmarks.push(bookmark);
 				else
 					removedItem = bookmark;			

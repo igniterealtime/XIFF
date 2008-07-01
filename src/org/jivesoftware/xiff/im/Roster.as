@@ -27,7 +27,8 @@ package org.jivesoftware.xiff.im
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.core.XMPPConnection;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IQ;
@@ -114,7 +115,7 @@ package org.jivesoftware.xiff.im
 	{
 		private var myConnection:XMPPConnection;
 		//FIXME: does not support multiple pending requests
-		private var pendingSubscriptionRequestJID:JID;
+		private var pendingSubscriptionRequestJID:UnescapedJID;
 		//FIXME: maps should not be arrays
 		private var _presenceMap:Array = new Array();
 		
@@ -162,7 +163,7 @@ package org.jivesoftware.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:JID, displayName:String, groupName:String, requestSubscription:Boolean=true ):void
+		public function addContact( id:UnescapedJID, displayName:String, groupName:String, requestSubscription:Boolean=true ):void
 		{
 			if( displayName == null )
 				displayName = id.toString();
@@ -182,7 +183,7 @@ package org.jivesoftware.xiff.im
 				
 			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-			ext.addItem( id, null, displayName, [groupName] );
+			ext.addItem( id.escaped, null, displayName, [groupName] );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 	
@@ -199,20 +200,20 @@ package org.jivesoftware.xiff.im
 		 * @availability Flash Player 7
 		 * @see #subscriptionDenial
 		 */
-		public function requestSubscription( id:JID, isResponse:Boolean=false):void
+		public function requestSubscription( id:UnescapedJID, isResponse:Boolean=false):void
 		{
 			// Roster length is 0 if it a response to a user request. we must handle this event.
 			var tempPresence:Presence;
 			if (isResponse)
 			{
-				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
+				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
 				return;
 			}
 			// Only request for items in the roster
 			if(contains(RosterItemVO.get(id, false)))
 			{
-				tempPresence = new Presence( id, null, Presence.SUBSCRIBE_TYPE );
+				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
 			}
 		}
@@ -231,7 +232,7 @@ package org.jivesoftware.xiff.im
 			{
 				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-				ext.addItem( rosterItem.jid.bareJid, RosterExtension.SUBSCRIBE_TYPE_REMOVE );
+				ext.addItem(new EscapedJID(rosterItem.jid.bareJID), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				tempIQ.addExtension( ext );
 				myConnection.send( tempIQ );
 				
@@ -265,9 +266,9 @@ package org.jivesoftware.xiff.im
 		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
-		public function grantSubscription( tojid:JID, requestAfterGrant:Boolean = true ):void
+		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
 		{
-			var tempPresence:Presence = new Presence( tojid, null, Presence.SUBSCRIBED_TYPE );
+			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.SUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
 			
 			// Request a return subscription
@@ -285,9 +286,9 @@ package org.jivesoftware.xiff.im
 		 * @availability Flash Player 7
 		 * @param to The JID of the user or service that you are denying subscription
 		 */
-		public function denySubscription( tojid:JID ):void
+		public function denySubscription( tojid:UnescapedJID ):void
 		{
-			var tempPresence:Presence = new Presence( tojid, null, Presence.UNSUBSCRIBED_TYPE );
+			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.UNSUBSCRIBED_TYPE );
 			myConnection.send( tempPresence );
 		}
 		
@@ -305,7 +306,7 @@ package org.jivesoftware.xiff.im
 			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			
-			ext.addItem( contact.jid, contact.subscribeType, newName, groupNames );
+			ext.addItem( contact.jid.escaped, contact.subscribeType, newName, groupNames );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 		}
@@ -392,7 +393,7 @@ package org.jivesoftware.xiff.im
 						if (!item is XMLStanza)
 							continue;
 						
-						addRosterItem( new JID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
+						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
 					}
 				}
 				enableAutoUpdate();
@@ -448,7 +449,7 @@ package org.jivesoftware.xiff.im
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var rosterItemVO:RosterItemVO = RosterItemVO.get(new JID(item.jid), true);
+							var rosterItemVO:RosterItemVO = RosterItemVO.get(new UnescapedJID(item.jid), true);
 							var ev: RosterEvent;
 							
 							if (contains(rosterItemVO))
@@ -513,22 +514,22 @@ package org.jivesoftware.xiff.im
 				{
 					case Presence.SUBSCRIBE_TYPE:
 						var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
-						sReq.jid = aPresence.from;
+						sReq.jid = aPresence.from.unescaped;
 						dispatchEvent(sReq);
 						break;
 						
 					case Presence.UNSUBSCRIBED_TYPE:
 						var sDeny:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
-						sDeny.jid = aPresence.from;
+						sDeny.jid = aPresence.from.unescaped;
 						dispatchEvent(sDeny);
 						break;
 					
 					case Presence.UNAVAILABLE_TYPE:
 						var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
-						unavailEv.jid = aPresence.from;
+						unavailEv.jid = aPresence.from.unescaped;
 						dispatchEvent(unavailEv);
 	
-						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
+						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from.unescaped, false);
 						if(!unavailableItem) return;
 						updateRosterItemPresence( unavailableItem, aPresence );
 						
@@ -537,12 +538,12 @@ package org.jivesoftware.xiff.im
 					// null means available
 					default:
 						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-						availEv.jid = aPresence.from;
+						availEv.jid = aPresence.from.unescaped;
 						availEv.data = aPresence;
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from, false);
+						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from.unescaped, false);
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						
@@ -551,7 +552,7 @@ package org.jivesoftware.xiff.im
 			}	
 		}
 		
-		private function addRosterItem( jid:JID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String="none" ):Boolean
+		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String="none" ):Boolean
 		{
 			if(!jid) 
 				return false;
@@ -637,7 +638,7 @@ package org.jivesoftware.xiff.im
 			}
 		}
 		
-		public function getPresence(jid:JID):String {
+		public function getPresence(jid:UnescapedJID):String {
 			return _presenceMap[jid.toString()];
 		}
 		

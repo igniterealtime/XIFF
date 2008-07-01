@@ -24,7 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IExtension;
@@ -172,7 +172,7 @@
 		 * @return A roster item object with the following attributes: "jid", "subscription", "displayName", and "groups".
 		 * @availability Flash Player 7
 		 */
-		public function getItemByJID( jid:JID ):RosterItem
+		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
 			for( var i:String in myItems ) {
 				if( myItems[i].jid == jid.toString() ) {
@@ -192,7 +192,7 @@
 		 * @param groups An array of strings of the group names that this contact should be placed in.
 		 * @availability Flash Player 7
 		 */
-		public function addItem( jid:JID=null, subscription:String="", displayName:String="", groups:Array=null ):void
+		public function addItem( jid:EscapedJID=null, subscription:String="", displayName:String="", groups:Array=null ):void
 		{
 			var item:RosterItem = new RosterItem( getNode() );
 			

@@ -2,7 +2,7 @@ package org.jivesoftware.xiff.bookmark
 {
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMPPStanza;
@@ -49,25 +49,25 @@ package org.jivesoftware.xiff.bookmark
 			}
 		}
 		
-		public function isGroupChatBookmarked(jid:JID):Boolean {
+		public function isGroupChatBookmarked(jid:UnescapedJID):Boolean {
 			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.equals(jid, false)) {
+				if (bookmark.jid.unescaped.equals(jid, false)) {
 					return true;
 				}
 			}
 			return false;
 		}
 		
-		public function getGroupChatBookmark(jid:JID):GroupChatBookmark {
+		public function getGroupChatBookmark(jid:UnescapedJID):GroupChatBookmark {
 			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.equals(jid, false)) {
+				if (bookmark.jid.unescaped.equals(jid, false)) {
 					return bookmark;
 				}
 			}	
 			return null;		
 		}
 		
-		public function removeGroupChatBookmark(jid:JID):void {
+		public function removeGroupChatBookmark(jid:UnescapedJID):void {
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksRemove"], jid));
 			}
@@ -76,7 +76,7 @@ package org.jivesoftware.xiff.bookmark
 			}
 		}
 		
-		public function setAutoJoin(jid:JID, state:Boolean):void {
+		public function setAutoJoin(jid:UnescapedJID, state:Boolean):void {
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksSetAuto"], jid, state));
 			}		
@@ -100,12 +100,12 @@ package org.jivesoftware.xiff.bookmark
 			this._addBookmark(bookmark);
 		}
 		
-		private function _processBookmarksRemove(jid:JID, bookmarksIq:XMPPStanza):void {
+		private function _processBookmarksRemove(jid:UnescapedJID, bookmarksIq:XMPPStanza):void {
 			this._processBookmarks(bookmarksIq);
 			this._removeBookmark(jid);
 		}
 		
-		private function _processBookmarksSetAuto(jid:JID, state:Boolean, bookmarksIq:XMPPStanza):void {
+		private function _processBookmarksSetAuto(jid:UnescapedJID, state:Boolean, bookmarksIq:XMPPStanza):void {
 			this._processBookmarks(bookmarksIq);
 			this._setAutoJoin(jid, state);
 		}
@@ -128,15 +128,15 @@ package org.jivesoftware.xiff.bookmark
 			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_ADDED, bookmark));
 		}
 		
-		private function _removeBookmark(jid:JID):void {
+		private function _removeBookmark(jid:UnescapedJID):void {
 			var removedBookmark:GroupChatBookmark = _bookmarks.removeGroupChatBookmark(jid);
 			this._updateBookmarks();
 			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED, removedBookmark));		
 		}
 		
-		private function _setAutoJoin(jid:JID, state:Boolean):void {
+		private function _setAutoJoin(jid:UnescapedJID, state:Boolean):void {
 			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.equals(jid, false)) {
+				if (bookmark.jid.unescaped.equals(jid, false)) {
 					bookmark.autoJoin = state;
 				}
 			}	

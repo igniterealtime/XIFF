@@ -24,7 +24,7 @@
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
@@ -64,7 +64,7 @@
 		private var myPriorityNode:XMLNode;
 	
 	
-		public function Presence( recipient:JID=null, sender:JID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
+		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
 		{		
 			super( recipient, sender, presenceType, null, "presence" );
 			

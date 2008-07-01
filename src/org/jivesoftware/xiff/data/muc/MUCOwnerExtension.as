@@ -24,7 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
@@ -89,7 +89,7 @@
 	     * @param alternateJID A string containing a JID that room members can use instead of this room
 	     * @availability Flash Player 7
 	     */
-	    public function destroy(reason:String, alternateJID:JID):void
+	    public function destroy(reason:String, alternateJID:EscapedJID):void
 	    {
 	        myDestroyNode = ensureNode(myDestroyNode, "destroy");
 	        for (var i:String in myDestroyNode.childNodes) {

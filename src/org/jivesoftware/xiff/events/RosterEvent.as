@@ -25,7 +25,7 @@ package org.jivesoftware.xiff.events
 {
 	import flash.events.Event;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 
 	public class RosterEvent extends Event
 	{
@@ -41,17 +41,17 @@ package org.jivesoftware.xiff.events
 		public static const ROSTER_LOADED:String = "rosterLoaded";
 		
 		private var _data:*;
-		private var _jid:JID;
+		private var _jid:UnescapedJID;
 		
 		public function RosterEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{
 			super(type, bubbles, cancelable);
 		}
-		public function get jid():JID
+		public function get jid():UnescapedJID
 		{
 			return _jid;
 		}
-		public function set jid(s:JID):void
+		public function set jid(s:UnescapedJID):void
 		{
 			_jid = s;
 		}

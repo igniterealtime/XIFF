@@ -24,7 +24,7 @@ package org.jivesoftware.xiff.data.disco
 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ISerializable;
 	
@@ -37,7 +37,7 @@ package org.jivesoftware.xiff.data.disco
 		public static var NS:String = "http://jabber.org/protocol/disco";
 		public static var ELEMENT:String = "query";
 		
-		public var myService:JID
+		public var myService:EscapedJID;
 	
 		/**
 		 * The name of the resource of the service queried if the resource 
@@ -66,21 +66,21 @@ package org.jivesoftware.xiff.data.disco
 		/**
 		 * The service name of the discovery procedure
 		 */
-		public function get service():JID
+		public function get service():EscapedJID
 		{
 			var parent:XMLNode = getNode().parentNode;
 	
 			if (parent.attributes.type == "result") {
-				return new JID(parent.attributes.from);
+				return new EscapedJID(parent.attributes.from);
 			} else {
-				return new JID(parent.attributes.to);
+				return new EscapedJID(parent.attributes.to);
 			}
 		}
 		
 		/**
 		 * @private
 		 */
-		public function set service(val:JID):void
+		public function set service(val:EscapedJID):void
 		{
 			var parent:XMLNode = getNode().parentNode;
 	

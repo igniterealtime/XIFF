@@ -2,7 +2,7 @@ package org.jivesoftware.xiff.bookmark
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.ISerializable;
 
 	public class GroupChatBookmark implements ISerializable
@@ -11,7 +11,7 @@ package org.jivesoftware.xiff.bookmark
 		private var _nickNode:XMLNode;
 		private var _passwordNode:XMLNode;
 		
-		public function GroupChatBookmark(name:String = null, jid:JID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null):void {
+		public function GroupChatBookmark(name:String = null, jid:EscapedJID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null):void {
 			if(!name && !jid) {
 				return;
 			}
@@ -41,8 +41,8 @@ package org.jivesoftware.xiff.bookmark
 			return _groupChatNode.attributes.name;
 		}
 		
-		public function get jid():JID {
-			return new JID(_groupChatNode.attributes.jid);
+		public function get jid():EscapedJID {
+			return new EscapedJID(_groupChatNode.attributes.jid);
 		}
 		
 		public function get autoJoin():Boolean {

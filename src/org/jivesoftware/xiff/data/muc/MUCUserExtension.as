@@ -24,7 +24,7 @@
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.EscapedJID;
 	import org.jivesoftware.xiff.data.IExtension;
 	
 	/**
@@ -112,25 +112,25 @@
 		/**
 		 * The to property for invite and decline action types
 		 */
-		public function get to():JID
+		public function get to():EscapedJID
 		{
-			return new JID(myActionNode.attributes.to);
+			return new EscapedJID(myActionNode.attributes.to);
 		}
 	
 		/**
 		 * The from property for invite and decline action types
 		 */
-		public function get from():JID
+		public function get from():EscapedJID
 		{
-			return new JID(myActionNode.attributes.from);
+			return new EscapedJID(myActionNode.attributes.from);
 		}
 	
 		/**
 		 * The jid property for destroy the action type
 		 */
-		public function get jid():JID
+		public function get jid():EscapedJID
 		{
-			return new JID(myActionNode.attributes.jid);
+			return new EscapedJID(myActionNode.attributes.jid);
 		}
 	
 	    /**
@@ -149,7 +149,7 @@
 		/**
 		 * Use this extension to invite another user
 		 */
-		public function invite(to:JID, from:JID, reason:String):void
+		public function invite(to:EscapedJID, from:EscapedJID, reason:String):void
 		{
 			updateActionNode(INVITE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
@@ -157,7 +157,7 @@
 		/**
 		 * Use this extension to destroy a room
 		 */
-		public function destroy(room:JID, reason:String):void
+		public function destroy(room:EscapedJID, reason:String):void
 		{
 			updateActionNode(DESTROY_TYPE, {jid: room.toString()}, reason);
 		}
@@ -165,7 +165,7 @@
 		/**
 		 * Use this extension to decline an invitation
 		 */
-		public function decline(to:JID, from:JID, reason:String):void
+		public function decline(to:EscapedJID, from:EscapedJID, reason:String):void
 		{
 			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}

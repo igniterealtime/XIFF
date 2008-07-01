@@ -3,15 +3,14 @@ package org.jivesoftware.xiff.data.im
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
-	import mx.core.IPropertyChangeNotifier;
 	import mx.events.PropertyChangeEvent;
 	
-	import org.jivesoftware.xiff.core.JID;
+	import org.jivesoftware.xiff.core.UnescapedJID;
 	
 	public class RosterItemVO extends EventDispatcher implements Contact
 	{
 		private static var allContacts:Object = {};
-		private var _jid:JID;
+		private var _jid:UnescapedJID
 		private var _displayName:String;
 		private var _groups:Array = [];
 		private var _askType:String;
@@ -21,17 +20,17 @@ package org.jivesoftware.xiff.data.im
 		private var _priority:Number;
 		private var _online:Boolean = false;
 		
-		public function RosterItemVO(newJID:JID):void 
+		public function RosterItemVO(newJID:UnescapedJID):void 
 		{
 			jid = newJID;
 		}
 		
-		public static function get(jid:JID, create:Boolean):RosterItemVO
+		public static function get(jid:UnescapedJID, create:Boolean):RosterItemVO
 		{
-			var bareJID:String = jid.toBareJID();
+			var bareJID:String = jid.bareJID;
 			var item:RosterItemVO = allContacts[bareJID];
 			if(!item && create)
-				allContacts[bareJID] = item = new RosterItemVO(jid.bareJid);
+				allContacts[bareJID] = item = new RosterItemVO(new UnescapedJID(bareJID));
 			return item;
 		}
 		
@@ -132,9 +131,9 @@ package org.jivesoftware.xiff.data.im
 			return _show;
 		}
 		
-		public function set jid(j:JID):void
+		public function set jid(j:UnescapedJID):void
 		{
-			var oldjid:JID = _jid;
+			var oldjid:UnescapedJID = _jid;
 			_jid = j;
 			//if we aren't using a custom display name, then settings the jid updates the display name
 			if(!_displayName)
@@ -144,7 +143,7 @@ package org.jivesoftware.xiff.data.im
 		}
 		
 		[Bindable]
-		public function get jid():JID
+		public function get jid():UnescapedJID
 		{
 			return _jid;
 		}
