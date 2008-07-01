@@ -1148,7 +1148,7 @@ package org.jivesoftware.xiff.conference
 	  		else if( aPresence.type != Presence.UNAVAILABLE_TYPE ) 
 	  		{
 		 		// We didn't know about this occupant yet, so we add them, then let everyone know that we did.
-		 		addItem( new RoomOccupant(userNickname, aPresence.show, item.affiliation, item.role, item.jid.unescaped, this) );
+		 		addItem( new RoomOccupant(userNickname, aPresence.show, item.affiliation, item.role, item.jid ? item.jid.unescaped : null, this) );
 		
 				e = new RoomEvent(RoomEvent.USER_JOIN);
 				e.nickname = userNickname;
