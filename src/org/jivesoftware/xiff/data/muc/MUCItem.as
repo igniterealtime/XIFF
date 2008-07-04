@@ -85,15 +85,15 @@
 			return true;
 		}
 	
-		public function get actor():String
+		public function get actor():EscapedJID
 		{
-			return myActorNode.attributes.jid;
+			return new EscapedJID(myActorNode.attributes.jid);
 		}
 	
-		public function set actor(val:String):void
+		public function set actor(val:EscapedJID):void
 		{
 			myActorNode = ensureNode(myActorNode, "actor");
-			myActorNode.attributes.jid = val;
+			myActorNode.attributes.jid = val.toString();
 		}
 	
 		public function get reason():String

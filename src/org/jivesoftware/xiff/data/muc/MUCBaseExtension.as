@@ -140,7 +140,7 @@
 			if (exists(role)) 		{ item.role = role; }
 			if (exists(nick)) 		{ item.nick = nick; }
 			if (exists(jid)) 		{ item.jid = jid; }
-			if (exists(actor)) 		{ item.actor = actor; }
+			if (exists(actor)) 		{ item.actor = new EscapedJID(actor); }
 			if (exists(reason)) 	{ item.reason = reason; }
 			
 			myItems.push(item);

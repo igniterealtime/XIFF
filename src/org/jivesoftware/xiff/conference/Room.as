@@ -1091,7 +1091,7 @@ package org.jivesoftware.xiff.conference
 		
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
-			var userNickname:String = aPresence.from.resource;
+			var userNickname:String = aPresence.from.unescaped.resource;
 			var userExts:Array = aPresence.getAllExtensionsByNS(MUCUserExtension.NS);
 			var item:MUCItem = userExts[0].getAllItems()[0];
 			var e:RoomEvent;
@@ -1134,7 +1134,7 @@ package org.jivesoftware.xiff.conference
 					
 	                // Notify listeners that a user has left the room
 	           		e = new RoomEvent(RoomEvent.USER_DEPARTURE);
-	            	e.nickname = userNickname
+	            	e.nickname = userNickname;
 	            	e.data = aPresence;
 	            	dispatchEvent(e);
 	            }
