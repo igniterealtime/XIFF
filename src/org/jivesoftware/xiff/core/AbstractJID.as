@@ -30,36 +30,59 @@ package org.jivesoftware.xiff.core
 		private static var quoteregex:RegExp = new RegExp('"', "g");
 		private static var quoteregex2:RegExp = new RegExp("'", "g");
 		
-		protected function get escapedNode():String
+		public static function escapedNode(n:String):String
 		{
-			var n:String = node;
-			n = n.replace(/\\/g, "\\5c");
-			n = n.replace(/@/g, "\\40");
-    		n = n.replace(/ /g, "\\20");
-    		n = n.replace(/&/g, "\\26");
-     		n = n.replace(/>/g, "\\3e");
-     		n = n.replace(/</g, "\\3c");
-     		n = n.replace(/:/g, "\\3a");
-     		n = n.replace(/\//g, "\\2f");
-   			n = n.replace(quoteregex, "\\22");
-   			n = n.replace(quoteregex2, "\\27");
-   			trace(n);
+			if( n && (
+				n.indexOf("@") >= 0 ||
+				n.indexOf(" ") >= 0 ||
+				n.indexOf("\\")>= 0 ||
+				n.indexOf("/") >= 0 ||
+				n.indexOf("&") >= 0 ||
+				n.indexOf("'") >= 0 ||
+				n.indexOf('"') >= 0 ||
+				n.indexOf(":") >= 0 ||
+				n.indexOf("<") >= 0 ||
+				n.indexOf(">") >= 0))
+			{
+				n = n.replace(/\\/g, "\\5c");
+				n = n.replace(/@/g, "\\40");
+	    		n = n.replace(/ /g, "\\20");
+	    		n = n.replace(/&/g, "\\26");
+	     		n = n.replace(/>/g, "\\3e");
+	     		n = n.replace(/</g, "\\3c");
+	     		n = n.replace(/:/g, "\\3a");
+	     		n = n.replace(/\//g, "\\2f");
+	   			n = n.replace(quoteregex, "\\22");
+	   			n = n.replace(quoteregex2, "\\27");
+	   		}
    			return n;
 		}
 		
-		protected function get unescapedNode():String
+		public static function unescapedNode(n:String):String
 		{
-			var n:String = node;
-			n = n.replace(/\40/g, "@");
-    		n = n.replace(/\20/g, " ");
-    		n = n.replace(/\26/g, "&");
-     		n = n.replace(/\3e/g, ">");
-     		n = n.replace(/\3c/g, "<");
-     		n = n.replace(/\3a/g, ":");
-     		n = n.replace(/\2f/g, "/");
-   			n = n.replace(quoteregex, '"');
-   			n = n.replace(quoteregex2, "'");
-   			n = n.replace(/\5c/g, "\\");
+			if( n && (
+				n.indexOf("\\40") >= 0 ||
+				n.indexOf("\\20") >= 0 ||
+				n.indexOf("\\26")>= 0 ||
+				n.indexOf("\\3e") >= 0 ||
+				n.indexOf("\\3c") >= 0 ||
+				n.indexOf("\\5c") >= 0 ||
+				n.indexOf('\\3a') >= 0 ||
+				n.indexOf("\\2f") >= 0 ||
+				n.indexOf("\\22") >= 0 ||
+				n.indexOf("\\27") >= 0) )
+			{
+				n = n.replace(/\40/g, "@");
+	    		n = n.replace(/\20/g, " ");
+	    		n = n.replace(/\26/g, "&");
+	     		n = n.replace(/\3e/g, ">");
+	     		n = n.replace(/\3c/g, "<");
+	     		n = n.replace(/\3a/g, ":");
+	     		n = n.replace(/\2f/g, "/");
+	   			n = n.replace(quoteregex, '"');
+	   			n = n.replace(quoteregex2, "'");
+	   			n = n.replace(/\5c/g, "\\");
+	  		}
    			return n;
 		}
 		

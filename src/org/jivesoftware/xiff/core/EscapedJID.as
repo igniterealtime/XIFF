@@ -5,21 +5,8 @@ package org.jivesoftware.xiff.core
 		public function EscapedJID(inJID:String, validate:Boolean=false)
 		{
 			super(inJID, validate);
-			if( node && (
-				node.indexOf("@") >= 0 ||
-				node.indexOf(" ") >= 0 ||
-				node.indexOf("\\")>= 0 ||
-				node.indexOf("/") >= 0 ||
-				node.indexOf("&") >= 0 ||
-				node.indexOf("'") >= 0 ||
-				node.indexOf('"') >= 0 ||
-				node.indexOf(":") >= 0 ||
-				node.indexOf("<") >= 0 ||
-				node.indexOf(">") >= 0))
-			{
-				_node = escapedNode;
-			}
-			trace(_node);
+			
+			_node = escapedNode(node);
 		}
 		
 		public function get unescaped():UnescapedJID
