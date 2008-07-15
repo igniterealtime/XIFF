@@ -202,8 +202,6 @@ package org.jivesoftware.xiff.core
 		 */
 		protected var _expireTagSearch:Boolean;
 		
-		protected static var _openConnections:Array = [];
-		
 		public function XMPPConnection()
 		{	
 			
@@ -607,25 +605,12 @@ package org.jivesoftware.xiff.core
 		
 		protected function set active(flag:Boolean):void
 		{
-			if(flag)
-			{
-				_openConnections.push(this);
-			}
-			else
-			{
-				_openConnections.splice(_openConnections.indexOf(this), 1);
-			}
 			_active = flag;
 		}
 		
 		protected function get active():Boolean
 		{
 			return _active;
-		}
-		
-		public static function get openConnections():Array
-		{
-			return _openConnections;
 		}
 		
 		/**
