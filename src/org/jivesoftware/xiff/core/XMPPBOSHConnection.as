@@ -1,12 +1,10 @@
 package org.jivesoftware.xiff.core
 {
-	import flash.events.ErrorEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
-	import mx.messaging.messages.HTTPRequestMessage;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
@@ -97,6 +95,11 @@ package org.jivesoftware.xiff.core
 		public function set secure(flag:Boolean):void
 		{
 			https = flag;
+		}
+		
+		public function get secure():Boolean
+		{
+			return https;
 		}
 		
 		public override function set port(portnum:Number):void
