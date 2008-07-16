@@ -6,7 +6,9 @@ package org.jivesoftware.xiff.core
 		{
 			super(inJID, validate);			
 			
-   			_node = unescapedNode(node);
+			if(node) {
+   				_node = unescapedNode(node);
+   			}
 		}
 		
 		public function get escaped():EscapedJID
