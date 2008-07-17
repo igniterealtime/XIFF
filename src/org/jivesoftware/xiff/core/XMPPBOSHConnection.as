@@ -39,15 +39,15 @@ package org.jivesoftware.xiff.core
 		private var failedRequests:Array = [];
 		private var requestQueue:Array = [];
 		private var responseQueue:Array = [];
-		private const responseTimer:Timer = new Timer(0.0, 1);
+		private var responseTimer:Timer;
 		private var isDisconnecting:Boolean = false;
 		private var boshPollingInterval:Number = 10000;
 		private var sid:String;
 		private var rid:Number;
 		private var wait:int;
 		private var inactivity:int;
-		private var pollTimer:Timer = new Timer(1, 1);
-		private var pollTimeoutTimer:Timer = new Timer(1, 1);
+		private var pollTimer:Timer;
+		private var pollTimeoutTimer:Timer;
 		
 		private var auth:SASLAuth;
 		private var authHandler:Function;
@@ -148,13 +148,14 @@ package org.jivesoftware.xiff.core
 	            maxConcurrentRequests = Math.min(serverRequests, maxConcurrentRequests);
 	        active = true;
 	        configureConnection(responseBody);
+	        responseTimer = new Timer(0.0, 1);
 	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
 	        trace(boshPollingInterval);
-	        pollTimer.delay = boshPollingInterval;
+	        pollTimer = new Timer(boshPollingInterval, 1);
+	        pollTimeoutTimer = new Timer(inactivity, 1);
 	        pollTimer.addEventListener(TimerEvent.TIMER_COMPLETE, pollServer);
 	        pollTimer.start();
 	        
-	        pollTimeoutTimer.delay = inactivity;
 	        pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
 				trace("Poll timed out, resuming");
 				pollServer(evt, true);
@@ -328,7 +329,8 @@ package org.jivesoftware.xiff.core
 				trace("Polling at: " + lastPollTime.getMinutes() + ":" + lastPollTime.getSeconds());
 			}
 			
-			pollTimer.stop();
+			if(pollTimer)
+				pollTimer.stop();
 			
 			return true;
 		}
