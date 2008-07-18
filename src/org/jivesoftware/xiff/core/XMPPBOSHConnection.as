@@ -122,9 +122,11 @@ package org.jivesoftware.xiff.core
 		public override function disconnect():void
 		{
 			super.disconnect();
-			pollTimer.stop();
+			if(pollTimer)
+				pollTimer.stop();
 			pollTimer = null;
-			pollTimeoutTimer.stop();
+			if(pollTimeoutTimer)
+				pollTimeoutTimer.stop();
 			pollTimeoutTimer = null;
 		}
 		
