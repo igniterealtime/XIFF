@@ -626,7 +626,7 @@ package org.jivesoftware.xiff.core
 			
 			// If it's an error, handle it
 			
-			if( iq.type == IQ.ERROR_TYPE && !pendingIQs[iq.id]) {
+			if( iq.type == IQ.ERROR_TYPE) {
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
 			else {
