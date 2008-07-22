@@ -100,6 +100,7 @@
 <classEntry path="org.jivesoftware.xiff.data.im.RosterItem"/>
 <classEntry path="org.jivesoftware.xiff.data.search.SearchItem"/>
 <classEntry path="org.jivesoftware.xiff.data.XMPPStanza"/>
+<classEntry path="org.jivesoftware.xiff.logging.LoggerFactory"/>
 </includeClasses>
 <includeResources/>
 <namespaceManifests/>

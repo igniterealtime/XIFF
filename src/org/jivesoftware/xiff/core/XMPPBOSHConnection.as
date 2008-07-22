@@ -1,12 +1,11 @@
 package org.jivesoftware.xiff.core
 {
-	import flash.events.ErrorEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
-	import mx.messaging.messages.HTTPRequestMessage;
+	import mx.logging.ILogger;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
@@ -21,60 +20,81 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
 	import org.jivesoftware.xiff.events.IncomingDataEvent;
 	import org.jivesoftware.xiff.events.LoginEvent;
+	import org.jivesoftware.xiff.events.OutgoingDataEvent;
+	import org.jivesoftware.xiff.logging.LoggerFactory;
 	import org.jivesoftware.xiff.util.Callback;
 	
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
+		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPBOSHConnection");
+		
+		private static const HTTP_PORT:int = 7070;
+		private static const HTTPS_PORT:int = 7443;
+		private static const BOSH_VERSION:String = "1.6";
+		
+		private static const headers:Object = {
+			"post": [],
+			"get": ['Cache-Control', 'no-store', 'Cache-Control', 'no-cache', 'Pragma', 'no-cache']
+		};
+		
 		private static var saslMechanisms:Object = {
 			"PLAIN":Plain,
 			"ANONYMOUS":Anonymous,
             "EXTERNAL":External
 		};
 		
-		private var maxConcurrentRequests:uint = 2;
-		private var boshVersion:Number = 1.6;
-		private var headers:Object = {
-			"post": [],
-			"get": ['Cache-Control', 'no-store', 'Cache-Control', 'no-cache', 'Pragma', 'no-cache']
-		};
+		private const responseTimer:Timer = new Timer(0.0, 1);
+		
 		private var requestCount:int = 0;
 		private var failedRequests:Array = [];
 		private var requestQueue:Array = [];
 		private var responseQueue:Array = [];
-		private const responseTimer:Timer = new Timer(0.0, 1);
 		private var isDisconnecting:Boolean = false;
-		private var boshPollingInterval:Number = 10000;
 		private var sid:String;
 		private var rid:Number;
-		private var wait:int;
-		private var inactivity:int;
+		
+		private var lastPollTime:Date = null;
 		private var pollTimer:Timer = new Timer(1, 1);
 		private var pollTimeoutTimer:Timer = new Timer(1, 1);
 		
 		private var auth:SASLAuth;
 		private var authHandler:Function;
-		private var https:Boolean = false;
-		private var _port:Number = -1;
 		
-		private var callbacks:Object = {};
+		private var inactivity:uint;
+		private var boshPollingInterval:uint = 10000;
 		
-		public static var logger:Object = null;
-		private var lastPollTime:Date = null;
-			
+		// These attributes can be configured from outside after creating the instance
+		private var _secure:Boolean;
+		private var _port:Number;
+		private var _maxConcurrentRequests:uint;
+		private var _hold:uint;
+		private var _wait:uint;
+		
+		public function XMPPBOSHConnection(secure:Boolean = false):void
+		{
+			super();
+			this.secure = secure;
+			this.hold = 1;
+			this.wait = 30;
+			this.maxConcurrentRequests = 2;
+			this.boshPollingInterval = 10000;
+		}
+		
 		public override function connect(streamType:String=null):Boolean
 		{
-			if(logger)
-				logger.log("CONNECT()", "INFO");
+			logger.debug("BOSH connect()");
 			BindExtension.enable();
 			active = false;
 			loggedIn = false;
 			var attrs:Object = {
+				"xml:lang": "en",
 	            xmlns: "http://jabber.org/protocol/httpbind",
-	            hold: maxConcurrentRequests,
+	            hold: hold,
 	            rid: nextRID,
-	            secure: https,
-	            wait: 10,
-	            ver: boshVersion
+	            secure: secure,
+	            wait: wait,
+	            ver: BOSH_VERSION,
+	            to: domain
 	        }
 	        
 	        var result:XMLNode = new XMLNode(1, "body");
@@ -94,26 +114,62 @@ package org.jivesoftware.xiff.core
 			saslMechanisms[name] = null;
 		}
 		
+		public function set maxConcurrentRequests(value:uint):void
+		{
+			_maxConcurrentRequests = value;
+		}
+		
+		public function get maxConcurrentRequests():uint
+		{
+			return _maxConcurrentRequests;
+		}
+		
+		public function set hold(value:uint):void
+		{
+			_hold = value;
+		}
+		
+		public function get hold():uint
+		{
+			return _hold;
+		}
+		
+		public function set wait(value:uint):void
+		{
+			_wait = value;
+		}
+		
+		public function get wait():uint
+		{
+			return _wait;
+		}
+		
 		public function set secure(flag:Boolean):void
 		{
-			https = flag;
+			logger.debug("set secure: {0}", flag);
+			_secure = flag;			
+			port = _secure ? HTTPS_PORT : HTTP_PORT;
+		}
+		
+		public function get secure():Boolean
+		{
+			return _secure;
 		}
 		
 		public override function set port(portnum:Number):void
 		{
+			logger.debug("set port: {0}", portnum);
 			_port = portnum;
 		}
 		
 		public override function get port():Number
 		{
-			if(_port == -1)
-				return https ? 8483 : 8080;
 			return _port;
 		}
 		
 		public function get httpServer():String
 		{
-			return (https ? "https" : "http") + "://" + server + ":" + port + "/http-bind/";
+			return (secure ? "https" : "http") + "://" + server + ":" + port + "/http-bind/";
 		}
 		
 		public override function disconnect():void
@@ -128,11 +184,13 @@ package org.jivesoftware.xiff.core
 		public function processConnectionResponse(responseBody:XMLNode):void
 		{
 			var attributes:Object = responseBody.attributes;
+			
 			sid = attributes.sid;
-	        boshPollingInterval = attributes.polling * 1000;
-	        
 	        wait = attributes.wait;
+	        
+	        boshPollingInterval = attributes.polling * 1000;
 	        inactivity = attributes.inactivity * 1000;
+	        
 	        if(inactivity - 2000 >= boshPollingInterval || (boshPollingInterval <= 1000 && boshPollingInterval > 0))
 	        {
 	        	boshPollingInterval += 1000;
@@ -140,20 +198,22 @@ package org.jivesoftware.xiff.core
 	        
 	        inactivity -= 1000;
 	        
+	        logger.debug("Polling interval: {0}", boshPollingInterval);
+	        logger.debug("Inactivity timeout: {0}", inactivity);
+	        
 	        var serverRequests:int = attributes.requests;
 	        if (serverRequests)
 	            maxConcurrentRequests = Math.min(serverRequests, maxConcurrentRequests);
 	        active = true;
 	        configureConnection(responseBody);
 	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
-	        trace(boshPollingInterval);
 	        pollTimer.delay = boshPollingInterval;
 	        pollTimer.addEventListener(TimerEvent.TIMER_COMPLETE, pollServer);
 	        pollTimer.start();
 	        
 	        pollTimeoutTimer.delay = inactivity;
 	        pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
-				trace("Poll timed out, resuming");
+				logger.debug("Poll timed out, resuming");
 				pollServer(evt, true);
 			});
 		}
@@ -215,21 +275,20 @@ package org.jivesoftware.xiff.core
 			requestCount--;
 			var rawXML:String = evt.result as String;
 			
-			if(logger)
-	       		logger.log(rawXML, "INCOMING");
+			logger.info("INCOMING {0}", rawXML);
 			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
-			xmlData.parseXML( rawXML );
+			xmlData.parseXML(rawXML);
 			var bodyNode:XMLNode = xmlData.firstChild;
-	
+			
 			var event:IncomingDataEvent = new IncomingDataEvent();
 			event.data = xmlData;
-			dispatchEvent( event );
+			dispatchEvent(event);
 			
-			if(bodyNode.attributes["type"] == "terminal")
+			if(bodyNode.attributes["type"] == "terminate")
 			{
-				dispatchError( "BOSH Error", bodyNode.attributes["condition"], "", -1 );
+				dispatchError("BOSH Error", bodyNode.attributes["condition"], "", -1);
 				active = false;
 			}
 			
@@ -238,7 +297,7 @@ package org.jivesoftware.xiff.core
 				if(childNode.nodeName == "stream:features")
 				{
 					_expireTagSearch = false;
-					processConnectionResponse( bodyNode );
+					processConnectionResponse(bodyNode);
 				}
 				else
 					responseQueue.push(childNode);
@@ -311,18 +370,19 @@ package org.jivesoftware.xiff.core
 	        request.addEventListener(ResultEvent.RESULT, responseCallback.call, false);
 	        request.addEventListener(FaultEvent.FAULT, errorCallback.call, false);
 	       
-	       	if(logger)
-	       		logger.log(data, "OUTGOING");
+	       	logger.info("OUTGOING {0}", data);
 	       
 			request.send(data);
-			
-			
+
+			var event:OutgoingDataEvent = new OutgoingDataEvent();
+			event.data = data;
+			dispatchEvent(event);
 			
 			if(isPoll) {
 				lastPollTime = new Date();
 				pollTimeoutTimer.reset();
 				pollTimeoutTimer.start();
-				trace("Polling at: " + lastPollTime.getMinutes() + ":" + lastPollTime.getSeconds());
+				logger.info("Polling");
 			}
 			
 			pollTimer.stop();
@@ -352,7 +412,7 @@ package org.jivesoftware.xiff.core
     	private function pollServer(evt:TimerEvent, force:Boolean=false):void 
     	{
     		if(force)
-    			trace("Forcing poll!");
+    			logger.warn("Forcing poll!");
     		//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
     		if(!isActive() || ((sendQueuedRequests() || requestCount > 0) && !force))
     			return;
@@ -385,9 +445,6 @@ package org.jivesoftware.xiff.core
 	    
 	    private function handleAuthentication(responseBody:XMLNode):void
 	    {
-	    //    if(!response || response.length == 0) {
-	     //       return;
-	     //   }
 	        var status:Object = auth.handleResponse(0, responseBody);
 	        if (status.authComplete) {
 	            if (status.authSuccess) {
@@ -442,6 +499,7 @@ package org.jivesoftware.xiff.core
 	    
 	    public function handleBindResponse(packet:IQ):void
 	    {
+	    	logger.debug("handleBindResponse: {0}", packet.getNode());
 	    	var bind:BindExtension = packet.getExtension("bind") as BindExtension;
 	
             var jid:UnescapedJID = bind.jid.unescaped;
@@ -462,9 +520,8 @@ package org.jivesoftware.xiff.core
 	        	bindExt.resource = resource;
 	        
 	        bindIQ.addExtension(bindExt);
-	
-			//this is laaaaaame, it should be a function
-			bindIQ.callbackName = "handleBindResponse";
+	        
+			bindIQ.callback = handleBindResponse;
 			bindIQ.callbackScope = this;
 	
 	        send(bindIQ);
@@ -472,6 +529,7 @@ package org.jivesoftware.xiff.core
 	    
 	    public function handleSessionResponse(packet:IQ):void
 	    {
+	    	logger.debug("handleSessionResponse: {0}", packet.getNode());
 	    	dispatchEvent(new LoginEvent());
 	    }
 	    
@@ -481,7 +539,7 @@ package org.jivesoftware.xiff.core
 
 	        sessionIQ.addExtension(new SessionExtension());
 	        
-	        sessionIQ.callbackName = "handleSessionResponse";
+	        sessionIQ.callback = handleSessionResponse;
 	        sessionIQ.callbackScope = this;
 	
 	        send(sessionIQ);
