@@ -27,6 +27,7 @@
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.ISerializable;
+	import org.jivesoftware.xiff.data.XMLStanza;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -100,10 +101,9 @@
 		{
 			var node:XMLNode = getNode();
 	
-			for (var i:String in myFields) {
-				if (!myFields[i].serialize(node)) {
+			for each (var field:FormField in myFields) {
+				if (!field.serialize(node))
 					return false;
-				}
 			}
 	
 			if (parent != node.parentNode) {
@@ -120,11 +120,9 @@
 			removeAllItems();
 			removeAllFields();
 	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-	            var c:XMLNode = children[i];
+			for each( var c:XMLNode in node.childNodes ) {
 				var field:FormField;
-				switch( children[i].nodeName )
+				switch( c.nodeName )
 				{
 	                case "instructions": myInstructionsNode = c; break;
 	                case "title": myTitleNode = c; break;
@@ -138,7 +136,7 @@
 	                    break;
 	
 					case "item":
-						var itemFields:Array = new Array();
+						var itemFields:Array = [];
 	                    for each(var itemFieldXML:XMLNode in c.childNodes) 
 	                    {
 	                        field = new FormField();
@@ -169,10 +167,9 @@
 	    public function getFormType():String
 	    {
 	        // Most likely at the start of the array
-	        for (var i:int=0; i < myFields.length; i++) {
-	            if (myFields[i].name == "FORM_TYPE") {
-	                return myFields[i].value;
-	            }
+	        for each(var field:FormField in myFields) {
+	        	if(field.name == "FORM_TYPE")
+	        		return field.value;
 	        }
 	        return "";
 	    }
@@ -196,21 +193,12 @@
 	    */
 	    public function getFormField(value:String):FormField
 	    {
-	    	//trace ('get form field: '+ value);
-	    	var field: FormField = null;
-	    	 var len:int = myFields.length;
-	    	 for each (field in myFields)
+	    	 for each (var field:FormField in myFields)
 	    	 {
-			// for (var f:int =0;f<len;f++){
-			 	//field = myFields[f];
-			 	//trace ('compare: '+ field.name + ' == ' + value);
 			 	if (field.name == value)
-			 	{
-			 		//trace ('match');
-			 		break;
-			 	}
+			 		return field;
 			 }
-			 return field;
+			 return null;
 	    }
 	
 		/**
@@ -249,13 +237,13 @@
 		 */
 		public function removeAllItems():void
 		{
-			for (var i:String in myItems) {
-	            for (var j:String in myItems) {
-	                myItems[i][j].getNode().removeNode();
-	                myItems[i][j].setNode(null);
+			for each(var item:FormField in myItems) {
+	            for each(var i:* in item) {
+	                i.getNode().removeNode();
+	                i.setNode(null);
 	            }
 			}
-		 	myItems = new Array();
+		 	myItems = [];
 		}
 		/**
 		 * Use this method to remove all fields.
@@ -264,13 +252,13 @@
 		 */
 		public function removeAllFields():void
 		{
-			for (var i:String in myFields) {
-	            for (var j:String in myFields[i]) {
-	                myFields[i][j].getNode().removeNode();
-	                myFields[i][j].setNode(null);
+			for each(var item:FormField in myFields) {
+	            for each(var i:* in item) {
+	                i.getNode().removeNode();
+	                i.setNode(null);
 	            }
 			}
-		 	myFields = new Array();
+		 	myFields = [];
 		}
 	
 	    /**

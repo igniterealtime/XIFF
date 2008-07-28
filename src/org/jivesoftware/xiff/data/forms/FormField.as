@@ -209,9 +209,10 @@
 	     */
 	    public function getAllValues():Array
 	    {
-	        var res:Array = new Array();
-	        for (var i:int=0; i < myValueNodes.length; i++) {
-	            res.push(myValueNodes[i].firstChild.nodeValue);
+	        var res:Array = [];
+	        for each(var valueNode:XMLNode in myValueNodes)
+	        {
+	            res.push(valueNode.firstChild.nodeValue);
 	        }
 	        return res;
 	    }
@@ -224,15 +225,15 @@
 	     */
 	    public function setAllValues(val:Array) :void
 	    {
-	        for (var v:String in myValueNodes) {
-	            myValueNodes[v].removeNode();
+	        for each(var v:XMLNode in myValueNodes) {
+	            v.removeNode();
 	        }
 	
-	        myValueNodes = new Array();
-	
-	        for (var i:int=0; i < val.length; i++) {
-	            myValueNodes[i] = replaceTextNode(getNode(), undefined, "value", val[i]);
-	        }
+	        myValueNodes = val.map( 
+	        	function(value:String, index:uint, arr:Array):* { 
+	        		return replaceTextNode(getNode(), undefined, "value", value); 
+	        	}
+	        );
 	    }
 	
 	    /**
@@ -251,14 +252,14 @@
 	     */
 	    public function getAllOptions():Array
 	    {
-	        var res:Array = new Array();
-	        for (var i:int=0; i < myOptionNodes.length; i++) {
-	            res.push({
-	                label: myOptionNodes[i].attributes.label,
-	                value: myOptionNodes[i].firstChild.firstChild.nodeValue
-	            });
-	        }
-	        return res;
+	        return myOptionNodes.map(
+	        	function(optionNode:XMLNode, index:uint, arr:Array):Object {
+	        		return {
+	        			label: optionNode.attributes.label,
+	                	value: optionNode.firstChild.firstChild.nodeValue
+	        		}
+	        	}
+	        );
 	    }
 	
 	    /**
@@ -270,17 +271,17 @@
 	     */
 	    public function setAllOptions(val:Array):void
 	    {
-	        for (var v:String in myOptionNodes) {
-	            myOptionNodes[v].removeNode();
+	        for each(var optionNode:XMLNode in myOptionNodes) {
+	        	optionNode.removeNode();
 	        }
 	
-	        myOptionNodes = new Array();
-	
-	        for (var i:int=0; i < val.length; i++) {
-	            var option:XMLNode = replaceTextNode(getNode(), undefined, "value", val[i].value);
-	            option.attributes.label = val[i].label;
-	            myOptionNodes[i] = option;
-	        }
+	        myOptionNodes = val.map(
+	        	function(v:Object, index:uint, arr:Array):XMLNode {
+	        		var option:XMLNode = replaceTextNode(getNode(), undefined, "value", v.value);
+	            	option.attributes.label = v.label;
+	            	return option;
+	        	}
+	        );
 	    }
 	}
 	

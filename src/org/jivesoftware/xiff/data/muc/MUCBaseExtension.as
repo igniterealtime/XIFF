@@ -57,15 +57,15 @@
 		{
 			var node:XMLNode = getNode();
 	
-			for (var i:String in myItems) {
-				if (!myItems[i].serialize(node)) {
+			for each(var i:* in myItems) {
+				if (!i.serialize(node)) {
 					return false;
 				}
 			}
 	
 			var exts:Array = getAllExtensions();
-			for (var ii:String in exts) {
-				if (!exts[ii].serialize(node)) {
+			for each(var ii:* in exts) {
+				if (!ii.serialize(node)) {
 					return false;
 				}
 			}
@@ -82,23 +82,22 @@
 			setNode(node);
 			removeAllItems();
 	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-				switch( children[i].nodeName )
+			for each( var child:XMLNode in node.childNodes ) {
+				switch( child.nodeName )
 				{
 					case "item":
 						var item:MUCItem = new MUCItem(getNode());
-						item.deserialize(children[i]);
+						item.deserialize(child);
 						myItems.push(item);
 						break;
 	
 					default:
-						var extClass:Class = ExtensionClassRegistry.lookup(children[i].attributes.xmlns);
+						var extClass:Class = ExtensionClassRegistry.lookup(child.attributes.xmlns);
 						if (extClass != null) {
 							var ext:IExtension = new extClass();
 							if (ext != null) {
 								if (ext is ISerializable) {
-									ISerializable(ext).deserialize(children[i]);
+									ISerializable(ext).deserialize(child);
 								}
 								addExtension(ext);
 							}
@@ -154,10 +153,10 @@
 		 */
 		public function removeAllItems():void
 		{
-			for (var i:String in myItems) {
-				myItems[i].setNode(null);
+			for each(var i:* in myItems) {
+				i.setNode(null);
 			}
-		 	myItems = new Array();
+		 	myItems = [];
 		}
 	}
 }

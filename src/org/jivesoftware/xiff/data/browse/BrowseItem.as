@@ -22,9 +22,10 @@
 package org.jivesoftware.xiff.data.browse
 {
 	
+	import flash.xml.XMLNode;
+	
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMLStanza;
-	import flash.xml.XMLNode;
 	
 	/**
 	 * Class that representes a child resource of a browsed resource.
@@ -162,11 +163,9 @@ package org.jivesoftware.xiff.data.browse
 		 */
 		public function get namespaces():Array
 		{
-			var res:Array = new Array();
-			var node:XMLNode = getNode();
+			var res:Array = [];
 	
-			for (var i:String in node.childNodes) {
-				var child:XMLNode = node.childNodes[i];
+			for each (var child:XMLNode in getNode().childNodes) {
 				if (child.nodeName == "ns") {
 					res.push(child.firstChild.nodeValue);
 				}

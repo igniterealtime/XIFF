@@ -71,28 +71,27 @@
 		{
 			super.deserialize(node);
 	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-				switch( children[i].nodeName )
+			for each( var child:XMLNode in node.childNodes ) {
+				switch( child.nodeName )
 				{
 					case DECLINE_TYPE:
-						myActionNode = children[i];
+						myActionNode = child;
 						break;
 						
 					case DESTROY_TYPE:
-						myActionNode = children[i];
+						myActionNode = child;
 						break;
 						
 					case INVITE_TYPE:
-						myActionNode = children[i];
+						myActionNode = child;
 						break;
 						
 					case "status":
-						myStatuses.push(new MUCStatus(children[i], this));
+						myStatuses.push(new MUCStatus(child, this));
 						break;
 						
 					case "password":
-						myPasswordNode = children[i];
+						myPasswordNode = child;
 						break;
 				}
 			}
@@ -213,7 +212,7 @@
 			if (myActionNode != null) myActionNode.removeNode();
 	
 			myActionNode = XMLFactory.createElement(type);
-			for (var i:* in attrs) {
+			for (var i:String in attrs) {
 				if (exists(attrs[i])) {
 					myActionNode.attributes[i] = attrs[i];
 				}

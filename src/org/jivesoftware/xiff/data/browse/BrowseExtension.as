@@ -22,11 +22,11 @@
 package org.jivesoftware.xiff.data.browse
 {
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.browse.BrowseItem;
 	import flash.xml.XMLNode;
+	
+	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
 	
 	/**
 	 * Implements jabber:iq:browse namespace.  Use this extension to request the items
@@ -118,8 +118,8 @@ package org.jivesoftware.xiff.data.browse
 		override public function serialize(parentNode:XMLNode):Boolean
 		{
 			var node:XMLNode = getNode();
-			for (var i:String in myItems) {
-				myItems[i].serialize(node);
+			for each (var item:BrowseItem in myItems) {
+				item.serialize(node);
 			}
 	
 			if (!exists(node.parentNode)) {
@@ -141,10 +141,9 @@ package org.jivesoftware.xiff.data.browse
 	
 			this['deserialized'] = true;
 	
-			myItems = new Array();
+			myItems = [];
 	
-			for (var i:String in node.childNodes) {
-				var child:XMLNode = node.childNodes[i];
+			for each (var child:XMLNode in node.childNodes) {
 				switch(child.nodeName) {
 					case "item":
 						var item:BrowseItem = new BrowseItem(getNode());

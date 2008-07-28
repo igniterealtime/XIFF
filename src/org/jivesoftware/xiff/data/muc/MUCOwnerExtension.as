@@ -92,8 +92,8 @@
 	    public function destroy(reason:String, alternateJID:EscapedJID):void
 	    {
 	        myDestroyNode = ensureNode(myDestroyNode, "destroy");
-	        for (var i:String in myDestroyNode.childNodes) {
-	            myDestroyNode.childNodes[i].removeNode();
+	        for each(var child:XMLNode in myDestroyNode.childNodes) {
+	            child.removeNode();
 	        }
 	
 	        if( exists(reason) ) { replaceTextNode(myDestroyNode, undefined, "reason", reason); }

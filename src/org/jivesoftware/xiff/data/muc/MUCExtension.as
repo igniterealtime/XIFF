@@ -70,10 +70,9 @@
 				return false;
 			}
 			var node:XMLNode = getNode().cloneNode(true);
-			var extensions:Array = getAllExtensions();
-			for (var i:int = 0; i < extensions.length; i++) {
-				if (extensions[i] is ISerializable) {
-					ISerializable(extensions[i]).serialize(node);
+			for each(var ext:IExtension in getAllExtensions()) {
+				if (ext is ISerializable) {
+					ISerializable(ext).serialize(node);
 				}
 			}
 			parent.appendChild(node);
@@ -84,16 +83,15 @@
 		{
 			setNode(node);
 	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-				switch( children[i].nodeName )
+			for each( var child:XMLNode in node.childNodes ) {
+				switch( child.nodeName )
 				{
 					case "history":
-						myHistoryNode = children[i];
+						myHistoryNode = child;
 						break;
 						
 					case "password":
-						myPasswordNode = children[i];
+						myPasswordNode = child;
 						break;
 				}
 			}
