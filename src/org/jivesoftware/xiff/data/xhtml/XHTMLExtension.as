@@ -23,11 +23,13 @@
 	 *
 	 */
 	
+	import flash.xml.XMLDocument;
+	import flash.xml.XMLNode;
+	
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
 	import org.jivesoftware.xiff.data.IExtension;
-	import flash.xml.XMLNode;
-	import flash.xml.XMLDocument;
+	import org.jivesoftware.xiff.data.ISerializable;
 	
 	/**
 	 * This class provides an extension for XHTML body text in messages.
@@ -39,7 +41,7 @@
 	 * @toc-path Extensions/HTML
 	 * @toc-sort 1/2
 	 */
-	public class XHTMLExtension extends Extension implements IExtension
+	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
 		public static var NS:String = "http://www.w3.org/1999/xhtml";
@@ -51,6 +53,16 @@
 		{
 			super(parent);
 		}
+		
+		public function serialize( parent:XMLNode ):Boolean
+        {
+             return true;
+        }
+          
+        public function deserialize( node:XMLNode ):Boolean
+        {   
+        	return true;
+        }
 	
 		/**
 		 * Gets the namespace associated with this extension.
@@ -95,29 +107,17 @@
 		 */
 		public function get body():String
 		{
-			// XXX This kinda sucks becuase the accessor gets called
-			// every time it appears in code, rather than being smart
-			// about when to call it
-	
-			var html:Array = new Array();
-	
-			// XXX Some tests need to be done to determine if 
-			// for (... in ...); reverse() is faster than for (...; ...; ...)
-			// typically there will only be 1-5 nodeValues to join
-	
-			var children:Array = getNode().childNodes;
-			for (var i:String in children) {
-				html.push(children[i].toString());
+			var html:Array = [];
+			for each(var child:XMLNode in getNode().childNodes) {
+				html.unshift(child.toString());
 			}
-			html.reverse();
 			return html.join();
 		}
 	
 		public function set body(theBody:String):void
 		{
-			var children:Array = getNode().childNodes;
-			for (var i:String in children) {
-				children[i].removeNode();
+			for each(var child:XMLNode in getNode().childNodes) {
+				child.removeNode();
 			}
 			getNode().appendChild(new XMLDocument(theBody));
 		}
