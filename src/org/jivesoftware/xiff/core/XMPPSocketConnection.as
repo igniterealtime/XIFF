@@ -23,15 +23,17 @@
 	 
 package org.jivesoftware.xiff.core
 {	 
-	import org.jivesoftware.xiff.util.SocketConn;
-	import flash.errors.IOError;
-	import flash.events.ProgressEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import org.jivesoftware.xiff.events.*;
 	import flash.events.SecurityErrorEvent;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
+	
+	import mx.logging.ILogger;
+	
+	import org.jivesoftware.xiff.events.*;
+	import org.jivesoftware.xiff.logging.LoggerFactory;
+	import org.jivesoftware.xiff.util.SocketConn;
 	import org.jivesoftware.xiff.util.SocketDataEvent;
 	
 	/**
@@ -44,6 +46,8 @@ package org.jivesoftware.xiff.core
 	 */
 	public class XMPPSocketConnection extends XMPPConnection
 	{
+		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPSocketConnection");
+		
 		private var _incompleteRawXML: String = '';
 		
 		protected var binarySocket:SocketConn;
@@ -66,6 +70,7 @@ package org.jivesoftware.xiff.core
 	    
 	    override protected function sendXML( someData:* ):void
 		{
+			logger.info("OUTGOING: {0}", someData);
 			// Data is untyped because it could be a string or XML
 	        binarySocket.sendString(someData);
 
@@ -123,6 +128,7 @@ package org.jivesoftware.xiff.core
 		{
 			var rawXML:String = _incompleteRawXML + ev.data as String;
 			
+			logger.info("INCOMING: {0}", rawXML);
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
 			if (!_expireTagSearch) 
