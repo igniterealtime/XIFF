@@ -76,6 +76,8 @@ package org.jivesoftware.xiff.core
 			var attrs:Object = {
 				"xml:lang": "en",
 	            "xmlns": "http://jabber.org/protocol/httpbind",
+	            "xmlns:xmpp":"urn:xmpp:xbosh",
+	            "xmpp:version":"1.0",
 	            "hold": hold,
 	            "rid": nextRID,
 	            "secure": secure,
@@ -207,7 +209,6 @@ package org.jivesoftware.xiff.core
 	        active = true;
 	        
 	        addEventListener(LoginEvent.LOGIN, handleLogin);
-	        configureConnection(responseBody);
 	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
 		}
 		
@@ -220,7 +221,7 @@ package org.jivesoftware.xiff.core
 			switch( nodeName )
 			{
 				case "stream:features":
-					//we already handled this in httpResponse()
+					handleStreamFeatures( currentNode );
 					break;
 								
 				case "stream:error":
@@ -326,22 +327,26 @@ package org.jivesoftware.xiff.core
 				active = false;
 			}
 			
+			if(bodyNode.attributes["sid"] && !loggedIn)
+			{
+				processConnectionResponse(bodyNode);
+				
+				var featuresFound:Boolean = false;
+				for each(var childNode:XMLNode in bodyNode.childNodes)
+				{
+					if(childNode.nodeName == "stream:features")
+						featuresFound = true;
+				}
+				if(!featuresFound)
+				{
+					pollingEnabled = true;
+	    			pollServer();
+				}
+			}
+			
 			for each(var childNode:XMLNode in bodyNode.childNodes)
 			{
-				if(childNode.nodeName == "stream:features")
-				{
-					_expireTagSearch = false;
-					if(!loggedIn)
-					{
-						processConnectionResponse(bodyNode);
-					}
-					else
-					{
-						bindConnection();
-					}
-				}
-				else
-					responseQueue.push(childNode);
+				responseQueue.push(childNode);
 			}
 			
 			resetResponseProcessor();
@@ -437,17 +442,19 @@ package org.jivesoftware.xiff.core
     		sendRequests(null, true);
     	}
     	
-    	private function get nextRID():Number {
+    	private function get nextRID():Number
+    	{
     		if(!rid)
     			rid = Math.floor(Math.random() * 1000000);
     		return ++rid;
     	}
     	
-    	private function createRequest(bodyContent:Array=null):XMLNode {
+    	private function createRequest(bodyContent:Array=null):XMLNode
+    	{
     		var attrs:Object = {
-    			xmlns: "http://jabber.org/protocol/httpbind",
-				rid: nextRID,
-				sid: sid
+    			"xmlns": "http://jabber.org/protocol/httpbind",
+				"rid": nextRID,
+				"sid": sid
     		}
     		var req:XMLNode = new XMLNode(1, "body");
     		if(bodyContent)
@@ -458,19 +465,6 @@ package org.jivesoftware.xiff.core
     		
     		return req;
     	}
-	    
-	    private function configureConnection(responseBody:XMLNode):void
-	    {
-	    	var features:XMLNode = responseBody.firstChild;
-	    	
-	    	for each(var feature:XMLNode in features.childNodes)
-			{
-	            if (feature.nodeName == "mechanisms")
-					configureAuthMechanisms(feature);
-	        }
-	        
-	        beginAuthentication();
-	    }
 	    
 	    private function handleLogin(e:LoginEvent):void
 	    {
