@@ -50,6 +50,8 @@ package org.jivesoftware.xiff.core
 		private var maxPause:uint;
 		private var pauseTimer:Timer;
 		
+		private var streamRestarted:Boolean;
+		
 		// These attributes can be configured from outside after creating the instance
 		private var _secure:Boolean;
 		private var _port:Number;
@@ -263,6 +265,7 @@ package org.jivesoftware.xiff.core
 			data.attributes["xml:lang"] = "en";
 			data.attributes["to"] = domain;
 			sendRequests(data);
+	        streamRestarted = true;
 	    }
 	    
 	    /**
@@ -320,6 +323,12 @@ package org.jivesoftware.xiff.core
 			var event:IncomingDataEvent = new IncomingDataEvent();
 			event.data = xmlData;
 			dispatchEvent(event);
+			
+			if(streamRestarted && !bodyNode.hasChildNodes())
+			{
+				streamRestarted = false;
+				bindConnection();
+			}
 			
 			if(bodyNode.attributes["type"] == "terminate")
 			{
