@@ -76,8 +76,8 @@ package org.jivesoftware.xiff.core
 			var attrs:Object = {
 				"xml:lang": "en",
 	            "xmlns": "http://jabber.org/protocol/httpbind",
-	            "xmlns:xmpp":"urn:xmpp:xbosh",
-	            "xmpp:version":"1.0",
+	            "xmlns:xmpp": "urn:xmpp:xbosh",
+	            "xmpp:version": "1.0",
 	            "hold": hold,
 	            "rid": nextRID,
 	            "secure": secure,
@@ -332,9 +332,9 @@ package org.jivesoftware.xiff.core
 				processConnectionResponse(bodyNode);
 				
 				var featuresFound:Boolean = false;
-				for each(var childNode:XMLNode in bodyNode.childNodes)
+				for each(var child:XMLNode in bodyNode.childNodes)
 				{
-					if(childNode.nodeName == "stream:features")
+					if(child.nodeName == "stream:features")
 						featuresFound = true;
 				}
 				if(!featuresFound)
