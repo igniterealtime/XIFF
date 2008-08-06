@@ -34,6 +34,12 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
+	import mx.logging.ILogger;
+	
+	import org.jivesoftware.xiff.auth.Anonymous;
+	import org.jivesoftware.xiff.auth.External;
+	import org.jivesoftware.xiff.auth.Plain;
+	import org.jivesoftware.xiff.auth.SASLAuth;
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.IExtension;
 	import org.jivesoftware.xiff.data.IQ;
@@ -41,10 +47,13 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.data.Presence;
 	import org.jivesoftware.xiff.data.XMPPStanza;
 	import org.jivesoftware.xiff.data.auth.AuthExtension;
+	import org.jivesoftware.xiff.data.bind.BindExtension;
 	import org.jivesoftware.xiff.data.forms.FormExtension;
 	import org.jivesoftware.xiff.data.register.RegisterExtension;
+	import org.jivesoftware.xiff.data.session.SessionExtension;
 	import org.jivesoftware.xiff.events.*;
 	import org.jivesoftware.xiff.exception.SerializationException;
+	import org.jivesoftware.xiff.logging.LoggerFactory;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -122,6 +131,8 @@ package org.jivesoftware.xiff.core
      */ 
 	public class XMPPConnection extends EventDispatcher
 	{
+		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPConnection");
+		
 		/**
 		 * @private
 		 */
@@ -202,6 +213,19 @@ package org.jivesoftware.xiff.core
 		 */
 		protected var _expireTagSearch:Boolean;
 		
+		/**
+		 * @private
+		 */
+		protected var auth:SASLAuth;
+		
+		protected static var _openConnections:Array = [];
+		
+		protected static var saslMechanisms:Object = {
+			"PLAIN":Plain,
+			"ANONYMOUS":Anonymous,
+            "EXTERNAL":External
+		};
+		
 		public function XMPPConnection()
 		{	
 			
@@ -216,6 +240,8 @@ package org.jivesoftware.xiff.core
 			port = 5222;
 			
 			AuthExtension.enable();
+			BindExtension.enable();
+			SessionExtension.enable();
 			RegisterExtension.enable();
 			FormExtension.enable();
 		}
@@ -264,6 +290,16 @@ package org.jivesoftware.xiff.core
 			}
 			_socket.connect( server, port );
 			return true;
+		}
+		
+		public static function registerSASLMechanism(name:String, authClass:Class):void
+		{
+			saslMechanisms[name] = authClass;
+		}
+		
+		public static function disableSASLMechanism(name:String):void
+		{
+			saslMechanisms[name] = null;
 		}
 		
 		/**
@@ -511,7 +547,9 @@ package org.jivesoftware.xiff.core
 			// Read the data and send it to the appropriate parser
 			var firstNode:XMLNode = xmlData.firstChild;
 			var nodeName:String = firstNode.nodeName.toLowerCase();
-			//trace("RECV: " + firstNode);
+			
+			logger.info("INCOMING: {0}", firstNode);
+			
 			switch( nodeName )
 			{
 				case "stream:stream":
@@ -537,6 +575,15 @@ package org.jivesoftware.xiff.core
 					break;
 					
 				case "stream:features":
+					handleStreamFeatures( firstNode );
+					break;
+					
+				case "success":
+					handleAuthentication( firstNode );
+					break;
+
+				case "failure":
+					handleAuthentication( firstNode );
 					break;
 					
 				default:
@@ -570,17 +617,71 @@ package org.jivesoftware.xiff.core
 			sessionID = node.attributes.id;
 			domain = node.attributes.from;
 			
-			if(_useAnonymousLogin) {
-				// Begin anonymous login
-				sendAnonymousLogin();
-			} else if( username != null && username.length > 0 ) {
-				// Begin login sequence
-				beginAuthentication();
-			} else {
-				//get registration fields
-				getRegistrationFields();
+			for each(var childNode:XMLNode in node.childNodes)
+			{
+				if(childNode.nodeName == "stream:features")
+				{
+					handleStreamFeatures(childNode);
+				}
 			}
 		}
+		
+		/**
+		 * @private
+		 */
+		protected function handleStreamFeatures( node:XMLNode ):void
+		{
+			if(!loggedIn)
+			{
+				for each(var feature:XMLNode in node.childNodes)
+				{
+		            if (feature.nodeName == "mechanisms")
+						configureAuthMechanisms(feature);
+		        }
+		        
+				if(useAnonymousLogin || (username != null && username.length > 0))
+				{
+					beginAuthentication();
+				}
+				else
+				{
+					getRegistrationFields();
+				}
+			}
+			else
+			{
+				bindConnection();
+			}
+		}
+	    
+	    /**
+		 * @private
+		 */
+	    protected function configureAuthMechanisms(mechanisms:XMLNode):void
+	    {
+	        var authMechanism:SASLAuth;
+	        var authClass:Class;
+	        for each(var mechanism:XMLNode in mechanisms.childNodes) 
+	        {
+	        	authClass = saslMechanisms[mechanism.firstChild.nodeValue];
+	   			if(useAnonymousLogin)
+	   			{
+	   				if(authClass == Anonymous)
+	   					break;
+	   			}
+	   			else
+	   			{
+	   				if(authClass) break;
+	   			}	   			
+	        }
+	
+	        if (!authClass) {
+	        	dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
+	        	return;
+	        }
+	        
+	        auth = new authClass(this);
+	    }
 		
 		/**
 		 * @private
@@ -605,12 +706,25 @@ package org.jivesoftware.xiff.core
 		
 		protected function set active(flag:Boolean):void
 		{
+			if(flag)
+			{
+				_openConnections.push(this);
+			}
+			else
+			{
+				_openConnections.splice(_openConnections.indexOf(this), 1);
+			}
 			_active = flag;
 		}
 		
 		protected function get active():Boolean
 		{
 			return _active;
+		}
+		
+		public static function get openConnections():Array
+		{
+			return _openConnections;
 		}
 		
 		/**
@@ -667,7 +781,7 @@ package org.jivesoftware.xiff.core
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var msg:Message = new Message();
-			//trace(msg);	
+			logger.debug("MESSAGE: {0}", msg);	
 			// Populate with data
 			if( !msg.deserialize( node ) ) {
 				throw new SerializationException();
@@ -746,6 +860,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function dispatchError( condition:String, message:String, type:String, code:Number, extension:Extension = null ):void
 		{
+			logger.error("Error: {0} - {1}", condition, message);
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
 			event.errorMessage = message;
@@ -760,7 +875,7 @@ package org.jivesoftware.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			//trace("SEND: " + someData);
+			logger.info("OUTGOING: {0}", someData);
 			// Data is untyped because it could be a string or XML
 			_socket.send( someData );
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
@@ -768,94 +883,102 @@ package org.jivesoftware.xiff.core
 			dispatchEvent( event );
 		}
 		
-		// anonymous login
-		/**
-		 * @private
-		 */
-		protected function sendAnonymousLogin():void 
-		{
-			var anonIQ:IQ = new IQ(null, IQ.SET_TYPE, XMPPStanza.generateID("log_anom_"), "sendAnonymousLogin_result", this, null );
-			var authExt:AuthExtension = new AuthExtension(anonIQ.getNode());
-			anonIQ.addExtension(authExt);
-			send(anonIQ);
-		}
-		
-		/**
-		 * @private
-		 */
-		protected function sendAnonymousLogin_result(resultIQ:IQ):void 
-		{
-			if( resultIQ.type == IQ.RESULT_TYPE ) {
-				// update resource
-				var jid:UnescapedJID = resultIQ.to.unescaped;
-				resource = jid.resource;
-				username = jid.node;
-				// dispatch login event
-				loggedIn = true;
-				var event:LoginEvent = new LoginEvent();
-				dispatchEvent( event );
-			}
-		}
-		
 		/**
 		 * @private
 		 */
 		protected function beginAuthentication():void
 		{
-			var authIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("log_user_"), "beginAuthentication_result", this, null );
-			var authExt:AuthExtension = new AuthExtension(authIQ.getNode());
-			authExt.username = username
-			
-			authIQ.addExtension(authExt);
-			send( authIQ );
+	        sendXML(auth.request);
 		}
-		
+	    
 		/**
 		 * @private
 		 */
-		protected function beginAuthentication_result( resultIQ:IQ ):void
-		{
-			var connectionType:String = "none";
+	    protected function handleAuthentication(responseBody:XMLNode):void
+	    {
+	        var status:Object = auth.handleResponse(0, responseBody);
+	        if (status.authComplete)
+	        {
+	            if (status.authSuccess)
+	            {
+					loggedIn = true;
+					restartStream();
+	            }
+	            else
+	            {
+					dispatchError("Authentication Error", "", "", 401);
+	                disconnect();
+	            }
+	        }
+	    }
+	    
+		/**
+		 * @private
+		 */
+	    protected function restartStream():void
+	    {
+	        sendXML(openingStreamTag);
+	    }
+	    
+		/**
+		 * @private
+		 */
+	    protected function bindConnection():void 
+	    {
+	    	var bindIQ:IQ = new IQ(null, "set");
 	
-			// Begin authentication procedure
-			if( resultIQ.type == IQ.RESULT_TYPE ) {
-				var authIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("log_user2_"), "sendAuthentication_result", this, null );
-				try
-				{
-					var resultAuth:* = resultIQ.getAllExtensionsByNS(AuthExtension.NS)[0];
-					var responseAuth:AuthExtension = new AuthExtension(authIQ.getNode());
-					responseAuth.password = password;
-					responseAuth.username = username;
-					responseAuth.resource = resource;
-					authIQ.addExtension(responseAuth);
-					send( authIQ );
-				}
-				catch (e:Error)
-				{
-					trace("Error : null trapped. Resuming.");
-				}
-			}
-			else {
-				// We weren't expecting this
-				dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
-			}
-		}
-		
+			var bindExt:BindExtension = new BindExtension();
+			if(resource)
+	        	bindExt.resource = resource;
+	        
+	        bindIQ.addExtension(bindExt);
+	        
+			bindIQ.callback = handleBindResponse;
+			bindIQ.callbackScope = this;
+	
+	        send(bindIQ);
+	    }
+	    
 		/**
 		 * @private
 		 */
-		protected function sendAuthentication_result( resultIQ:IQ ):void
-		{
-			if( resultIQ.type == IQ.RESULT_TYPE ) {
-				loggedIn = true;
-				var event:LoginEvent = new LoginEvent();
-				dispatchEvent( event );
-			}
-			else {
-				// We weren't expecting this
-				dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
-			}
-		}
+	    protected function handleBindResponse(packet:IQ):void
+	    {
+	    	logger.debug("handleBindResponse: {0}", packet.getNode());
+	    	var bind:BindExtension = packet.getExtension("bind") as BindExtension;
+	
+            var jid:UnescapedJID = bind.jid.unescaped;
+            
+            myResource = jid.resource;
+            myUsername = jid.node;
+            domain = jid.domain;
+            
+            establishSession();
+	    }
+	    
+		/**
+		 * @private
+		 */
+	    private function establishSession():void
+	    {
+	        var sessionIQ:IQ = new IQ(null, "set");
+
+	        sessionIQ.addExtension(new SessionExtension());
+	        
+	        sessionIQ.callback = handleSessionResponse;
+	        sessionIQ.callbackScope = this;
+	
+	        send(sessionIQ);
+	    }
+	    
+		/**
+		 * @private
+		 */
+	    private function handleSessionResponse(packet:IQ):void
+	    {
+	    	logger.debug("handleSessionResponse: {0}", packet.getNode());
+			dispatchEvent(new LoginEvent());
+	    }
 		
 		/**
 		 * @private

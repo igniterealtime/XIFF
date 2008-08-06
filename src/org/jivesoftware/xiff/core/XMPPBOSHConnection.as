@@ -5,74 +5,87 @@ package org.jivesoftware.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
+	import mx.logging.ILogger;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 	
-	import org.jivesoftware.xiff.auth.Anonymous;
-	import org.jivesoftware.xiff.auth.External;
-	import org.jivesoftware.xiff.auth.Plain;
-	import org.jivesoftware.xiff.auth.SASLAuth;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.bind.BindExtension;
-	import org.jivesoftware.xiff.data.session.SessionExtension;
 	import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
+	import org.jivesoftware.xiff.events.DisconnectionEvent;
 	import org.jivesoftware.xiff.events.IncomingDataEvent;
 	import org.jivesoftware.xiff.events.LoginEvent;
+	import org.jivesoftware.xiff.events.OutgoingDataEvent;
+	import org.jivesoftware.xiff.logging.LoggerFactory;
 	import org.jivesoftware.xiff.util.Callback;
 	
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
-		private static var saslMechanisms:Object = {
-			"PLAIN":Plain,
-			"ANONYMOUS":Anonymous,
-            "EXTERNAL":External
-		};
+		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPBOSHConnection");
 		
-		private var maxConcurrentRequests:uint = 2;
-		private var boshVersion:Number = 1.6;
-		private var headers:Object = {
+		private static const HTTP_PORT:int = 7070;
+		private static const HTTPS_PORT:int = 7443;
+		private static const BOSH_VERSION:String = "1.6";
+		
+		private static const headers:Object = {
 			"post": [],
 			"get": ['Cache-Control', 'no-store', 'Cache-Control', 'no-cache', 'Pragma', 'no-cache']
 		};
+		
+		private const responseTimer:Timer = new Timer(0.0, 1);
+		
 		private var requestCount:int = 0;
-		private var failedRequests:Array = [];
 		private var requestQueue:Array = [];
 		private var responseQueue:Array = [];
-		private var responseTimer:Timer;
 		private var isDisconnecting:Boolean = false;
-		private var boshPollingInterval:Number = 10000;
 		private var sid:String;
 		private var rid:Number;
-		private var wait:int;
-		private var inactivity:int;
-		private var pollTimer:Timer;
-		private var pollTimeoutTimer:Timer;
 		
-		private var auth:SASLAuth;
-		private var authHandler:Function;
-		private var https:Boolean = false;
-		private var _port:Number = -1;
-		
-		private var callbacks:Object = {};
-		
-		public static var logger:Object = null;
+		private var pollingEnabled:Boolean = false;
 		private var lastPollTime:Date = null;
-			
+		
+		private var inactivity:uint;
+		private var boshPollingInterval:uint = 10000;
+		
+		private var pauseEnabled:Boolean = false;
+		private var maxPause:uint;
+		private var pauseTimer:Timer;
+		
+		private var streamRestarted:Boolean;
+		
+		// These attributes can be configured from outside after creating the instance
+		private var _secure:Boolean;
+		private var _port:Number;
+		private var _maxConcurrentRequests:uint;
+		private var _hold:uint;
+		private var _wait:uint;
+		private var _boshPath:String;
+		
+		public function XMPPBOSHConnection(secure:Boolean = false):void
+		{
+			super();
+			this.secure = secure;
+			this.hold = 1;
+			this.wait = 20;
+			this.maxConcurrentRequests = 2;
+			this.boshPollingInterval = 10000;
+			this.boshPath = "http-bind/";
+		}
+		
 		public override function connect(streamType:String=null):Boolean
 		{
-			if(logger)
-				logger.log("CONNECT()", "INFO");
-			BindExtension.enable();
-			active = false;
-			loggedIn = false;
+			logger.debug("BOSH connect()");
+			
 			var attrs:Object = {
-	            xmlns: "http://jabber.org/protocol/httpbind",
-	            hold: maxConcurrentRequests,
-	            rid: nextRID,
-	            secure: https,
-	            wait: 10,
-	            ver: boshVersion
+				"xml:lang": "en",
+	            "xmlns": "http://jabber.org/protocol/httpbind",
+	            "xmlns:xmpp": "urn:xmpp:xbosh",
+	            "xmpp:version": "1.0",
+	            "hold": hold,
+	            "rid": nextRID,
+	            "secure": secure,
+	            "wait": wait,
+	            "ver": BOSH_VERSION,
+	            "to": domain
 	        }
 	        
 	        var result:XMLNode = new XMLNode(1, "body");
@@ -82,86 +95,123 @@ package org.jivesoftware.xiff.core
 	        return true;
 		}
 		
-		public static function registerSASLMechanism(name:String, authClass:Class):void
+		public function set maxConcurrentRequests(value:uint):void
 		{
-			saslMechanisms[name] = authClass;
+			_maxConcurrentRequests = value;
 		}
 		
-		public static function disableSASLMechanism(name:String):void
+		public function get maxConcurrentRequests():uint
 		{
-			saslMechanisms[name] = null;
+			return _maxConcurrentRequests;
+		}
+		
+		public function set hold(value:uint):void
+		{
+			_hold = value;
+		}
+		
+		public function get hold():uint
+		{
+			return _hold;
+		}
+		
+		public function set wait(value:uint):void
+		{
+			_wait = value;
+		}
+		
+		public function get wait():uint
+		{
+			return _wait;
 		}
 		
 		public function set secure(flag:Boolean):void
 		{
-			https = flag;
+			logger.debug("set secure: {0}", flag);
+			_secure = flag;			
+			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
 		
 		public function get secure():Boolean
 		{
-			return https;
+			return _secure;
 		}
 		
 		public override function set port(portnum:Number):void
 		{
+			logger.debug("set port: {0}", portnum);
 			_port = portnum;
 		}
 		
 		public override function get port():Number
 		{
-			if(_port == -1)
-				return https ? 8483 : 8080;
 			return _port;
+		}
+		
+		public function set boshPath(value:String):void
+		{
+			_boshPath = value;
+		}
+		
+		public function get boshPath():String
+		{
+			return _boshPath;
 		}
 		
 		public function get httpServer():String
 		{
-			return (https ? "https" : "http") + "://" + server + ":" + port + "/http-bind/";
+			return (secure ? "https" : "http") + "://" + server + ":" + port + "/" + boshPath;
 		}
 		
 		public override function disconnect():void
 		{
-			super.disconnect();
-			if(pollTimer)
-				pollTimer.stop();
-			pollTimer = null;
-			if(pollTimeoutTimer)
-				pollTimeoutTimer.stop();
-			pollTimeoutTimer = null;
+			if(active)
+			{
+				var data:XMLNode = createRequest();
+				data.attributes.type = "terminate";
+				sendRequests(data);
+				active = false;
+				loggedIn = false;
+				dispatchEvent(new DisconnectionEvent());
+			}
 		}
 		
 		public function processConnectionResponse(responseBody:XMLNode):void
 		{
+			dispatchEvent(new ConnectionSuccessEvent());
+			
 			var attributes:Object = responseBody.attributes;
+			
 			sid = attributes.sid;
-	        boshPollingInterval = attributes.polling * 1000;
-	        
 	        wait = attributes.wait;
-	        inactivity = attributes.inactivity * 1000;
-	        if(inactivity - 2000 >= boshPollingInterval || (boshPollingInterval <= 1000 && boshPollingInterval > 0))
+	        
+	        if(attributes.polling)
 	        {
-	        	boshPollingInterval += 1000;
+	        	boshPollingInterval = attributes.polling * 1000;
+	        }
+	        if(attributes.inactivity)
+	        {
+	        	inactivity = attributes.inactivity * 1000;
+	        }
+	        if(attributes.maxpause)
+	        {
+	            maxPause = attributes.maxpause * 1000;
+	            pauseEnabled = true;
+	        }
+	        if(attributes.requests)
+	        {
+	            maxConcurrentRequests = attributes.requests;
 	        }
 	        
-	        inactivity -= 1000;
+	        logger.debug("Polling interval: {0}", boshPollingInterval);
+	        logger.debug("Inactivity timeout: {0}", inactivity);
+	        logger.debug("Max requests: {0}", maxConcurrentRequests);
+	        logger.debug("Max pause: {0}", maxPause);
 	        
-	        var serverRequests:int = attributes.requests;
-	        if (serverRequests)
-	            maxConcurrentRequests = Math.min(serverRequests, maxConcurrentRequests);
 	        active = true;
-	        configureConnection(responseBody);
-	        responseTimer = new Timer(0.0, 1);
-	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
-	        trace(boshPollingInterval);
-	        pollTimer = new Timer(boshPollingInterval, 1);
-	        pollTimeoutTimer = new Timer(inactivity, 1);
-	        pollTimer.addEventListener(TimerEvent.TIMER_COMPLETE, pollServer);
-	        pollTimer.start();
 	        
-	        pollTimeoutTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function(evt:TimerEvent):void {
-				trace("Poll timed out, resuming");
-				pollServer(evt, true);
-			});
+	        addEventListener(LoginEvent.LOGIN, handleLogin);
+	        responseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, processResponse);
 		}
 		
 		private function processResponse(event:TimerEvent=null):void
@@ -173,7 +223,8 @@ package org.jivesoftware.xiff.core
 			switch( nodeName )
 			{
 				case "stream:features":
-					//we already handled this in httpResponse()
+					handleStreamFeatures( currentNode );
+					streamRestarted = false; //avoid triggering the old server workaround
 					break;
 								
 				case "stream:error":
@@ -206,6 +257,48 @@ package org.jivesoftware.xiff.core
 			
 			resetResponseProcessor();
 		}
+	    
+	    protected override function restartStream():void
+	    {
+	    	var data:XMLNode = createRequest();
+			data.attributes["xmpp:restart"] = "true";
+			data.attributes["xmlns:xmpp"] = "urn:xmpp:xbosh";
+			data.attributes["xml:lang"] = "en";
+			data.attributes["to"] = domain;
+			sendRequests(data);
+	        streamRestarted = true;
+	    }
+	    
+	    /**
+	    * returns true if pause request is sent
+	    */
+	    public function pauseSession(seconds:uint):Boolean
+	    {
+	    	logger.debug("Pausing session for {0} seconds", seconds);
+	    	
+	    	var pauseDuration:uint = seconds * 1000;
+	    	if(!pauseEnabled || pauseDuration > maxPause || pauseDuration <= boshPollingInterval)
+	    		return false;
+	    	
+	    	pollingEnabled = false;
+	    	
+	    	var data:XMLNode = createRequest();
+			data.attributes["pause"] = seconds;
+			sendRequests(data);
+			
+			pauseTimer = new Timer(pauseDuration - 2000, 1);
+			pauseTimer.addEventListener(TimerEvent.TIMER, handlePauseTimeout);
+			pauseTimer.start();
+			
+			return true;
+	    }
+	    
+	    private function handlePauseTimeout(e:TimerEvent):void
+	    {
+	    	logger.debug("handlePauseTimeout");
+	    	pollingEnabled = true;
+	    	pollServer();
+	    }
 		
 		private function resetResponseProcessor():void
 		{
@@ -221,40 +314,56 @@ package org.jivesoftware.xiff.core
 			requestCount--;
 			var rawXML:String = evt.result as String;
 			
-			if(logger)
-	       		logger.log(rawXML, "INCOMING");
+			logger.info("INCOMING {0}", rawXML);
 			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
-			xmlData.parseXML( rawXML );
+			xmlData.parseXML(rawXML);
 			var bodyNode:XMLNode = xmlData.firstChild;
-	
+			
 			var event:IncomingDataEvent = new IncomingDataEvent();
 			event.data = xmlData;
-			dispatchEvent( event );
+			dispatchEvent(event);
 			
-			if(bodyNode.attributes["type"] == "terminal")
+			if(streamRestarted && !bodyNode.hasChildNodes())
 			{
-				dispatchError( "BOSH Error", bodyNode.attributes["condition"], "", -1 );
+				streamRestarted = false;
+				bindConnection();
+			}
+			
+			if(bodyNode.attributes["type"] == "terminate")
+			{
+				dispatchError("BOSH Error", bodyNode.attributes["condition"], "", -1);
 				active = false;
+			}
+			
+			if(bodyNode.attributes["sid"] && !loggedIn)
+			{
+				processConnectionResponse(bodyNode);
+				
+				var featuresFound:Boolean = false;
+				for each(var child:XMLNode in bodyNode.childNodes)
+				{
+					if(child.nodeName == "stream:features")
+						featuresFound = true;
+				}
+				if(!featuresFound)
+				{
+					pollingEnabled = true;
+	    			pollServer();
+				}
 			}
 			
 			for each(var childNode:XMLNode in bodyNode.childNodes)
 			{
-				if(childNode.nodeName == "stream:features")
-				{
-					_expireTagSearch = false;
-					processConnectionResponse( bodyNode );
-				}
-				else
-					responseQueue.push(childNode);
+				responseQueue.push(childNode);
 			}
 			
 			resetResponseProcessor();
 			
 			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
 			if(requestCount == 0 && !sendQueuedRequests())
-				resetPollTimer();
+				pollServer();
 		}
 		
 		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
@@ -316,69 +425,46 @@ package org.jivesoftware.xiff.core
 	        
 	        request.addEventListener(ResultEvent.RESULT, responseCallback.call, false);
 	        request.addEventListener(FaultEvent.FAULT, errorCallback.call, false);
-	       
-	       	if(logger)
-	       		logger.log(data, "OUTGOING");
-	       
+	        
 			request.send(data);
-			
-			
+
+			var event:OutgoingDataEvent = new OutgoingDataEvent();
+			event.data = data;
+			dispatchEvent(event);
 			
 			if(isPoll) {
 				lastPollTime = new Date();
-				pollTimeoutTimer.reset();
-				pollTimeoutTimer.start();
-				trace("Polling at: " + lastPollTime.getMinutes() + ":" + lastPollTime.getSeconds());
+				logger.info("Polling");
 			}
 			
-			if(pollTimer)
-				pollTimer.stop();
+			logger.info("OUTGOING {0}", data);
 			
 			return true;
 		}
     	
-    	private function resetPollTimer():void 
+    	private function pollServer():void 
     	{
-    		if(!pollTimer)
-    			return;
-
-    		pollTimeoutTimer.stop();
-    		
-    		pollTimer.reset();
-    		var timeSinceLastPoll:Number = 0;
-    		if(lastPollTime)
-    			 timeSinceLastPoll = new Date().time - lastPollTime.time;
-    			
-    		if(timeSinceLastPoll >= boshPollingInterval)
-    			timeSinceLastPoll = 0;
-    		
-    		pollTimer.delay = boshPollingInterval - timeSinceLastPoll;
-    		pollTimer.start();
-    	}
-    	
-    	private function pollServer(evt:TimerEvent, force:Boolean=false):void 
-    	{
-    		if(force)
-    			trace("Forcing poll!");
     		//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
-    		if(!isActive() || ((sendQueuedRequests() || requestCount > 0) && !force))
+    		if(!isActive() || !pollingEnabled || sendQueuedRequests() || requestCount > 0)
     			return;
     		
     		//this should be safe since sendRequests checks to be sure it's not over the concurrent requests limit, and we just ensured that the queue is empty by calling sendQueuedRequests()
     		sendRequests(null, true);
     	}
     	
-    	private function get nextRID():Number {
+    	private function get nextRID():Number
+    	{
     		if(!rid)
     			rid = Math.floor(Math.random() * 1000000);
     		return ++rid;
     	}
     	
-    	private function createRequest(bodyContent:Array=null):XMLNode {
+    	private function createRequest(bodyContent:Array=null):XMLNode
+    	{
     		var attrs:Object = {
-    			xmlns: "http://jabber.org/protocol/httpbind",
-				rid: nextRID,
-				sid: sid
+    			"xmlns": "http://jabber.org/protocol/httpbind",
+				"rid": nextRID,
+				"sid": sid
     		}
     		var req:XMLNode = new XMLNode(1, "body");
     		if(bodyContent)
@@ -390,108 +476,10 @@ package org.jivesoftware.xiff.core
     		return req;
     	}
 	    
-	    private function handleAuthentication(responseBody:XMLNode):void
+	    private function handleLogin(e:LoginEvent):void
 	    {
-	    //    if(!response || response.length == 0) {
-	     //       return;
-	     //   }
-	        var status:Object = auth.handleResponse(0, responseBody);
-	        if (status.authComplete) {
-	            if (status.authSuccess) {
-	                bindConnection();
-	            }
-	            else {
-					dispatchError("Authentication Error", "", "", 401);
-	                disconnect();
-	            }
-	        }
-	    }
-	    
-	    private function configureConnection(responseBody:XMLNode):void
-	    {
-	    	var features:XMLNode = responseBody.firstChild;
-	
-	        var authentication:Object = {};
-	        for each(var feature:XMLNode in features.childNodes)
-			{
-	            if (feature.nodeName == "mechanisms")
-	                authentication.auth = configureAuthMechanisms(feature);
-	            else if (feature.nodeName == "bind")
-	                authentication.bind = true;
-	            else if (feature.nodeName == "session")
-	                authentication.session = true;
-	        }
-	        
-	        auth = authentication.auth;
-	        dispatchEvent(new ConnectionSuccessEvent());
-	        authHandler = handleAuthentication;
-	        sendXML(auth.request);
-	    }
-	    
-	    private function configureAuthMechanisms(mechanisms:XMLNode):SASLAuth
-	    {
-	        var authMechanism:SASLAuth;
-	        var authClass:Class;
-	        for each(var mechanism:XMLNode in mechanisms.childNodes) 
-	        {
-	        	authClass = saslMechanisms[mechanism.firstChild.nodeValue];
-	   			if(authClass)
-	   				break;
-	        }
-	
-	        if (!authClass) {
-	        	dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
-	        	return null;
-	        }
-	
-	   		return new authClass(this);
-	    }
-	    
-	    public function handleBindResponse(packet:IQ):void
-	    {
-	    	var bind:BindExtension = packet.getExtension("bind") as BindExtension;
-	
-            var jid:UnescapedJID = bind.jid.unescaped;
-            
-            myResource = jid.resource;
-            myUsername = jid.node;
-            domain = jid.domain;
-            
-            establishSession();
-	    }
-	    
-	    private function bindConnection():void 
-	    {
-	    	var bindIQ:IQ = new IQ(null, "set");
-	
-			var bindExt:BindExtension = new BindExtension();
-			if(resource)
-	        	bindExt.resource = resource;
-	        
-	        bindIQ.addExtension(bindExt);
-	
-			//this is laaaaaame, it should be a function
-			bindIQ.callbackName = "handleBindResponse";
-			bindIQ.callbackScope = this;
-	
-	        send(bindIQ);
-	    }
-	    
-	    public function handleSessionResponse(packet:IQ):void
-	    {
-	    	dispatchEvent(new LoginEvent());
-	    }
-	    
-	    private function establishSession():void
-	    {
-	        var sessionIQ:IQ = new IQ(null, "set");
-
-	        sessionIQ.addExtension(new SessionExtension());
-	        
-	        sessionIQ.callbackName = "handleSessionResponse";
-	        sessionIQ.callbackScope = this;
-	
-	        send(sessionIQ);
+	    	pollingEnabled = true;
+	    	pollServer();
 	    }
 	    
 		//do nothing, we use polling instead
