@@ -208,6 +208,18 @@ package org.jivesoftware.xiff.core
 						case "presence":
 							handlePresence( currentNode );
 							break;
+												
+						case "stream:features":
+							handleStreamFeatures( currentNode );
+							break;
+							
+						case "success":
+							handleAuthentication( currentNode );
+							break;
+		
+						case "failure":
+							handleAuthentication( currentNode );
+							break;
 							
 						default:
 							dispatchError( "undefined-condition", "Unknown Error", "modify", 500 );
