@@ -635,8 +635,21 @@ package org.jivesoftware.xiff.core
 			{
 				for each(var feature:XMLNode in node.childNodes)
 				{
-		            if (feature.nodeName == "mechanisms")
+					if (feature.nodeName == "starttls")
+					{
+						if (feature.firstChild && feature.firstChild.nodeName == "required")
+						{
+							// No TLS support yet
+							dispatchError("TLS required", "The server requires TLS, but this feature is not implemented.", "cancel", 501);
+							disconnect();
+							return;
+						}
+					}
+					else if (feature.nodeName == "mechanisms")
+					{
 						configureAuthMechanisms(feature);
+					}
+					
 		        }
 		        
 				if(useAnonymousLogin || (username != null && username.length > 0))
