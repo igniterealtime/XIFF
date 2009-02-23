@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project name="XIFF" basedir="." default="release">
+
+	<!-- Define variables/paths used in this build script -->
+	<property file="./build.properties" />
+
+	<!--
+		Have you edited the properties file to make sure the paths are right on your system?
+	-->
+	<target name="properties">
+		<fail unless="compc">The "compc" property must be set in build.properties.</fail>
+    <fail unless="asdoc">The "asdoc" property must be set in build.properties.</fail>
+	</target>
+
+	<!--
+	  Create a SWC file
+	-->
+	<target name="release" depends="properties">
+    <exec executable="${flexsdk.bin.dir}/${compc}" dir="${basedir}">
+      
+      <!-- Specify the name of the output file -->
+			<arg line="--output '${bin.dir}/${output.name}.swc'" />
+
+      <!-- Specify the source path -->
+      <arg line="--source-path '${src.dir}'" />
+
+      <!-- Add the namespace -->
+      <arg line="--namespace ${manifest.ns} ${manifest}" />
+
+      <!-- Include the manifest -->
+      <arg line="--include-namespaces ${manifest.ns}" />
+		</exec>
+	</target>
+
+  <!-- 
+    Clean and re-generate the documentation
+  -->
+	<target name="docs" depends="clean-docs,compile-docs"/>
+
+	<!-- 
+	  Clean the documentation
+  -->
+  <target name="clean-docs">
+    <delete dir="${docs.dir}" includeemptydirs="true" failonerror="true"/>
+    <mkdir dir="${docs.dir}"/>
+	</target>
+
+  <!--
+    Generate the documentation
+  -->
+	<target name="compile-docs">
+    <exec executable='${flexsdk.bin.dir}/${asdoc}'>
+
+			<arg line='-doc-sources ${src.dir}'/>
+      
+			<arg line='-output ${docs.dir}'/>
+      
+			<arg line='-templates-path ${templates.dir}'/>
+
+		</exec>
+	</target>
+
+</project>
