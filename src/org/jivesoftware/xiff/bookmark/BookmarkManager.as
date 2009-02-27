@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.bookmark
 		private var _privateDataManager:PrivateDataManager;
 		private var _bookmarks:BookmarkPrivatePayload;
 		
-		public function BookmarkManager(privateDataManager:PrivateDataManager):void {
+		public function BookmarkManager(privateDataManager:PrivateDataManager) {
 			this._privateDataManager = privateDataManager;
 		}
 		

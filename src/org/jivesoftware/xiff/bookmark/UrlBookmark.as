@@ -9,7 +9,7 @@ package org.jivesoftware.xiff.bookmark
 	{
 		private var node:XMLNode;
 		
-		public function UrlBookmark(name:String = null, url:String = null):void {
+		public function UrlBookmark(name:String = null, url:String = null) {
 			if(!name && !url) {
 				return;
 			}

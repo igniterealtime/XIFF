@@ -8,7 +8,7 @@ package org.jivesoftware.xiff.core
 		protected var _domain:String = "";
 		protected var _resource:String = "";
 		
-		public function AbstractJID(inJID:String, validate:Boolean=false):void {
+		public function AbstractJID(inJID:String, validate:Boolean=false) {
 			if(validate)
 			{
     			if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1) 

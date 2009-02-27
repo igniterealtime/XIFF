@@ -14,7 +14,7 @@ package org.jivesoftware.xiff.events
 		public var groupchatBookmark:GroupChatBookmark = null;
 		public var urlBookmark:UrlBookmark = null;
 		
-		public function BookmarkChangedEvent(type:String, bookmark:*):void {
+		public function BookmarkChangedEvent(type:String, bookmark:*) {
 			super(type);
 			if(bookmark is GroupChatBookmark)
 				groupchatBookmark = bookmark as GroupChatBookmark;

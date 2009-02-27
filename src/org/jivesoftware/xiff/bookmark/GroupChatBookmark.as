@@ -11,7 +11,7 @@ package org.jivesoftware.xiff.bookmark
 		private var _nickNode:XMLNode;
 		private var _passwordNode:XMLNode;
 		
-		public function GroupChatBookmark(name:String = null, jid:EscapedJID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null):void {
+		public function GroupChatBookmark(name:String = null, jid:EscapedJID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null) {
 			if(!name && !jid) {
 				return;
 			}

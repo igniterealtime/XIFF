@@ -12,7 +12,7 @@ package org.jivesoftware.xiff.data.privatedata
 		private var _extension:XMLNode;
 		private var _payload:IPrivatePayload;
 		
-		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null, payload:IPrivatePayload = null):void {
+		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null, payload:IPrivatePayload = null) {
 			this._extension = new XMLNode(1, privateName);
 			this._extension.attributes["xmlns"] = privateNamespace;
 			this._payload = payload;

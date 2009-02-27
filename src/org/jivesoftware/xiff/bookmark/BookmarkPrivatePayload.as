@@ -12,7 +12,7 @@ package org.jivesoftware.xiff.bookmark
 		private var _urlBookmarks:Array = new Array();
 		private var _others:Array = new Array();
 		
-		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null):void {
+		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null) {
 			if(groupChatBookmarks) {
 				for each(var bookmark:GroupChatBookmark in groupChatBookmarks) {
 					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean { return testGroupChatBookmark.jid != bookmark.jid; }))

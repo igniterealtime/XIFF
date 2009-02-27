@@ -6,7 +6,7 @@ package org.jivesoftware.xiff.events
 	{
 		public static var BOOKMARK_RETRIEVED:String = "bookmark retrieved";
 		
-		public function BookmarkRetrievedEvent():void {
+		public function BookmarkRetrievedEvent() {
 			super(BOOKMARK_RETRIEVED);
 		}
 	}
