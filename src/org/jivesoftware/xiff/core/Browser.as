@@ -1,26 +1,23 @@
 ﻿/*
- * Copyright (C) 2003-2007 
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
+ * Copyright 2003-2009
  * Sean Voisen <sean@voisen.org>
  * Sean Treadway <seant@oncotype.dk>
+ * Nick Velloff <nick.velloff@gmail.com>
+ * Derrick Grigg <dgrigg@rogers.com>
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
  *
+ *   http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
  */
- 
+
 package org.jivesoftware.xiff.core
 {	
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
@@ -30,8 +27,9 @@ package org.jivesoftware.xiff.core
 	import org.jivesoftware.xiff.data.disco.ItemDiscoExtension;
 	
 	/**
-	 * Provides a means of querying for available services on an XMPP server using
-	 * the Disco protocol extension. For more information on Disco, take a look at
+	 * This class provides a means of querying for available services on an XMPP
+   * server using the Disco protocol extension. For more information on Disco,
+   * take a look at
 	 * <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030</a> and 
 	 * <a href="http://www.jabber.org/jeps/jep-0011.html">JEP-0011</a> for the
 	 * protocol enhancement specifications.
@@ -45,6 +43,8 @@ package org.jivesoftware.xiff.core
 		private static var _isEventEnabled:Boolean = BrowserStaticConstructor();
 	
 		/**
+     * Creates a new Browser object.
+     *
 		 * @param conn A reference to the <code>XMPPConnection</code> instance
 		 * to use.
 		 */
@@ -54,6 +54,12 @@ package org.jivesoftware.xiff.core
 			_pending = new Object();
 		}
 	
+    /**
+     * @private
+     *
+     * Actionscript does not provide static constructors, but this is a 
+     * way to get aroudn that.
+     */
 		private static function BrowserStaticConstructor():Boolean
 		{
 			ItemDiscoExtension.enable();
@@ -140,12 +146,15 @@ package org.jivesoftware.xiff.core
 		}
 	
 		/**
-		 * The instance of the XMPPConnection class to use for sending and receiving data.
+		 * The instance of the XMPPConnection class to use for sending and 
+     * receiving data.
 		 */
 		public function get connection():XMPPConnection { return _connection; }
 		
 		/**
 		 * @private
+     *
+     * Read-only.
 		 */
 		public function set connection(val:XMPPConnection):void { _connection=val; }
 	}

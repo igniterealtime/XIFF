@@ -98,6 +98,7 @@
   <component class="org.jivesoftware.xiff.filter.CallbackPacketFilter" />
   <component class="org.jivesoftware.xiff.filter.IPacketFilter" />
   <component class="org.jivesoftware.xiff.im.Roster" />
+  <component class="org.jivesoftware.xiff.logging.TextAreaTarget" />
   <component class="org.jivesoftware.xiff.logging.LoggerFactory" />
   <component class="org.jivesoftware.xiff.privatedata.IPrivatePayload" />
   <component class="org.jivesoftware.xiff.privatedata.PrivateDataManager" />

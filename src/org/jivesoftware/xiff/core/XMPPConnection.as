@@ -223,7 +223,7 @@ package org.jivesoftware.xiff.core
 		protected static var saslMechanisms:Object = {
 			"PLAIN":Plain,
 			"ANONYMOUS":Anonymous,
-            "EXTERNAL":External
+      "EXTERNAL":External
 		};
 		
 		public function XMPPConnection()
