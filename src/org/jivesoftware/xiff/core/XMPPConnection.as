@@ -477,6 +477,8 @@ package org.jivesoftware.xiff.core
 				var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
 				event.fields = fields;
 				event.data = ext;
+				
+				dispatchEvent(event);
 			}
 			catch (e:Error)
 			 {
