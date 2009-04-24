@@ -153,7 +153,7 @@ package org.jivesoftware.xiff.im
 		 *
 		 * @param id The JID of the contact to add
 		 * @param displayName A friendly name for use when displaying this contact in the roster
-		 * @param group (Optional) The name of the group that this contact should be added to. (Used for
+		 * @param groupName (Optional) The name of the group that this contact should be added to. (Used for
 		 * organization in the roster listing.
 		 * @param requestSubscription (Optional) Determines whether a subscription request should be sent
 		 * to this user. Most of the time you will want this parameter to be true.
@@ -163,7 +163,7 @@ package org.jivesoftware.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:UnescapedJID, displayName:String, groupName:String, requestSubscription:Boolean=true ):void
+		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean=true ):void
 		{
 			if( displayName == null )
 				displayName = id.toString();
@@ -183,7 +183,7 @@ package org.jivesoftware.xiff.im
 				
 			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-			ext.addItem( id.escaped, null, displayName, [groupName] );
+			ext.addItem( id.escaped, null, displayName, groupName ? [groupName] : null );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 	
