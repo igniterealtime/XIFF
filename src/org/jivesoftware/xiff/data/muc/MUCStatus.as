@@ -33,7 +33,10 @@ package org.jivesoftware.xiff.data.muc
 		 */
 		public function get message():String
 		{
-			return node.firstChild.nodeValue;
+			if(node.firstChild)
+				return node.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function set message(val:String):void

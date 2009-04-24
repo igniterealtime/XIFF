@@ -266,7 +266,15 @@
 	     *
 		 * @availability Flash Player 7
 	     */
-	    public function get instructions():String { return myInstructionsNode.firstChild.nodeValue; }
+	    public function get instructions():String 
+	    {
+	    	if(myInstructionsNode && myInstructionsNode.firstChild)
+	    		return myInstructionsNode.firstChild.nodeValue;
+	    	
+	    	return null;
+	    }
+	    
+	    
 	    public function set instructions(val:String) :void
 	    { 
 	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
@@ -277,7 +285,15 @@
 	     *
 		 * @availability Flash Player 7
 	     */
-	    public function get title():String { return myTitleNode.firstChild.nodeValue; }
+	    public function get title():String
+	    {
+	    	if(myTitleNode && myTitleNode.firstChild)
+	    		return myTitleNode.firstChild.nodeValue;
+	    	
+	    	return null;
+	    }
+	    
+	    
 	    public function set title(val:String) :void
 	    { 
 	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", val);

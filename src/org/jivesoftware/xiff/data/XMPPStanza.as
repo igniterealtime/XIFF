@@ -269,10 +269,10 @@
 				//return myErrorConditionNode.nextSibling.firstChild.nodeValue;  // fix recommended by bram 7/12/05
 				return errorCondition.toString();
 			}
-			else {
+			else if(myErrorNode && myErrorNode.firstChild) {
 				return myErrorNode.firstChild.nodeValue;
 			}
-			
+			return null;
 		}
 		
 		public function set errorMessage( theMsg:String ):void

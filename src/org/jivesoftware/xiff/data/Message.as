@@ -203,7 +203,7 @@ package org.jivesoftware.xiff.data
 		 */
 		public function get subject():String
 		{
-			if (mySubjectNode == null) return null;
+			if (mySubjectNode == null || mySubjectNode.firstChild == null) return null;
 			return mySubjectNode.firstChild.nodeValue;
 		}
 		
@@ -222,7 +222,7 @@ package org.jivesoftware.xiff.data
 		 */
 		public function get thread():String
 		{
-			if (myThreadNode == null) return null;
+			if (myThreadNode == null || myThreadNode.firstChild == null) return null;
 			return myThreadNode.firstChild.nodeValue;
 		}
 		

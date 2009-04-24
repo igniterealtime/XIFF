@@ -22,11 +22,12 @@
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.IExtension;
+	import flash.xml.XMLNode;
+	
 	import org.jivesoftware.xiff.data.Extension;
 	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import flash.xml.XMLNode;
+	import org.jivesoftware.xiff.data.IExtension;
+	import org.jivesoftware.xiff.data.ISerializable;
 		
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
@@ -141,7 +142,10 @@
 	
 		public function get key():String 
 		{ 
-			return myKeyNode.firstChild.nodeValue; 
+			if(myKeyNode && myKeyNode.firstChild)
+				return myKeyNode.firstChild.nodeValue;
+			
+			return null; 
 		}
 	
 		public function set key(val:String):void
@@ -150,8 +154,11 @@
 		}
 	
 		public function get instructions():String 
-		{ 
-			return myInstructionsNode.firstChild.nodeValue; 
+		{
+			if(myInstructionsNode && myInstructionsNode.firstChild)
+				return myInstructionsNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function set instructions(val:String):void
@@ -161,7 +168,11 @@
 	
 		public function getField(name:String):String
 		{
-			return myFields[name].firstChild.nodeValue;
+			var node:XMLNode = myFields[name];
+			if(node && node.firstChild)
+				return node.firstChild.nodeValue;
+				
+			return null;
 		}
 	
 		public function setField(name:String, val:String):void

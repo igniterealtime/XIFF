@@ -107,7 +107,10 @@
 		 */
 		public function get password():String
 		{
-			return myPasswordNode.firstChild.nodeValue;
+			if(myPasswordNode && myPasswordNode.firstChild)
+				return myPasswordNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function set password(val:String):void

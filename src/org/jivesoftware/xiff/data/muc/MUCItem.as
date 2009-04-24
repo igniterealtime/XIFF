@@ -98,7 +98,10 @@
 	
 		public function get reason():String
 		{
-			return myReasonNode.firstChild.nodeValue;
+			if(myReasonNode && myReasonNode.firstChild)
+				return myReasonNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function set reason(val:String):void

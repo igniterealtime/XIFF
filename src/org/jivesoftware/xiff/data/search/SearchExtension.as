@@ -119,8 +119,11 @@ package org.jivesoftware.xiff.data.search{
 		}
 	
 		public function get instructions():String 
-		{ 
-			return myInstructionsNode.firstChild.nodeValue; 
+		{
+			if(myInstructionsNode && myInstructionsNode.firstChild)
+				return myInstructionsNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function set instructions(val:String):void
@@ -130,7 +133,11 @@ package org.jivesoftware.xiff.data.search{
 	
 		public function getField(name:String):String
 		{
-			return myFields[name].firstChild.nodeValue;
+			var node:XMLNode = myFields[name];
+			if(node && node.firstChild)
+				return node.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		public function setField(name:String, val:String):void

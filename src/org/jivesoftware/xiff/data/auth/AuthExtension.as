@@ -154,8 +154,11 @@ package org.jivesoftware.xiff.data.auth
 		 * The username to use for authentication.
 		 */
 		public function get username():String 
-		{ 
-			return myUsernameNode.firstChild.nodeValue; 
+		{
+			if(myUsernameNode && myUsernameNode.firstChild)
+				return myUsernameNode.firstChild.nodeValue;
+			
+			return null; 
 		}
 	
 		/**
@@ -170,8 +173,11 @@ package org.jivesoftware.xiff.data.auth
 		 * The password to use for authentication.
 		 */
 		public function get password():String 
-		{ 
-			return myPasswordNode.firstChild.nodeValue;
+		{
+			if(myPasswordNode && myPasswordNode.firstChild)
+				return myPasswordNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		/**
@@ -192,8 +198,11 @@ package org.jivesoftware.xiff.data.auth
 		 * The SHA1 digest to use for authentication.
 		 */
 		public function get digest():String 
-		{ 
-			return myDigestNode.firstChild.nodeValue;
+		{
+			if(myDigestNode && myDigestNode.firstChild)
+				return myDigestNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		/**
@@ -214,9 +223,12 @@ package org.jivesoftware.xiff.data.auth
 		 *
 		 * @see org.jivesoftware.xiff.core.XMPPConnection#resource
 		 */
-		public function get resource():String 
-		{ 
-			return myResourceNode.firstChild.nodeValue 
+		public function get resource():String
+		{
+			if(myResourceNode && myResourceNode.firstChild)
+				return myResourceNode.firstChild.nodeValue;
+			
+			return null;
 		}
 	
 		/**
