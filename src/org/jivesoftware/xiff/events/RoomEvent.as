@@ -24,8 +24,6 @@
 package org.jivesoftware.xiff.events
 {
 	import flash.events.Event;
-	
-	import org.jivesoftware.xiff.data.Message;
 
 	public class RoomEvent extends Event
 	{
@@ -136,5 +134,21 @@ package org.jivesoftware.xiff.events
 		{
 			return _reason;
 		}
+		
+		public override function clone():Event
+		{
+			var event:RoomEvent = new RoomEvent(this.type, this.bubbles, this.cancelable);
+			event._subject = this._subject;
+			event._data = this._data;
+			event._errorCondition = this._errorCondition;
+			event._errorMessage = this._errorMessage;
+			event._errorType = this._errorType;
+			event._errorCode = this._errorCode;
+			event._nickname = this._nickname;
+			event._from = this._from;
+			event._reason = this._reason;
+			
+			return event;
+		} 
 	}
 }
