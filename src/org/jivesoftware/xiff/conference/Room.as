@@ -856,7 +856,7 @@ package org.jivesoftware.xiff.conference
 	     *
 	     * You must be joined and have owner affiliation to configure the room
 	     *
-	     * @param fieldmap A hash that is an object with keys being the room configuration
+	     * @param fieldmap FormExtension, or a hash that is an object with keys being the room configuration
 	     * form variables and the values being arrays. For single value fields, use a single 
 	     * element array.
 	     * @see #configureForm
