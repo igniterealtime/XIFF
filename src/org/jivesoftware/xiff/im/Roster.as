@@ -449,7 +449,8 @@ package org.jivesoftware.xiff.im
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
 						for each(var item:* in ext.getAllItems())
 						{
-							var rosterItemVO:RosterItemVO = RosterItemVO.get(new UnescapedJID(item.jid), true);
+							var jid:UnescapedJID = new UnescapedJID(item.jid);
+							var rosterItemVO:RosterItemVO = RosterItemVO.get(jid, true);
 							var ev: RosterEvent;
 							
 							if (contains(rosterItemVO))
@@ -458,7 +459,7 @@ package org.jivesoftware.xiff.im
 								{
 									case RosterExtension.SUBSCRIBE_TYPE_NONE:
 										ev = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
-										ev.jid = item.jid;
+										ev.jid = jid;
 										dispatchEvent( ev );
 										break;
 									
@@ -470,7 +471,7 @@ package org.jivesoftware.xiff.im
 										}
 										//should be impossible for getItemIndex to return -1, since we just looked it up
 										ev.data = removeItemAt(getItemIndex(rosterItemVO));
-										ev.jid = item.jid;
+										ev.jid = jid;
 										dispatchEvent(ev);
 										break;
 														
@@ -486,12 +487,12 @@ package org.jivesoftware.xiff.im
 								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
 								{
 									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-									addRosterItem( item.jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}
 								else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) 
 								{
 									// A contact was added to the roster, and its authorization is still pending.
-									addRosterItem( item.jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}
 							}
 						}
@@ -538,12 +539,17 @@ package org.jivesoftware.xiff.im
 					// null means available
 					default:
 						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-						availEv.jid = aPresence.from.unescaped;
+						// from can sometimes not be set
+						if(aPresence.from)
+							availEv.jid = aPresence.from.unescaped;
 						availEv.data = aPresence;
 						dispatchEvent(availEv);
 						
 						// Change the item on the roster
-						var availableItem:RosterItemVO = RosterItemVO.get(aPresence.from.unescaped, false);
+						var availableItem:RosterItemVO;
+						if(aPresence.from)
+							availableItem = RosterItemVO.get(aPresence.from.unescaped, false);
+						
 						if(!availableItem) return;
 						updateRosterItemPresence( availableItem, aPresence );
 						

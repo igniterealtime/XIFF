@@ -182,7 +182,8 @@
 		 */
 		public function get from():EscapedJID
 		{
-			return new EscapedJID(getNode().attributes.from);
+			var jid:String = getNode().attributes.from;
+			return jid ? new EscapedJID(jid) : null;
 		}
 		
 		public function set from( sender:EscapedJID ):void
