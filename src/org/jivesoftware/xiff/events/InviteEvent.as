@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 
+ * Copyright (C) 2003-2007
  * Nick Velloff <nick.velloff@gmail.com>
  * Derrick Grigg <dgrigg@rogers.com>
  * Sean Voisen <sean@voisen.org>
@@ -9,18 +9,18 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-	 
+	
 package org.jivesoftware.xiff.events
 {
 	import flash.events.Event;
@@ -36,9 +36,23 @@ package org.jivesoftware.xiff.events
 		private var _reason:String;
 		private var _room:Room;
 		private var _data:Message;
+		
 		public function InviteEvent()
 		{
 			super(INVITED);
+		}
+		override public function clone():Event
+		{
+			var event:InviteEvent = new InviteEvent();
+			event.from = _from;
+			event.reason = _reason;
+			event.room = _room;
+			event.data = _data;
+			return event;
+		}
+		override public function toString():String
+		{
+			return '[InviteEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' + cancelable + ' eventPhase=' + eventPhase + ']';
 		}
 		public function get from():UnescapedJID
 		{
@@ -73,15 +87,5 @@ package org.jivesoftware.xiff.events
 			_data = d;
 		}
 		
-		public override function clone():Event
-		{
-			var e:InviteEvent = new InviteEvent();
-			e.from = this.from;
-			e.reason = this.reason;
-			e.room = this.room;
-			e.data = this.data;
-			
-			return e;
-		} 
 	}
 }

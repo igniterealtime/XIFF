@@ -9,5 +9,13 @@ package org.jivesoftware.xiff.events
 		public function BookmarkRetrievedEvent() {
 			super(BOOKMARK_RETRIEVED);
 		}
+		override public function clone():Event
+		{
+			return new BookmarkRetrievedEvent();
+		}
+		override public function toString():String
+		{
+			return '[BookmarkRetrievedEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' + cancelable + ' eventPhase=' + eventPhase + ']';
+		}
 	}
 }
