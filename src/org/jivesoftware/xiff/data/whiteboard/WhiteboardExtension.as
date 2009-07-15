@@ -56,7 +56,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 		public function WhiteboardExtension( parent:XMLNode=null )
 		{
 			super( parent );
-	        myPaths = new Array();
+	        myPaths = [];
 		}
 	
 		/**
@@ -125,7 +125,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 		public function deserialize( node:XMLNode ):Boolean
 		{
 			setNode( node );
-	        myPaths = new Array();
+	        myPaths = [];
 			
 	        for (var i:int=0; i < node.childNodes.length; i++) {
 	            var child:XMLNode = node.childNodes[i];

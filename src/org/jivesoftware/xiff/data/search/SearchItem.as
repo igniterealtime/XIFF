@@ -23,7 +23,7 @@ package org.jivesoftware.xiff.data.search{
 		public function SearchItem(parent:XMLNode=null)
 		{
 			super();
-			myFields = new Object();
+			myFields = {};
 	
 			getNode().nodeName = ELEMENT;
 	

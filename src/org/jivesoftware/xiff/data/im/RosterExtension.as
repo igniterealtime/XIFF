@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.im{
+package org.jivesoftware.xiff.data.im{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -218,7 +218,7 @@
 				myItems[i].setNode( null );
 			}
 			
-			myItems = new Array();
+			myItems = [];
 		}
 	}
 }

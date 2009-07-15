@@ -24,9 +24,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	import org.jivesoftware.xiff.data.ISerializable;
 	import org.jivesoftware.xiff.data.XMLStanza;
 	
-	import org.jivesoftware.xiff.data.whiteboard.WhiteboardExtension;
-	import org.jivesoftware.xiff.data.whiteboard.Stroke;
-	import org.jivesoftware.xiff.data.whiteboard.Fill;
+	import org.jivesoftware.xiff.data.whiteboard.*;
 	import flash.xml.XMLNode;
 	 
 	/**
@@ -53,7 +51,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 		public function Path( parent:XMLNode=null )
 		{
 			//super( parent );
-	        mySegments = new Array();
+	        mySegments = [];
 			myStroke = new Stroke();
 			myFill = new Fill();
 		}
@@ -89,7 +87,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	
 			// Divide and conquer, using commands as delims, joining
 			// the results in prefix order
-	        mySegments = new Array();
+	        mySegments = [];
 	        _lastLocation = new Object;
 			loadNextCommand(p);
 	

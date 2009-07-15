@@ -9,8 +9,8 @@ package org.jivesoftware.xiff.bookmark
 	public class BookmarkPrivatePayload implements IPrivatePayload {
 		
 		private var _groupChatBookmarks:Array = [];
-		private var _urlBookmarks:Array = new Array();
-		private var _others:Array = new Array();
+		private var _urlBookmarks:Array = [];
+		private var _others:Array = [];
 		
 		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null) {
 			if(groupChatBookmarks) {

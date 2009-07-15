@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.rpc{
+package org.jivesoftware.xiff.data.rpc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>

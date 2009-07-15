@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2003-2007 
  * Nick Velloff <nick.velloff@gmail.com>
  * Derrick Grigg <dgrigg@rogers.com>
@@ -117,7 +117,7 @@ package org.jivesoftware.xiff.im
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:UnescapedJID;
 		//FIXME: maps should not be arrays
-		private var _presenceMap:Array = new Array();
+		private var _presenceMap:Array = [];
 		
 		[Bindable]
 		public var groups:ArrayCollection = new ArrayCollection();

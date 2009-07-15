@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.register{
+package org.jivesoftware.xiff.data.register{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -58,7 +58,7 @@
 		public function RegisterExtension( parent:XMLNode=null )
 		{
 			super(parent);
-			myFields = new Object();
+			myFields = {};
 		}
 	
 		public function getNS():String
@@ -130,7 +130,7 @@
 	
 		public function getRequiredFieldNames():Array
 		{
-			var fields:Array = new Array();
+			var fields:Array = [];
 	
 			for (var i:String in myFields) {
 				fields.push(i);

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2003-2007 
  * Sean Voisen <sean@voisen.org>
  * Sean Treadway <seant@oncotype.dk>
@@ -50,7 +50,7 @@ package org.jivesoftware.xiff.data.browse
 			getNode().attributes.xmlns = getNS();
 			getNode().nodeName = getElementName();
 	
-			myItems = new Array();
+			myItems = [];
 		}
 	
 		/**

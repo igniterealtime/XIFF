@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.rpc{
+package org.jivesoftware.xiff.data.rpc{
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
@@ -57,7 +57,7 @@
 				result = extractValue(response.firstChild.firstChild.firstChild);
 				result.isFault = true;
 			} else {
-				result = new Array();
+				result = [];
 				var params:XMLNode = findNode("params", response);
 				if (params != null) {
 					for (var param_idx:int=0; param_idx < params.childNodes.length; param_idx++) {
@@ -106,7 +106,7 @@
 					break;
 	
 				case "array":
-					var value_array:Array = new Array();
+					var value_array:Array = [];
 					var next_value:*;
 					for (var data_idx:int=0; data_idx < value.firstChild.childNodes.length; data_idx++) {
 						next_value = value.firstChild.childNodes[data_idx];
@@ -116,7 +116,7 @@
 					break;
 	
 				case "struct":
-					var value_object:Object = new Object();
+					var value_object:Object = {};
 					for (var member_idx:int=0; member_idx < value.childNodes.length; member_idx++) {
 						var member:Array = value.childNodes[member_idx];
 						var m_name:String = member.childNodes[0].firstChild.nodeValue;

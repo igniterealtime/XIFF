@@ -64,7 +64,7 @@ package org.jivesoftware.xiff.vcard
 			if(!cacheFlushTimer.running)
 			{
 				cacheFlushTimer.start();
-				cacheFlushTimer.addEventListener(TimerEvent.TIMER, function(evt:TimerEvent):void {
+				cacheFlushTimer.addEventListener(TimerEvent.TIMER, function(event:TimerEvent):void {
 					var tempCache:Object = cache;
 					cache = {};
 					for each(var cachedCard:VCard in tempCache)
@@ -101,7 +101,7 @@ package org.jivesoftware.xiff.vcard
 			requestTimer.start();
 		}
 		
-		private static function sendRequest(evt:TimerEvent):void
+		private static function sendRequest(event:TimerEvent):void
 		{
 			if(requestQueue.length == 0)
 				return;

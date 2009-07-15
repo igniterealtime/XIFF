@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2003-2009
  * Sean Voisen <sean@voisen.org>
  * Sean Treadway <seant@oncotype.dk>
@@ -51,7 +51,7 @@ package org.jivesoftware.xiff.core
 		public function Browser( conn:XMPPConnection )
 		{
 			connection = conn;
-			_pending = new Object();
+			_pending = {};
 		}
 	
     /**

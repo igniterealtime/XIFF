@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.xhtml{
+package org.jivesoftware.xiff.data.xhtml{
 	
 	/*
 	 * Copyright (C) 2003-2007 

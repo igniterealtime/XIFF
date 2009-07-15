@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.forms{
+package org.jivesoftware.xiff.data.forms{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -81,8 +81,8 @@
 		{
 			setNode( node );
 	
-	        myValueNodes = new Array();
-	        myOptionNodes = new Array();
+	        myValueNodes = [];
+	        myOptionNodes = [];
 	
 			var children:Array = node.childNodes;
 			for( var i:String in children ) {
@@ -188,7 +188,7 @@
 	    public function set value(val:String) :void
 	    {
 	    	if (myValueNodes == null)
-	    		myValueNodes = new Array();
+	    		myValueNodes = [];
 
 	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", val);
 	    }

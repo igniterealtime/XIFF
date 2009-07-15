@@ -1,4 +1,4 @@
-﻿
+
 package org.jivesoftware.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
@@ -40,13 +40,13 @@ package org.jivesoftware.xiff.data{
 		public var _exts:Object;
 		
 		public function ExtensionContainer(){
-			_exts = new Object();
+			_exts = {};
 		}
 	
 		public function addExtension( ext:IExtension ):IExtension
 		{
 			if (_exts[ext.getNS()] == null){
-				_exts[ext.getNS()] = new Array();
+				_exts[ext.getNS()] = [];
 			}
 			_exts[ext.getNS()].push(ext);
 			return ext;
@@ -71,7 +71,7 @@ package org.jivesoftware.xiff.data{
 			for (var i:String in _exts[ns]) {
 				_exts[ns][i].ns();
 			}
-			_exts[ns] = new Array();
+			_exts[ns] = [];
 		}
 	
 		public function getAllExtensionsByNS( ns:String ):Array
@@ -86,7 +86,7 @@ package org.jivesoftware.xiff.data{
 	
 		public function getAllExtensions():Array
 		{
-			var exts:Array = new Array();
+			var exts:Array = [];
 			for (var ns:String in _exts) {
 			//for (var ns in this[_exts]) {
 				exts = exts.concat(_exts[ns]);

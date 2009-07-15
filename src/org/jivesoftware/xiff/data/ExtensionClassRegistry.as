@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data{
+package org.jivesoftware.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -36,7 +36,7 @@
 	 */
 	public class ExtensionClassRegistry
 	{
-		private static var myClasses:Array = new Array();
+		private static var myClasses:Array = [];
 		
 		public static function register( extensionClass:Class ):Boolean
 		{

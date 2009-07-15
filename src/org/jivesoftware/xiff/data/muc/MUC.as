@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.muc{
+package org.jivesoftware.xiff.data.muc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>

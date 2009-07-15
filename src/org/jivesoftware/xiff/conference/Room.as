@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2003-2007
  * Nick Velloff <nick.velloff@gmail.com>
  * Derrick Grigg <dgrigg@rogers.com>

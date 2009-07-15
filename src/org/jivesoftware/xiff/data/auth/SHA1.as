@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2003-2007 
  * Sean Voisen <sean@voisen.org>
  * Sean Treadway <seant@oncotype.dk>

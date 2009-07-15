@@ -36,7 +36,7 @@ package org.jivesoftware.xiff.data.search{
 		public function SearchExtension( parent:XMLNode=null )
 		{
 			super(parent);
-			myFields = new Object();
+			myFields = {};
 		}
 	
 		public function getNS():String
@@ -104,7 +104,7 @@ package org.jivesoftware.xiff.data.search{
 	
 		public function getRequiredFieldNames():Array
 		{
-			var fields:Array = new Array();
+			var fields:Array = [];
 	
 			for (var i:String in myFields) {
 				fields.push(i);

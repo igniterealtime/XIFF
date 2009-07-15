@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.forms{
+package org.jivesoftware.xiff.data.forms{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -74,9 +74,9 @@
 		public function FormExtension( parent:XMLNode=null )
 		{
 			super(parent);
-			myItems = new Array();
-			myFields = new Array();
-			myReportedFields = new Array();
+			myItems = [];
+			myFields = [];
+			myReportedFields = [];
 		}
 	
 		public function getNS():String

@@ -1,4 +1,4 @@
-﻿package org.jivesoftware.xiff.data.im{
+package org.jivesoftware.xiff.data.im{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -55,7 +55,7 @@
 			super();
 			
 			getNode().nodeName = ELEMENT;
-			myGroupNodes = new Array();
+			myGroupNodes = [];
 			
 			if( exists( parent ) ) {
 				parent.appendChild( getNode() );
@@ -129,7 +129,7 @@
 		 */
 		public function get groupNames():Array
 		{
-			var returnArr:Array = new Array();
+			var returnArr:Array = [];
 
 			for( var i:String in myGroupNodes ) {
 				var node:XMLNode = myGroupNodes[i].firstChild;
@@ -153,7 +153,7 @@
 				myGroupNodes[i].removeNode();
 			}
 			
-			myGroupNodes = new Array();
+			myGroupNodes = [];
 		}
 		
 		public function removeGroupByName( groupName:String ):Boolean
