@@ -24,14 +24,14 @@ package org.jivesoftware.xiff.data.search{
 	public class SearchExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:search";
-		public static var ELEMENT:String = "query";
+		static public var NS:String = "jabber:iq:search";
+		static public var ELEMENT:String = "query";
 	
 		private var myFields:Object;
 		private var myInstructionsNode:XMLNode;
 		private var myItems:Array = [];
 	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+	    static private var staticDepends:Class = ExtensionClassRegistry;
 	
 		public function SearchExtension( parent:XMLNode=null )
 		{
@@ -54,7 +54,7 @@ package org.jivesoftware.xiff.data.search{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(SearchExtension);
 	    }

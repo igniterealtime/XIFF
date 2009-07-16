@@ -36,9 +36,9 @@ package org.jivesoftware.xiff.data{
 	 */
 	public class ExtensionClassRegistry
 	{
-		private static var myClasses:Array = [];
+		static private var myClasses:Array = [];
 		
-		public static function register( extensionClass:Class ):Boolean
+		static public function register( extensionClass:Class ):Boolean
 		{
 			//trace ("ExtensionClassRegistry.register(" + extensionClass + ")");
 			
@@ -52,7 +52,7 @@ package org.jivesoftware.xiff.data{
 			return false;
 		}
 		
-		public static function lookup( ns:String ):Class
+		static public function lookup( ns:String ):Class
 		{
 			return myClasses[ns];
 		}

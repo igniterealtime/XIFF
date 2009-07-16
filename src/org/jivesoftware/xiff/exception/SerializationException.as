@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.exception
 	 */
 	public class SerializationException extends Error
 	{
-		private static var MSG:String = "Could not properly serialize/deserialize stanza."
+		static private var MSG:String = "Could not properly serialize/deserialize stanza."
 		
 		public function SerializationException()
 		{

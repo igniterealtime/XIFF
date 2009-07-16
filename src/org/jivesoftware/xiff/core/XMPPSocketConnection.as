@@ -46,7 +46,7 @@ package org.jivesoftware.xiff.core
 	 */
 	public class XMPPSocketConnection extends XMPPConnection
 	{
-		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPSocketConnection");
+		static private const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPSocketConnection");
 		
 		private var _incompleteRawXML: String = '';
 		

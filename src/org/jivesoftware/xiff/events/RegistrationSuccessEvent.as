@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.events
 
 	public class RegistrationSuccessEvent extends Event
 	{
-		public static var REGISTRATION_SUCCESS:String = "registrationSuccess";
+		static public var REGISTRATION_SUCCESS:String = "registrationSuccess";
 		
 		public function RegistrationSuccessEvent()
 		{

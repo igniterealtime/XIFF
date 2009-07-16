@@ -31,9 +31,9 @@ package org.jivesoftware.xiff.data.id
 	public class IncrementalGenerator implements IIDGenerator
 	{
 		private var myCounter:Number;
-		private static var instance:IIDGenerator;
+		static private var instance:IIDGenerator;
 		
-		public static function getInstance():IIDGenerator
+		static public function getInstance():IIDGenerator
 		{
 			if(instance == null)
 			{

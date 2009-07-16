@@ -46,10 +46,10 @@ package org.jivesoftware.xiff.data.whiteboard{
 	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "xiff:wb";
-		public static var ELEMENT:String = "x";
+		static public var NS:String = "xiff:wb";
+		static public var ELEMENT:String = "x";
 	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+	    static private var staticDepends:Class = ExtensionClassRegistry;
 	
 	    private var myPaths:Array;
 		
@@ -110,7 +110,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(WhiteboardExtension);
 	    }

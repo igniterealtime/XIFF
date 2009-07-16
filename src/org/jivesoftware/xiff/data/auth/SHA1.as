@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.data.auth
 	 */
 	public class SHA1
 	{
-		private static var hex_chr:String = "0123456789abcdef";
+		static private var hex_chr:String = "0123456789abcdef";
 		
 		/**
 		 * Takes a string and returns the hex representation of its SHA1 hash.
@@ -35,7 +35,7 @@ package org.jivesoftware.xiff.data.auth
 		 * @param str The string to use for calculating the hash
 		 * @return The SHA1 hash of the string passed to the function
 		 */
-		public static function calcSHA1(str:String):String
+		static public function calcSHA1(str:String):String
 		{
 			var x:Array = SHA1.str2blks(str);
 			var w:Array = new Array(80);
@@ -77,7 +77,7 @@ package org.jivesoftware.xiff.data.auth
 			return SHA1.hex(a) + SHA1.hex(b) + SHA1.hex(c) + SHA1.hex(d) + SHA1.hex(e);
 		}
 		
-		private static function hex(num:Number):String
+		static private function hex(num:Number):String
 		{
 			var str:String = "";
 			for (var j:Number = 7; j >= 0; j--)
@@ -91,7 +91,7 @@ package org.jivesoftware.xiff.data.auth
 		 * Convert a string to a sequence of 16-word blocks, stored as an array.
 		 * Append padding bits and the length, as described in the SHA1 standard.
 		 */
-		private static function str2blks(str:String):Array
+		static private function str2blks(str:String):Array
 		{
 			var nblk:Number = ((str.length + 8) >> 6) + 1;
 			var blks:Array = new Array(nblk * 16);
@@ -112,7 +112,7 @@ package org.jivesoftware.xiff.data.auth
 		 * Add integers, wrapping at 2^32. This uses 16-bit operations internally
 		 * to work around bugs in some JS interpreters.
 		 */
-		private static function safe_add(x:Number, y:Number):Number
+		static private function safe_add(x:Number, y:Number):Number
 		{
 			var lsw:Number = (x & 0xFFFF) + (y & 0xFFFF);
 			var msw:Number = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -122,7 +122,7 @@ package org.jivesoftware.xiff.data.auth
 		/*
 		 * Bitwise rotate a 32-bit number to the left
 		 */
-		private static function rol(num:Number, cnt:Number):Number
+		static private function rol(num:Number, cnt:Number):Number
 		{
 			return (num << cnt) | (num >>> (32 - cnt));
 		}
@@ -131,7 +131,7 @@ package org.jivesoftware.xiff.data.auth
 		 * Perform the appropriate triplet combination function for the current
 		 * iteration
 		 */
-		private static function ft(t:Number, b:Number, c:Number, d:Number):Number
+		static private function ft(t:Number, b:Number, c:Number, d:Number):Number
 		{
 			if (t < 20)
 			{
@@ -151,7 +151,7 @@ package org.jivesoftware.xiff.data.auth
 		/*
 		 * Determine the appropriate additive constant for the current iteration
 		 */
-		private static function kt(t:Number):Number
+		static private function kt(t:Number):Number
 		{
 			return (t < 20) ? 1518500249 : (t < 40) ? 1859775393 : (t < 60) ? -1894007588 : -899497514;
 		}

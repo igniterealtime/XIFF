@@ -40,7 +40,7 @@ package org.jivesoftware.xiff.data.muc{
 	 */
 	public class MUCItem extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "item";
+		static public var ELEMENT:String = "item";
 	
 		private var myActorNode:XMLNode;
 		private var myReasonNode:XMLNode;

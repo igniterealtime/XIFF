@@ -47,10 +47,10 @@ package org.jivesoftware.xiff.data
 		private var myQueryFields:Array;
 		
 		// Static variables for specific type strings
-		public static var SET_TYPE:String = "set";
-		public static var GET_TYPE:String = "get";
-		public static var RESULT_TYPE:String = "result";
-		public static var ERROR_TYPE:String = "error";
+		static public var SET_TYPE:String = "set";
+		static public var GET_TYPE:String = "get";
+		static public var RESULT_TYPE:String = "result";
+		static public var ERROR_TYPE:String = "error";
 	
 		public function IQ( recipient:EscapedJID=null, iqType:String=null, iqID:String=null, iqCallback:String=null, iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
 		{

@@ -38,8 +38,8 @@ package org.jivesoftware.xiff.data.auth
 	public class AuthExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:auth";
-		public static var ELEMENT:String = "query";
+		static public var NS:String = "jabber:iq:auth";
+		static public var ELEMENT:String = "query";
 	
 		private var myUsernameNode:XMLNode;
 		private var myPasswordNode:XMLNode;
@@ -76,7 +76,7 @@ package org.jivesoftware.xiff.data.auth
 	    /**
 	     * Registers this extension with the extension registry.  
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(AuthExtension);
 	    }
@@ -124,7 +124,7 @@ package org.jivesoftware.xiff.data.auth
 		 * @param sessionID The session ID provided by the server
 		 * @param password The user's password
 		 */
-		public static function computeDigest( sessionID:String, password:String ):String
+		static public function computeDigest( sessionID:String, password:String ):String
 		{
 			return SHA1.calcSHA1( sessionID + password ).toLowerCase();
 		}

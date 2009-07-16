@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.events
 
 	public class LoginEvent extends Event
 	{
-		public static var LOGIN:String = "login";
+		static public var LOGIN:String = "login";
 		
 		public function LoginEvent()
 		{

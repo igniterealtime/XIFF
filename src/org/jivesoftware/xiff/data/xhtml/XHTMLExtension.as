@@ -44,10 +44,10 @@ package org.jivesoftware.xiff.data.xhtml{
 	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://www.w3.org/1999/xhtml";
-		public static var ELEMENT:String = "html";
+		static public var NS:String = "http://www.w3.org/1999/xhtml";
+		static public var ELEMENT:String = "html";
 	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+	    static private var staticDepends:Class = ExtensionClassRegistry;
 	
 		public function XHTMLExtension(parent:XMLNode = null)
 		{
@@ -93,7 +93,7 @@ package org.jivesoftware.xiff.data.xhtml{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(XHTMLExtension);
 	    }

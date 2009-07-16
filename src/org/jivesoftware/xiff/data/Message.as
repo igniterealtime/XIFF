@@ -45,11 +45,11 @@ package org.jivesoftware.xiff.data
 	{
 		
 		// Static variables for specific type strings
-		public static var NORMAL_TYPE:String = "normal";
-		public static var CHAT_TYPE:String = "chat";
-		public static var GROUPCHAT_TYPE:String = "groupchat";
-		public static var HEADLINE_TYPE:String = "headline";
-		public static var ERROR_TYPE:String = "error";
+		static public var NORMAL_TYPE:String = "normal";
+		static public var CHAT_TYPE:String = "chat";
+		static public var GROUPCHAT_TYPE:String = "groupchat";
+		static public var HEADLINE_TYPE:String = "headline";
+		static public var ERROR_TYPE:String = "error";
 	
 		// Private references to nodes within our XML
 		private var myBodyNode:XMLNode;
@@ -57,8 +57,8 @@ package org.jivesoftware.xiff.data
 		private var myThreadNode:XMLNode;
 		private var myTimeStampNode:XMLNode;
 			
-		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
-		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
+		static private var isMessageStaticCalled:Boolean = MessageStaticConstructor();
+		static private var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
 	
 		public function Message( recipient:EscapedJID=null, msgID:String=null, msgBody:String=null, msgHTMLBody:String=null, msgType:String=null, msgSubject:String=null )
 		{
@@ -70,7 +70,7 @@ package org.jivesoftware.xiff.data
 			subject = msgSubject;
 		}
 	
-		public static function MessageStaticConstructor():Boolean
+		static public function MessageStaticConstructor():Boolean
 		{
 			XHTMLExtension.enable();
 			return true;

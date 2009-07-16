@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.events
 
 	public class XIFFErrorEvent extends Event
 	{
-		public static var XIFF_ERROR:String = "error";
+		static public var XIFF_ERROR:String = "error";
 		
 		private var _errorCondition:String;
 		private var _errorMessage:String;

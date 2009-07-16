@@ -44,19 +44,19 @@ package org.jivesoftware.xiff.data{
 	public class Presence extends XMPPStanza implements ISerializable 
 	{
 		// Static constants for specific type strings
-		public static const UNAVAILABLE_TYPE:String = "unavailable";
-		public static const PROBE_TYPE:String = "probe";
-		public static const SUBSCRIBE_TYPE:String = "subscribe";
-		public static const UNSUBSCRIBE_TYPE:String = "unsubscribe";
-		public static const SUBSCRIBED_TYPE:String = "subscribed";
-		public static const UNSUBSCRIBED_TYPE:String = "unsubscribed";
-		public static const ERROR_TYPE:String = "error";
+		static public const UNAVAILABLE_TYPE:String = "unavailable";
+		static public const PROBE_TYPE:String = "probe";
+		static public const SUBSCRIBE_TYPE:String = "subscribe";
+		static public const UNSUBSCRIBE_TYPE:String = "unsubscribe";
+		static public const SUBSCRIBED_TYPE:String = "subscribed";
+		static public const UNSUBSCRIBED_TYPE:String = "unsubscribed";
+		static public const ERROR_TYPE:String = "error";
 		
 		// Static constants for show values
-		public static const SHOW_AWAY:String = "away";
-		public static const SHOW_CHAT:String = "chat";
-		public static const SHOW_DND:String = "dnd";
-		public static const SHOW_XA:String = "xa";
+		static public const SHOW_AWAY:String = "away";
+		static public const SHOW_CHAT:String = "chat";
+		static public const SHOW_DND:String = "dnd";
+		static public const SHOW_XA:String = "xa";
 	
 		// Private node references for property lookups
 		private var myShowNode:XMLNode;

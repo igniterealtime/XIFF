@@ -36,10 +36,10 @@ package org.jivesoftware.xiff.data.browse
 	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable 
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:browse";
-		public static var ELEMENT:String = "query";
+		static public var NS:String = "jabber:iq:browse";
+		static public var ELEMENT:String = "query";
 	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+	    static private var staticDepends:Class = ExtensionClassRegistry;
 	
 		private var myItems:Array;
 	
@@ -77,7 +77,7 @@ package org.jivesoftware.xiff.data.browse
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(BrowseExtension);
 	    }

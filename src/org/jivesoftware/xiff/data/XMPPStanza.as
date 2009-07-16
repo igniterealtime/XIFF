@@ -39,15 +39,15 @@ package org.jivesoftware.xiff.data{
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
-		public static var CLIENT_NS:String = "jabber:client";
+		static public var CLIENT_NS:String = "jabber:client";
 
 	
 		private var myErrorNode:XMLNode;
 		private var myErrorConditionNode:XMLNode;
 	
-		//private static var theIDGenerator:IIDGenerator = new IncrementalGenerator();
-		private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
-		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
+		//static private var theIDGenerator:IIDGenerator = new IncrementalGenerator();
+		static private var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
+		static private var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
 		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nName:String )
 		{
@@ -60,7 +60,7 @@ package org.jivesoftware.xiff.data{
 			id = theID;
 		}
 	
-		private static function XMPPStanzaStaticConstructor():void
+		static private function XMPPStanzaStaticConstructor():void
 		{
 			//ExtensionContainer.decorate(XMPPStanza.prototype);
 		}
@@ -74,7 +74,7 @@ package org.jivesoftware.xiff.data{
 		 * @param prefix The prefix for the ID to be generated
 		 * @return The generated ID
 		 */
-		public static function generateID( prefix:String ):String
+		static public function generateID( prefix:String ):String
 		{
 			var id:String = IncrementalGenerator.getInstance().getID( prefix );
 			return id;
@@ -96,7 +96,7 @@ package org.jivesoftware.xiff.data{
 		 * class found in org.jivesoftware.xiff.data.id.IncrementalGenerator:
 		 * <pre>Message.setIDGenerator( org.jivesoftware.xiff.data.id.IncrementalGenerator );</pre>
 		 */
-		public static function setIDGenerator( generator:IIDGenerator ):void
+		static public function setIDGenerator( generator:IIDGenerator ):void
 		{
 			//XMPPStanza.theIDGenerator = generator;
 		}

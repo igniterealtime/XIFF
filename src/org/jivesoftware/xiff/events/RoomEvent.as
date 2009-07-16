@@ -27,26 +27,26 @@ package org.jivesoftware.xiff.events
 
 	public class RoomEvent extends Event
 	{
-		public static const SUBJECT_CHANGE:String = "subjectChange";
-		public static const GROUP_MESSAGE:String = "groupMessage";
-		public static const PRIVATE_MESSAGE:String = "privateMessage";
-		public static const ROOM_JOIN:String = "roomJoin";
-		public static const ROOM_LEAVE:String = "roomLeave";
-		public static const ROOM_DESTROYED:String = "roomDestroyed";
-		public static const AFFILIATIONS:String = "affiliations";
-		public static const ADMIN_ERROR:String = "adminError";
-		public static const PASSWORD_ERROR:String = "passwordError";
-		public static const REGISTRATION_REQ_ERROR:String = "registrationReqError";
-		public static const BANNED_ERROR:String = "bannedError";
-		public static const MAX_USERS_ERROR:String = "maxUsersError";
-		public static const LOCKED_ERROR:String = "lockedError";
-		public static const USER_JOIN:String = "userJoin";
-		public static const USER_DEPARTURE:String = "userDeparture";
-		public static const USER_KICKED:String = "userKicked";
-		public static const USER_BANNED:String = "userBanned";
-		public static const NICK_CONFLICT:String = "nickConflict";
-		public static const CONFIGURE_ROOM:String = "configureForm";
-		public static const DECLINED:String = "declined";
+		static public const SUBJECT_CHANGE:String = "subjectChange";
+		static public const GROUP_MESSAGE:String = "groupMessage";
+		static public const PRIVATE_MESSAGE:String = "privateMessage";
+		static public const ROOM_JOIN:String = "roomJoin";
+		static public const ROOM_LEAVE:String = "roomLeave";
+		static public const ROOM_DESTROYED:String = "roomDestroyed";
+		static public const AFFILIATIONS:String = "affiliations";
+		static public const ADMIN_ERROR:String = "adminError";
+		static public const PASSWORD_ERROR:String = "passwordError";
+		static public const REGISTRATION_REQ_ERROR:String = "registrationReqError";
+		static public const BANNED_ERROR:String = "bannedError";
+		static public const MAX_USERS_ERROR:String = "maxUsersError";
+		static public const LOCKED_ERROR:String = "lockedError";
+		static public const USER_JOIN:String = "userJoin";
+		static public const USER_DEPARTURE:String = "userDeparture";
+		static public const USER_KICKED:String = "userKicked";
+		static public const USER_BANNED:String = "userBanned";
+		static public const NICK_CONFLICT:String = "nickConflict";
+		static public const CONFIGURE_ROOM:String = "configureForm";
+		static public const DECLINED:String = "declined";
 		
 		private var _subject:String;
 		private var _data:*;

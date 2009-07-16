@@ -45,15 +45,15 @@ package org.jivesoftware.xiff.data.register{
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:register";
-		public static var ELEMENT:String = "query";
+		static public var NS:String = "jabber:iq:register";
+		static public var ELEMENT:String = "query";
 	
 		private var myFields:Object;
 		private var myKeyNode:XMLNode;
 		private var myInstructionsNode:XMLNode;
 		private var myRemoveNode:XMLNode;
 	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+	    static private var staticDepends:Class = ExtensionClassRegistry;
 	
 		public function RegisterExtension( parent:XMLNode=null )
 		{
@@ -76,7 +76,7 @@ package org.jivesoftware.xiff.data.register{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(RegisterExtension);
 	    }

@@ -122,12 +122,12 @@ package org.jivesoftware.xiff.im
 		[Bindable]
 		public var groups:ArrayCollection = new ArrayCollection();
 		
-		private static const staticConstructorDependencies:Array = [			
+		static private const staticConstructorDependencies:Array = [			
 			ExtensionClassRegistry,
 			RosterExtension
 		]
 		
-		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
+		static private var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
 		public function Roster( aConnection:XMPPConnection = null)
 		{	
@@ -140,7 +140,7 @@ package org.jivesoftware.xiff.im
 			groups.sort = groupSort;
 		}
 		
-		private static function RosterStaticConstructor():Boolean
+		static private function RosterStaticConstructor():Boolean
 		{	
 			ExtensionClassRegistry.register( RosterExtension );
 			return true;
@@ -659,7 +659,7 @@ package org.jivesoftware.xiff.im
 			return myConnection;
 		}
 		
-		private static var counter:int = 0;
+		static private var counter:int = 0;
 		public function set connection( aConnection:XMPPConnection ):void
 		{
 			trace(++counter);

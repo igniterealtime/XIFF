@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.events
 	
 	public class DisconnectionEvent extends Event
 	{
-		public static var DISCONNECT:String = "disconnection";
+		static public var DISCONNECT:String = "disconnection";
 		
 		public function DisconnectionEvent()
 		{

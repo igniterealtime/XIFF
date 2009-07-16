@@ -16,9 +16,9 @@ package org.jivesoftware.xiff.bookmark
 	
 	public class BookmarkManager extends EventDispatcher
 	{
-		private static var bookmarkManagerConstructed:Boolean = bookmarkManagerStaticConstructor();
+		static private var bookmarkManagerConstructed:Boolean = bookmarkManagerStaticConstructor();
 		
-		private static function bookmarkManagerStaticConstructor():Boolean
+		static private function bookmarkManagerStaticConstructor():Boolean
 		{	
 			ExtensionClassRegistry.register( BookmarkPrivatePayload );
 			return true;

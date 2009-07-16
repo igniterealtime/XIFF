@@ -26,7 +26,7 @@ package org.jivesoftware.xiff.util
 
 	public class SocketDataEvent extends Event
 	{
-		public static var SOCKET_DATA_RECEIVED:String = "socketDataReceived";
+		static public var SOCKET_DATA_RECEIVED:String = "socketDataReceived";
 		private var _data:String;
 		
 		public function SocketDataEvent()

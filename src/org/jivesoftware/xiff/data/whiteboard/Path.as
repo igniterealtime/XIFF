@@ -40,7 +40,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	public class Path implements ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var ELEMENT:String = "path";
+		static public var ELEMENT:String = "path";
 	
 	    private var mySegments:Array;
 	    private var myStroke:Stroke;
@@ -208,7 +208,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	
 	    // PRIVATE METHODS
 	
-		private static function indexOfNextCommand(str:String):Number
+		static private function indexOfNextCommand(str:String):Number
 		{
 			for (var i:int=0; i < str.length; i++) {
 				if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z' ||

@@ -32,7 +32,7 @@ package org.jivesoftware.xiff.data.id
 	 */
 	public class SharedObjectGenerator implements IIDGenerator
 	{
-		private static var SO_COOKIE_NAME:String = "IIDGenerator";
+		static private var SO_COOKIE_NAME:String = "IIDGenerator";
 	
 		private var mySO:SharedObject;
 	

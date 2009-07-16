@@ -41,8 +41,8 @@ package org.jivesoftware.xiff.data.muc{
 	public class MUCAdminExtension extends MUCBaseExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/muc#admin";
-		public static var ELEMENT:String = "query";
+		static public var NS:String = "http://jabber.org/protocol/muc#admin";
+		static public var ELEMENT:String = "query";
 	
 		private var myItems:Array;
 	

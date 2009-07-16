@@ -4,7 +4,7 @@ package org.jivesoftware.xiff.events
 	
 	public class SearchPrepEvent extends Event
 	{
-		public static const SEARCH_PREP_COMPLETE:String = "searchPrepComplete";
+		static public const SEARCH_PREP_COMPLETE:String = "searchPrepComplete";
 		
 		private var _server:String;
 		

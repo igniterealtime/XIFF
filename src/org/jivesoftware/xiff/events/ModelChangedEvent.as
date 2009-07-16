@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.events
 
 	public class ModelChangedEvent extends Event
 	{
-		public static var MODEL_CHANGED:String = "modelChanged";
+		static public var MODEL_CHANGED:String = "modelChanged";
 		private var _firstItem:String;
 		private var _lastItem:String;
 		private var _removedIDs:String;

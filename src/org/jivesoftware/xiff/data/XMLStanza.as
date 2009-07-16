@@ -39,7 +39,7 @@ package org.jivesoftware.xiff.data{
 	public class XMLStanza extends ExtensionContainer implements INodeProxy, IExtendable
 	{
 	    // Global factory for all XMLNode generation
-		public static var XMLFactory:XMLDocument = new XMLDocument();
+		static public var XMLFactory:XMLDocument = new XMLDocument();
 		private var myXML:XMLNode;
 	
 		public function XMLStanza()
@@ -56,8 +56,8 @@ package org.jivesoftware.xiff.data{
 		 * @param val The value to check for existance
 		 * @return Whether the value checked is both not null and not undefined
 		 */
-		//private static function exists( val:* ):Boolean
-		public static function exists( val:* ):Boolean
+		//static private function exists( val:* ):Boolean
+		static public function exists( val:* ):Boolean
 		{
 			if( val != null && val !== undefined )
 				return true;

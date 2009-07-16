@@ -16,7 +16,7 @@ package org.jivesoftware.xiff.data.search{
 	 */
 	public class SearchItem extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "item";
+		static public var ELEMENT:String = "item";
 	
 		private var myFields:Object;
 	

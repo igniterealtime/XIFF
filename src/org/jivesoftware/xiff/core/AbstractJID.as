@@ -67,8 +67,8 @@ package org.jivesoftware.xiff.core
     }
 
     //if we use the literal regexp notation, flex gets confused and thinks the quote starts a string
-    private static var quoteregex:RegExp = new RegExp('"', "g");
-    private static var quoteregex2:RegExp = new RegExp("'", "g");
+    static private var quoteregex:RegExp = new RegExp('"', "g");
+    static private var quoteregex2:RegExp = new RegExp("'", "g");
 
     /**
      * Provides functionality to convert a JID to an escaped format.
@@ -77,7 +77,7 @@ package org.jivesoftware.xiff.core
      *
      * @return The escaped string.
      */
-    public static function escapedNode(n:String):String
+    static public function escapedNode(n:String):String
     {
       if( n && (
             n.indexOf("@") >= 0 ||
@@ -112,7 +112,7 @@ package org.jivesoftware.xiff.core
      *
      * @return The unescaped string.
      */
-    public static function unescapedNode(n:String):String
+    static public function unescapedNode(n:String):String
     {
       if( n && (
             n.indexOf("\\40") >= 0 ||

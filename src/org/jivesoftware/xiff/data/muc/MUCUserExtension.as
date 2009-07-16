@@ -40,13 +40,13 @@ package org.jivesoftware.xiff.data.muc{
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/muc#user";
-		public static var ELEMENT:String = "x";
+		static public var NS:String = "http://jabber.org/protocol/muc#user";
+		static public var ELEMENT:String = "x";
 	
-		public static var DECLINE_TYPE:String = "decline";
-		public static var DESTROY_TYPE:String = "destroy";
-		public static var INVITE_TYPE:String = "invite";
-		public static var OTHER_TYPE:String = "other";
+		static public var DECLINE_TYPE:String = "decline";
+		static public var DESTROY_TYPE:String = "destroy";
+		static public var INVITE_TYPE:String = "invite";
+		static public var OTHER_TYPE:String = "other";
 	
 		private var myActionNode:XMLNode;
 		private var myPasswordNode:XMLNode;

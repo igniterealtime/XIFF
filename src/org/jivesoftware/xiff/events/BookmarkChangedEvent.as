@@ -7,8 +7,8 @@ package org.jivesoftware.xiff.events
 
 	public class BookmarkChangedEvent extends Event
 	{
-		public static const GROUPCHAT_BOOKMARK_ADDED:String = "groupchat bookmark retrieved";
-		public static const GROUPCHAT_BOOKMARK_REMOVED:String = "groupchat bookmark removed";
+		static public const GROUPCHAT_BOOKMARK_ADDED:String = "groupchat bookmark retrieved";
+		static public const GROUPCHAT_BOOKMARK_REMOVED:String = "groupchat bookmark removed";
 		//add url types here when needed
 		
 		public var groupchatBookmark:GroupChatBookmark = null;

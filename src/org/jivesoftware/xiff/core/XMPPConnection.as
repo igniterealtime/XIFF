@@ -131,7 +131,7 @@ package org.jivesoftware.xiff.core
      */ 
 	public class XMPPConnection extends EventDispatcher
 	{
-		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPConnection");
+		static private const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPConnection");
 		
 		/**
 		 * @private
@@ -292,12 +292,12 @@ package org.jivesoftware.xiff.core
 			return true;
 		}
 		
-		public static function registerSASLMechanism(name:String, authClass:Class):void
+		static public function registerSASLMechanism(name:String, authClass:Class):void
 		{
 			saslMechanisms[name] = authClass;
 		}
 		
-		public static function disableSASLMechanism(name:String):void
+		static public function disableSASLMechanism(name:String):void
 		{
 			saslMechanisms[name] = null;
 		}
@@ -737,7 +737,7 @@ package org.jivesoftware.xiff.core
 			return _active;
 		}
 		
-		public static function get openConnections():Array
+		static public function get openConnections():Array
 		{
 			return _openConnections;
 		}

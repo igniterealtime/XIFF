@@ -10,8 +10,8 @@ package org.jivesoftware.xiff.data.session
 
 	public class SessionExtension extends Extension implements IExtension, ISerializable
 	{
-		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-session";
-		public static var ELEMENT_NAME:String = "session";
+		static public var NS:String = "urn:ietf:params:xml:ns:xmpp-session";
+		static public var ELEMENT_NAME:String = "session";
 		private var jid:String;
 		
 		public function getNS():String
@@ -46,7 +46,7 @@ package org.jivesoftware.xiff.data.session
 		/**
 	     * Registers this extension with the extension registry.  
 	     */
-	    public static function enable():void
+	    static public function enable():void
 	    {
 	        ExtensionClassRegistry.register(SessionExtension);
 	    }

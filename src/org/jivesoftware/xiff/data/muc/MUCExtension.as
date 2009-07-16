@@ -43,8 +43,8 @@ package org.jivesoftware.xiff.data.muc{
 	public class MUCExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/muc";
-		public static var ELEMENT:String = "x";
+		static public var NS:String = "http://jabber.org/protocol/muc";
+		static public var ELEMENT:String = "x";
 	
 		private var myHistoryNode:XMLNode;
 		private var myPasswordNode:XMLNode;

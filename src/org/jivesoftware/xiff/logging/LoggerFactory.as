@@ -9,17 +9,17 @@ package org.jivesoftware.xiff.logging
 	
 	public final class LoggerFactory
 	{
-		public static function configureDefault( filters:Array, level:int ):void
+		static public function configureDefault( filters:Array, level:int ):void
 		{
 			configureTarget( new TraceTarget(), filters, level );
 		}
 
-    public static function configureTextAreaTarget( textArea:TextArea, filters:Array, level:int ):void
+    static public function configureTextAreaTarget( textArea:TextArea, filters:Array, level:int ):void
     {
       configureTarget( new TextAreaTarget( textArea ), filters, level );
     }
 
-    private static function configureTarget( logTarget:LineFormattedTarget, filters:Array, level:int ):void
+    static private function configureTarget( logTarget:LineFormattedTarget, filters:Array, level:int ):void
     {
       logTarget.filters = new Array(["org.jivesoftware.*"]).concat(filters);
 			logTarget.level = level;
@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.logging
 			Log.addTarget(logTarget);
     }
 		
-		public static function getLogger(category:String):ILogger
+		static public function getLogger(category:String):ILogger
 		{
 			return Log.getLogger(category);
 		}

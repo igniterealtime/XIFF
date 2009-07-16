@@ -44,7 +44,7 @@ package org.jivesoftware.xiff.data.im{
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "item";
+		static public var ELEMENT:String = "item";
 		
 		private var myGroupNodes:Array;
 		

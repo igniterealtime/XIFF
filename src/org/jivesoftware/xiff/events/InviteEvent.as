@@ -31,7 +31,7 @@ package org.jivesoftware.xiff.events
 
 	public class InviteEvent extends Event
 	{
-		public static var INVITED:String = "invited";
+		static public var INVITED:String = "invited";
 		private var _from:UnescapedJID;
 		private var _reason:String;
 		private var _room:Room;

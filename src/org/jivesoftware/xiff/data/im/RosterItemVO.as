@@ -9,7 +9,7 @@ package org.jivesoftware.xiff.data.im
 
   public class RosterItemVO extends EventDispatcher implements Contact
   {
-    private static var allContacts:Object = {};
+    static private var allContacts:Object = {};
     private var _jid:UnescapedJID
     private var _displayName:String;
     private var _groups:Array = [];
@@ -25,7 +25,7 @@ package org.jivesoftware.xiff.data.im
       jid = newJID;
     }
 
-    public static function get(jid:UnescapedJID, create:Boolean):RosterItemVO
+    static public function get(jid:UnescapedJID, create:Boolean):RosterItemVO
     {
       var bareJID:String = jid.bareJID;
       var item:RosterItemVO = allContacts[bareJID];

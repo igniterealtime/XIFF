@@ -27,7 +27,7 @@ package org.jivesoftware.xiff.events
 
 	public class ConnectionSuccessEvent extends Event
 	{
-		public static var CONNECT_SUCCESS:String = "connection";
+		static public var CONNECT_SUCCESS:String = "connection";
 		
 		public function ConnectionSuccessEvent()
 		{

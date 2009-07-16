@@ -28,7 +28,7 @@ package org.jivesoftware.xiff.events
 	
 	public class MessageEvent extends Event
 	{
-		public static var MESSAGE:String = "message";
+		static public var MESSAGE:String = "message";
 		private var _data:Message;
 		
 		public function MessageEvent()
