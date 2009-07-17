@@ -39,8 +39,8 @@ package org.jivesoftware.xiff.core
 		private var _connection:XMPPConnection;
 		private var _pending:Object;
 	
-		static private var _staticDepends:Array = [ ItemDiscoExtension, InfoDiscoExtension, BrowseExtension, ExtensionClassRegistry ];
-		static private var _isEventEnabled:Boolean = BrowserStaticConstructor();
+		private static var _staticDepends:Array = [ ItemDiscoExtension, InfoDiscoExtension, BrowseExtension, ExtensionClassRegistry ];
+		private static var _isEventEnabled:Boolean = BrowserStaticConstructor();
 	
 		/**
      * Creates a new Browser object.
@@ -60,7 +60,7 @@ package org.jivesoftware.xiff.core
      * Actionscript does not provide static constructors, but this is a 
      * way to get aroudn that.
      */
-		static private function BrowserStaticConstructor():Boolean
+		private static function BrowserStaticConstructor():Boolean
 		{
 			ItemDiscoExtension.enable();
 			InfoDiscoExtension.enable();

@@ -29,16 +29,16 @@ package org.jivesoftware.xiff.events
 
 	public class RosterEvent extends Event
 	{
-		static public const SUBSCRIPTION_REVOCATION:String = "subscriptionRevocation";
-		static public const SUBSCRIPTION_REQUEST:String = "subscriptionRequest";
-		static public const SUBSCRIPTION_DENIAL:String = "subscriptionDenial";
-		static public const USER_AVAILABLE:String = "userAvailable";
-		static public const USER_UNAVAILABLE:String = "userUnavailable";
-		static public const USER_ADDED:String = 'userAdded';
-		static public const USER_REMOVED:String = 'userRemoved';
-		static public const USER_PRESENCE_UPDATED:String = 'userPresenceUpdated';
-		static public const USER_SUBSCRIPTION_UPDATED:String = 'userSubscriptionUpdated';
-		static public const ROSTER_LOADED:String = "rosterLoaded";
+		public static const SUBSCRIPTION_REVOCATION:String = "subscriptionRevocation";
+		public static const SUBSCRIPTION_REQUEST:String = "subscriptionRequest";
+		public static const SUBSCRIPTION_DENIAL:String = "subscriptionDenial";
+		public static const USER_AVAILABLE:String = "userAvailable";
+		public static const USER_UNAVAILABLE:String = "userUnavailable";
+		public static const USER_ADDED:String = 'userAdded';
+		public static const USER_REMOVED:String = 'userRemoved';
+		public static const USER_PRESENCE_UPDATED:String = 'userPresenceUpdated';
+		public static const USER_SUBSCRIPTION_UPDATED:String = 'userSubscriptionUpdated';
+		public static const ROSTER_LOADED:String = "rosterLoaded";
 		
 		private var _data:*;
 		private var _jid:UnescapedJID;

@@ -50,16 +50,16 @@ package org.jivesoftware.xiff.vcard
 		public var homeFaxNumber:String;
 		public var homePagerNumber:String;
 		public var homeCellNumber:String;
-		static private var cache:Object = {};
+		private static var cache:Object = {};
 		public var loaded:Boolean = false;
 		private var _avatar:DisplayObject;
 		private var _imageBytes:ByteArray;
 		
-		static private var requestQueue:Array = [];
-		static private var requestTimer:Timer;
+		private static var requestQueue:Array = [];
+		private static var requestTimer:Timer;
 		//flush the vcard cache every 6 hours
-		static private var cacheFlushTimer:Timer = new Timer(21600000, 0);
-		static public function getVCard(con:XMPPConnection, user:RosterItemVO):VCard
+		private static var cacheFlushTimer:Timer = new Timer(21600000, 0);
+		public static function getVCard(con:XMPPConnection, user:RosterItemVO):VCard
 		{
 			if(!cacheFlushTimer.running)
 			{
@@ -89,7 +89,7 @@ package org.jivesoftware.xiff.vcard
 		    return vcard;
 		}
 		
-		static private function pushRequest(con:XMPPConnection, vcard:VCard):void
+		private static function pushRequest(con:XMPPConnection, vcard:VCard):void
 		{
 			if(!requestTimer)
 			{
@@ -101,7 +101,7 @@ package org.jivesoftware.xiff.vcard
 			requestTimer.start();
 		}
 		
-		static private function sendRequest(event:TimerEvent):void
+		private static function sendRequest(event:TimerEvent):void
 		{
 			if(requestQueue.length == 0)
 				return;

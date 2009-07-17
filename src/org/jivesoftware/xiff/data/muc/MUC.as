@@ -57,24 +57,24 @@ package org.jivesoftware.xiff.data.muc{
 	
 	public class MUC
 	{
-		static public var ADMIN_AFFILIATION:String = "admin";
-		static public var MEMBER_AFFILIATION:String = "member";
-		static public var NO_AFFILIATION:String = "none";
-		static public var OUTCAST_AFFILIATION:String = "outcast";
-		static public var OWNER_AFFILIATION:String = "owner";
+		public static var ADMIN_AFFILIATION:String = "admin";
+		public static var MEMBER_AFFILIATION:String = "member";
+		public static var NO_AFFILIATION:String = "none";
+		public static var OUTCAST_AFFILIATION:String = "outcast";
+		public static var OWNER_AFFILIATION:String = "owner";
 	
-		static public var MODERATOR_ROLE:String = "moderator";
-		static public var NO_ROLE:String = "none";
-		static public var PARTICIPANT_ROLE:String = "participant";
-		static public var VISITOR_ROLE:String = "visitor";
+		public static var MODERATOR_ROLE:String = "moderator";
+		public static var NO_ROLE:String = "none";
+		public static var PARTICIPANT_ROLE:String = "participant";
+		public static var VISITOR_ROLE:String = "visitor";
 	
-		static private var staticDependencies:Array = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
+		private static var staticDependencies:Array = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
 	
 	    /** 
 	     * Register the multi-user chat extension capabilities with this method
 	     * @availability Flash Player 7
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register( MUCExtension );
 	        ExtensionClassRegistry.register( MUCUserExtension );

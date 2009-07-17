@@ -12,9 +12,9 @@ package org.jivesoftware.xiff.privatedata
 
 	public class PrivateDataManager extends EventDispatcher
 	{
-		static private var privateDataManagerConstructed:Boolean = privateDataManagerStaticConstructor();
+		private static var privateDataManagerConstructed:Boolean = privateDataManagerStaticConstructor();
 		
-		static private function privateDataManagerStaticConstructor():Boolean
+		private static function privateDataManagerStaticConstructor():Boolean
 		{
 			ExtensionClassRegistry.register( PrivateDataExtension );
 			return true;

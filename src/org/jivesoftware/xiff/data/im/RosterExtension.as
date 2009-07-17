@@ -45,21 +45,21 @@ package org.jivesoftware.xiff.data.im{
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		static public var NS:String = "jabber:iq:roster";
-		static public var ELEMENT:String = "query";
+		public static var NS:String = "jabber:iq:roster";
+		public static var ELEMENT:String = "query";
 		
-		static public var SUBSCRIBE_TYPE_NONE:String = "none";
-		static public var SUBSCRIBE_TYPE_TO:String = "to";
-		static public var SUBSCRIBE_TYPE_FROM:String = "from";
-		static public var SUBSCRIBE_TYPE_BOTH:String = "both";
-		static public var SUBSCRIBE_TYPE_REMOVE:String = "remove";
-		static public var ASK_TYPE_NONE:String = "none";
-		static public var ASK_TYPE_SUBSCRIBE:String = "subscribe";
-		static public var ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
-		static public var SHOW_UNAVAILABLE:String = "unavailable";
-		static public var SHOW_PENDING:String = "Pending";
+		public static var SUBSCRIBE_TYPE_NONE:String = "none";
+		public static var SUBSCRIBE_TYPE_TO:String = "to";
+		public static var SUBSCRIBE_TYPE_FROM:String = "from";
+		public static var SUBSCRIBE_TYPE_BOTH:String = "both";
+		public static var SUBSCRIBE_TYPE_REMOVE:String = "remove";
+		public static var ASK_TYPE_NONE:String = "none";
+		public static var ASK_TYPE_SUBSCRIBE:String = "subscribe";
+		public static var ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
+		public static var SHOW_UNAVAILABLE:String = "unavailable";
+		public static var SHOW_PENDING:String = "Pending";
 		
-	    static private var staticDepends:Array = [ExtensionClassRegistry];
+	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
 		private var myItems:Array = [];
 		
@@ -97,7 +97,7 @@ package org.jivesoftware.xiff.data.im{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(RosterExtension);
 	    }

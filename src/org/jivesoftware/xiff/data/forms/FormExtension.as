@@ -42,27 +42,27 @@ package org.jivesoftware.xiff.data.forms{
 	//public class FormExtension extends Extension implements ISerializable, IExtension
 	public class FormExtension extends Extension implements IExtension, ISerializable
 	{
-	    static public var FIELD_TYPE_BOOLEAN:String = "boolean";
-	    static public var FIELD_TYPE_FIXED:String = "fixed";
-	    static public var FIELD_TYPE_HIDDEN:String = "hidden";
-	    static public var FIELD_TYPE_JID_MULTI:String = "jid-multi";
-	    static public var FIELD_TYPE_JID_SINGLE:String = "jid-single";
-	    static public var FIELD_TYPE_LIST_MULTI:String = "list-multi";
-	    static public var FIELD_TYPE_LIST_SINGLE:String = "list-single";
-	    static public var FIELD_TYPE_TEXT_MULTI:String = "text-multi";
-	    static public var FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
-	    static public var FIELD_TYPE_TEXT_SINGLE:String = "text-single";
+	    public static var FIELD_TYPE_BOOLEAN:String = "boolean";
+	    public static var FIELD_TYPE_FIXED:String = "fixed";
+	    public static var FIELD_TYPE_HIDDEN:String = "hidden";
+	    public static var FIELD_TYPE_JID_MULTI:String = "jid-multi";
+	    public static var FIELD_TYPE_JID_SINGLE:String = "jid-single";
+	    public static var FIELD_TYPE_LIST_MULTI:String = "list-multi";
+	    public static var FIELD_TYPE_LIST_SINGLE:String = "list-single";
+	    public static var FIELD_TYPE_TEXT_MULTI:String = "text-multi";
+	    public static var FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
+	    public static var FIELD_TYPE_TEXT_SINGLE:String = "text-single";
 	
-	    static public var REQUEST_TYPE:String = "form";
-	    static public var RESULT_TYPE:String = "result";
-	    static public var SUBMIT_TYPE:String = "submit";
-	    static public var CANCEL_TYPE:String = "cancel";
+	    public static var REQUEST_TYPE:String = "form";
+	    public static var RESULT_TYPE:String = "result";
+	    public static var SUBMIT_TYPE:String = "submit";
+	    public static var CANCEL_TYPE:String = "cancel";
 	
-	    static public var NS:String = "jabber:x:data";
-	    static public var ELEMENT:String = "x";
+	    public static var NS:String = "jabber:x:data";
+	    public static var ELEMENT:String = "x";
 	
-		//static private var isStaticConstructed:Boolean = enable();
-		//static private var staticDependencies:Array = [ ExtensionClassRegistry ];
+		//private static var isStaticConstructed:Boolean = enable();
+		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 	
 		private var myItems:Array;
 		private var myFields:Array;
@@ -89,7 +89,7 @@ package org.jivesoftware.xiff.data.forms{
 			return FormExtension.ELEMENT;
 		}
 		
-		static public function enable():Boolean
+		public static function enable():Boolean
 	    {
 	        ExtensionClassRegistry.register(FormExtension);
 	        return true;

@@ -28,7 +28,7 @@ package org.jivesoftware.xiff.events
 
 	public class IncomingDataEvent extends Event
 	{
-		static public var INCOMING_DATA:String = "incomingData";
+		public static var INCOMING_DATA:String = "incomingData";
 		private var _data:XMLDocument;
 		
 		public function IncomingDataEvent()

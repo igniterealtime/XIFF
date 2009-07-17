@@ -40,10 +40,10 @@ package org.jivesoftware.xiff.data.rpc{
 	public class RPCExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		static public var NS:String = "jabber:iq:rpc";
-		static public var ELEMENT:String = "query";
+		public static var NS:String = "jabber:iq:rpc";
+		public static var ELEMENT:String = "query";
 	
-	    static private var staticDepends:Class = ExtensionClassRegistry;
+	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
 		private var myResult:Array;
 		private var myFault:Object;
@@ -145,7 +145,7 @@ package org.jivesoftware.xiff.data.rpc{
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(RPCExtension);
 	    }

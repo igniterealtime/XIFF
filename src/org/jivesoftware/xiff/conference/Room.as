@@ -216,16 +216,16 @@ package org.jivesoftware.xiff.conference
 	 */
 	public class Room extends ArrayCollection
 	{
-		static public const NO_AFFILIATION:String = MUC.NO_AFFILIATION;
-		static public const MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
-		static public const ADMIN_AFFILIATION:String = MUC.ADMIN_AFFILIATION;
-		static public const OWNER_AFFILIATION:String = MUC.OWNER_AFFILIATION;
-		static public const OUTCAST_AFFILIATION:String = MUC.OUTCAST_AFFILIATION;
+		public static const NO_AFFILIATION:String = MUC.NO_AFFILIATION;
+		public static const MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
+		public static const ADMIN_AFFILIATION:String = MUC.ADMIN_AFFILIATION;
+		public static const OWNER_AFFILIATION:String = MUC.OWNER_AFFILIATION;
+		public static const OUTCAST_AFFILIATION:String = MUC.OUTCAST_AFFILIATION;
 		
-		static public const NO_ROLE:String = MUC.NO_ROLE;
-		static public const MODERATOR_ROLE:String = MUC.MODERATOR_ROLE;
-		static public const PARTICIPANT_ROLE:String = MUC.PARTICIPANT_ROLE;
-		static public const VISITOR_ROLE:String = MUC.VISITOR_ROLE;
+		public static const NO_ROLE:String = MUC.NO_ROLE;
+		public static const MODERATOR_ROLE:String = MUC.MODERATOR_ROLE;
+		public static const PARTICIPANT_ROLE:String = MUC.PARTICIPANT_ROLE;
+		public static const VISITOR_ROLE:String = MUC.VISITOR_ROLE;
 	
 		private var myConnection:XMPPConnection;
 	    private var myJID:UnescapedJID
@@ -243,12 +243,12 @@ package org.jivesoftware.xiff.conference
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
 
-		static private var staticConstructorDependencies:Array = [ 
+		private static var staticConstructorDependencies:Array = [ 
 	        FormExtension,
 	        MUC
 		]
 	
-		static private var roomStaticConstructed:Boolean = RoomStaticConstructor();
+		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 		
 		public function Room( aConnection:XMPPConnection=null )
 		{
@@ -257,7 +257,7 @@ package org.jivesoftware.xiff.conference
 				connection = aConnection;
 		}
 		
-		static private function RoomStaticConstructor():Boolean
+		private static function RoomStaticConstructor():Boolean
 		{
 	        MUC.enable();
 	        FormExtension.enable();

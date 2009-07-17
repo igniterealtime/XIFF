@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.events
 	public class PresenceEvent extends Event
 	{
 		
-		static public var PRESENCE:String = "presence";
+		public static var PRESENCE:String = "presence";
 		private var _data:Array;
 		
 		public function PresenceEvent()

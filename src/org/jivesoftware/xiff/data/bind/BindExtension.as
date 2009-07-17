@@ -11,8 +11,8 @@ package org.jivesoftware.xiff.data.bind
 
 	public class BindExtension extends Extension implements IExtension, ISerializable
 	{
-		static public var NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
-		static public var ELEMENT_NAME:String = "bind";
+		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
+		public static var ELEMENT_NAME:String = "bind";
 		private var _jid:EscapedJID;
 		private var _resource:String;
 		
@@ -51,7 +51,7 @@ package org.jivesoftware.xiff.data.bind
 		/**
 	     * Registers this extension with the extension registry.  
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(BindExtension);
 	    }

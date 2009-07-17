@@ -42,7 +42,7 @@ package org.jivesoftware.xiff.data.disco
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		static public const NS:String = "http://jabber.org/protocol/disco#info";
+		public static const NS:String = "http://jabber.org/protocol/disco#info";
 	
 		private var myIdentities:Array;
 		private var myFeatures:Array;
@@ -67,7 +67,7 @@ package org.jivesoftware.xiff.data.disco
 	     * 
 		 * @availability Flash Player 7
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(InfoDiscoExtension);
 	    }

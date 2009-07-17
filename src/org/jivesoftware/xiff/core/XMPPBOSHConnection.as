@@ -20,13 +20,13 @@ package org.jivesoftware.xiff.core
 	
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
-		static private const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPBOSHConnection");
+		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPBOSHConnection");
 		
-		static private const HTTP_PORT:int = 7070;
-		static private const HTTPS_PORT:int = 7443;
-		static private const BOSH_VERSION:String = "1.6";
+		private static const HTTP_PORT:int = 7070;
+		private static const HTTPS_PORT:int = 7443;
+		private static const BOSH_VERSION:String = "1.6";
 		
-		static private const headers:Object = {
+		private static const headers:Object = {
 			"post": [],
 			"get": ['Cache-Control', 'no-store', 'Cache-Control', 'no-cache', 'Pragma', 'no-cache']
 		};

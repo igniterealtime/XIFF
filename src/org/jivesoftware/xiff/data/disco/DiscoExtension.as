@@ -34,8 +34,8 @@ package org.jivesoftware.xiff.data.disco
 	public class DiscoExtension extends Extension implements ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		static public var NS:String = "http://jabber.org/protocol/disco";
-		static public var ELEMENT:String = "query";
+		public static var NS:String = "http://jabber.org/protocol/disco";
+		public static var ELEMENT:String = "query";
 		
 		public var myService:EscapedJID;
 	

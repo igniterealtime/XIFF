@@ -37,7 +37,7 @@ package org.jivesoftware.xiff.data.rpc{
 	 */
 	public class XMLRPC
 	{
-		static private var XMLFactory:XMLDocument = new XMLDocument();
+		private static var XMLFactory:XMLDocument = new XMLDocument();
 	
 		/**
 		 * Extract and marshall the XML-RPC response to Flash types.
@@ -47,7 +47,7 @@ package org.jivesoftware.xiff.data.rpc{
 		 * If the result is a fault, "result.isFault" will evaulate as true.
 		 * @availability Flash Player 7
 		 */
-		static public function fromXML(xml:XMLNode):Array
+		public static function fromXML(xml:XMLNode):Array
 		{
 			var result:Array;
 			var response:XMLNode = findNode("methodResponse", xml);
@@ -77,7 +77,7 @@ package org.jivesoftware.xiff.data.rpc{
 		 *
 		 * @return XMLNode containing the XML marshalled result
 		 */
-		static public function toXML(parent:XMLNode, method:String, params:Array):XMLNode
+		public static function toXML(parent:XMLNode, method:String, params:Array):XMLNode
 		{
 			var mc:XMLNode = addNode(parent, "methodCall");
 			addText(addNode(mc, "methodName"), method);
@@ -90,7 +90,7 @@ package org.jivesoftware.xiff.data.rpc{
 			return mc;
 		}
 	
-		static private function extractValue(value:XMLNode):*
+		private static function extractValue(value:XMLNode):*
 		{
 			var result:* = null;
 	
@@ -138,12 +138,12 @@ package org.jivesoftware.xiff.data.rpc{
 			return result;
 		}
 	
-		static private function addParameter(node:XMLNode, param:*):XMLNode
+		private static function addParameter(node:XMLNode, param:*):XMLNode
 		{
 			return addValue(addNode(node, "param"), param);
 		}
 	
-		static private function addValue(node:XMLNode, value:*):XMLNode
+		private static function addValue(node:XMLNode, value:*):XMLNode
 		{
 			var value_node:XMLNode = addNode(node, "value");
 	
@@ -182,21 +182,21 @@ package org.jivesoftware.xiff.data.rpc{
 			return node;
 		}
 	
-		static private function addNode(parent:XMLNode, name:String):XMLNode
+		private static function addNode(parent:XMLNode, name:String):XMLNode
 		{
 			var child:XMLNode = XMLRPC.XMLFactory.createElement(name);
 			parent.appendChild(child);
 			return parent.lastChild;
 		}
 	
-		static private function addText(parent:XMLNode, value:String):XMLNode
+		private static function addText(parent:XMLNode, value:String):XMLNode
 		{
 			var child:XMLNode = XMLRPC.XMLFactory.createTextNode(value);
 			parent.appendChild(child);
 			return parent.lastChild;
 		}
 	
-		static private function findNode(name:String, xml:XMLNode):XMLNode
+		private static function findNode(name:String, xml:XMLNode):XMLNode
 		{
 			if (xml.nodeName == name) {
 				return xml;

@@ -34,7 +34,7 @@ package org.jivesoftware.xiff.data.disco
 	public class ItemDiscoExtension extends DiscoExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		static public const NS:String = "http://jabber.org/protocol/disco#items";
+		public static const NS:String = "http://jabber.org/protocol/disco#items";
 	
 		private var myItems:Array;
 		
@@ -57,7 +57,7 @@ package org.jivesoftware.xiff.data.disco
 	     * Performs the registration of this extension into the extension 
 	     * registry.  
 	     */
-	    static public function enable():void
+	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(ItemDiscoExtension);
 	    }

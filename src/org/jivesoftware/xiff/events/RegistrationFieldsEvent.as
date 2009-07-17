@@ -28,7 +28,7 @@ package org.jivesoftware.xiff.events
 
 	public class RegistrationFieldsEvent extends Event
 	{
-		static public var REG_FIELDS:String = "registrationFields";
+		public static var REG_FIELDS:String = "registrationFields";
 		private var _fields:Array;
 		private var _data:RegisterExtension;
 		

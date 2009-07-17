@@ -40,8 +40,8 @@ package org.jivesoftware.xiff.data.muc{
 	public class MUCOwnerExtension extends MUCBaseExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		static public var NS:String = "http://jabber.org/protocol/muc#owner";
-		static public var ELEMENT:String = "query";
+		public static var NS:String = "http://jabber.org/protocol/muc#owner";
+		public static var ELEMENT:String = "query";
 	
 		private var myDestroyNode:XMLNode;
 	

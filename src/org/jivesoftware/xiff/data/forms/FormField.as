@@ -43,7 +43,7 @@ package org.jivesoftware.xiff.data.forms{
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
-		static public var ELEMENT:String = "field";
+		public static var ELEMENT:String = "field";
 	
 	    private var myDescNode:XMLNode;
 	    private var myRequiredNode:XMLNode;

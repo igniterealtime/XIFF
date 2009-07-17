@@ -29,7 +29,7 @@ package org.jivesoftware.xiff.events
 	public class OutgoingDataEvent extends Event
 	{
 		
-		static public var OUTGOING_DATA:String = "outgoingData";
+		public static var OUTGOING_DATA:String = "outgoingData";
 		private var _data:*;
 		
 		public function OutgoingDataEvent()

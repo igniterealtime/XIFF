@@ -7,9 +7,9 @@ package org.jivesoftware.xiff.events
 	public class VCardEvent extends Event
 	{
 	
-		static public const LOADED:String = "vcardLoaded";
-		static public const AVATAR_LOADED:String = "vcardAvatarLoaded";
-		static public const ERROR:String = "vcardError";
+		public static const LOADED:String = "vcardLoaded";
+		public static const AVATAR_LOADED:String = "vcardAvatarLoaded";
+		public static const ERROR:String = "vcardError";
 		private var _vcard:VCard;
 
 		public function VCardEvent( type:String, vcard:VCard, bubbles:Boolean, cancelable:Boolean )
