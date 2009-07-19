@@ -39,7 +39,7 @@ package org.jivesoftware.xiff.events
 		override public function clone():Event
 		{
 			var event:ModelChangedEvent = new ModelChangedEvent();
-			event.firstItem = _fieldItem;
+			event.firstItem = _firstItem;
 			event.lastItem = _lastItem;
 			event.removedIDs = _removedIDs;
 			event.fieldName = _fieldName;

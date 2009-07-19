@@ -38,7 +38,7 @@ package org.jivesoftware.xiff.events
 		}
 		override public function clone():Event
 		{
-			var event:IQEvent = new IQEvent();
+			var event:IQEvent = new IQEvent(type);
 			event.data = _data;
 			event.iq = _iq;
 			return event;
