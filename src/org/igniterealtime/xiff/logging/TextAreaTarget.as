@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.logging
+package org.igniterealtime.xiff.logging
 {
   import mx.controls.TextArea;
   import mx.core.mx_internal;

@@ -21,13 +21,13 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 	
-	import org.jivesoftware.xiff.conference.Room;
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.data.Message;
+	import org.igniterealtime.xiff.conference.Room;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.data.Message;
 
 	public class InviteEvent extends Event
 	{

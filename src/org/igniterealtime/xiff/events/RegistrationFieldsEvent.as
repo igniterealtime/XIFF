@@ -21,10 +21,10 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
-	import org.jivesoftware.xiff.data.register.RegisterExtension;
+	import org.igniterealtime.xiff.data.register.RegisterExtension;
 
 	public class RegistrationFieldsEvent extends Event
 	{

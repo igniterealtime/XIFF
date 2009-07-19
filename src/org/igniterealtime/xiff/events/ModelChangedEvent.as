@@ -21,7 +21,7 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 

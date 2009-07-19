@@ -18,7 +18,7 @@
  * limitations under the License. 
  */
 
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {
   /**
    * This is a base class for the JID (Jabber ID) classes. It provides

@@ -21,7 +21,7 @@
  *
  */
 	 
-package org.jivesoftware.xiff.exception
+package org.igniterealtime.xiff.exception
 {	
 	/**
 	 * This exception is thrown whenever there is a problem serializing or 

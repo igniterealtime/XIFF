@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.util
+package org.igniterealtime.xiff.util
 {
 	/*
 	 * Copyright (C) 2003-2007 

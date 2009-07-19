@@ -20,14 +20,14 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.id
+package org.igniterealtime.xiff.data.id
 {	
 	/**
 	 * To use custom ID generators call the static function on the
 	 * XMPPStanza class with an instance that implements IIDGenerator.
 	 * 
 	 * @example <code>XMPPStanza.setIDGenerator( 
-	 * 	new org.jivesoftware.xiff.data.id.SharedObjectGenerator() );</code>
+	 * 	new org.igniterealtime.xiff.data.id.SharedObjectGenerator() );</code>
 	 */
 	public interface IIDGenerator
 	{

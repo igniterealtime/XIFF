@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.im{
+package org.igniterealtime.xiff.data.im{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,11 +24,11 @@ package org.jivesoftware.xiff.data.im{
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	 
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data

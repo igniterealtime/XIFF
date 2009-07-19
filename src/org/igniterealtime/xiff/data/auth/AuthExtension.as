@@ -19,17 +19,17 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.auth
+package org.igniterealtime.xiff.data.auth
 {	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.auth.SHA1;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.auth.SHA1;
 	
 	import flash.xml.XMLNode;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * Implements <a href="http://www.jabber.org/jeps/jep-0078.html">JEP-0078<a> 
@@ -221,7 +221,7 @@ package org.jivesoftware.xiff.data.auth
 		/**
 		 * The resource to use for authentication.
 		 *
-		 * @see org.jivesoftware.xiff.core.XMPPConnection#resource
+		 * @see org.igniterealtime.xiff.core.XMPPConnection#resource
 		 */
 		public function get resource():String
 		{

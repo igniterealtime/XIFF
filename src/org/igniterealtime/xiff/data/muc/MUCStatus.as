@@ -1,8 +1,8 @@
-package org.jivesoftware.xiff.data.muc
+package org.igniterealtime.xiff.data.muc
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	public class MUCStatus
 	{

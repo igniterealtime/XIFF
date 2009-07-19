@@ -21,11 +21,11 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data
+package org.igniterealtime.xiff.data
 {
 	
 	import flash.xml.XMLNode;
-	import org.jivesoftware.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.EscapedJID;
 	
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.

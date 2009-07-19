@@ -21,14 +21,14 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data
+package org.igniterealtime.xiff.data
 {
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
-	import org.jivesoftware.xiff.data.xhtml.XHTMLExtension;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
+	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
 	
 	/**
 	 * A class for abstraction and encapsulation of message data.
@@ -166,7 +166,7 @@ package org.jivesoftware.xiff.data
 		/**
 		 * The message body in XHTML format. Internally, this uses the XHTML data extension.
 		 *
-		 * @see org.jivesoftware.xiff.data.xhtml.XHTMLExtension
+		 * @see org.igniterealtime.xiff.data.xhtml.XHTMLExtension
 		 */
 		public function get htmlBody():String
 		{

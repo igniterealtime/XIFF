@@ -1,5 +1,5 @@
 
-package org.jivesoftware.xiff.data{
+package org.igniterealtime.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -23,8 +23,8 @@ package org.jivesoftware.xiff.data{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.IExtendable;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IExtendable;
 	 
 	/**
 	 * Contains the implementation for a generic extension container.  Use the static method "decorate" to implement the IExtendable interface on a class.

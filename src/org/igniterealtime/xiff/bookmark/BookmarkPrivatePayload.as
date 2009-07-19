@@ -1,10 +1,10 @@
-package org.jivesoftware.xiff.bookmark
+package org.igniterealtime.xiff.bookmark
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.privatedata.IPrivatePayload;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 
 	public class BookmarkPrivatePayload implements IPrivatePayload {
 		

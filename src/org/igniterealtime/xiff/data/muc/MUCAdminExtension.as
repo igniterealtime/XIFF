@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -22,10 +22,10 @@ package org.jivesoftware.xiff.data.muc{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
-	import org.jivesoftware.xiff.data.muc.MUCBaseExtension;
+	import org.igniterealtime.xiff.data.muc.MUCBaseExtension;
 	import flash.xml.XMLNode;
 	
 	/**

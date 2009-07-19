@@ -21,24 +21,24 @@
  *
  */
 	 
-package org.jivesoftware.xiff.conference
+package org.igniterealtime.xiff.conference
 {	
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.Message;
-	import org.jivesoftware.xiff.data.muc.MUCUserExtension;
-	import org.jivesoftware.xiff.events.InviteEvent;
-	import org.jivesoftware.xiff.events.MessageEvent;
+	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.Message;
+	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
+	import org.igniterealtime.xiff.events.InviteEvent;
+	import org.igniterealtime.xiff.events.MessageEvent;
 	
 	/**
 	 * Dispatched when an invitations has been received.
 	 * 
-	 * @eventType org.jivesoftware.xiff.InviteEvent.INVITED
-	 * @see org.jivesoftware.xiff.conference.Room
-	 * @see org.jivesoftware.xiff.conference.Room.#invite
+	 * @eventType org.igniterealtime.xiff.InviteEvent.INVITED
+	 * @see org.igniterealtime.xiff.conference.Room
+	 * @see org.igniterealtime.xiff.conference.Room.#invite
 	 */
-	[Event( name="invited", type="org.jivesoftware.xiff.events.InviteEvent" )]
+	[Event( name="invited", type="org.igniterealtime.xiff.events.InviteEvent" )]
 	
 	/**
 	 * Manages the dispatching of events during invitations.  Add event
@@ -65,7 +65,7 @@ package org.jivesoftware.xiff.conference
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @param connection The XMPPConnection instance to use.
-		 * @see org.jivesoftware.xiff.core.XMPPConnection
+		 * @see org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function setConnection( connection:XMPPConnection ):void
 		{
@@ -80,7 +80,7 @@ package org.jivesoftware.xiff.conference
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @returns The XMPPConnection used
-		 * @see org.jivesoftware.xiff.core.XMPPConnection
+		 * @see org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function getConnection():XMPPConnection
 		{

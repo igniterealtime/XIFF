@@ -21,11 +21,11 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 	
-	import org.jivesoftware.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.Extension;
 
 	public class XIFFErrorEvent extends Event
 	{

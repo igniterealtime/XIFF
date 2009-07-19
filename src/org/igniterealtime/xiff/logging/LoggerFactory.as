@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.logging
+package org.igniterealtime.xiff.logging
 {
 	import mx.logging.ILogger;
 	import mx.logging.Log;

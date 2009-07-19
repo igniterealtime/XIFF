@@ -21,24 +21,24 @@
  *
  */
 	 
-package org.jivesoftware.xiff.im
+package org.igniterealtime.xiff.im
 {	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.Presence;
-	import org.jivesoftware.xiff.data.XMLStanza;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.data.im.RosterExtension;
-	import org.jivesoftware.xiff.data.im.RosterGroup;
-	import org.jivesoftware.xiff.data.im.RosterItemVO;
-	import org.jivesoftware.xiff.events.*;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.Presence;
+	import org.igniterealtime.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.data.im.RosterExtension;
+	import org.igniterealtime.xiff.data.im.RosterGroup;
+	import org.igniterealtime.xiff.data.im.RosterItemVO;
+	import org.igniterealtime.xiff.events.*;
 	
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
@@ -369,7 +369,7 @@ package org.jivesoftware.xiff.im
 		 * you are offline, online, away, etc.
 		 * @param status The status message associated with the show value
 		 * @param priority (Optional) A priority number for the presence
-		 * @see org.jivesoftware.xiff.data.Presence
+		 * @see org.igniterealtime.xiff.data.Presence
 		 */
 		public function setPresence( show:String, status:String, priority:Number ):void
 		{

@@ -21,11 +21,11 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data
+package org.igniterealtime.xiff.data
 {
 	
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	import flash.xml.XMLNode;
 	
 	/**

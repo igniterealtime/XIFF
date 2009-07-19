@@ -1,8 +1,8 @@
-package org.jivesoftware.xiff.data.im
+package org.igniterealtime.xiff.data.im
 {
 	import mx.core.IPropertyChangeNotifier;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.UnescapedJID;
 	
 	public interface Contact extends IPropertyChangeNotifier
 	{

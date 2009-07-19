@@ -1,7 +1,7 @@
-package org.jivesoftware.xiff.privatedata
+package org.igniterealtime.xiff.privatedata
 {
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 
 	public interface IPrivatePayload extends ISerializable, IExtension
 	{

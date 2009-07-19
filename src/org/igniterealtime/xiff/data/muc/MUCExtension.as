@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,9 +24,9 @@ package org.jivesoftware.xiff.data.muc{
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
 	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.

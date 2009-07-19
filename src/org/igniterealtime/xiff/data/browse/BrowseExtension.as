@@ -19,14 +19,14 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.browse
+package org.igniterealtime.xiff.data.browse
 {
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
 	 * Implements jabber:iq:browse namespace.  Use this extension to request the items
@@ -89,7 +89,7 @@ package org.jivesoftware.xiff.data.browse
 		 * @param item BrowseItem which contains the info related to the browsed resource
 		 * @availability Flash Player 7
 		 * @returns the item added
-		 * @see org.jivesoftware.xiff.data.browse.BrowseItem
+		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
 		public function addItem(item:BrowseItem):BrowseItem
 		{
@@ -102,7 +102,7 @@ package org.jivesoftware.xiff.data.browse
 		 *
 		 * @availability Flash Player 7
 		 * @returns array of BrowseItems
-		 * @see org.jivesoftware.xiff.data.browse.BrowseItem
+		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
 		public function get items():Array
 		{
@@ -113,7 +113,7 @@ package org.jivesoftware.xiff.data.browse
 		 * ISerializable implementation which loads this extension from XML
 		 *
 		 * @availability Flash Player 7
-		 * @see org.jivesoftware.xiff.data.ISerializable
+		 * @see org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function serialize(parentNode:XMLNode):Boolean
 		{
@@ -133,7 +133,7 @@ package org.jivesoftware.xiff.data.browse
 		 * ISerializable implementation which saves this extension to XML
 		 *
 		 * @availability Flash Player 7
-		 * @see org.jivesoftware.xiff.data.ISerializable
+		 * @see org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function deserialize(node:XMLNode):Boolean
 		{

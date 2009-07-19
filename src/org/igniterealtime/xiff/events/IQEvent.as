@@ -21,11 +21,11 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IQ;
 	
 	public class IQEvent extends Event
 	{

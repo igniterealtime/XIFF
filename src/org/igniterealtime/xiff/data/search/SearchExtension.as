@@ -1,12 +1,12 @@
-package org.jivesoftware.xiff.data.search{
+package org.igniterealtime.xiff.data.search{
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.forms.FormExtension;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.forms.FormExtension;
 		
 	/**
 	 * Implements jabber:iq:search namespace.  Use this to perform user searches.

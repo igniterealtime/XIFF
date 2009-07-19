@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.forms{
+package org.igniterealtime.xiff.data.forms{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -23,8 +23,8 @@ package org.jivesoftware.xiff.data.forms{
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * This class is used by the FormExtension class for managing fields
@@ -35,7 +35,7 @@ package org.jivesoftware.xiff.data.forms{
 	 * @author Sean Treadway
 	 * @since 2.0.0
 	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.forms.FormExtension
+	 * @see org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see http://www.jabber.org/jeps/jep-0004.html
 	 * @param parent The parent XMLNode
 	 * @toc-path Extensions/Instant Messaging

@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.im
+package org.igniterealtime.xiff.data.im
 {
 	/*
 	 * Copyright (C) 2008

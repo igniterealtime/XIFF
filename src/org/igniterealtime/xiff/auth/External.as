@@ -18,14 +18,14 @@
  * limitations under the License. 
  */
 
-package org.jivesoftware.xiff.auth
+package org.igniterealtime.xiff.auth
 {
   import flash.xml.XMLNode;
 
   import mx.utils.Base64Encoder;
 
-  import org.jivesoftware.xiff.core.UnescapedJID;
-  import org.jivesoftware.xiff.core.XMPPConnection;
+  import org.igniterealtime.xiff.core.UnescapedJID;
+  import org.igniterealtime.xiff.core.XMPPConnection;
 
   /**
    * This class provides SASL authentication using the EXTERNAL mechanism.

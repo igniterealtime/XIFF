@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.xhtml{
+package org.igniterealtime.xiff.data.xhtml{
 	
 	/*
 	 * Copyright (C) 2003-2007 
@@ -26,10 +26,10 @@ package org.jivesoftware.xiff.data.xhtml{
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
 	 * This class provides an extension for XHTML body text in messages.

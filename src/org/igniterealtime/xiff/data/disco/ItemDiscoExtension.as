@@ -19,13 +19,13 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.disco
+package org.igniterealtime.xiff.data.disco
 {
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * Implements <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030<a> 

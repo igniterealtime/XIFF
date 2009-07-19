@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.vcard
+package org.igniterealtime.xiff.vcard
 {
 	import flash.display.*;
 	import flash.events.*;
@@ -8,13 +8,13 @@ package org.jivesoftware.xiff.vcard
 	
 	import mx.utils.Base64Decoder;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.data.im.RosterItemVO;
-	import org.jivesoftware.xiff.data.vcard.VCardExtension;
-	import org.jivesoftware.xiff.events.VCardEvent;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.data.im.RosterItemVO;
+	import org.igniterealtime.xiff.data.vcard.VCardExtension;
+	import org.igniterealtime.xiff.events.VCardEvent;
 	
 	[Bindable]
 	public class VCard extends EventDispatcher {

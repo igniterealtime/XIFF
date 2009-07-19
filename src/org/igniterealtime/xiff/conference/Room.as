@@ -21,63 +21,63 @@
  *
  */
  
-package org.jivesoftware.xiff.conference
+package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
 	
 	import mx.collections.ArrayCollection;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.*;
-	import org.jivesoftware.xiff.data.forms.FormExtension;
-	import org.jivesoftware.xiff.data.muc.*;
-	import org.jivesoftware.xiff.events.DisconnectionEvent;
-	import org.jivesoftware.xiff.events.MessageEvent;
-	import org.jivesoftware.xiff.events.PresenceEvent;
-	import org.jivesoftware.xiff.events.RoomEvent;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.*;
+	import org.igniterealtime.xiff.data.forms.FormExtension;
+	import org.igniterealtime.xiff.data.muc.*;
+	import org.igniterealtime.xiff.events.DisconnectionEvent;
+	import org.igniterealtime.xiff.events.MessageEvent;
+	import org.igniterealtime.xiff.events.PresenceEvent;
+	import org.igniterealtime.xiff.events.RoomEvent;
 	
 	/**
 	 * Dispatched when the room subject changes.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent.SUBJECT_CHANGE
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.SUBJECT_CHANGE
 	 */
-	[Event( name="subjectChange", type="org.jivesoftware.xiff.events.RoomEvent" )]
+	[Event( name="subjectChange", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	
 	/**
 	 * Dispatched whenever a new message intented for all room occupants is received. The 
 	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the 
 	 * group message as an instance of the <code>Message</code> class.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event( name="groupMessage", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event( name="groupMessage", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched whenever a new private message is received. The <code>RoomEvent</code> class
 	 * contains an attribute <code>data</code> with the private message as an instance of the 
 	 * <code>Message</code> class.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="privateMessage", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="privateMessage", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when you have entered the room and messages that are sent
 	 * will be displayed to other users. The room's role and affiliation will
 	 * be visible from this point forward.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="roomJoin", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="roomJoin", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the server acknoledges that you have the left the room.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="roomLeave", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="roomLeave", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when an affiliation list has been requested. The event object contains an 
@@ -86,94 +86,94 @@ package org.jivesoftware.xiff.conference
 	 * <p>To grant or revoke permissions based on this list, only send the changes you wish to 
 	 * make, calling grant/revoke with the new affiliation and existing JID.</p>
 	 * 
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="affiliations", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="affiliations", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when an administration action failed.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
-	 * @see org.jivesoftware.xiff.core.XMPPConnection.error
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @see org.igniterealtime.xiff.core.XMPPConnection.error
 	 */
-	[Event(name="adminError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="adminError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the room requires a password and the user did not supply one (or
 	 * the password provided is incorrect).
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="passwordError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="passwordError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the room is members-only and the user is not on the member list.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="registrationReqError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="registrationReqError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched if the user attempted to join the room but was not allowed to do so because
 	 * they are banned (i.e., has an affiliation of "outcast").
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="bannedError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="bannedError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched if the room has reached its maximum number of occupants.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="maxUsersError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="maxUsersError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
 	 * creator provides an initial configuration and therefore before the room officially exists).
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="lockedError", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="lockedError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="userJoin", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="userJoin", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="userDeparture", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="userDeparture", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when a user is kicked from the room.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="userKicked", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="userKicked", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when a user is banned from the room.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="userBanned", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="userBanned", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the user's preferred nickname already exists in the room.  The 
 	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname 
 	 * already existing in the room.
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="nickConflict", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="nickConflict", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when a room configuration form is required.  This can occur during the 
@@ -189,12 +189,12 @@ package org.jivesoftware.xiff.conference
 	 * <code>type</code>: The type of the field to be displayed. Type will be a constant
 	 * from the <code>FormField</code> class.</p>
 	 * 
-	 * @see org.jivesoftware.xiff.data.forms.FormExtension
-	 * @see org.jivesoftware.xiff.data.forms.FormField
+	 * @see org.igniterealtime.xiff.data.forms.FormExtension
+	 * @see org.igniterealtime.xiff.data.forms.FormField
 	 * @see #configure
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="configureForm", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="configureForm", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when an invite to this room has been declined by the invitee. The <code>RoomEvent</code>
@@ -204,9 +204,9 @@ package org.jivesoftware.xiff.conference
 	 * <code>reason</code>: A string containing the reason to join the room<br />
 	 * <code>data</code>: The original message containing the decline</p>
 	 *
-	 * @eventType org.jivesoftware.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
-	[Event(name="declined", type="org.jivesoftware.xiff.events.RoomEvent")]
+	[Event(name="declined", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (JEP-0045).
@@ -269,7 +269,7 @@ package org.jivesoftware.xiff.conference
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @param connection The XMPPConnection instance to use.
-		 * @see org.jivesoftware.xiff.core.XMPPConnection
+		 * @see org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function set connection( connection:XMPPConnection ):void
 		{
@@ -294,7 +294,7 @@ package org.jivesoftware.xiff.conference
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
 		 * @returns The XMPPConnection used
-		 * @see org.jivesoftware.xiff.core.XMPPConnection
+		 * @see org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function get connection():XMPPConnection
 		{

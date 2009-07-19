@@ -21,11 +21,11 @@
  *
  */
 	
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.UnescapedJID;
 
 	public class RosterEvent extends Event
 	{

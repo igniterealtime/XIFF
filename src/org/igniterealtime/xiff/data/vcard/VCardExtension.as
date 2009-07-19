@@ -1,10 +1,10 @@
-package org.jivesoftware.xiff.data.vcard
+package org.igniterealtime.xiff.data.vcard
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
 	public class VCardExtension extends Extension implements IExtension, ISerializable {
 		

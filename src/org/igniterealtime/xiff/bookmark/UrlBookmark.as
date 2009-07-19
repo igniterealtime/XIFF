@@ -1,9 +1,9 @@
-package org.jivesoftware.xiff.bookmark
+package org.igniterealtime.xiff.bookmark
 {
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.ISerializable;
 
 	public class UrlBookmark implements ISerializable
 	{

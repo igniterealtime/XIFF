@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,9 +24,9 @@ package org.jivesoftware.xiff.data.muc{
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * This class is used by the MUCExtension for internal representation of

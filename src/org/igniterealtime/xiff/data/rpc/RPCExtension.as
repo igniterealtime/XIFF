@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.rpc{
+package org.igniterealtime.xiff.data.rpc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -21,11 +21,11 @@ package org.jivesoftware.xiff.data.rpc{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.rpc.XMLRPC;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.rpc.XMLRPC;
 	import flash.xml.XMLNode;
 	
 	/**
@@ -121,7 +121,7 @@ package org.jivesoftware.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.jivesoftware.xiff.data.IExtension
+		 * @see org.igniterealtime.xiff.data.IExtension
 		 * @availability Flash Player 7
 		 */
 		public function getNS():String
@@ -132,7 +132,7 @@ package org.jivesoftware.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.jivesoftware.xiff.data.IExtension
+		 * @see org.igniterealtime.xiff.data.IExtension
 		 * @availability Flash Player 7
 		 */
 		public function getElementName():String
@@ -153,7 +153,7 @@ package org.jivesoftware.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.jivesoftware.xiff.data.ISerializable
+		 * @see org.igniterealtime.xiff.data.ISerializable
 		 * @availability Flash Player 7
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -167,7 +167,7 @@ package org.jivesoftware.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.jivesoftware.xiff.data.ISerializable
+		 * @see org.igniterealtime.xiff.data.ISerializable
 		 * @availability Flash Player 7
 		 */
 		public function deserialize( node:XMLNode ):Boolean

@@ -18,13 +18,13 @@
  * limitations under the License. 
  */
 
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {	
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.browse.BrowseExtension;
-	import org.jivesoftware.xiff.data.disco.InfoDiscoExtension;
-	import org.jivesoftware.xiff.data.disco.ItemDiscoExtension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.browse.BrowseExtension;
+	import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
+	import org.igniterealtime.xiff.data.disco.ItemDiscoExtension;
 	
 	/**
 	 * This class provides a means of querying for available services on an XMPP

@@ -1,6 +1,6 @@
-package org.jivesoftware.xiff.filter
+package org.igniterealtime.xiff.filter
 {
-	import org.jivesoftware.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.data.XMPPStanza;
 	
 	public interface IPacketFilter
 	{

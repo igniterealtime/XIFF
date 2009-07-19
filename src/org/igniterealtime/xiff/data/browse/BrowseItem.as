@@ -19,13 +19,13 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.browse
+package org.igniterealtime.xiff.data.browse
 {
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * Class that representes a child resource of a browsed resource.

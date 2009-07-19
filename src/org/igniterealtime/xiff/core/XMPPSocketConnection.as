@@ -21,7 +21,7 @@
  *
  */
 	 
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {	 
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -31,10 +31,10 @@ package org.jivesoftware.xiff.core
 	
 	import mx.logging.ILogger;
 	
-	import org.jivesoftware.xiff.events.*;
-	import org.jivesoftware.xiff.logging.LoggerFactory;
-	import org.jivesoftware.xiff.util.SocketConn;
-	import org.jivesoftware.xiff.util.SocketDataEvent;
+	import org.igniterealtime.xiff.events.*;
+	import org.igniterealtime.xiff.logging.LoggerFactory;
+	import org.igniterealtime.xiff.util.SocketConn;
+	import org.igniterealtime.xiff.util.SocketDataEvent;
 	
 	/**
 	 * A child of <code>XMPPConnection</code>, this class makes use of the
@@ -42,11 +42,11 @@ package org.jivesoftware.xiff.core
 	 * This gets rid of issues related to the <code>XMLSocket</code>'s appending
 	 * of a null-byte to all outgoing data.
 	 * 
-	 * @see org.jivesoftware.xiff.core.XMPPConnection
+	 * @see org.igniterealtime.xiff.core.XMPPConnection
 	 */
 	public class XMPPSocketConnection extends XMPPConnection
 	{
-		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPSocketConnection");
+		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPSocketConnection");
 		
 		private var _incompleteRawXML: String = '';
 		

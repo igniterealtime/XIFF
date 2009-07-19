@@ -1,11 +1,11 @@
-package org.jivesoftware.xiff.data.im
+package org.igniterealtime.xiff.data.im
 {
   import flash.events.Event;
   import flash.events.EventDispatcher;
 
   import mx.events.PropertyChangeEvent;
 
-  import org.jivesoftware.xiff.core.UnescapedJID;
+  import org.igniterealtime.xiff.core.UnescapedJID;
 
   public class RosterItemVO extends EventDispatcher implements Contact
   {

@@ -1,9 +1,9 @@
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 	
-	import org.jivesoftware.xiff.bookmark.GroupChatBookmark;
-	import org.jivesoftware.xiff.bookmark.UrlBookmark;
+	import org.igniterealtime.xiff.bookmark.GroupChatBookmark;
+	import org.igniterealtime.xiff.bookmark.UrlBookmark;
 
 	public class BookmarkChangedEvent extends Event
 	{

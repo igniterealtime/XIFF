@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.rpc{
+package org.igniterealtime.xiff.data.rpc{
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 	

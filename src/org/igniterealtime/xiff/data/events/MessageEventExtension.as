@@ -1,7 +1,7 @@
-package org.jivesoftware.xiff.data.events
+package org.igniterealtime.xiff.data.events
 {
-import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
 	public class MessageEventExtension implements IExtension, ISerializable {

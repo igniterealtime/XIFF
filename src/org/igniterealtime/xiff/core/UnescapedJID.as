@@ -18,7 +18,7 @@
  * limitations under the License. 
  */
 
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {
   /**
    * This class provides access to a JID (Jabber ID) in unescaped form.

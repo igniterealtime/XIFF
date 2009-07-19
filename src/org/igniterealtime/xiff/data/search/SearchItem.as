@@ -1,7 +1,7 @@
-package org.jivesoftware.xiff.data.search{
+package org.igniterealtime.xiff.data.search{
 	
-	import org.jivesoftware.xiff.data.XMLStanza;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
 	/**

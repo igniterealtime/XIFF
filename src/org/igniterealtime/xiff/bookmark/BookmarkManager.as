@@ -1,16 +1,16 @@
-package org.jivesoftware.xiff.bookmark
+package org.igniterealtime.xiff.bookmark
 {
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.data.privatedata.PrivateDataExtension;
-	import org.jivesoftware.xiff.events.BookmarkChangedEvent;
-	import org.jivesoftware.xiff.events.BookmarkRetrievedEvent;
-	import org.jivesoftware.xiff.privatedata.PrivateDataManager;
-	import org.jivesoftware.xiff.util.Callback;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
+	import org.igniterealtime.xiff.events.BookmarkChangedEvent;
+	import org.igniterealtime.xiff.events.BookmarkRetrievedEvent;
+	import org.igniterealtime.xiff.privatedata.PrivateDataManager;
+	import org.igniterealtime.xiff.util.Callback;
 
 	[Event("GroupChatBookmarkChanged")]
 	

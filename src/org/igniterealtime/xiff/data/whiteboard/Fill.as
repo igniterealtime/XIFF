@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.whiteboard{
+package org.igniterealtime.xiff.data.whiteboard{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -21,7 +21,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
 	/**

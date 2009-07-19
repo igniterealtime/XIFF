@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.conference
+package org.igniterealtime.xiff.conference
 {
 	public class RoomFile
 	{

@@ -20,10 +20,10 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.id
+package org.igniterealtime.xiff.data.id
 {
 	
-	import org.jivesoftware.xiff.data.id.IIDGenerator;
+	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import flash.net.SharedObject;
 	
 	/**

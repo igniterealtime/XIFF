@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.register{
+package org.igniterealtime.xiff.data.register{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,10 +24,10 @@ package org.jivesoftware.xiff.data.register{
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
 		
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.

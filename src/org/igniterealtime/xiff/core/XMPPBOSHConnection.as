@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -10,17 +10,17 @@ package org.jivesoftware.xiff.core
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 	
-	import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
-	import org.jivesoftware.xiff.events.DisconnectionEvent;
-	import org.jivesoftware.xiff.events.IncomingDataEvent;
-	import org.jivesoftware.xiff.events.LoginEvent;
-	import org.jivesoftware.xiff.events.OutgoingDataEvent;
-	import org.jivesoftware.xiff.logging.LoggerFactory;
-	import org.jivesoftware.xiff.util.Callback;
+	import org.igniterealtime.xiff.events.ConnectionSuccessEvent;
+	import org.igniterealtime.xiff.events.DisconnectionEvent;
+	import org.igniterealtime.xiff.events.IncomingDataEvent;
+	import org.igniterealtime.xiff.events.LoginEvent;
+	import org.igniterealtime.xiff.events.OutgoingDataEvent;
+	import org.igniterealtime.xiff.logging.LoggerFactory;
+	import org.igniterealtime.xiff.util.Callback;
 	
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
-		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPBOSHConnection");
+		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPBOSHConnection");
 		
 		private static const HTTP_PORT:int = 7070;
 		private static const HTTPS_PORT:int = 7443;

@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data{
+package org.igniterealtime.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,9 +24,9 @@ package org.jivesoftware.xiff.data{
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.id.IIDGenerator;
-	import org.jivesoftware.xiff.data.id.IncrementalGenerator;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.id.IIDGenerator;
+	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
@@ -69,7 +69,7 @@ package org.jivesoftware.xiff.data{
 		 * (Static method) Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
 		 *
-		 * @see org.jivesoftware.xiff.data.id.IncrementalGenerator
+		 * @see org.igniterealtime.xiff.data.id.IncrementalGenerator
 		 * @availability Flash Player 7
 		 * @param prefix The prefix for the ID to be generated
 		 * @return The generated ID
@@ -83,7 +83,7 @@ package org.jivesoftware.xiff.data{
 		/**
 	 	 * (Static method) Sets the ID generator for this stanza type. ID generators must implement
 		 * the IIDGenerator interface. The XIFF library comes with a few default
-		 * ID generators that have already been implemented (see org.jivesoftware.xiff.data.id.*).
+		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
 		 * 
 		 * Setting the ID generator by stanza type is useful if you'd like to use
 		 * different ID generation schemes for each type. For instance, messages could
@@ -93,8 +93,8 @@ package org.jivesoftware.xiff.data{
 		 * @availability Flash Player 7
 		 * @param generator The ID generator class
 		 * @example The following sets the ID generator for the Message stanza type to the IncrementalGenerator
-		 * class found in org.jivesoftware.xiff.data.id.IncrementalGenerator:
-		 * <pre>Message.setIDGenerator( org.jivesoftware.xiff.data.id.IncrementalGenerator );</pre>
+		 * class found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
+		 * <pre>Message.setIDGenerator( org.igniterealtime.xiff.data.id.IncrementalGenerator );</pre>
 		 */
 		public static function setIDGenerator( generator:IIDGenerator ):void
 		{

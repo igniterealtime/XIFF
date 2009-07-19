@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.im{
+package org.igniterealtime.xiff.data.im{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,9 +24,9 @@ package org.jivesoftware.xiff.data.im{
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * This class is used internally by the RosterExtension class for managing items
@@ -37,7 +37,7 @@ package org.jivesoftware.xiff.data.im{
 	 * @author Sean Voisen
 	 * @since 2.0.0
 	 * @availability Flash Player 7
-	 * @see org.jivesoftware.xiff.data.im.RosterExtension
+	 * @see org.igniterealtime.xiff.data.im.RosterExtension
 	 * @param parent The parent XMLNode
 	 * @toc-path Extensions/Instant Messaging
 	 * @toc-sort 1/2

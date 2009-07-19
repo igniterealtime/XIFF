@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data{
+package org.igniterealtime.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -22,7 +22,7 @@ package org.jivesoftware.xiff.data{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.INodeProxy;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import flash.xml.XMLNode;
 	import flash.xml.XMLDocument;
 	

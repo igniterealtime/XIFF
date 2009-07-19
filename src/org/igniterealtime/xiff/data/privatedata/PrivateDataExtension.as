@@ -1,11 +1,11 @@
-package org.jivesoftware.xiff.data.privatedata
+package org.igniterealtime.xiff.data.privatedata
 {
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.privatedata.IPrivatePayload;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 
 	public class PrivateDataExtension implements IExtension, ISerializable
 	{

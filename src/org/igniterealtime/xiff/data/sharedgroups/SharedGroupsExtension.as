@@ -1,8 +1,8 @@
-package org.jivesoftware.xiff.data.sharedgroups
+package org.igniterealtime.xiff.data.sharedgroups
 {
 	import flash.xml.XMLNode;
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.IExtension;
 
 	public class SharedGroupsExtension implements IExtension, ISerializable
 	{

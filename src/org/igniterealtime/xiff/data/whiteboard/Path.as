@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.whiteboard{
+package org.igniterealtime.xiff.data.whiteboard{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Sean Voisen <sean@voisen.org>
@@ -21,10 +21,10 @@ package org.jivesoftware.xiff.data.whiteboard{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.ISerializable;
-	import org.jivesoftware.xiff.data.XMLStanza;
+	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
-	import org.jivesoftware.xiff.data.whiteboard.*;
+	import org.igniterealtime.xiff.data.whiteboard.*;
 	import flash.xml.XMLNode;
 	 
 	/**
@@ -192,7 +192,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	     * The Stroke object that contains the properties describing the stroke of this
 	     * path
 	     *
-	     * @see org.jivesoftware.xiff.data.whiteboard.Stroke
+	     * @see org.igniterealtime.xiff.data.whiteboard.Stroke
 		 * @availability Flash Player 7
 	     */
 	    public function get stroke():Stroke { return myStroke; }
@@ -201,7 +201,7 @@ package org.jivesoftware.xiff.data.whiteboard{
 	     * The Fill object that contains the properties describing the fill of this
 	     * path
 	     *
-	     * @see org.jivesoftware.xiff.data.whiteboard.Fill
+	     * @see org.igniterealtime.xiff.data.whiteboard.Fill
 		 * @availability Flash Player 7
 	     */
 	    public function get fill():Fill { return myFill; }

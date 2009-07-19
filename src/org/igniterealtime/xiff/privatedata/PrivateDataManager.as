@@ -1,14 +1,14 @@
-package org.jivesoftware.xiff.privatedata
+package org.igniterealtime.xiff.privatedata
 {
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.XMPPConnection;
-	import org.jivesoftware.xiff.data.ExtensionClassRegistry;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.privatedata.PrivateDataExtension;
-	import org.jivesoftware.xiff.filter.CallbackPacketFilter;
-	import org.jivesoftware.xiff.filter.IPacketFilter;
-	import org.jivesoftware.xiff.util.Callback;
+	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
+	import org.igniterealtime.xiff.filter.CallbackPacketFilter;
+	import org.igniterealtime.xiff.filter.IPacketFilter;
+	import org.igniterealtime.xiff.util.Callback;
 
 	public class PrivateDataManager extends EventDispatcher
 	{

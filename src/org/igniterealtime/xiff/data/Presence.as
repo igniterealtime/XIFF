@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data{
+package org.igniterealtime.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,7 +24,7 @@ package org.jivesoftware.xiff.data{
 	 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.EscapedJID;
 	
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.

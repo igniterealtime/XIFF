@@ -1,8 +1,8 @@
-package org.jivesoftware.xiff.events
+package org.igniterealtime.xiff.events
 {
 	import flash.events.*;
 
-	import org.jivesoftware.xiff.vcard.VCard;
+	import org.igniterealtime.xiff.vcard.VCard;
 		
 	public class VCardEvent extends Event
 	{

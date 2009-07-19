@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -24,8 +24,8 @@ package org.jivesoftware.xiff.data.muc{
 	
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.IExtension;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * Implements the administration command data model in <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.

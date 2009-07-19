@@ -1,7 +1,7 @@
-package org.jivesoftware.xiff.filter
+package org.igniterealtime.xiff.filter
 {
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.util.Callback;
+	import org.igniterealtime.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.util.Callback;
 
 	public class CallbackPacketFilter implements IPacketFilter
 	{

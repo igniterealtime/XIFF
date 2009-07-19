@@ -19,14 +19,14 @@
  *
  */
 	
-package org.jivesoftware.xiff.data.disco
+package org.igniterealtime.xiff.data.disco
 {
 
 	import flash.xml.XMLNode;
 	
-	import org.jivesoftware.xiff.core.EscapedJID;
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
 	 * Base class for service discovery extensions.

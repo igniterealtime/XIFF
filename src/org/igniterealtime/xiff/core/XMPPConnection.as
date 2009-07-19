@@ -21,7 +21,7 @@
  *
  */
 	 
-package org.jivesoftware.xiff.core
+package org.igniterealtime.xiff.core
 {	 
 	import flash.events.DataEvent;
 	import flash.events.Event;
@@ -36,94 +36,94 @@ package org.jivesoftware.xiff.core
 	
 	import mx.logging.ILogger;
 	
-	import org.jivesoftware.xiff.auth.Anonymous;
-	import org.jivesoftware.xiff.auth.External;
-	import org.jivesoftware.xiff.auth.Plain;
-	import org.jivesoftware.xiff.auth.SASLAuth;
-	import org.jivesoftware.xiff.data.Extension;
-	import org.jivesoftware.xiff.data.IExtension;
-	import org.jivesoftware.xiff.data.IQ;
-	import org.jivesoftware.xiff.data.Message;
-	import org.jivesoftware.xiff.data.Presence;
-	import org.jivesoftware.xiff.data.XMPPStanza;
-	import org.jivesoftware.xiff.data.auth.AuthExtension;
-	import org.jivesoftware.xiff.data.bind.BindExtension;
-	import org.jivesoftware.xiff.data.forms.FormExtension;
-	import org.jivesoftware.xiff.data.register.RegisterExtension;
-	import org.jivesoftware.xiff.data.session.SessionExtension;
-	import org.jivesoftware.xiff.events.*;
-	import org.jivesoftware.xiff.exception.SerializationException;
-	import org.jivesoftware.xiff.logging.LoggerFactory;
+	import org.igniterealtime.xiff.auth.Anonymous;
+	import org.igniterealtime.xiff.auth.External;
+	import org.igniterealtime.xiff.auth.Plain;
+	import org.igniterealtime.xiff.auth.SASLAuth;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.Message;
+	import org.igniterealtime.xiff.data.Presence;
+	import org.igniterealtime.xiff.data.XMPPStanza;
+	import org.igniterealtime.xiff.data.auth.AuthExtension;
+	import org.igniterealtime.xiff.data.bind.BindExtension;
+	import org.igniterealtime.xiff.data.forms.FormExtension;
+	import org.igniterealtime.xiff.data.register.RegisterExtension;
+	import org.igniterealtime.xiff.data.session.SessionExtension;
+	import org.igniterealtime.xiff.events.*;
+	import org.igniterealtime.xiff.exception.SerializationException;
+	import org.igniterealtime.xiff.logging.LoggerFactory;
 
 	/**
 	 * Dispatched when a password change is successful.
 	 * 
-	 * @eventType org.jivesoftware.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
+	 * @eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
 	 */
-    [Event(name="changePasswordSuccess", type="org.jivesoftware.xiff.events.ChangePasswordSuccessEvent")]
+    [Event(name="changePasswordSuccess", type="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent")]
     
     /**
      * Dispatched when the connection is successfully made to the server.
      * 
-     * @eventType org.jivesoftware.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
+     * @eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
      */
-    [Event(name="connection", type="org.jivesoftware.xiff.events.ConnectionSuccessEvent")]
+    [Event(name="connection", type="org.igniterealtime.xiff.events.ConnectionSuccessEvent")]
     
     /**
      * Dispatched when there is a disconnection from the server.
      * 
-     * @eventType org.jivesoftware.xiff.events.DisconnectionEvent.DISCONNECT
+     * @eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
      */
-    [Event(name="disconnection", type="org.jivesoftware.xiff.events.DisconnectionEvent")]
+    [Event(name="disconnection", type="org.igniterealtime.xiff.events.DisconnectionEvent")]
     
     /**
      * Dispatched when there is some type of XMPP error.
      * 
-     * @eventType org.jivesoftware.xiff.events.XIFFErrorEvent.XIFF_ERROR
+     * @eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
      */
-    [Event(name="error", type="org.jivesoftware.xiff.events.XIFFErrorEvent")]
+    [Event(name="error", type="org.igniterealtime.xiff.events.XIFFErrorEvent")]
     
     /**
      * Dispatched whenever there is incoming XML data.
      * 
-     * @eventType org.jivesoftware.xiff.events.IncomingDataEvent.INCOMING_DATA
+     * @eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
      */
-    [Event(name="incomingData", type="org.jivesoftware.xiff.events.IncomingDataEvent")]
+    [Event(name="incomingData", type="org.igniterealtime.xiff.events.IncomingDataEvent")]
     
     /**
      * Dispatched on successful authentication (login) with the server.
      * 
-     * @eventType org.jivesoftware.xiff.events.LoginEvent.LOGIN
+     * @eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
      */
-    [Event(name="login", type="org.jivesoftware.xiff.events.LoginEvent")]
+    [Event(name="login", type="org.igniterealtime.xiff.events.LoginEvent")]
     
     /**
      * Dispatched on incoming messages.
      * 
-     * @eventType org.jivesoftware.xiff.events.MessageEvent.MESSAGE
+     * @eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
      */
-    [Event(name="message", type="org.jivesoftware.xiff.events.MessageEvent")]
+    [Event(name="message", type="org.igniterealtime.xiff.events.MessageEvent")]
     
     /**
      * Dispatched whenever data is sent to the server.
      * 
-     * @eventType org.jivesoftware.xiff.events.OutgoingDataEvent.OUTGOING_DATA
+     * @eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
      */
-    [Event(name="outgoingData", type="org.jivesoftware.xiff.events.OutgoingDataEvent")]
+    [Event(name="outgoingData", type="org.igniterealtime.xiff.events.OutgoingDataEvent")]
     
     /**
      * Dispatched on incoming presence data.
      * 
-     * @eventType org.jivesoftware.xiff.events.PresenceEvent.PRESENCE
+     * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
      */
-    [Event(name="presence", type="org.jivesoftware.xiff.events.PresenceEvent")]
+    [Event(name="presence", type="org.igniterealtime.xiff.events.PresenceEvent")]
     
     /**
      * Dispatched on when new user account registration is successful.
      * 
-     * @eventType org.jivesoftware.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
+     * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
      */
-    [Event(name="registrationSuccess", type="org.jivesoftware.xiff.events.RegistrationSuccessEvent")]
+    [Event(name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent")]
     
     /**
      * This class is used to connect to and manage data coming from an XMPP server. Use one instance
@@ -131,7 +131,7 @@ package org.jivesoftware.xiff.core
      */ 
 	public class XMPPConnection extends EventDispatcher
 	{
-		private static const logger:ILogger = LoggerFactory.getLogger("org.jivesoftware.xiff.core.XMPPConnection");
+		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPConnection");
 		
 		/**
 		 * @private
@@ -323,7 +323,7 @@ package org.jivesoftware.xiff.core
 		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a <code>SerializeException</code>.
 		 *
 		 * @param o The data to send. This must be an instance of a class that implements the ISerializable interface.
-		 * @see org.jivesoftware.xiff.data.ISerializable
+		 * @see org.igniterealtime.xiff.data.ISerializable
 		 * @example The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".<br />
 		 * <pre>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
 		 * myXMPPConnection.send( msg );</pre>
@@ -363,7 +363,7 @@ package org.jivesoftware.xiff.core
 		 * For login status, use the <code>isLoggedIn()</code> method.)
 		 * 
 		 * @return A boolean indicating whether the connection is active.
-		 * @see org.jivesoftware.xiff.core.XMPPConnection#isLoggedIn
+		 * @see org.igniterealtime.xiff.core.XMPPConnection#isLoggedIn
 		 */
 		public function isActive():Boolean
 		{
@@ -374,7 +374,7 @@ package org.jivesoftware.xiff.core
 		 * Determines whether the user is connected and logged into the server.
 		 * 
 		 * @return A boolean indicating whether the user is logged in.
-		 * @see org.jivesoftware.xiff.core.XMPPConnection#isActive
+		 * @see org.igniterealtime.xiff.core.XMPPConnection#isActive
 		 */
 		public function isLoggedIn():Boolean
 		{

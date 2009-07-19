@@ -1,10 +1,10 @@
-package org.jivesoftware.xiff.conference
+package org.igniterealtime.xiff.conference
 {
 	import flash.events.EventDispatcher;
 	
-	import org.jivesoftware.xiff.core.UnescapedJID;
-	import org.jivesoftware.xiff.data.im.Contact;
-	import org.jivesoftware.xiff.data.im.RosterItemVO;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.data.im.Contact;
+	import org.igniterealtime.xiff.data.im.RosterItemVO;
 
 	public class RoomOccupant extends EventDispatcher implements Contact
 	{

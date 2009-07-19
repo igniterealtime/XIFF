@@ -1,4 +1,4 @@
-package org.jivesoftware.xiff.data{
+package org.igniterealtime.xiff.data{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -22,7 +22,7 @@ package org.jivesoftware.xiff.data{
 	 *
 	 */
 	
-	import org.jivesoftware.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * This interface provides access to contained extensions and methods to modify the contained extensions.  
@@ -30,8 +30,8 @@ package org.jivesoftware.xiff.data{
 	 *
 	 * @author Sean Voisen
 	 * @since 2.0.0
-	 * @see org.jivesoftware.xiff.data.ExtensionContainer
-	 * @see org.jivesoftware.xiff.data.IExtension
+	 * @see org.igniterealtime.xiff.data.ExtensionContainer
+	 * @see org.igniterealtime.xiff.data.IExtension
 	 * @availability Flash Player 7
 	 * @toc-path Interfaces
 	 * @toc-sort 1

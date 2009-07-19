@@ -19,7 +19,7 @@
  *
  */
 	 
-package org.jivesoftware.xiff.data.auth
+package org.igniterealtime.xiff.data.auth
 {
 	/**
 	 * A static class for SHA1 hash creation. Original ActionScript 1.0 version 

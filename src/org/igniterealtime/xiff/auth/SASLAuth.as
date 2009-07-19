@@ -18,7 +18,7 @@
  * limitations under the License. 
  */
 
-package org.jivesoftware.xiff.auth
+package org.igniterealtime.xiff.auth
 {
 	import flash.xml.XMLNode;
 	
