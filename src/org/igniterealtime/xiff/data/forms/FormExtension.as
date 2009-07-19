@@ -161,7 +161,7 @@ package org.igniterealtime.xiff.data.forms{
 	     * easily check what kind of form this is.
 	     *
 		 * @return String the registered namespace of this form type
-	     * @see http://www.jabber.org/jeps/jep-0068.html
+	     * @see http://xmpp.org/extensions/xep-0068.html
 		 * @availability Flash Player 7
 	     */
 	    public function getFormType():String

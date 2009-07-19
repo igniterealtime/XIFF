@@ -30,8 +30,8 @@ package org.igniterealtime.xiff.core
 	 * This class provides a means of querying for available services on an XMPP
    * server using the Disco protocol extension. For more information on Disco,
    * take a look at
-	 * <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030</a> and 
-	 * <a href="http://www.jabber.org/jeps/jep-0011.html">JEP-0011</a> for the
+	 * <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a> and 
+	 * <a href="http://xmpp.org/extensions/xep-0011.html">XEP-0011</a> for the
 	 * protocol enhancement specifications.
 	 */
 	public class Browser

@@ -32,8 +32,9 @@ package org.igniterealtime.xiff.data.auth
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
-	 * Implements <a href="http://www.jabber.org/jeps/jep-0078.html">JEP-0078<a> 
+	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a> 
 	 * for non SASL authentication.
+	 * @see http://xmpp.org/extensions/xep-0078.html
 	 */
 	public class AuthExtension extends Extension implements IExtension, ISerializable
 	{

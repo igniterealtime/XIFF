@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.data.rpc{
 	import flash.xml.XMLNode;
 	
 	/**
-	 * Implements <a href="http://www.jabber.org/jeps/jep-0009.html">JEP-0009<a> for XML-RPC over XMPP.
+	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
 	 *
 	 * @author Sean Treadway
 	 * @since 2.0.0

@@ -182,7 +182,7 @@ package org.igniterealtime.xiff.data.muc{
 	
 		/**
 		 * Time base condition to retrieve all messages from a given time formatted in the format described in 
-		 * <a href="http://www.jabber.org/jeps/jep-0082.html">JEP-0082</a>.
+		 * <a href="http://xmpp.org/extensions/xep-0082.html">XEP-0082</a>.
 		 *
 		 */
 		public function get since():String

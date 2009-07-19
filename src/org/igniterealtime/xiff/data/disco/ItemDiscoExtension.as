@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030<a> 
+	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a> 
 	 * for service item discovery.
 	 */
 	public class ItemDiscoExtension extends DiscoExtension implements IExtension

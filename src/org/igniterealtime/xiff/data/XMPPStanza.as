@@ -294,7 +294,7 @@ package org.igniterealtime.xiff.data{
 		
 		/**
 		 * The error condition, assuming this stanza contains error information. For more information
-		 * on error conditions, see <a href="http://www.jabber.org/jeps/jep-0086.html">http://www.jabber.org/jeps/jep-0086.html</a>.
+		 * on error conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
 		 * @availability Flash Player 7
 		 */
@@ -328,7 +328,7 @@ package org.igniterealtime.xiff.data{
 		
 		/**
 		 * The error type, assuming this stanza contains error information. For more information
-		 * on error types, see <a href="http://www.jabber.org/jeps/jep-0086.html">http://www.jabber.org/jeps/jep-0086.html</a>.
+		 * on error types, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
 		 * @availability Flash Player 7
 		 */
@@ -349,7 +349,7 @@ package org.igniterealtime.xiff.data{
 		 * The error code, assuming this stanza contains error information. Error codes are 
 		 * deprecated in standard XMPP, but they are commonly used by older Jabber servers 
 		 * like Jabberd 1.4. For more information on error codes, and corresponding error
-		 * conditions, see <a href="http://www.jabber.org/jeps/jep-0086.html">http://www.jabber.org/jeps/jep-0086.html</a>.
+		 * conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
 		 * @availability Flash Player 7
 		 */

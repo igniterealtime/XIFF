@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.data.forms{
 	 * @since 2.0.0
 	 * @availability Flash Player 7
 	 * @see org.igniterealtime.xiff.data.forms.FormExtension
-	 * @see http://www.jabber.org/jeps/jep-0004.html
+	 * @see http://xmpp.org/extensions/xep-0004.html
 	 * @param parent The parent XMLNode
 	 * @toc-path Extensions/Instant Messaging
 	 * @toc-sort 1/2
@@ -131,7 +131,7 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_TEXT_PRIVATE</code>
 	     * <code>FormExtension.FIELD_TYPE_TEXT_SINGLE</code>
 	     *
-	     * @see http://www.jabber.org/jeps/jep-0004.html#protocol-fieldtypes
+	     * @see http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
 		 * @availability Flash Player 7
 	     */
 	    public function get type():String { return getNode().attributes.type; }

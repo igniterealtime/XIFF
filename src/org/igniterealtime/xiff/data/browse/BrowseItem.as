@@ -64,7 +64,7 @@ package org.igniterealtime.xiff.data.browse
 		 * One of the categories from the list above, or a 
 		 * non-standard category prefixed with the string "x-". 
 		 *
-		 * @see http://www.jabber.org/jeps/jep-0011.html#sect-id2594870
+		 * @see http://xmpp.org/extensions/xep-0011.html#sect-id2594870
 		 */
 		public function get category():String 
 		{ 
@@ -99,7 +99,7 @@ package org.igniterealtime.xiff.data.browse
 		 * One of the official types from the specified category, 
 		 * or a non-standard type prefixed with the string "x-". 
 
-		 * @see http://www.jabber.org/jeps/jep-0011.html#sect-id2594870
+		 * @see http://xmpp.org/extensions/xep-0011.html#sect-id2594870
 		 */
 		public function get type():String 
 		{ 

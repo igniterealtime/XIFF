@@ -26,8 +26,8 @@ package org.igniterealtime.xiff.data.rpc{
 	
 	/**
 	 * Implements client side XML marshalling of methods and parameters into XMLRPC.
-	 * For more information on RPC over XMPP, see <a href="http://www.jabber.org/jeps/jep-0009.html">
-	 * http://www.jabber.org/jeps/jep-0009.html</a>.
+	 * For more information on RPC over XMPP, see <a href="http://xmpp.org/extensions/xep-0009.html">
+	 * http://xmpp.org/extensions/xep-0009.html</a>.
 	 *
 	 * @author Sean Treadway
 	 * @since 2.0.0

@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.muc{
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements the administration command data model in <a href="http://www.jabber.org/jeps/jep-0045.html">JEP-0045<a> for multi-user chat.
+	 * Implements the administration command data model in <a href="http://xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * @author Sean Treadway
 	 * @since 2.0.0

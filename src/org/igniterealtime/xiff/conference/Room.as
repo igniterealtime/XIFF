@@ -209,7 +209,7 @@ package org.igniterealtime.xiff.conference
 	[Event(name="declined", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
-	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (JEP-0045).
+	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
 	 *
 	 * @param connection An XMPPConnection instance that is providing the primary server connection
@@ -775,12 +775,10 @@ package org.igniterealtime.xiff.conference
 	
 	    /*
 	     * Room owner (creation/configuration/destruction) methods
+		 * @see http://xmpp.org/extensions/xep-0045.html#createroom
 	     */
-	
 	    private function unlockRoom( isReserved:Boolean ):void
-	    {
-	        // http://www.jabber.org/jeps/jep-0045.html#createroom
-	
+	    {	
 	        if( isReserved ) {
 	            requestConfiguration();
 	        } else {

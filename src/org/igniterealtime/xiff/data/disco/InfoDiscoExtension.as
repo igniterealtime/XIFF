@@ -28,9 +28,9 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements <a href="http://www.jabber.org/jeps/jep-0030.html">JEP-0030<a> for service info discovery.
-	 * Also, take a look at <a href="http://www.jabber.org/jeps/jep-0020.html">JEP-0020</a> and 
-	 * <a href="http://www.jabber.org/jeps/jep-0060.html">JEP-0060</a>.
+	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a> for service info discovery.
+	 * Also, take a look at <a href="http://xmpp.org/extensions/xep-0020.html">XEP-0020</a> and 
+	 * <a href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</a>.
 	 *
 	 * @author Sean Treadway
 	 * @since 2.0.0
