@@ -7,18 +7,18 @@
   creationComplete="init()">
   <mx:Script>
   <![CDATA[
-    
+
     import mx.controls.Alert;
     import mx.logging.ILogger;
     import mx.logging.LogEventLevel;
 
-    import org.jivesoftware.xiff.core.XMPPSocketConnection;
-    import org.jivesoftware.xiff.auth.Anonymous;
-    import org.jivesoftware.xiff.events.ConnectionSuccessEvent;
-    import org.jivesoftware.xiff.events.DisconnectionEvent;
-    import org.jivesoftware.xiff.events.LoginEvent;
-    import org.jivesoftware.xiff.events.XIFFErrorEvent;
-    import org.jivesoftware.xiff.logging.LoggerFactory;
+    import org.igniterealtime.xiff.core.XMPPSocketConnection;
+    import org.igniterealtime.xiff.auth.Anonymous;
+    import org.igniterealtime.xiff.events.ConnectionSuccessEvent;
+    import org.igniterealtime.xiff.events.DisconnectionEvent;
+    import org.igniterealtime.xiff.events.LoginEvent;
+    import org.igniterealtime.xiff.events.XIFFErrorEvent;
+    import org.igniterealtime.xiff.logging.LoggerFactory;
 
     private var connection:XMPPSocketConnection;
     private var logger:ILogger;
@@ -47,13 +47,13 @@
       }
     }
 
-    private function handleError( e:XIFFErrorEvent ):void
+    private function handleError( event:XIFFErrorEvent ):void
     {
-      logger.error( "ERROR: " + e.errorCondition );
-      Alert.show( e.errorCondition, "Error" );
+      logger.error( "ERROR: " + event.errorCondition );
+      Alert.show( event.errorCondition, "Error" );
     }
 
-    private function handleDisconnect( e:DisconnectionEvent ):void
+    private function handleDisconnect( event:DisconnectionEvent ):void
     {
       logger.info( "Disconnected!" );
       disconnectButton.enabled = false;
@@ -92,12 +92,12 @@
       connection.disconnect();
     }
 
-    private function handleConnection( e:ConnectionSuccessEvent ):void
+    private function handleConnection( event:ConnectionSuccessEvent ):void
     {
       logger.info( "Connection successful!" );
     }
 
-    private function handleLogin( e:LoginEvent ):void
+    private function handleLogin( event:LoginEvent ):void
     {
       logger.info( "Authentication successful!" );
       Alert.show( "Authentication successful!", "Authentication" );
@@ -149,6 +149,6 @@
     </mx:HBox>
   </mx:Panel>
   <mx:Panel width="80%" title="Debug">
-    <mx:TextArea editable="false" width="100%" height="300" id="debugOutput" /> 
+    <mx:TextArea editable="false" width="100%" height="300" id="debugOutput" />
   </mx:Panel>
 </mx:Application>
