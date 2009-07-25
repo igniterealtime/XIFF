@@ -43,10 +43,7 @@ package org.igniterealtime.xiff.data.muc{
 	 * </ul>
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;

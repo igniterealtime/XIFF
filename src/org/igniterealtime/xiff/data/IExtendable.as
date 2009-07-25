@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -29,12 +30,9 @@ package org.igniterealtime.xiff.data{
 	 * All XMPP stanzas that can be extended should implement this interface.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
 	 * @see org.igniterealtime.xiff.data.ExtensionContainer
 	 * @see org.igniterealtime.xiff.data.IExtension
-	 * @availability Flash Player 7
 	 * @toc-path Interfaces
-	 * @toc-sort 1
 	 */
 	public interface IExtendable
 	{

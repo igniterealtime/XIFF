@@ -30,10 +30,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	 * if no properties were defined in the XML.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Whiteboard
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Whiteboard/2
 	*/
 	public class Fill implements ISerializable
 	{
@@ -47,7 +44,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * serializes into the attributes of the XML node, it will directly modify
 	     * the parent node passed.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -62,7 +58,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Extracts the known fill attributes from the node
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -82,7 +77,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * The value of the RGB color.  This is the same color format used by
 	     * MovieClip.lineStyle
 	     *
-		 * @availability Flash Player 7
 	     */
 		public function get color():Number 
 		{
@@ -98,7 +92,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * The opacity of the fill, in percent. 100 is solid, 0 is transparent.
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get opacity():Number { return myOpacity ? myOpacity : 100; }
 	    public function set opacity(v:Number):void { myOpacity = v; }

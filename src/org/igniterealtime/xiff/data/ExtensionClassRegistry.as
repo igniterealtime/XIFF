@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -29,10 +30,6 @@ package org.igniterealtime.xiff.data{
 	 * This is a static class that contains class constructors for all extensions that could come from the network.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Data
-	 * @toc-sort 1
 	 */
 	public class ExtensionClassRegistry
 	{

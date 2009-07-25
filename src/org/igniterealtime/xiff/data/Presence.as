@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -30,16 +31,6 @@ package org.igniterealtime.xiff.data{
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @param recipient The recipient of the presence, usually in the form of a JID.
-	 * @param sender The sender of the presence, usually in the form of a JID.
-	 * @param presenceType The type of presence as a string. There are predefined static variables for this.
-	 * @param showVal What to show for this presence (away, online, etc.) There are predefined static variables for this.
-	 * @param statusVal The status; usually used for the "away message."
-	 * @param priorityVal The priority of this presence; usually on a scale of 1-5.
-	 * @toc-path Data
-	 * @toc-sort 1
 	 */
 	public class Presence extends XMPPStanza implements ISerializable 
 	{
@@ -63,7 +54,15 @@ package org.igniterealtime.xiff.data{
 		private var myStatusNode:XMLNode;
 		private var myPriorityNode:XMLNode;
 	
-	
+		/**
+		 * 
+		 * @param recipient The recipient of the presence, usually in the form of a JID.
+		 * @param sender The sender of the presence, usually in the form of a JID.
+		 * @param presenceType The type of presence as a string. There are predefined static variables for this.
+		 * @param showVal What to show for this presence (away, online, etc.) There are predefined static variables for this.
+		 * @param statusVal The status; usually used for the "away message."
+		 * @param priorityVal The priority of this presence; usually on a scale of 1-5.
+		 */
 		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
 		{		
 			super( recipient, sender, presenceType, null, "presence" );
@@ -77,7 +76,6 @@ package org.igniterealtime.xiff.data{
 		 * Serializes the Presence into XML form for sending to a server.
 		 *
 		 * @return An indication as to whether serialization was successful
-		 * @availability Flash Player 7
 		 */
 		override public function serialize( parentNode:XMLNode ):Boolean 
 		{
@@ -89,7 +87,6 @@ package org.igniterealtime.xiff.data{
 		 *
 		 * @param xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
-		 * @availability Flash Player 7
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean 
 		{	
@@ -128,7 +125,6 @@ package org.igniterealtime.xiff.data{
 		 * <li>Presence.SHOW_XA</li>
 		 * </ul>
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get show():String 
 		{
@@ -158,7 +154,6 @@ package org.igniterealtime.xiff.data{
 		/**
 		 * The status; usually used for "away messages."
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get status():String  {
 			if (myStatusNode == null || myStatusNode.firstChild == null) return null;
@@ -173,7 +168,6 @@ package org.igniterealtime.xiff.data{
 		/**
 		 * The priority of the presence, usually on a scale of 1-5.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get priority():Number 
 		{

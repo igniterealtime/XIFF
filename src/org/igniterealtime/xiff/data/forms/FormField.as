@@ -33,13 +33,10 @@ package org.igniterealtime.xiff.data.forms{
 	 *
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @see org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see http://xmpp.org/extensions/xep-0004.html
 	 * @param parent The parent XMLNode
-	 * @toc-path Extensions/Instant Messaging
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Instant Messaging/2
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
@@ -55,7 +52,6 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Serializes the FormField data to XML for sending.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this item should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -73,7 +69,6 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Deserializes the FormField data.
 		 *
-		 * @availability Flash Player 7
 		 * @param node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
@@ -106,7 +101,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * field node.  Since <code>var</code> is a reserved word in ActionScript
 	     * this field uses <code>name</code> to describe the name of this field.
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get name():String { return getNode().attributes["var"]; }
 	    public function set name(val:String) :void
@@ -132,7 +126,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_TEXT_SINGLE</code>
 	     *
 	     * @see http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
-		 * @availability Flash Player 7
 	     */
 	    public function get type():String { return getNode().attributes.type; }
 	    public function set type(val:String) :void
@@ -144,7 +137,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * The label of this field used by user interfaces to render a descriptive
 	     * title of this field
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get label():String { return getNode().attributes.label; }
 	    public function set label(val:String) :void
@@ -170,7 +162,6 @@ package org.igniterealtime.xiff.data.forms{
 	     *
 	     * Suggested values can typically be retrieved in <code>getAllOptions</code>
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get value():String {
 	    	try 
@@ -205,7 +196,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_TEXT_MULTI</code>
 	     *
 	     * @returns Array containing strings representing the values of this field
-		 * @availability Flash Player 7
 	     */
 	    public function getAllValues():Array
 	    {
@@ -221,7 +211,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * Sets all the values of this field from an array of strings
 	     *
 	     * @param val Array of Strings
-		 * @availability Flash Player 7
 	     */
 	    public function setAllValues(val:Array) :void
 	    {
@@ -248,7 +237,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
 	     *
 	     * @returns Array of objects with the properties <code>label</code> and <code>value</code>
-		 * @availability Flash Player 7
 	     */
 	    public function getAllOptions():Array
 	    {
@@ -267,7 +255,6 @@ package org.igniterealtime.xiff.data.forms{
 	     *
 	     * @param Array containing objects with the properties <code>label</code> and
 	     * <code>value</code>
-		 * @availability Flash Player 7
 	     */
 	    public function setAllOptions(val:Array):void
 	    {

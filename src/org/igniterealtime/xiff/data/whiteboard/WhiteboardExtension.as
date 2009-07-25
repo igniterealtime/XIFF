@@ -38,10 +38,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	 * All child whiteboard objects are contained and serialized by this class
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Whiteboard
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Whiteboard/2
 	 */
 	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
 	{
@@ -64,7 +61,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		 * The namespace for the WhiteboardExtension is "xiff:wb".
 		 *
 		 * @return The namespace
-		 * @availability Flash Player 7
 		 */
 		public function getNS():String
 		{
@@ -76,7 +72,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		 * The element for this extension is "x".
 		 *
 		 * @return The element name
-		 * @availability Flash Player 7
 		 */
 		public function getElementName():String
 		{
@@ -86,7 +81,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Serializes the WhiteboardExtension data to XML for sending.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -108,7 +102,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {
@@ -118,7 +111,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Deserializes the WhiteboardExtension data.
 		 *
-		 * @availability Flash Player 7
 		 * @param node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
@@ -143,7 +135,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	    /**
 	     * The paths available in this whiteboard message
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get paths():Array { return myPaths; }
 	

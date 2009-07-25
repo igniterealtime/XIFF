@@ -32,10 +32,7 @@ package org.igniterealtime.xiff.data.rpc{
 	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/RPC
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/RPC/2
 	 */
 	public class RPCExtension extends Extension implements IExtension, ISerializable
 	{
@@ -57,7 +54,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * @param methodName The name of the remote procedure to call
 		 * @param params A collection of parameters of any type
 		 * @see #result
-		 * @availability Flash Player 7
 		 */
 	
 		public function call(methodName:String, params:Array):void
@@ -69,7 +65,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * The result of this remote procedure call.  It can contain elements of any type.
 		 *
 		 * @return Array of demarshalled results from the remote procedure
-		 * @availability Flash Player 7
 		 */
 		public function get result():Array
 		{
@@ -81,7 +76,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * If the XMPP stanza never made it to the RPC service, then the error would be on the stanza object instead of this extension.
 		 *
 		 * @return True if the remote procedure call produced an error
-		 * @availability Flash Player 7
 		 */
 		public function get isFault():Boolean
 		{
@@ -91,7 +85,6 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * The object containing the fault of the remote procedure call.  This object could have any properties, as fault results are only structurally defined.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get fault():Object
 		{
@@ -101,7 +94,6 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * A common result from most RPC servers to describe a fault
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get faultCode():Number 
 		{
@@ -111,7 +103,6 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * A common result from most RPC servers to describe a fault
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get faultString():String
 		{
@@ -122,7 +113,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * Interface method, returning the namespace for this extension
 		 *
 		 * @see org.igniterealtime.xiff.data.IExtension
-		 * @availability Flash Player 7
 		 */
 		public function getNS():String
 		{
@@ -133,7 +123,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * Interface method, returning the namespace for this extension
 		 *
 		 * @see org.igniterealtime.xiff.data.IExtension
-		 * @availability Flash Player 7
 		 */
 		public function getElementName():String
 		{
@@ -143,7 +132,6 @@ package org.igniterealtime.xiff.data.rpc{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {
@@ -154,7 +142,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * Interface method, returning the namespace for this extension
 		 *
 		 * @see org.igniterealtime.xiff.data.ISerializable
-		 * @availability Flash Player 7
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
@@ -168,7 +155,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * Interface method, returning the namespace for this extension
 		 *
 		 * @see org.igniterealtime.xiff.data.ISerializable
-		 * @availability Flash Player 7
 		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{

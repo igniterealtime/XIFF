@@ -33,11 +33,8 @@ package org.igniterealtime.xiff.data.forms{
 	 * Implements the base functionality shared by all MUC extensions
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	//public class FormExtension extends Extension implements ISerializable, IExtension
 	public class FormExtension extends Extension implements IExtension, ISerializable
@@ -162,7 +159,6 @@ package org.igniterealtime.xiff.data.forms{
 	     *
 		 * @return String the registered namespace of this form type
 	     * @see http://xmpp.org/extensions/xep-0068.html
-		 * @availability Flash Player 7
 	     */
 	    public function getFormType():String
 	    {
@@ -178,7 +174,6 @@ package org.igniterealtime.xiff.data.forms{
 		 * Item interface to array of fields if they are contained in an "item" element
 		 *
 		 * @return Array containing Arrays of FormFields objects
-		 * @availability Flash Player 7
 		 */
 	    public function getAllItems():Array 
 	    { 
@@ -205,7 +200,6 @@ package org.igniterealtime.xiff.data.forms{
 		 * Item interface to array of fields if they are contained in an "item" element
 		 *
 		 * @return Array of FormFields objects
-		 * @availability Flash Player 7
 		 */
 	    public function getAllFields():Array 
 	    { 
@@ -233,7 +227,6 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Use this method to remove all items.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function removeAllItems():void
 		{
@@ -248,7 +241,6 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Use this method to remove all fields.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function removeAllFields():void
 		{
@@ -264,7 +256,6 @@ package org.igniterealtime.xiff.data.forms{
 	    /**
 	     * Instructions describing what to do with this form
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get instructions():String 
 	    {
@@ -283,7 +274,6 @@ package org.igniterealtime.xiff.data.forms{
 	    /**
 	     * The title of this form
 	     *
-		 * @availability Flash Player 7
 	     */
 	    public function get title():String
 	    {
@@ -304,7 +294,6 @@ package org.igniterealtime.xiff.data.forms{
 	     *
 	     * @returns Array of FormField objects containing information about the fields
 	     * in the fields retrieved by getAllItems
-		 * @availability Flash Player 7
 	     */
 	    public function getReportedFields():Array
 	    { 
@@ -319,7 +308,6 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.SUBMIT_TYPE</code>
 	     * <code>FormExtension.CANCEL_TYPE</code>
 	     *
-		 * @availability Flash Player 7
 	     */
 	
 	    public function get type():String { return getNode().attributes.type; }

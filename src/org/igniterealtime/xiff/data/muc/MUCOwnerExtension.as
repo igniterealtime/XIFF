@@ -31,11 +31,8 @@ package org.igniterealtime.xiff.data.muc{
 	 * Implements the administration command data model in <a href="http://xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	public class MUCOwnerExtension extends MUCBaseExtension implements IExtension
 	{

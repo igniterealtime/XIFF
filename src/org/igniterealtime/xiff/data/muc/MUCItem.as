@@ -33,10 +33,7 @@ package org.igniterealtime.xiff.data.muc{
 	 * information pertaining to occupants in a multi-user conference room.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	public class MUCItem extends XMLStanza implements ISerializable
 	{
@@ -134,7 +131,6 @@ package org.igniterealtime.xiff.data.muc{
 		/**
 		 * The nickname of the conference occupant.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get nick():String
 		{

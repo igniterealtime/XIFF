@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -30,11 +31,7 @@ package org.igniterealtime.xiff.data{
 	 * This is a base class for all classes that encapsulate XML stanza data. It provides
 	 * a set of methods that faciliate easy manipulation of XML data.
 	 * 
-	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Data/Base Classes
-	 * @toc-sort 1/2
+	 * @author Sean Treadway/Base Classes/2
 	 */
 	public class XMLStanza extends ExtensionContainer implements INodeProxy, IExtendable
 	{
@@ -52,7 +49,6 @@ package org.igniterealtime.xiff.data{
 		 * A helper method to determine if a value is both not null
 		 * and not undefined.
 		 *
-		 * @availability Flash Player 7
 		 * @param val The value to check for existance
 		 * @return Whether the value checked is both not null and not undefined
 		 */
@@ -72,7 +68,6 @@ package org.igniterealtime.xiff.data{
 		 * @param elementName The element name of the new node
 		 * @param value The value of the new node
 		 * @return A reference to the new node
-		 * @availability Flash Player 7
 		 */
 		public function addTextNode( parent:XMLNode, elementName:String, value:String):XMLNode
 		{
@@ -89,7 +84,6 @@ package org.igniterealtime.xiff.data{
 		 * @param node The node to ensure
 		 * @param elementName The element name to check for existance
 		 * @return The node if it already exists, else a newly created node with the element name provided
-		 * @availability Flash Player 7
 		 */
 		public function ensureNode( node:XMLNode, elementName:String ):XMLNode
 		{
@@ -108,7 +102,6 @@ package org.igniterealtime.xiff.data{
 		 * @param elementName The new node's element name
 		 * @param value The new node's value
 		 * @return The newly created node
-		 * @availability Flash Player 7
 		 */
 		public function replaceTextNode( parent:XMLNode, original:XMLNode, elementName:String, value:String ):XMLNode
 		{
@@ -140,7 +133,6 @@ package org.igniterealtime.xiff.data{
 		 * Returns a reference to the stanza in XML form.
 		 *
 		 * @return The stanza as XML
-		 * @availability Flash Player 7
 		 */
 		public function getNode():XMLNode
 		{
@@ -151,7 +143,6 @@ package org.igniterealtime.xiff.data{
 		 * Sets the XML node that should be used for this stanza's internal XML representation.
 		 *
 		 * @return Whether the node set was successful
-		 * @availability Flash Player 7
 		 */
 		public function setNode( node:XMLNode ):Boolean
 		{

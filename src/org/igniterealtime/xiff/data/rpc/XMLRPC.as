@@ -30,10 +30,7 @@ package org.igniterealtime.xiff.data.rpc{
 	 * http://xmpp.org/extensions/xep-0009.html</a>.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/RPC
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/RPC/2
 	 */
 	public class XMLRPC
 	{
@@ -45,7 +42,6 @@ package org.igniterealtime.xiff.data.rpc{
 		 * @param xml The XML containing the message response
 		 * @return Mixed object of either an array of results from the method call or a fault.
 		 * If the result is a fault, "result.isFault" will evaulate as true.
-		 * @availability Flash Player 7
 		 */
 		public static function fromXML(xml:XMLNode):Array
 		{

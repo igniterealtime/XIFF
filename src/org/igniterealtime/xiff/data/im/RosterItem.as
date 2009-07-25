@@ -35,12 +35,9 @@ package org.igniterealtime.xiff.data.im{
 	 * this data.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @see org.igniterealtime.xiff.data.im.RosterExtension
 	 * @param parent The parent XMLNode
-	 * @toc-path Extensions/Instant Messaging
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Instant Messaging/2
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
@@ -65,7 +62,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Serializes the RosterItem data to XML for sending.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this item should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -86,7 +82,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Deserializes the RosterItem data.
 		 *
-		 * @availability Flash Player 7
 		 * @param node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
@@ -111,7 +106,6 @@ package org.igniterealtime.xiff.data.im{
 		 * Adds a group to the roster item. Contacts in the roster can be associated
 		 * with multiple groups.
 		 *
-		 * @availability Flash Player 7
 		 * @param groupName The name of the group to add
 		 */
 		public function addGroupNamed( groupName:String ):void
@@ -124,7 +118,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Gets a list of all the groups associated with this roster item.
 		 *
-		 * @availability Flash Player 7
 		 * @return An array of strings containing the name of each group
 		 */
 		public function get groupNames():Array
@@ -173,7 +166,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * The JID for this roster item.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get jid():EscapedJID
 		{
@@ -188,7 +180,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * The display name for this roster item.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get name():String
 		{
@@ -211,7 +202,6 @@ package org.igniterealtime.xiff.data.im{
 		 * <li>RosterExtension.SUBSCRIBE_TYPE_REMOVE</li>
 		 * </ul>
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get subscription():String
 		{
@@ -232,7 +222,6 @@ package org.igniterealtime.xiff.data.im{
 		 * <li>RosterExtension.ASK_TYPE_UNSUBSCRIBE</li>
 		 * </ul>
 		 * 
-		 * @availability Flash Player 7
 		 */
 		 public function get askType():String
 		 {

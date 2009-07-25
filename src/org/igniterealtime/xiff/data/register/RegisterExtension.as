@@ -36,11 +36,8 @@ package org.igniterealtime.xiff.data.register{
 	 * Check the result and re-establish the connection with the new account.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The parent node used to build the XML tree.
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Registration
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Registration/2
 	 */
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
@@ -74,7 +71,6 @@ package org.igniterealtime.xiff.data.register{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {

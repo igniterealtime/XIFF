@@ -35,12 +35,9 @@ package org.igniterealtime.xiff.data.im{
 	 * that is sent or received with the "jabber:iq:roster" namespace.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @param theRoot The extension root
 	 * @param theNode The extension node
-	 * @toc-path Extensions/Instant Messaging
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Instant Messaging/2
 	 */
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
@@ -73,7 +70,6 @@ package org.igniterealtime.xiff.data.im{
 		 * The namespace for the RosterExtension is "jabber:iq:roster".
 		 *
 		 * @return The namespace
-		 * @availability Flash Player 7
 		 */
 		public function getNS():String
 		{
@@ -85,7 +81,6 @@ package org.igniterealtime.xiff.data.im{
 		 * The element for this extension is "query".
 		 *
 		 * @return The element name
-		 * @availability Flash Player 7
 		 */
 		public function getElementName():String
 		{
@@ -95,7 +90,6 @@ package org.igniterealtime.xiff.data.im{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {
@@ -105,7 +99,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Serializes the RosterExtension data to XML for sending.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -130,7 +123,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Deserializes the RosterExtension data.
 		 *
-		 * @availability Flash Player 7
 		 * @param node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
@@ -159,7 +151,6 @@ package org.igniterealtime.xiff.data.im{
 		 * Get all the items from this roster query.
 		 *
 		 * @return An array of roster items.
-		 * @availability Flash Player 7
 		 */
 		public function getAllItems():Array
 		{
@@ -170,7 +161,6 @@ package org.igniterealtime.xiff.data.im{
 		 * Gets one item from the roster query, returning the first item found with the JID specified. If none is found, then it returns null.
 		 *
 		 * @return A roster item object with the following attributes: "jid", "subscription", "displayName", and "groups".
-		 * @availability Flash Player 7
 		 */
 		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
@@ -190,7 +180,6 @@ package org.igniterealtime.xiff.data.im{
 		 * @param subscription The subscription type of the roster item contact. There are pre-defined static variables for these string options in this class definition.
 		 * @param displayName The display name or nickname of the contact.
 		 * @param groups An array of strings of the group names that this contact should be placed in.
-		 * @availability Flash Player 7
 		 */
 		public function addItem( jid:EscapedJID=null, subscription:String="", displayName:String="", groups:Array=null ):void
 		{
@@ -210,7 +199,6 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Removes all items from the roster data.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function removeAllItems():void
 		{

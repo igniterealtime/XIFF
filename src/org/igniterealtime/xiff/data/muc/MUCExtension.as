@@ -34,11 +34,8 @@ package org.igniterealtime.xiff.data.muc{
 	 * This extension is typically used to test for the presence of MUC enabled conferencing service, or a MUC related error condition.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	public class MUCExtension extends Extension implements IExtension, ISerializable
 	{

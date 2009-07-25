@@ -58,7 +58,6 @@ package org.igniterealtime.xiff.data.browse
 		 * The namespace for the BrowseExtension is "jabber:iq:browse".
 		 *
 		 * @return The namespace
-		 * @availability Flash Player 7
 		 */
 		public function getNS():String
 		{
@@ -87,7 +86,6 @@ package org.igniterealtime.xiff.data.browse
 		 * fill out the items list with this method.
 		 *
 		 * @param item BrowseItem which contains the info related to the browsed resource
-		 * @availability Flash Player 7
 		 * @returns the item added
 		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
@@ -100,7 +98,6 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * An array of BrowseItems containing information about the browsed resource
 		 *
-		 * @availability Flash Player 7
 		 * @returns array of BrowseItems
 		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
@@ -112,7 +109,6 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * ISerializable implementation which loads this extension from XML
 		 *
-		 * @availability Flash Player 7
 		 * @see org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function serialize(parentNode:XMLNode):Boolean
@@ -132,7 +128,6 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * ISerializable implementation which saves this extension to XML
 		 *
-		 * @availability Flash Player 7
 		 * @see org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function deserialize(node:XMLNode):Boolean

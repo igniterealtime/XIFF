@@ -33,11 +33,8 @@ package org.igniterealtime.xiff.data.disco
 	 * <a href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</a>.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The XMLNode that contains this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Service Discovery
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Service Discovery/2
 	 */
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
 	{
@@ -65,7 +62,6 @@ package org.igniterealtime.xiff.data.disco
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {
@@ -84,7 +80,6 @@ package org.igniterealtime.xiff.data.disco
 		 * <li><code>name</code> - the friendly name of the identity</li>
 		 * </ul>
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get identities():Array
 		{
@@ -94,7 +89,6 @@ package org.igniterealtime.xiff.data.disco
 		/**
 		 * An array of namespaces this service supports for feature negotiation.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get features():Array
 		{

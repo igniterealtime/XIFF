@@ -49,7 +49,6 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Removes the extension from its parent.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function remove():void
 		{
@@ -59,7 +58,6 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Converts the extension stanza XML to a string.
 		 *
-		 * @availability Flash Player 7
 		 * @return The extension XML in string form
 		 */
 		public function toString():String

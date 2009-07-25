@@ -32,10 +32,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	 * for other extension classes such as Path
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Whiteboard
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Whiteboard/2
 	 */
 	public class Path implements ISerializable
 	{
@@ -59,7 +56,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Serializes the Path data to XML for sending.
 		 *
-		 * @availability Flash Player 7
 		 * @param parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
@@ -77,7 +73,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Deserializes the Path data.
 		 *
-		 * @availability Flash Player 7
 		 * @param node The XML node associated this data
 		 * @return true if deserialization was successful
 		 */
@@ -107,7 +102,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 		 * Example: M100 200L14 -15 L 125 100L150 200 300 400M10 20L30 40 50 60 z
 	     *
 		 * @returns String containging the compact version
-		 * @availability Flash Player 7
 		 */
 		public function serializeSegments():String
 		{
@@ -142,7 +136,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * be { from: { x: 100, y: 200 }, to: { x: 200, y: 300 } }
 	     * @return the segment parameter with the rounded values
 	     * @see #addPoints
-		 * @availability Flash Player 7
 	     */
 		public function addSegment(seg:Object):Object
 		{
@@ -170,7 +163,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * @param to_y the destination y coordinate
 	     * @return the segment object created from the parameters with the rounded values
 	     * from being modified in addSegment
-		 * @availability Flash Player 7
 	     */
 		public function addPoints(from_x:Number, from_y:Number, to_x:Number, to_y:Number):Object
 		{
@@ -184,7 +176,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * You should not modify this list.  Segments should be added with addSegment
 	     *
 	     * @see #addSegment
-		 * @availability Flash Player 7
 	     */
 	    public function get segments():Array { return mySegments; }
 	
@@ -193,7 +184,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * path
 	     *
 	     * @see org.igniterealtime.xiff.data.whiteboard.Stroke
-		 * @availability Flash Player 7
 	     */
 	    public function get stroke():Stroke { return myStroke; }
 	
@@ -202,7 +192,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * path
 	     *
 	     * @see org.igniterealtime.xiff.data.whiteboard.Fill
-		 * @availability Flash Player 7
 	     */
 	    public function get fill():Fill { return myFill; }
 	

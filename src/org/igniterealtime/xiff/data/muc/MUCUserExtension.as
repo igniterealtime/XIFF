@@ -31,11 +31,8 @@ package org.igniterealtime.xiff.data.muc{
 	 * Implements the base MUC user protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension
 	{

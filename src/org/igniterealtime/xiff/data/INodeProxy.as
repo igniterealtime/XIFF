@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -26,10 +27,7 @@ package org.igniterealtime.xiff.data{
 	 * to the original XML data stored within.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @toc-path Interfaces
-	 * @toc-sort 1
 	 */
 	import flash.xml.XMLNode;
 
@@ -38,14 +36,12 @@ package org.igniterealtime.xiff.data{
 		/**
 		 * Gets the XML node that is being abstracted.
 		 *
-		 * @availability Flash Player 7
 		 */
 		function getNode():XMLNode;
 		
 		/**
 		 * Sets the XML node that will be abstracted.
 		 *
-		 * @availability Flash Player 7
 		 */
 		function setNode( node:XMLNode ):Boolean;
 	}

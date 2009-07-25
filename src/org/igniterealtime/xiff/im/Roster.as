@@ -49,7 +49,6 @@ package org.igniterealtime.xiff.im
 	 * The event object contains an attribute <code>jid</code> with the JID of
 	 * the user who revoked your subscription.
 	 *
-	 * @availability Flash Player 7
 	 */
 	[Event("subscriptionRevocation")]
 	
@@ -58,7 +57,6 @@ package org.igniterealtime.xiff.im
 	 * contains an attribute <code>jid</code> with the JID of the user who is requesting
 	 * a presence subscription.
 	 *
-	 * @availability Flash Player 7
 	 */
 	[Event("subscriptionRequest")]
 	
@@ -69,7 +67,6 @@ package org.igniterealtime.xiff.im
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * denied the request.
 	 *
-	 * @availability Flash Player 7
 	 */
 	[Event("subscriptionDenial")]
 	
@@ -78,7 +75,6 @@ package org.igniterealtime.xiff.im
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became unavailable.
 	 *
-	 * @availability Flash Player 7
 	 */
 	[Event("userUnavailable")]
 	
@@ -87,7 +83,6 @@ package org.igniterealtime.xiff.im
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became available.
 	 *
-	 * @availability Flash Player 7
 	 */
 	[Event("userAvailable")]
 	
@@ -104,10 +99,7 @@ package org.igniterealtime.xiff.im
 	 * however, its probably a rare occurence.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
 	 * @toc-path Instant Messaging
-	 * @toc-sort 1
-	 * @availability Flash Player 7
 	 * @param aConnection A reference to an XMPPConnection class instance
 	 * @param externalDataProvider (Optional) A reference to an instance of a data provider
 	 */ 
@@ -158,7 +150,6 @@ package org.igniterealtime.xiff.im
 		 * @param requestSubscription (Optional) Determines whether a subscription request should be sent
 		 * to this user. Most of the time you will want this parameter to be true.
 		 * You will be unable to view the contacts presence status until a subscription request is granted.
-		 * @availability Flash Player 7
 		 * @example This example adds a contact to the roster and simultaneously requests a presence subscription
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
@@ -197,7 +188,6 @@ package org.igniterealtime.xiff.im
 		 * to his/her/its presence.
 		 *
 		 * @param id The JID of the user or service that you wish to subscribe to
-		 * @availability Flash Player 7
 		 * @see #subscriptionDenial
 		 */
 		public function requestSubscription( id:UnescapedJID, isResponse:Boolean=false):void
@@ -224,7 +214,6 @@ package org.igniterealtime.xiff.im
 		 * roster in the first place.
 		 *
 		 * @param id The JID of the contact to remove
-		 * @availability Flash Player 7
 		 */
 		public function removeContact( rosterItem:RosterItemVO):void
 		{
@@ -247,7 +236,6 @@ package org.igniterealtime.xiff.im
 		 * set up before logging in, then this method will be called automatically because the Roster
 		 * listens for "login" events from the XMPPConnection.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function fetchRoster():void
 		{
@@ -261,7 +249,6 @@ package org.igniterealtime.xiff.im
 		 * is granted, the user can see whether you are offline, online, away, etc. Subscriptions can
 		 * be revoked at any time using the <code>denySubscription()</code> method.
 		 *
-		 * @availability Flash Player 7
 		 * @param to The JID of the user or service to grant subscription to
 		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
@@ -283,7 +270,6 @@ package org.igniterealtime.xiff.im
 		 * if a user already has a granted presence subscription, you can use this method to revoke that
 		 * subscription.
 		 *
-		 * @availability Flash Player 7
 		 * @param to The JID of the user or service that you are denying subscription
 		 */
 		public function denySubscription( tojid:UnescapedJID ):void
@@ -296,7 +282,6 @@ package org.igniterealtime.xiff.im
 		 * Updates the information for an existing contact. You can use this method to change the
 		 * display name or associated group for a contact in your roster.
 		 *
-		 * @availability Flash Player 7
 		 * @param id The JID of the contact to update
 		 * @param newName The new display name for this contact
 		 * @param newGroups The new groups to associate the contact with
@@ -314,7 +299,6 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the display name for an existing contact.
 		 *
-		 * @availability Flash Player 7
 		 * @param id The JID of the contact to update
 		 * @param newName The new display name for this contact
 		 */
@@ -342,7 +326,6 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the groups associated with an existing contact.
 		 *
-		 * @availability Flash Player 7
 		 * @param id The JID of the contact to update
 		 * @param newGroups The new groups to associate the contact with
 		 */
@@ -364,7 +347,6 @@ package org.igniterealtime.xiff.im
 		 * <li><code>Presence.SHOW_XA</code></li>
 		 * </ul>
 		 *
-		 * @availability Flash Player 7
 		 * @param show The show type for your presence. This represents what others should see - whether
 		 * you are offline, online, away, etc.
 		 * @param status The status message associated with the show value
@@ -652,7 +634,6 @@ package org.igniterealtime.xiff.im
 		 * The instance of the XMPPConnection class to use for the roster to use for
 		 * sending and receiving data.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get connection():XMPPConnection
 		{

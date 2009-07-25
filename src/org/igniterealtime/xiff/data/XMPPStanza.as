@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -31,11 +32,7 @@ package org.igniterealtime.xiff.data{
 	/**
 	 * The base class for all XMPP stanza data classes.
 	 *
-	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Data/Base Classes
-	 * @toc-sort 1/2
+	 * @author Sean Voisen/Base Classes/2
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
@@ -70,7 +67,6 @@ package org.igniterealtime.xiff.data{
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
 		 *
 		 * @see org.igniterealtime.xiff.data.id.IncrementalGenerator
-		 * @availability Flash Player 7
 		 * @param prefix The prefix for the ID to be generated
 		 * @return The generated ID
 		 */
@@ -90,7 +86,6 @@ package org.igniterealtime.xiff.data{
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
 		 * IQs could use the shared object ID generation scheme provided by the SharedObjectGenerator class.
 		 *
-		 * @availability Flash Player 7
 		 * @param generator The ID generator class
 		 * @example The following sets the ID generator for the Message stanza type to the IncrementalGenerator
 		 * class found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
@@ -106,7 +101,6 @@ package org.igniterealtime.xiff.data{
 		 *
 		 * @param parentNode (Optional) The parent node that the stanza should be appended to during serialization
 		 * @return An indication as to whether serialization was successful
-		 * @availability Flash Player 7
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
 		{		
@@ -160,7 +154,6 @@ package org.igniterealtime.xiff.data{
 		/**
 		 * The JID of the recipient.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get to():EscapedJID
 		{
@@ -178,7 +171,6 @@ package org.igniterealtime.xiff.data{
 		 * that prevent this from being falsified. Thus, under normal circumstances, you don't
 		 * need to supply this information because the server will fill it in automatically.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get from():EscapedJID
 		{
@@ -226,7 +218,6 @@ package org.igniterealtime.xiff.data{
 		 * <li>Message.ERROR_TYPE</li>
 		 * </ul>
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get type():String
 		{
@@ -243,7 +234,6 @@ package org.igniterealtime.xiff.data{
 		 * The unique identifier of this stanza. ID generation is accomplished using
 		 * the static <code>generateID</code> method.
 		 *
-		 * @availability Flash Player 7
 		 * @see #generateID
 		 */
 		public function get id():String
@@ -260,7 +250,6 @@ package org.igniterealtime.xiff.data{
 		/**
 		 * The error message, assuming this stanza contains error information.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get errorMessage():String
 		{
@@ -296,7 +285,6 @@ package org.igniterealtime.xiff.data{
 		 * The error condition, assuming this stanza contains error information. For more information
 		 * on error conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get errorCondition():String
 		{
@@ -330,7 +318,6 @@ package org.igniterealtime.xiff.data{
 		 * The error type, assuming this stanza contains error information. For more information
 		 * on error types, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get errorType():String
 		{
@@ -351,7 +338,6 @@ package org.igniterealtime.xiff.data{
 		 * like Jabberd 1.4. For more information on error codes, and corresponding error
 		 * conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get errorCode():Number
 		{

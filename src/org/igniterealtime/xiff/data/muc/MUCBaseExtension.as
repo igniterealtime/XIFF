@@ -35,11 +35,8 @@ package org.igniterealtime.xiff.data.muc{
 	 * Implements the base functionality shared by all MUC extensions
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
 	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Conferencing
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/Conferencing/2
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
@@ -112,7 +109,6 @@ package org.igniterealtime.xiff.data.muc{
 		 * Item interface to MUCItems if they are contained in this extension
 		 *
 		 * @return Array of MUCItem objects
-		 * @availability Flash Player 7
 		 */
 		public function getAllItems():Array
 		{
@@ -129,7 +125,6 @@ package org.igniterealtime.xiff.data.muc{
 		 * @param actor The user that is actually creating the request
 		 * @param reason The reason why the action associated with this item is being preformed
 		 * @return The newly created MUCItem
-		 * @availability Flash Player 7
 		 */
 		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:EscapedJID=null, actor:String=null, reason:String=null):MUCItem
 		{
@@ -149,7 +144,6 @@ package org.igniterealtime.xiff.data.muc{
 		/**
 		 * Use this method to remove all items.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function removeAllItems():void
 		{

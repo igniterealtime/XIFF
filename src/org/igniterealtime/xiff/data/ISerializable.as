@@ -1,4 +1,5 @@
-package org.igniterealtime.xiff.data{
+package org.igniterealtime.xiff.data
+{
 	/*
 	 * Copyright (C) 2003-2007 
 	 * Nick Velloff <nick.velloff@gmail.com>
@@ -26,10 +27,7 @@ package org.igniterealtime.xiff.data{
 	 * All XMPP stanzas that will interact with the library should implement this interface.
 	 *
 	 * @author Sean Voisen
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @toc-path Interfaces
-	 * @toc-sort 1
 	 */
 	import flash.xml.XMLNode;
 

@@ -35,11 +35,8 @@ package org.igniterealtime.xiff.data.xhtml{
 	 * This class provides an extension for XHTML body text in messages.
 	 *
 	 * @author Sean Treadway
-	 * @since 2.0.0
-	 * @availability Flash Player 7
 	 * @param parent The parent node for this extension
-	 * @toc-path Extensions/HTML
-	 * @toc-sort 1/2
+	 * @toc-path Extensions/HTML/2
 	 */
 	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
@@ -69,7 +66,6 @@ package org.igniterealtime.xiff.data.xhtml{
 		 * The namespace for the XHTMLExtension is "http://www.w3.org/1999/xhtml".
 		 *
 		 * @return The namespace
-		 * @availability Flash Player 7
 		 */
 		public function getNS():String
 		{
@@ -81,7 +77,6 @@ package org.igniterealtime.xiff.data.xhtml{
 		 * The element for this extension is "html".
 		 *
 		 * @return The element name
-		 * @availability Flash Player 7
 		 */
 		public function getElementName():String
 		{
@@ -91,7 +86,6 @@ package org.igniterealtime.xiff.data.xhtml{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {
@@ -103,7 +97,6 @@ package org.igniterealtime.xiff.data.xhtml{
 		 * valid XML, standard HTML, which is not necessarily XML-parser compliant, will
 		 * not work.
 		 *
-		 * @availability Flash Player 7
 		 */
 		public function get body():String
 		{
