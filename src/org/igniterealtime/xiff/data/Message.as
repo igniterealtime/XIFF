@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 
+ * Copyright (C) 2003-2007
  * Nick Velloff <nick.velloff@gmail.com>
  * Derrick Grigg <dgrigg@rogers.com>
  * Sean Voisen <sean@voisen.org>
@@ -9,24 +9,25 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-	 
+	
 package org.igniterealtime.xiff.data
 {
-	 
+	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.chat.*;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
 	
@@ -40,6 +41,7 @@ package org.igniterealtime.xiff.data
 	 * @param msgHTMLBody The message body in XHTML format
 	 * @param msgType The message type
 	 * @param msgSubject (Optional) The message subject
+	 * @param chatState (Optional) The chat state
 	 */
 	public class Message extends XMPPStanza implements ISerializable
 	{
@@ -56,11 +58,12 @@ package org.igniterealtime.xiff.data
 		private var mySubjectNode:XMLNode;
 		private var myThreadNode:XMLNode;
 		private var myTimeStampNode:XMLNode;
+		private var myStateNode:XMLNode;
 			
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
 	
-		public function Message( recipient:EscapedJID=null, msgID:String=null, msgBody:String=null, msgHTMLBody:String=null, msgType:String=null, msgSubject:String=null )
+		public function Message( recipient:EscapedJID = null, msgID:String = null, msgBody:String = null, msgHTMLBody:String = null, msgType:String = null, msgSubject:String = null, chatState:String = null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
 			var msgId:String = exists( msgID ) ? msgID : generateID("m_");
@@ -68,6 +71,7 @@ package org.igniterealtime.xiff.data
 			body = msgBody;
 			htmlBody = msgHTMLBody;
 			subject = msgSubject;
+			state = chatState;
 		}
 	
 		public static function MessageStaticConstructor():Boolean
@@ -95,7 +99,8 @@ package org.igniterealtime.xiff.data
 		override public function deserialize( xmlNode:XMLNode ):Boolean
 		{
 			var isSerialized:Boolean = super.deserialize( xmlNode );
-			if (isSerialized) {
+			if (isSerialized)
+			{
 				var children:Array = xmlNode.childNodes;
 				for( var i:String in children )
 				{
@@ -103,8 +108,8 @@ package org.igniterealtime.xiff.data
 					{
 						// Adding error handler for 404 sent back by server
 						case "error":
-							
 							break;
+							
 						case "body":
 							myBodyNode = children[i];
 							break;
@@ -118,13 +123,24 @@ package org.igniterealtime.xiff.data
 							break;
 							
 						case "x":
-							if(children[i].attributes.xmlns == "jabber:x:delay")
+							if (children[i].attributes.xmlns == "jabber:x:delay")
+							{
 								myTimeStampNode = children[i];
-							if(children[i].attributes.xmlns == MUCUserExtension.NS) {
+							}
+							if (children[i].attributes.xmlns == MUCUserExtension.NS)
+							{
 								var mucUserExtension:MUCUserExtension = new MUCUserExtension(getNode());
 								mucUserExtension.deserialize(children[i]);
 								addExtension(mucUserExtension);
 							}
+							break;
+						
+						case ChatState.ACTIVE :
+						case ChatState.COMPOSING :
+						case ChatState.GONE :
+						case ChatState.INACTIVE :
+						case ChatState.PAUSED :
+							myStateNode = children[i];
 							break;
 					}
 				}
@@ -145,12 +161,11 @@ package org.igniterealtime.xiff.data
 			
 			try
 			{
-				value =  myBodyNode.firstChild.nodeValue;				
+				value = myBodyNode.firstChild.nodeValue;
 			}
-			
 			catch (error:Error)
 			{
-				trace (error.getStackTrace());
+				trace(error.getStackTrace());
 			}
 			return value;
 		}
@@ -239,7 +254,7 @@ package org.igniterealtime.xiff.data
 			
 		}
 		
-		public function get time():Date 
+		public function get time():Date
 		{
 			if(myTimeStampNode == null) return null;
 			var stamp:String = myTimeStampNode.attributes.stamp;
@@ -248,7 +263,7 @@ package org.igniterealtime.xiff.data
 			//CCYYMMDDThh:mm:ss
 			//20020910T23:41:07
 			t.setUTCFullYear(stamp.slice(0, 4)); //2002
-			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1); //09 
+			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1); //09
 			t.setUTCDate(stamp.slice(6, 8)); //10
 											 //T
 			t.setUTCHours(stamp.slice(9, 11)); //23
@@ -257,6 +272,56 @@ package org.igniterealtime.xiff.data
 												//:
 			t.setUTCSeconds(stamp.slice(15, 17)); //07
 			return t;
+		}
+		
+		/**
+		 * The chat state if any. Possible values, if not null, are:
+		 * <ul>
+		 * <li>ChatState.ACTIVE</li>
+		 * <li>ChatState.COMPOSING</li>
+		 * <li>ChatState.PAUSED</li>
+		 * <li>ChatState.INACTIVE</li>
+		 * <li>ChatState.GONE</li>
+		 * </ul>
+		 * @see org.igniterealtime.xiff.data.chat.ChatState
+		 */
+		public function get state():String
+		{
+			if (!myStateNode)
+			{
+				return null;
+			}
+			return myStateNode.nodeName;
+		}
+		
+		public function set state( value:String ):void
+		{
+			if (value != ChatState.ACTIVE
+				&& value != ChatState.COMPOSING
+				&& value != ChatState.PAUSED
+				&& value != ChatState.INACTIVE
+				&& value != ChatState.GONE
+				&& value != null
+				&& value != "")
+			{
+				throw new Error("Invalid state value: " + value + " for ChatState");
+			}
+			
+			if (myStateNode && (value == null || value == ""))
+			{
+				myStateNode.removeNode();
+				myStateNode = null;
+			}
+			else if (myStateNode && (value != null || value != ""))
+			{
+				myStateNode.nodeName = value;
+			}
+			else if (!myStateNode && (value != null || value != ""))
+			{
+				myStateNode = XMLStanza.XMLFactory.createElement(value);
+				myStateNode.attributes = { xmlns: ChatStateExtension.NS };
+				getNode().appendChild(myStateNode);
+			}
 		}
 	}
 }
