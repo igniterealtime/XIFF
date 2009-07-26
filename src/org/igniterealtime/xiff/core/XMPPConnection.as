@@ -585,10 +585,10 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function socketClosed(e:Event):void
+		protected function socketClosed(event:Event):void
 		{	
-			var event:DisconnectionEvent = new DisconnectionEvent();
-			dispatchEvent( event );
+			var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
+			dispatchEvent( disconnectionEvent );
 		}
 		
 		/**

@@ -21,12 +21,12 @@ package org.igniterealtime.xiff.conference
 		
 		public function RoomOccupant(nickname:String, show:String, affiliation:String, role:String, jid:UnescapedJID, room:Room)
 		{
-			this.displayName = nickname;
-			this.show = show;
-			this.affiliation = affiliation;
-			this.role = role;
-			this.jid = jid;
-			this.room = room;
+			displayName = nickname;
+			show = show;
+			affiliation = affiliation;
+			role = role;
+			jid = jid;
+			room = room;
 		}
 		
 		public function set online(newOnline:Boolean):void

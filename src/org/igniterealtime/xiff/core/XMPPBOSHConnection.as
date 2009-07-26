@@ -63,6 +63,10 @@ package org.igniterealtime.xiff.core
 		private var _wait:uint;
 		private var _boshPath:String;
 		
+		/**
+		 * 
+		 * @param	secure
+		 */
 		public function XMPPBOSHConnection(secure:Boolean = false):void
 		{
 			super();

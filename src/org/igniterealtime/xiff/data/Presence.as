@@ -38,8 +38,8 @@ package org.igniterealtime.xiff.data
 		 * 
 		 * @param	recipient The recipient of the presence, usually in the form of a JID.
 		 * @param	sender The sender of the presence, usually in the form of a JID.
-		 * @param	presenceType The type of presence as a string. There are predefined static variables for this.
-		 * @param	showVal What to show for this presence (away, online, etc.) There are predefined static variables for this.
+		 * @param	presenceType The type of presence as a string. There are predefined static variables for 
+		 * @param	showVal What to show for this presence (away, online, etc.) There are predefined static variables for 
 		 * @param	statusVal The status; usually used for the "away message."
 		 * @param	priorityVal The priority of this presence; usually on a scale of 1-5.
 		 */

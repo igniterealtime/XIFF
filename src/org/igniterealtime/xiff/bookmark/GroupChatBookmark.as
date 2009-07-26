@@ -14,11 +14,22 @@ package org.igniterealtime.xiff.bookmark
 		private var _nickNode:XMLNode;
 		private var _passwordNode:XMLNode;
 		
-		public function GroupChatBookmark(name:String = null, jid:EscapedJID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null) {
-			if(!name && !jid) {
+		/**
+		 * 
+		 * @param	name
+		 * @param	jid
+		 * @param	autoJoin
+		 * @param	nickname
+		 * @param	password
+		 */
+		public function GroupChatBookmark(name:String = null, jid:EscapedJID = null, autoJoin:Boolean = false, nickname:String = null, password:String = null)
+		{
+			if (!name && !jid) 
+			{
 				return;
 			}
-			else if(!name || !jid) {
+			else if (!name || !jid)
+			{
 				throw new Error("Name and jid cannot be null, they must either both be null or an Object");
 			}
 			var groupChatNode:XMLNode = new XMLNode(1, "conference");
@@ -37,7 +48,7 @@ package org.igniterealtime.xiff.bookmark
 				passwordNode.appendChild(new XMLNode(3, password));
 				groupChatNode.appendChild(passwordNode);
 			}
-			this._groupChatNode = groupChatNode;
+			_groupChatNode = groupChatNode;
 		}
 		
 		public function get name():String 
@@ -71,7 +82,7 @@ package org.igniterealtime.xiff.bookmark
 		
 		public function serialize(parentNode:XMLNode):Boolean
 		{
-			var groupChatNode:XMLNode = this._groupChatNode.cloneNode(true);
+			var groupChatNode:XMLNode = _groupChatNode.cloneNode(true);
 			var nickNode:XMLNode = (_nickNode != null ? _nickNode.cloneNode(true) : null);
 			var passwordNode:XMLNode = (_passwordNode != null ? _passwordNode.cloneNode(true) : null);
 			
@@ -89,7 +100,7 @@ package org.igniterealtime.xiff.bookmark
 		
 		public function deserialize(node:XMLNode):Boolean
 		{
-			this._groupChatNode = node.cloneNode(false);
+			_groupChatNode = node.cloneNode(false);
 			
 			var children:Array = node.childNodes;
 			for each(var child:XMLNode in children) {

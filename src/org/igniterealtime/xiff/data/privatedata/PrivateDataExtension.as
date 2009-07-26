@@ -15,10 +15,17 @@ package org.igniterealtime.xiff.data.privatedata
 		private var _extension:XMLNode;
 		private var _payload:IPrivatePayload;
 		
-		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null, payload:IPrivatePayload = null) {
-			this._extension = new XMLNode(1, privateName);
-			this._extension.attributes["xmlns"] = privateNamespace;
-			this._payload = payload;
+		/**
+		 * 
+		 * @param	privateName
+		 * @param	privateNamespace
+		 * @param	payload
+		 */
+		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null, payload:IPrivatePayload = null) 
+		{
+			_extension = new XMLNode(1, privateName);
+			_extension.attributes["xmlns"] = privateNamespace;
+			_payload = payload;
 		}
 		
 		public function getNS():String
@@ -33,12 +40,12 @@ package org.igniterealtime.xiff.data.privatedata
 		
 		public function get privateName():String 
 		{
-			return this._extension.nodeName;
+			return _extension.nodeName;
 		}
 		
 		public function get privateNamespace():String 
 		{
-			return this._extension.attributes["xmlns"];
+			return _extension.attributes["xmlns"];
 		}
 		
 		public function get payload():IPrivatePayload {
@@ -47,7 +54,7 @@ package org.igniterealtime.xiff.data.privatedata
 		
 		public function serialize(parentNode:XMLNode):Boolean
 		{
-			var extension:XMLNode = this._extension.cloneNode(true);
+			var extension:XMLNode = _extension.cloneNode(true);
 			var query:XMLNode = new XMLNode(1, "query");
 			query.attributes.xmlns = "jabber:iq:private";
 			query.appendChild(extension);
@@ -74,8 +81,8 @@ package org.igniterealtime.xiff.data.privatedata
 				return false;
 			}	
 			
-			this._extension = new XMLNode(1, payloadNode.nodeName);
-			this._extension.attributes["xmlns"] = ns;
+			_extension = new XMLNode(1, payloadNode.nodeName);
+			_extension.attributes["xmlns"] = ns;
 			
 			var extClass:Class = ExtensionClassRegistry.lookup(ns);
 			if(extClass == null) {
@@ -84,7 +91,7 @@ package org.igniterealtime.xiff.data.privatedata
 			var ext:IPrivatePayload = new extClass();
 			if (ext != null && ext is IPrivatePayload) {
 				ext.deserialize(payloadNode);
-				this._payload = ext;
+				_payload = ext;
 				return true;
 			}
 			else {

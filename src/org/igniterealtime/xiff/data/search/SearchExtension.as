@@ -16,8 +16,6 @@ package org.igniterealtime.xiff.data.search{
 	 * Send an empty IQ.GET_TYPE packet with this extension and the return will either be a conflict, or the fields you will need to fill out.  
 	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in getRequiredFieldNames set on this extension.  
 	 * Check the result and re-establish the connection with the new account.
-	 *
-	 * @param	parent (Optional) The parent node used to build the XML tree.
 	 */
 	public class SearchExtension extends Extension implements IExtension, ISerializable
 	{
@@ -31,6 +29,10 @@ package org.igniterealtime.xiff.data.search{
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
+		/**
+		 * 
+		 * @param	parent (Optional) The parent node used to build the XML tree.
+		 */
 		public function SearchExtension( parent:XMLNode=null )
 		{
 			super(parent);
@@ -48,9 +50,7 @@ package org.igniterealtime.xiff.data.search{
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
-	     * 
-		 * availability Flash Player 7
+	     * Performs the registration of this extension into the extension registry. 
 	     */
 	    public static function enable():void
 	    {
@@ -70,9 +70,11 @@ package org.igniterealtime.xiff.data.search{
 			setNode(node);
 	
 			var children:Array = getNode().childNodes;
-			for (var i:String in children) {
+			for (var i:String in children) 
+			{
 	
-				switch (children[i].nodeName) {
+				switch (children[i].nodeName) 
+				{
 					case "instructions":
 						myInstructionsNode = children[i];
 						break;
@@ -81,7 +83,7 @@ package org.igniterealtime.xiff.data.search{
 						if (children[i].namespaceURI == FormExtension.NS) {
 							var dataFormExt:FormExtension = new FormExtension(getNode());
 							dataFormExt.deserialize(children[i]);
-							this.addExtension(dataFormExt);
+							addExtension(dataFormExt);
 						}
 						break;
 						

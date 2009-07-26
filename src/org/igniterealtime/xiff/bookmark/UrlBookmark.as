@@ -12,7 +12,13 @@ package org.igniterealtime.xiff.bookmark
 	{
 		private var node:XMLNode;
 		
-		public function UrlBookmark(name:String = null, url:String = null) {
+		/**
+		 * 
+		 * @param	name
+		 * @param	url
+		 */
+		public function UrlBookmark(name:String = null, url:String = null)
+		{
 			if(!name && !url) {
 				return;
 			}
@@ -43,7 +49,7 @@ package org.igniterealtime.xiff.bookmark
 		
 		public function deserialize(node:XMLNode):Boolean 
 		{
-			this.node = node.cloneNode(true);
+			node = node.cloneNode(true);
 			return true;
 		}
 		

@@ -30,27 +30,34 @@ package org.igniterealtime.xiff.bookmark
 		private var _privateDataManager:PrivateDataManager;
 		private var _bookmarks:BookmarkPrivatePayload;
 		
-		public function BookmarkManager(privateDataManager:PrivateDataManager) {
-			this._privateDataManager = privateDataManager;
+		/**
+		 * 
+		 * @param	privateDataManager
+		 */
+		public function BookmarkManager(privateDataManager:PrivateDataManager)
+		{
+			_privateDataManager = privateDataManager;
 		}
 		
 		public function fetchBookmarks():void 
 		{
-			if(!this._bookmarks) {
-				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarks"]));
+			if (!_bookmarks) 
+			{
+				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarks"]));
 			}
-			else {
+			else 
+			{
 				dispatchEvent(new BookmarkRetrievedEvent());
 			}
 		}
 		
 		public function addGroupChatBookmark(serverBookmark:GroupChatBookmark):void 
 		{
-			if(!this._bookmarks) {
-				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksAdd"], serverBookmark));
+			if(!_bookmarks) {
+				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksAdd"], serverBookmark));
 			}
 			else {
-				this._addBookmark(serverBookmark);
+				_addBookmark(serverBookmark);
 			}
 		}
 		
@@ -75,21 +82,21 @@ package org.igniterealtime.xiff.bookmark
 		
 		public function removeGroupChatBookmark(jid:UnescapedJID):void 
 		{
-			if(!this._bookmarks) {
-				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksRemove"], jid));
+			if(!_bookmarks) {
+				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksRemove"], jid));
 			}
 			else {
-				this._removeBookmark(jid);				
+				_removeBookmark(jid);				
 			}
 		}
 		
 		public function setAutoJoin(jid:UnescapedJID, state:Boolean):void 
 		{
-			if(!this._bookmarks) {
-				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksSetAuto"], jid, state));
+			if(!_bookmarks) {
+				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksSetAuto"], jid, state));
 			}		
 			else {
-				this._setAutoJoin(jid, state);
+				_setAutoJoin(jid, state);
 			}	
 		}
 		
@@ -106,20 +113,20 @@ package org.igniterealtime.xiff.bookmark
 		
 		private function _processBookmarksAdd(bookmark:ISerializable, bookmarksIq:XMPPStanza):void 
 		{
-			this._processBookmarks(bookmarksIq);
-			this._addBookmark(bookmark);
+			_processBookmarks(bookmarksIq);
+			_addBookmark(bookmark);
 		}
 		
 		private function _processBookmarksRemove(jid:UnescapedJID, bookmarksIq:XMPPStanza):void 
 		{
-			this._processBookmarks(bookmarksIq);
-			this._removeBookmark(jid);
+			_processBookmarks(bookmarksIq);
+			_removeBookmark(jid);
 		}
 		
 		private function _processBookmarksSetAuto(jid:UnescapedJID, state:Boolean, bookmarksIq:XMPPStanza):void 
 		{
-			this._processBookmarks(bookmarksIq);
-			this._setAutoJoin(jid, state);
+			_processBookmarks(bookmarksIq);
+			_setAutoJoin(jid, state);
 		}
 		
 		private function _addBookmark(bookmark:ISerializable):void 
@@ -143,7 +150,7 @@ package org.igniterealtime.xiff.bookmark
 		private function _removeBookmark(jid:UnescapedJID):void 
 		{
 			var removedBookmark:GroupChatBookmark = _bookmarks.removeGroupChatBookmark(jid);
-			this._updateBookmarks();
+			_updateBookmarks();
 			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED, removedBookmark));		
 		}
 		
@@ -154,7 +161,7 @@ package org.igniterealtime.xiff.bookmark
 					bookmark.autoJoin = state;
 				}
 			}	
-			this._updateBookmarks();						
+			_updateBookmarks();						
 		}
 		
 		private function _updateBookmarks():void 

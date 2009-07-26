@@ -266,7 +266,7 @@ package org.igniterealtime.xiff.conference
 			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent, false, 0, true);
 			myConnection.addEventListener(DisconnectionEvent.DISCONNECT, handleEvent, false, 0, true);
 			
-//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+this.conferenceServer.replace("."+myConnection.server,"")+"/"+this.roomName+"/";
+//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+myConnection.server,"")+"/"+roomName+"/";
 //			_fileRepo = new RoomFileRepository(baserepo);
 		}
 	

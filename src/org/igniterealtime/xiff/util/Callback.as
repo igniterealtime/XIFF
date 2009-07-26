@@ -3,22 +3,38 @@
  */
 package org.igniterealtime.xiff.util
 {
+	/**
+	 * Sets an callback function
+	 */
 	public class Callback
 	{
-		
 		private var _scope:Object;
 		private var _callback:Function;
 		private var _args:Array;
 		
-		public function Callback(scope:Object, callback:Function, ... args) {
-			this._scope = scope;
-			this._callback = callback;
-			this._args = args.slice();
+		/**
+		 * 
+		 * @param	scope
+		 * @param	callback
+		 * @param	... args
+		 */
+		public function Callback(scope:Object, callback:Function, ... args)
+		{
+			_scope = scope;
+			_callback = callback;
+			_args = args.slice();
 		}
 		
-		public function call(... args):Object {
+		/**
+		 * 
+		 * @param	... args
+		 * @return
+		 */
+		public function call(... args):Object 
+		{
 			var callbackArgs:Array = _args.slice();
-			for each(var arg:Object in args) {
+			for each(var arg:Object in args)
+			{
 				callbackArgs.push(arg);
 			}
 
