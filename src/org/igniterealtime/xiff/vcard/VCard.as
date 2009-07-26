@@ -20,7 +20,8 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.events.VCardEvent;
 	
 	[Bindable]
-	public class VCard extends EventDispatcher {
+	public class VCard extends EventDispatcher
+	{
 		private var _loader:Loader;
 		
 		private var contact:RosterItemVO;

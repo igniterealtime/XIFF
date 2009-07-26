@@ -27,8 +27,6 @@ package org.igniterealtime.xiff.data.im{
 		
 		public function RosterItem( parent:XMLNode=null )
 		{
-			//<query xmlns="jabber:iq:roster"><item jid="herbvaio.lymabean.com" subscription="both"><group>Buddies</group></item><item jid="alexvaio.lymabean.com" subscription="both"><group>Co-workers</group></item><item jid="jackvaio.lymabean.com" subscription="both"><group>Buddies</group></item></query>
-
 			super();
 			
 			getNode().nodeName = ELEMENT;

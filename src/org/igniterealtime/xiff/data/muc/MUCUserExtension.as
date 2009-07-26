@@ -12,7 +12,6 @@ package org.igniterealtime.xiff.data.muc{
 	/**
 	 * Implements the base MUC user protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
-	 * @param	parent (Optional) The containing XMLNode for this extension
 	 */
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension
 	{
@@ -29,6 +28,10 @@ package org.igniterealtime.xiff.data.muc{
 		private var myPasswordNode:XMLNode;
 		private var myStatuses:Array = [];
 	
+		/**
+		 * 
+		 * @param	parent (Optional) The containing XMLNode for this extension
+		 */
 		public function MUCUserExtension( parent:XMLNode=null )
 		{
 			super(parent);

@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.im
 		 * You will be unable to view the contacts presence status until a subscription request is granted.
 		 * @example	This example adds a contact to the roster and simultaneously requests a presence subscription
 		 * with the new contact.
-		 * <pre>myRoster.addContact( "homerspringfield.com", "Homer", "Drinking Buddies", true );</pre>
+		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
 		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean=true ):void
 		{
@@ -137,7 +137,8 @@ package org.igniterealtime.xiff.im
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			var askType:String = RosterExtension.ASK_TYPE_NONE;
 			
-			if( requestSubscription == true ) {
+			if ( requestSubscription == true )
+			{
 				callbackObj = this;
 				callbackMethod = "addContact_result";
 				pendingSubscriptionRequestJID = id;

@@ -14,7 +14,7 @@ package org.igniterealtime.xiff.conference
 	/**
 	 * Dispatched when an invitations has been received.
 	 * 
-	 * eventType org.igniterealtime.xiff.InviteEvent.INVITED
+	 * @eventType org.igniterealtime.xiff.InviteEvent.INVITED
 	 * @see	org.igniterealtime.xiff.conference.Room
 	 * @see	org.igniterealtime.xiff.conference.Room.#invite
 	 */
@@ -27,18 +27,22 @@ package org.igniterealtime.xiff.conference
 	 *
 	 * <p>You only need a single instance of this class to listen for all invite
 	 * or decline events.</p>
-	 *
-	 * @param	connection An XMPPConnection instance that is providing the primary server 
-	 * connection.
 	 */
 	public class InviteListener extends EventDispatcher
 	{
 		private var myConnection:XMPPConnection;
 		
+		/**
+		 * 
+		 * @param	aConnection	An XMPPConnection instance that is providing the primary server 
+		 * connection.
+		 */
 		public function InviteListener( aConnection:XMPPConnection=null )
 		{
 			if (aConnection != null)
+			{
 				setConnection( aConnection );	
+			}
 		}
 		
 		/**
@@ -49,7 +53,8 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function setConnection( connection:XMPPConnection ):void
 		{
-			if (myConnection != null){
+			if (myConnection != null)
+			{
 				myConnection.removeEventListener(MessageEvent.MESSAGE, handleEvent);
 			}
 			myConnection = connection;
@@ -77,14 +82,17 @@ package org.igniterealtime.xiff.conference
 					{
 						var msg:Message = eventObj.data as Message;
 						var exts:Array = msg.getAllExtensionsByNS(MUCUserExtension.NS);
-						if(!exts || exts.length < 0) {
+						if (!exts || exts.length < 0) 
+						{
 							return;
 						}
 						var muc:MUCUserExtension =  exts[0];
-	                    if (muc.type == MUCUserExtension.INVITE_TYPE) {
+	                    if (muc.type == MUCUserExtension.INVITE_TYPE) 
+						{
 	                        var room:Room = new Room(myConnection);
 	                        room.roomJID = msg.from.unescaped;
 	                        room.password = muc.password;
+							
 							var inviteEvent:InviteEvent = new InviteEvent();
 							inviteEvent.from = muc.from.unescaped;
 							inviteEvent.reason = muc.reason;

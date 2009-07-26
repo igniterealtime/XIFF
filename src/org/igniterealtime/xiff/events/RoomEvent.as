@@ -88,6 +88,13 @@ package org.igniterealtime.xiff.events
 		{
 			return _subject;
 		}
+		
+		/**
+		 * Data type can be <code>Message</code>, <code>Array</code>, or <code>Presence</code>
+		 * depending of the context.
+		 * @see org.igniterealtime.xiff.data.Message
+		 * @see org.igniterealtime.xiff.data.Presence
+		 */
 		public function set data(s:*) : void
 		{
 			_data = s;

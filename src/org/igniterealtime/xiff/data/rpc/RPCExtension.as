@@ -32,10 +32,9 @@ package org.igniterealtime.xiff.data.rpc{
 		 * If this extension is being returned, then check the result property instead.
 		 *
 		 * @param	methodName The name of the remote procedure to call
-		 *@param@params A collection of parameters of any type
+		 * @param	params	A collection of parameters of any type
 		 * @see	#result
 		 */
-	
 		public function call(methodName:String, params:Array):void
 		{
 			XMLRPC.toXML(getNode(), methodName, params);

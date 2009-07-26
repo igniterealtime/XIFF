@@ -38,70 +38,70 @@ package org.igniterealtime.xiff.core
 	/**
 	 * Dispatched when a password change is successful.
 	 * 
-	 * eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
+	 * @eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
 	 */
     [Event(name="changePasswordSuccess", type="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent")]
     
     /**
      * Dispatched when the connection is successfully made to the server.
      * 
-     * eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
+     * @eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
      */
     [Event(name="connection", type="org.igniterealtime.xiff.events.ConnectionSuccessEvent")]
     
     /**
      * Dispatched when there is a disconnection from the server.
      * 
-     * eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
+     * @eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
      */
     [Event(name="disconnection", type="org.igniterealtime.xiff.events.DisconnectionEvent")]
     
     /**
      * Dispatched when there is some type of XMPP error.
      * 
-     * eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
+     * @eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
      */
     [Event(name="error", type="org.igniterealtime.xiff.events.XIFFErrorEvent")]
     
     /**
      * Dispatched whenever there is incoming XML data.
      * 
-     * eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
+     * @eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
      */
     [Event(name="incomingData", type="org.igniterealtime.xiff.events.IncomingDataEvent")]
     
     /**
      * Dispatched on successful authentication (login) with the server.
      * 
-     * eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
+     * @eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
      */
     [Event(name="login", type="org.igniterealtime.xiff.events.LoginEvent")]
     
     /**
      * Dispatched on incoming messages.
      * 
-     * eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
+     * @eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
      */
     [Event(name="message", type="org.igniterealtime.xiff.events.MessageEvent")]
     
     /**
      * Dispatched whenever data is sent to the server.
      * 
-     * eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
+     * @eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
      */
     [Event(name="outgoingData", type="org.igniterealtime.xiff.events.OutgoingDataEvent")]
     
     /**
      * Dispatched on incoming presence data.
      * 
-     * eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
+     * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
      */
     [Event(name="presence", type="org.igniterealtime.xiff.events.PresenceEvent")]
     
     /**
      * Dispatched on when new user account registration is successful.
      * 
-     * eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
+     * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
      */
     [Event(name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent")]
     
@@ -426,7 +426,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get jid():UnescapedJID
 		{
-			return new UnescapedJID(myUsername + "" + myDomain + "/" + myResource);
+			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
 		}
 		
 		/**

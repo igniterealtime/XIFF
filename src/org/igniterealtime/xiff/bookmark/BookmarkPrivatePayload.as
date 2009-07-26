@@ -15,18 +15,23 @@ package org.igniterealtime.xiff.bookmark
 		private var _urlBookmarks:Array = [];
 		private var _others:Array = [];
 		
-		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null) {
-			if(groupChatBookmarks) {
-				for each(var bookmark:GroupChatBookmark in groupChatBookmarks) {
+		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null) 
+		{
+			if (groupChatBookmarks)
+			{
+				for each(var bookmark:GroupChatBookmark in groupChatBookmarks) 
+				{
 					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean 
-		{ return testGroupChatBookmark.jid != bookmark.jid; }))
+						{ return testGroupChatBookmark.jid != bookmark.jid; }))
 						_groupChatBookmarks.push(bookmark);
 				}
 			}
-			if(urlBookmarks) {
-				for each(var urlBookmark:UrlBookmark in urlBookmarks) {
+			if (urlBookmarks) 
+			{
+				for each(var urlBookmark:UrlBookmark in urlBookmarks) 
+				{
 					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean 
-		{ return testURLBookmark.url != urlBookmark.url; }))
+						{ return testURLBookmark.url != urlBookmark.url; }))
 						_urlBookmarks.push(urlBookmark);
 				}
 			}
@@ -69,7 +74,7 @@ package org.igniterealtime.xiff.bookmark
 			var node:XMLNode = new XMLNode(1, getElementName());
 			node.attributes.xmlns = getNS();
 			var serializer:Function = function(element:ISerializable, index:int, arr:Array):void 
-		{
+			{
 				element.serialize(parentNode);
 			};
 			_groupChatBookmarks.forEach(serializer);
@@ -87,7 +92,7 @@ package org.igniterealtime.xiff.bookmark
 					groupChatBookmark.deserialize(child);
 					//don't add it if it's a duplicate
 					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean 
-		{ return testGroupChatBookmark.jid != groupChatBookmark.jid; }))
+						{ return testGroupChatBookmark.jid != groupChatBookmark.jid; }))
 						_groupChatBookmarks.push(groupChatBookmark);
 				}
 				else if(child.nodeName == "url") 
@@ -96,7 +101,7 @@ package org.igniterealtime.xiff.bookmark
 					urlBookmark.deserialize(child);
 					//don't add it if it's a duplicate
 					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean 
-		{ return testURLBookmark.url != urlBookmark.url; }))
+						{ return testURLBookmark.url != urlBookmark.url; }))
 						_urlBookmarks.push(urlBookmark);
 				}
 				else {
