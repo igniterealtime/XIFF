@@ -22,19 +22,19 @@ package org.igniterealtime.xiff.data.im{
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:roster";
-		public static var ELEMENT:String = "query";
+		public static const NS:String = "jabber:iq:roster";
+		public static const ELEMENT:String = "query";
 		
-		public static var SUBSCRIBE_TYPE_NONE:String = "none";
-		public static var SUBSCRIBE_TYPE_TO:String = "to";
-		public static var SUBSCRIBE_TYPE_FROM:String = "from";
-		public static var SUBSCRIBE_TYPE_BOTH:String = "both";
-		public static var SUBSCRIBE_TYPE_REMOVE:String = "remove";
-		public static var ASK_TYPE_NONE:String = "none";
-		public static var ASK_TYPE_SUBSCRIBE:String = "subscribe";
-		public static var ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
-		public static var SHOW_UNAVAILABLE:String = "unavailable";
-		public static var SHOW_PENDING:String = "Pending";
+		public static const SUBSCRIBE_TYPE_NONE:String = "none";
+		public static const SUBSCRIBE_TYPE_TO:String = "to";
+		public static const SUBSCRIBE_TYPE_FROM:String = "from";
+		public static const SUBSCRIBE_TYPE_BOTH:String = "both";
+		public static const SUBSCRIBE_TYPE_REMOVE:String = "remove";
+		public static const ASK_TYPE_NONE:String = "none";
+		public static const ASK_TYPE_SUBSCRIBE:String = "subscribe";
+		public static const ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
+		public static const SHOW_UNAVAILABLE:String = "unavailable";
+		public static const SHOW_PENDING:String = "Pending";
 		
 	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	

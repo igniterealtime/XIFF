@@ -24,8 +24,8 @@ package org.igniterealtime.xiff.data.whiteboard
 	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "xiff:wb";
-		public static var ELEMENT:String = "x";
+		public static const NS:String = "xiff:wb";
+		public static const ELEMENT:String = "x";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	

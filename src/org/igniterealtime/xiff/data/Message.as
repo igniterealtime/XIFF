@@ -1,24 +1,4 @@
 /*
- * Copyright (C) 2003-2007
- * Nick Velloff <nick.velloffgmail.com>
- * Derrick Grigg <dgriggrogers.com>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- */
-	/*
  * License
  */
 package org.igniterealtime.xiff.data
@@ -47,11 +27,11 @@ package org.igniterealtime.xiff.data
 	{
 		
 		// Static variables for specific type strings
-		public static var NORMAL_TYPE:String = "normal";
-		public static var CHAT_TYPE:String = "chat";
-		public static var GROUPCHAT_TYPE:String = "groupchat";
-		public static var HEADLINE_TYPE:String = "headline";
-		public static var ERROR_TYPE:String = "error";
+		public static const NORMAL_TYPE:String = "normal";
+		public static const CHAT_TYPE:String = "chat";
+		public static const GROUPCHAT_TYPE:String = "groupchat";
+		public static const HEADLINE_TYPE:String = "headline";
+		public static const ERROR_TYPE:String = "error";
 	
 		// Private references to nodes within our XML
 		private var myBodyNode:XMLNode;

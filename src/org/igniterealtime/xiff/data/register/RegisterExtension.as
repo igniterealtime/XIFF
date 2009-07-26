@@ -22,8 +22,8 @@ package org.igniterealtime.xiff.data.register{
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:register";
-		public static var ELEMENT:String = "query";
+		public static const NS:String = "jabber:iq:register";
+		public static const ELEMENT:String = "query";
 	
 		private var myFields:Object;
 		private var myKeyNode:XMLNode;

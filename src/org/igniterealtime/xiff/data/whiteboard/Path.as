@@ -18,7 +18,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	public class Path implements ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var ELEMENT:String = "path";
+		public static const ELEMENT:String = "path";
 	
 	    private var mySegments:Array;
 	    private var myStroke:Stroke;

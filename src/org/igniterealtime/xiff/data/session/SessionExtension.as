@@ -13,8 +13,8 @@ package org.igniterealtime.xiff.data.session
 
 	public class SessionExtension extends Extension implements IExtension, ISerializable
 	{
-		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-session";
-		public static var ELEMENT_NAME:String = "session";
+		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-session";
+		public static const ELEMENT_NAME:String = "session";
 		private var jid:String;
 		
 		public function getNS():String

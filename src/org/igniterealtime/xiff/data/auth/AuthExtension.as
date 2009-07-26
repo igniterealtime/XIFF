@@ -21,8 +21,8 @@ package org.igniterealtime.xiff.data.auth
 	public class AuthExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:auth";
-		public static var ELEMENT:String = "query";
+		public static const NS:String = "jabber:iq:auth";
+		public static const ELEMENT:String = "query";
 	
 		private var myUsernameNode:XMLNode;
 		private var myPasswordNode:XMLNode;

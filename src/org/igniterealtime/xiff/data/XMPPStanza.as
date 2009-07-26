@@ -14,7 +14,7 @@ package org.igniterealtime.xiff.data
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
-		public static var CLIENT_NS:String = "jabber:client";
+		public static const CLIENT_NS:String = "jabber:client";
 
 	
 		private var myErrorNode:XMLNode;

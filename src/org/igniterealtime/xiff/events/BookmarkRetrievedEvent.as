@@ -7,7 +7,7 @@ package org.igniterealtime.xiff.events
 
 	public class BookmarkRetrievedEvent extends Event
 	{
-		public static var BOOKMARK_RETRIEVED:String = "bookmark retrieved";
+		public static const BOOKMARK_RETRIEVED:String = "bookmark retrieved";
 		
 		public function BookmarkRetrievedEvent() {
 			super(BOOKMARK_RETRIEVED);

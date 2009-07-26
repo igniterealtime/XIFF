@@ -18,8 +18,8 @@ package org.igniterealtime.xiff.data.muc{
 	public class MUCAdminExtension extends MUCBaseExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/muc#admin";
-		public static var ELEMENT:String = "query";
+		public static const NS:String = "http://jabber.org/protocol/muc#admin";
+		public static const ELEMENT:String = "query";
 	
 		private var myItems:Array;
 	

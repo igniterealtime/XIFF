@@ -33,16 +33,16 @@ package org.igniterealtime.xiff.data.muc{
 	
 	public class MUC
 	{
-		public static var ADMIN_AFFILIATION:String = "admin";
-		public static var MEMBER_AFFILIATION:String = "member";
-		public static var NO_AFFILIATION:String = "none";
-		public static var OUTCAST_AFFILIATION:String = "outcast";
-		public static var OWNER_AFFILIATION:String = "owner";
+		public static const ADMIN_AFFILIATION:String = "admin";
+		public static const MEMBER_AFFILIATION:String = "member";
+		public static const NO_AFFILIATION:String = "none";
+		public static const OUTCAST_AFFILIATION:String = "outcast";
+		public static const OWNER_AFFILIATION:String = "owner";
 	
-		public static var MODERATOR_ROLE:String = "moderator";
-		public static var NO_ROLE:String = "none";
-		public static var PARTICIPANT_ROLE:String = "participant";
-		public static var VISITOR_ROLE:String = "visitor";
+		public static const MODERATOR_ROLE:String = "moderator";
+		public static const NO_ROLE:String = "none";
+		public static const PARTICIPANT_ROLE:String = "participant";
+		public static const VISITOR_ROLE:String = "visitor";
 	
 		private static var staticDependencies:Array = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
 	

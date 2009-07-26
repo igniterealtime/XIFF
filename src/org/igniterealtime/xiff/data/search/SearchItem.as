@@ -14,7 +14,7 @@ package org.igniterealtime.xiff.data.search{
 	 */
 	public class SearchItem extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "item";
+		public static const ELEMENT:String = "item";
 	
 		private var myFields:Object;
 	

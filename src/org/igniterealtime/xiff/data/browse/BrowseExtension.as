@@ -18,8 +18,8 @@ package org.igniterealtime.xiff.data.browse
 	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable 
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "jabber:iq:browse";
-		public static var ELEMENT:String = "query";
+		public static const NS:String = "jabber:iq:browse";
+		public static const ELEMENT:String = "query";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	

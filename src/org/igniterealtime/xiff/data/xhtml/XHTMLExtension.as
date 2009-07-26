@@ -21,8 +21,8 @@ package org.igniterealtime.xiff.data.xhtml{
 	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://www.w3.org/1999/xhtml";
-		public static var ELEMENT:String = "html";
+		public static const NS:String = "http://www.w3.org/1999/xhtml";
+		public static const ELEMENT:String = "html";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	

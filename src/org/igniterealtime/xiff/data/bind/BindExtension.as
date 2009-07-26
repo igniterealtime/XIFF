@@ -14,8 +14,8 @@ package org.igniterealtime.xiff.data.bind
 
 	public class BindExtension extends Extension implements IExtension, ISerializable
 	{
-		public static var NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
-		public static var ELEMENT_NAME:String = "bind";
+		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
+		public static const ELEMENT_NAME:String = "bind";
 		private var _jid:EscapedJID;
 		private var _resource:String;
 		

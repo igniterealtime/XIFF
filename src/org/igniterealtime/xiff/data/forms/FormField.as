@@ -20,7 +20,7 @@ package org.igniterealtime.xiff.data.forms
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "field";
+		public static const ELEMENT:String = "field";
 	
 	    private var myDescNode:XMLNode;
 	    private var myRequiredNode:XMLNode;

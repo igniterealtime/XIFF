@@ -15,7 +15,7 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCItem extends XMLStanza implements ISerializable
 	{
-		public static var ELEMENT:String = "item";
+		public static const ELEMENT:String = "item";
 	
 		private var myActorNode:XMLNode;
 		private var myReasonNode:XMLNode;

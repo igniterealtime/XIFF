@@ -16,13 +16,13 @@ package org.igniterealtime.xiff.data.muc{
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension
 	{
 		// Static class variables to be overridden in subclasses;
-		public static var NS:String = "http://jabber.org/protocol/muc#user";
-		public static var ELEMENT:String = "x";
+		public static const NS:String = "http://jabber.org/protocol/muc#user";
+		public static const ELEMENT:String = "x";
 	
-		public static var DECLINE_TYPE:String = "decline";
-		public static var DESTROY_TYPE:String = "destroy";
-		public static var INVITE_TYPE:String = "invite";
-		public static var OTHER_TYPE:String = "other";
+		public static const DECLINE_TYPE:String = "decline";
+		public static const DESTROY_TYPE:String = "destroy";
+		public static const INVITE_TYPE:String = "invite";
+		public static const OTHER_TYPE:String = "other";
 	
 		private var myActionNode:XMLNode;
 		private var myPasswordNode:XMLNode;

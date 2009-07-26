@@ -18,24 +18,24 @@ package org.igniterealtime.xiff.data.forms
 	 */
 	public class FormExtension extends Extension implements IExtension, ISerializable
 	{
-	    public static var FIELD_TYPE_BOOLEAN:String = "boolean";
-	    public static var FIELD_TYPE_FIXED:String = "fixed";
-	    public static var FIELD_TYPE_HIDDEN:String = "hidden";
-	    public static var FIELD_TYPE_JID_MULTI:String = "jid-multi";
-	    public static var FIELD_TYPE_JID_SINGLE:String = "jid-single";
-	    public static var FIELD_TYPE_LIST_MULTI:String = "list-multi";
-	    public static var FIELD_TYPE_LIST_SINGLE:String = "list-single";
-	    public static var FIELD_TYPE_TEXT_MULTI:String = "text-multi";
-	    public static var FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
-	    public static var FIELD_TYPE_TEXT_SINGLE:String = "text-single";
+	    public static const FIELD_TYPE_BOOLEAN:String = "boolean";
+	    public static const FIELD_TYPE_FIXED:String = "fixed";
+	    public static const FIELD_TYPE_HIDDEN:String = "hidden";
+	    public static const FIELD_TYPE_JID_MULTI:String = "jid-multi";
+	    public static const FIELD_TYPE_JID_SINGLE:String = "jid-single";
+	    public static const FIELD_TYPE_LIST_MULTI:String = "list-multi";
+	    public static const FIELD_TYPE_LIST_SINGLE:String = "list-single";
+	    public static const FIELD_TYPE_TEXT_MULTI:String = "text-multi";
+	    public static const FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
+	    public static const FIELD_TYPE_TEXT_SINGLE:String = "text-single";
 	
-	    public static var REQUEST_TYPE:String = "form";
-	    public static var RESULT_TYPE:String = "result";
-	    public static var SUBMIT_TYPE:String = "submit";
-	    public static var CANCEL_TYPE:String = "cancel";
+	    public static const REQUEST_TYPE:String = "form";
+	    public static const RESULT_TYPE:String = "result";
+	    public static const SUBMIT_TYPE:String = "submit";
+	    public static const CANCEL_TYPE:String = "cancel";
 	
-	    public static var NS:String = "jabber:x:data";
-	    public static var ELEMENT:String = "x";
+	    public static const NS:String = "jabber:x:data";
+	    public static const ELEMENT:String = "x";
 	
 		//private static var isStaticConstructed:Boolean = enable();
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];

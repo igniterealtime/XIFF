@@ -3,8 +3,6 @@
  */
 package org.igniterealtime.xiff.data
 {
-
-	
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import flash.xml.XMLNode;
 	import flash.xml.XMLDocument;
