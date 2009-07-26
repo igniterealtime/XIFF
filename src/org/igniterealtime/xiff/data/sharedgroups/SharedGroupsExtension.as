@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.sharedgroups
 {
 	import flash.xml.XMLNode;

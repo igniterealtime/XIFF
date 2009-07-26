@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.search{
 	
 	import flash.xml.XMLNode;
@@ -14,12 +17,7 @@ package org.igniterealtime.xiff.data.search{
 	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in getRequiredFieldNames set on this extension.  
 	 * Check the result and re-establish the connection with the new account.
 	 *
-	 * @author Daniel Henninger
-	 * @since 2.0.0
-	 * @param parent (Optional) The parent node used to build the XML tree.
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Search
-	 * @toc-sort 1/2
+	 * @param	parent (Optional) The parent node used to build the XML tree.
 	 */
 	public class SearchExtension extends Extension implements IExtension, ISerializable
 	{
@@ -52,7 +50,7 @@ package org.igniterealtime.xiff.data.search{
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
-		 * @availability Flash Player 7
+		 * availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {

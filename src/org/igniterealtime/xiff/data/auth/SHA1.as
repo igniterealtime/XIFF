@@ -1,7 +1,5 @@
 /*
  * Copyright (C) 2003-2007 
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,8 +15,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  *
+ *//*
+ * License
  */
-	 
 package org.igniterealtime.xiff.data.auth
 {
 	/**
@@ -32,7 +31,7 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * Takes a string and returns the hex representation of its SHA1 hash.
 		 *
-		 * @param str The string to use for calculating the hash
+		 * @param	str The string to use for calculating the hash
 		 * @return The SHA1 hash of the string passed to the function
 		 */
 		public static function calcSHA1(str:String):String
@@ -95,7 +94,7 @@ package org.igniterealtime.xiff.data.auth
 		{
 			var nblk:Number = ((str.length + 8) >> 6) + 1;
 			var blks:Array = new Array(nblk * 16);
-			for (var i:Number = 0; i < nblk * 16; i++)
+			for (var i:Number = 0; i < nblk * 16; ++i)
 			{
 				blks[i] = 0;
 			}

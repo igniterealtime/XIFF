@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.im
 {	
 	import mx.collections.ArrayCollection;
@@ -48,7 +28,6 @@ package org.igniterealtime.xiff.im
 	 *
 	 * The event object contains an attribute <code>jid</code> with the JID of
 	 * the user who revoked your subscription.
-	 *
 	 */
 	[Event("subscriptionRevocation")]
 	
@@ -56,7 +35,6 @@ package org.igniterealtime.xiff.im
 	 * Broadcast whenever someone requests to subscribe to your presence. The event object
 	 * contains an attribute <code>jid</code> with the JID of the user who is requesting
 	 * a presence subscription.
-	 *
 	 */
 	[Event("subscriptionRequest")]
 	
@@ -66,7 +44,6 @@ package org.igniterealtime.xiff.im
 	 *
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * denied the request.
-	 *
 	 */
 	[Event("subscriptionDenial")]
 	
@@ -74,7 +51,6 @@ package org.igniterealtime.xiff.im
 	 * Broadcast whenever a contact in the roster becomes unavailable. (Goes from online to offline.)
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became unavailable.
-	 *
 	 */
 	[Event("userUnavailable")]
 	
@@ -82,7 +58,6 @@ package org.igniterealtime.xiff.im
 	 * Broadcast whenever a contact in the roster becomes available. (Goes from offline to online.)
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became available.
-	 *
 	 */
 	[Event("userAvailable")]
 	
@@ -98,10 +73,8 @@ package org.igniterealtime.xiff.im
 	 * API decorations, like in the case of a Macromedia Central LCDataProvider. Overall,
 	 * however, its probably a rare occurence.
 	 *
-	 * @author Sean Voisen
-	 * @toc-path Instant Messaging
-	 * @param aConnection A reference to an XMPPConnection class instance
-	 * @param externalDataProvider (Optional) A reference to an instance of a data provider
+	 * @param	aConnection A reference to an XMPPConnection class instance
+	 * @param	externalDataProvider (Optional) A reference to an instance of a data provider
 	 */ 
 	public class Roster extends ArrayCollection
 	{
@@ -143,16 +116,16 @@ package org.igniterealtime.xiff.im
 		 * so this contact is added to the server-side roster first, and upon successful addition,
 		 * reflected in the local client-side copy of the roster.
 		 *
-		 * @param id The JID of the contact to add
-		 * @param displayName A friendly name for use when displaying this contact in the roster
-		 * @param groupName (Optional) The name of the group that this contact should be added to. (Used for
+		 * @param	id The JID of the contact to add
+		 * @param	displayName A friendly name for use when displaying this contact in the roster
+		 * @param	groupName (Optional) The name of the group that this contact should be added to. (Used for
 		 * organization in the roster listing.
-		 * @param requestSubscription (Optional) Determines whether a subscription request should be sent
+		 * @param	requestSubscription (Optional) Determines whether a subscription request should be sent
 		 * to this user. Most of the time you will want this parameter to be true.
 		 * You will be unable to view the contacts presence status until a subscription request is granted.
-		 * @example This example adds a contact to the roster and simultaneously requests a presence subscription
+		 * @example	This example adds a contact to the roster and simultaneously requests a presence subscription
 		 * with the new contact.
-		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
+		 * <pre>myRoster.addContact( "homerspringfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
 		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean=true ):void
 		{
@@ -187,8 +160,8 @@ package org.igniterealtime.xiff.im
 		 * notifications on changes to a contact's presence until that contact has authorized you to subscribe
 		 * to his/her/its presence.
 		 *
-		 * @param id The JID of the user or service that you wish to subscribe to
-		 * @see #subscriptionDenial
+		 * @param	id The JID of the user or service that you wish to subscribe to
+		 * @see	#subscriptionDenial
 		 */
 		public function requestSubscription( id:UnescapedJID, isResponse:Boolean=false):void
 		{
@@ -213,7 +186,7 @@ package org.igniterealtime.xiff.im
 		 * This method will only attempt action if the contact you are trying to remove is currently on the
 		 * roster in the first place.
 		 *
-		 * @param id The JID of the contact to remove
+		 * @param	id The JID of the contact to remove
 		 */
 		public function removeContact( rosterItem:RosterItemVO):void
 		{
@@ -249,8 +222,8 @@ package org.igniterealtime.xiff.im
 		 * is granted, the user can see whether you are offline, online, away, etc. Subscriptions can
 		 * be revoked at any time using the <code>denySubscription()</code> method.
 		 *
-		 * @param to The JID of the user or service to grant subscription to
-		 * @param requestAfterGrant Whether or not a reciprocal subscription request should be sent
+		 * @param	to The JID of the user or service to grant subscription to
+		 * @param	requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
 		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
@@ -270,7 +243,7 @@ package org.igniterealtime.xiff.im
 		 * if a user already has a granted presence subscription, you can use this method to revoke that
 		 * subscription.
 		 *
-		 * @param to The JID of the user or service that you are denying subscription
+		 * @param	to The JID of the user or service that you are denying subscription
 		 */
 		public function denySubscription( tojid:UnescapedJID ):void
 		{
@@ -282,9 +255,9 @@ package org.igniterealtime.xiff.im
 		 * Updates the information for an existing contact. You can use this method to change the
 		 * display name or associated group for a contact in your roster.
 		 *
-		 * @param id The JID of the contact to update
-		 * @param newName The new display name for this contact
-		 * @param newGroups The new groups to associate the contact with
+		 * @param	id The JID of the contact to update
+		 * @param	newName The new display name for this contact
+		 * @param	newGroups The new groups to associate the contact with
 		 */
 		private function updateContact( contact:RosterItemVO, newName:String, groupNames:Array ):void
 		{
@@ -299,8 +272,8 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the display name for an existing contact.
 		 *
-		 * @param id The JID of the contact to update
-		 * @param newName The new display name for this contact
+		 * @param	id The JID of the contact to update
+		 * @param	newName The new display name for this contact
 		 */
 		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
 		{
@@ -326,8 +299,8 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the groups associated with an existing contact.
 		 *
-		 * @param id The JID of the contact to update
-		 * @param newGroups The new groups to associate the contact with
+		 * @param	id The JID of the contact to update
+		 * @param	newGroups The new groups to associate the contact with
 		 */
 		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
 		{
@@ -347,11 +320,11 @@ package org.igniterealtime.xiff.im
 		 * <li><code>Presence.SHOW_XA</code></li>
 		 * </ul>
 		 *
-		 * @param show The show type for your presence. This represents what others should see - whether
+		 * @param	show The show type for your presence. This represents what others should see - whether
 		 * you are offline, online, away, etc.
-		 * @param status The status message associated with the show value
-		 * @param priority (Optional) A priority number for the presence
-		 * @see org.igniterealtime.xiff.data.Presence
+		 * @param	status The status message associated with the show value
+		 * @param	priority (Optional) A priority number for the presence
+		 * @see	org.igniterealtime.xiff.data.Presence
 		 */
 		public function setPresence( show:String, status:String, priority:Number ):void
 		{
@@ -626,7 +599,8 @@ package org.igniterealtime.xiff.im
 			}
 		}
 		
-		public function getPresence(jid:UnescapedJID):String {
+		public function getPresence(jid:UnescapedJID):String 
+		{
 			return _presenceMap[jid.toString()];
 		}
 		

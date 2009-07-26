@@ -1,26 +1,8 @@
-package org.igniterealtime.xiff.data.forms{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
-	
+/*
+ * License
+ */
+package org.igniterealtime.xiff.data.forms
+{
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.Extension;
@@ -32,11 +14,8 @@ package org.igniterealtime.xiff.data.forms{
 	/**
 	 * Implements the base functionality shared by all MUC extensions
 	 *
-	 * @author Sean Treadway
-	 * @param parent (Optional) The containing XMLNode for this extension
-	 * @toc-path Extensions/Conferencing/2
+	 * @param	parent (Optional) The containing XMLNode for this extension
 	 */
-	//public class FormExtension extends Extension implements ISerializable, IExtension
 	public class FormExtension extends Extension implements IExtension, ISerializable
 	{
 	    public static var FIELD_TYPE_BOOLEAN:String = "boolean";
@@ -92,7 +71,8 @@ package org.igniterealtime.xiff.data.forms{
 	        return true;
 	    }
 		/**
-		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
+		 * Called when this extension is being put back on the network. 
+		 * Perform any further serialization for Extensions and items
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
@@ -158,7 +138,7 @@ package org.igniterealtime.xiff.data.forms{
 	     * easily check what kind of form this is.
 	     *
 		 * @return String the registered namespace of this form type
-	     * @see http://xmpp.org/extensions/xep-0068.html
+	     * @see	http://xmpp.org/extensions/xep-0068.html
 	     */
 	    public function getFormType():String
 	    {
@@ -181,11 +161,10 @@ package org.igniterealtime.xiff.data.forms{
 	    }
 	    
 	    /**
-	    * Returns the request form field
-	    * 
-	    * @param value the name of the form field to retrieve
-	    * @returns FormField the matching form field
-	    */
+		 * 
+	     * @param	value the name of the form field to retrieve
+	     * @return	FormField the matching form field
+	     */
 	    public function getFormField(value:String):FormField
 	    {
 	    	 for each (var field:FormField in myFields)
@@ -210,8 +189,8 @@ package org.igniterealtime.xiff.data.forms{
 	     * Sets the fields given a fieldmap object containing keys of field names
 	     * and values of value arrays
 	     *
-	     * @param fieldmap Object in format obj[key:String].value:Array
-	     * @availability Flash Player 7
+	     * @param	fieldmap Object in format obj[key:String].value:Array
+	     * availability Flash Player 7
 	     */
 	    public function setFields(fieldmap:Object):void
 	    {
@@ -292,7 +271,7 @@ package org.igniterealtime.xiff.data.forms{
 	    /**
 	     * Array of fields found in individual items due to a search query result
 	     *
-	     * @returns Array of FormField objects containing information about the fields
+	     * @return	Array of FormField objects containing information about the fields
 	     * in the fields retrieved by getAllItems
 	     */
 	    public function getReportedFields():Array
@@ -310,7 +289,10 @@ package org.igniterealtime.xiff.data.forms{
 	     *
 	     */
 	
-	    public function get type():String { return getNode().attributes.type; }
+	    public function get type():String 
+		{ 
+			return getNode().attributes.type;
+		}
 	    public function set type(val:String) :void
 	    { 
 	        // TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"

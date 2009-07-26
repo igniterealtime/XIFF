@@ -1,36 +1,15 @@
-package org.igniterealtime.xiff.data.rpc{
+/*
+ * License
+ */
+package org.igniterealtime.xiff.data.rpc
+{
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
-	
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
 	
 	/**
 	 * Implements client side XML marshalling of methods and parameters into XMLRPC.
 	 * For more information on RPC over XMPP, see <a href="http://xmpp.org/extensions/xep-0009.html">
 	 * http://xmpp.org/extensions/xep-0009.html</a>.
-	 *
-	 * @author Sean Treadway
-	 * @toc-path Extensions/RPC/2
 	 */
 	public class XMLRPC
 	{
@@ -39,7 +18,7 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * Extract and marshall the XML-RPC response to Flash types.
 		 *
-		 * @param xml The XML containing the message response
+		 * @param	xml The XML containing the message response
 		 * @return Mixed object of either an array of results from the method call or a fault.
 		 * If the result is a fault, "result.isFault" will evaulate as true.
 		 */
@@ -48,18 +27,23 @@ package org.igniterealtime.xiff.data.rpc{
 			var result:Array;
 			var response:XMLNode = findNode("methodResponse", xml);
 	
-			if (response.firstChild.nodeName == "fault") {
+			if (response.firstChild.nodeName == "fault")
+			{
 				// methodResponse/fault/value/struct
 				result = extractValue(response.firstChild.firstChild.firstChild);
 				result.isFault = true;
-			} else {
+			} 
+			else 
+			{
 				result = [];
 				var params:XMLNode = findNode("params", response);
 				if (params != null) {
-					for (var param_idx:int=0; param_idx < params.childNodes.length; param_idx++) {
+					for (var param_idx:int = 0; param_idx < params.childNodes.length; param_idx++)
+					{
 						var param:Array = params.childNodes[param_idx].firstChild;
 	
-						for (var type_idx:int=0; type_idx < param.childNodes.length; type_idx++) {
+						for (var type_idx:int = 0; type_idx < param.childNodes.length; type_idx++)
+						{
 							result.push(extractValue(param.childNodes[type_idx]));
 						}
 					}
@@ -69,7 +53,8 @@ package org.igniterealtime.xiff.data.rpc{
 		}
 	
 		/**
-		 * The marshalling process, accepting a block of XML, a string description of the remote method, and an array of flash typed parameters.
+		 * The marshalling process, accepting a block of XML, a string description of the remote method,
+		 * and an array of flash type parameters.
 		 *
 		 * @return XMLNode containing the XML marshalled result
 		 */
@@ -79,7 +64,8 @@ package org.igniterealtime.xiff.data.rpc{
 			addText(addNode(mc, "methodName"), method);
 	
 			var p:XMLNode = addNode(mc, "params");
-			for (var i:int=0; i < params.length; i++) {
+			for (var i:int = 0; i < params.length; ++i)
+			{
 				addParameter(p, params[i]);
 			}
 	
@@ -158,7 +144,7 @@ package org.igniterealtime.xiff.data.rpc{
 	
 			} else if (value is Array) {
 				var data:XMLNode = addNode(addNode(value_node, "array"), "data");
-				for (var i:int=0; i < value.length; i++) {
+				for (var i:int=0; i < value.length; ++i) {
 					addValue(data, value[i]);
 				}
 			} else if (typeof(value) == "object") {

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;

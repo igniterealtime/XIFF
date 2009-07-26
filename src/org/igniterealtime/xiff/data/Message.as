@@ -1,9 +1,7 @@
 /*
  * Copyright (C) 2003-2007
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
+ * Nick Velloff <nick.velloffgmail.com>
+ * Derrick Grigg <dgriggrogers.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-	
+	/*
+ * License
+ */
 package org.igniterealtime.xiff.data
 {
 	
@@ -34,14 +34,14 @@ package org.igniterealtime.xiff.data
 	/**
 	 * A class for abstraction and encapsulation of message data.
 	 *
-	 * @param recipient The JID of the message recipient
-	 * @param sender The JID of the message sender - the server should report an error if this is falsified
-	 * @param msgID The message ID
-	 * @param msgBody The message body in plain-text format
-	 * @param msgHTMLBody The message body in XHTML format
-	 * @param msgType The message type
-	 * @param msgSubject (Optional) The message subject
-	 * @param chatState (Optional) The chat state
+	 * @param	recipient The JID of the message recipient
+	 * @param	sender The JID of the message sender - the server should report an error if this is falsified
+	 * @param	msgID The message ID
+	 * @param	msgBody The message body in plain-text format
+	 * @param	msgHTMLBody The message body in XHTML format
+	 * @param	msgType The message type
+	 * @param	msgSubject (Optional) The message subject
+	 * @param	chatState (Optional) The chat state
 	 */
 	public class Message extends XMPPStanza implements ISerializable
 	{
@@ -93,7 +93,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Deserializes an XML object and populates the Message instance with its data.
 		 *
-		 * @param xmlNode The XML to deserialize
+		 * @param	xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean
@@ -181,7 +181,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * The message body in XHTML format. Internally, this uses the XHTML data extension.
 		 *
-		 * @see org.igniterealtime.xiff.data.xhtml.XHTMLExtension
+		 * @see	org.igniterealtime.xiff.data.xhtml.XHTMLExtension
 		 */
 		public function get htmlBody():String
 		{
@@ -283,7 +283,7 @@ package org.igniterealtime.xiff.data
 		 * <li>ChatState.INACTIVE</li>
 		 * <li>ChatState.GONE</li>
 		 * </ul>
-		 * @see org.igniterealtime.xiff.data.chat.ChatState
+		 * @see	org.igniterealtime.xiff.data.chat.ChatState
 		 */
 		public function get state():String
 		{

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.privatedata
 {
 	import flash.events.EventDispatcher;
@@ -26,7 +29,8 @@ package org.igniterealtime.xiff.privatedata
 			this._connection = connection;
 		}
 		
-		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void {
+		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void 
+		{
 			var packetFilter:IPacketFilter = new CallbackPacketFilter(callback);
 			var privateDataGet:IQ = new IQ(null, IQ.GET_TYPE, null, "accept", packetFilter);
 			privateDataGet.addExtension(new PrivateDataExtension(elementName, elementNamespace));
@@ -34,7 +38,8 @@ package org.igniterealtime.xiff.privatedata
 			this._connection.send(privateDataGet);
 		}
 		
-		public function setPrivateData(elementName:String, elementNamespace:String, payload:IPrivatePayload):void {
+		public function setPrivateData(elementName:String, elementNamespace:String, payload:IPrivatePayload):void 
+		{
 			var privateDataSet:IQ = new IQ(null, IQ.SET_TYPE);
 			privateDataSet.addExtension(new PrivateDataExtension(elementName, elementNamespace, payload));
 			

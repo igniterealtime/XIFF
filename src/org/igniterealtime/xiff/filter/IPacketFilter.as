@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.filter
 {
 	import org.igniterealtime.xiff.data.XMPPStanza;

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.vcard
 {
 	import flash.display.*;
@@ -64,7 +67,8 @@ package org.igniterealtime.xiff.vcard
 			if(!cacheFlushTimer.running)
 			{
 				cacheFlushTimer.start();
-				cacheFlushTimer.addEventListener(TimerEvent.TIMER, function(event:TimerEvent):void {
+				cacheFlushTimer.addEventListener(TimerEvent.TIMER, function(event:TimerEvent):void 
+		{
 					var tempCache:Object = cache;
 					cache = {};
 					for each(var cachedCard:VCard in tempCache)

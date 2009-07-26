@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-2007
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
- 
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
@@ -41,7 +21,7 @@ package org.igniterealtime.xiff.conference
 	/**
 	 * Dispatched when the room subject changes.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.SUBJECT_CHANGE
+	 * eventType org.igniterealtime.xiff.events.RoomEvent.SUBJECT_CHANGE
 	 */
 	[Event( name="subjectChange", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	
@@ -50,7 +30,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the 
 	 * group message as an instance of the <code>Message</code> class.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event( name="groupMessage", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -59,7 +39,7 @@ package org.igniterealtime.xiff.conference
 	 * contains an attribute <code>data</code> with the private message as an instance of the 
 	 * <code>Message</code> class.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="privateMessage", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -68,14 +48,14 @@ package org.igniterealtime.xiff.conference
 	 * will be displayed to other users. The room's role and affiliation will
 	 * be visible from this point forward.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="roomJoin", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the server acknoledges that you have the left the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="roomLeave", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -86,15 +66,15 @@ package org.igniterealtime.xiff.conference
 	 * <p>To grant or revoke permissions based on this list, only send the changes you wish to 
 	 * make, calling grant/revoke with the new affiliation and existing JID.</p>
 	 * 
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="affiliations", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when an administration action failed.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
-	 * @see org.igniterealtime.xiff.core.XMPPConnection.error
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @see	org.igniterealtime.xiff.core.XMPPConnection.error
 	 */
 	[Event(name="adminError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -102,14 +82,14 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched when the room requires a password and the user did not supply one (or
 	 * the password provided is incorrect).
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="passwordError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when the room is members-only and the user is not on the member list.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="registrationReqError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -117,14 +97,14 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched if the user attempted to join the room but was not allowed to do so because
 	 * they are banned (i.e., has an affiliation of "outcast").
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="bannedError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched if the room has reached its maximum number of occupants.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="maxUsersError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -132,7 +112,7 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
 	 * creator provides an initial configuration and therefore before the room officially exists).
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="lockedError", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -140,7 +120,7 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will 
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="userJoin", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -148,21 +128,21 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="userDeparture", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when a user is kicked from the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="userKicked", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
 	/**
 	 * Dispatched when a user is banned from the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="userBanned", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -171,7 +151,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname 
 	 * already existing in the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="nickConflict", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -189,10 +169,10 @@ package org.igniterealtime.xiff.conference
 	 * <code>type</code>: The type of the field to be displayed. Type will be a constant
 	 * from the <code>FormField</code> class.</p>
 	 * 
-	 * @see org.igniterealtime.xiff.data.forms.FormExtension
-	 * @see org.igniterealtime.xiff.data.forms.FormField
-	 * @see #configure
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
+	 * @see	org.igniterealtime.xiff.data.forms.FormField
+	 * @see	#configure
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="configureForm", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -204,7 +184,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>reason</code>: A string containing the reason to join the room<br />
 	 * <code>data</code>: The original message containing the decline</p>
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
 	[Event(name="declined", type="org.igniterealtime.xiff.events.RoomEvent")]
 	
@@ -212,7 +192,7 @@ package org.igniterealtime.xiff.conference
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
 	 *
-	 * @param connection An XMPPConnection instance that is providing the primary server connection
+	 * @param	connection An XMPPConnection instance that is providing the primary server connection
 	 */
 	public class Room extends ArrayCollection
 	{
@@ -268,8 +248,8 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @param connection The XMPPConnection instance to use.
-		 * @see org.igniterealtime.xiff.core.XMPPConnection
+		 * @param	connection The XMPPConnection instance to use.
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function set connection( connection:XMPPConnection ):void
 		{
@@ -293,8 +273,8 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @returns The XMPPConnection used
-		 * @see org.igniterealtime.xiff.core.XMPPConnection
+		 * @return	The XMPPConnection used
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function get connection():XMPPConnection
 		{
@@ -312,7 +292,7 @@ package org.igniterealtime.xiff.conference
 	     * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and 
 	     * either return or cancel the configuration of the room.
 		 *
-	     * @param createReserved Set to true if you wish to create and configure a reserved room
+	     * @param	createReserved Set to true if you wish to create and configure a reserved room
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
 		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
@@ -363,8 +343,8 @@ package org.igniterealtime.xiff.conference
 		 * sent from this room. Use this method to get a <code>Message</code> in order to add extensions 
 		 * to outgoing room messages.
 		 * 
-		 * @param body The message body
-		 * @param htmlBody The message body with HTML formatting
+		 * @param	body The message body
+		 * @param	htmlBody The message body with HTML formatting
 		 * @return A <code>Message</code> class instance
 		 */
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
@@ -376,8 +356,8 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Sends a message to the conference room.
 		 *
-		 * @param body The message body
-		 * @param htmlBody The message body with HTML formatting
+		 * @param	body The message body
+		 * @param	htmlBody The message body with HTML formatting
 		 */
 		public function sendMessage( body:String=null, htmlBody:String=null ):void
 		{
@@ -391,7 +371,7 @@ package org.igniterealtime.xiff.conference
 		 * Sends a message to the conference room with an extension attached. 
 		 * Use this method in conjunction with the <code>getMessage</code> method.
 		 *
-		 * @param msg The message to send
+		 * @param	msg The message to send
 		 */
 		public function sendMessageWithExtension( msg:Message ):void
 		{
@@ -403,10 +383,10 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Sends a private message to a specific participant in the conference room.
 		 *
-		 * @param recipientNickname The conference room nickname of the recipient who should 
+		 * @param	recipientNickname The conference room nickname of the recipient who should 
 		 * receive the private message
-		 * @param body The message body
-		 * @param htmlBody The message body with HTML formatting
+		 * @param	body The message body
+		 * @param	htmlBody The message body with HTML formatting
 		 */
 		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
 		{
@@ -420,7 +400,7 @@ package org.igniterealtime.xiff.conference
 		 * Changes the subject in the conference room. You must have already joined the 
 		 * room before you can change the subject.
 		 *
-		 * @param newSubject The new subject
+		 * @param	newSubject The new subject
 		 */
 		public function changeSubject( newSubject:String ):void
 		{
@@ -434,8 +414,8 @@ package org.igniterealtime.xiff.conference
 		 * Kicks an occupant out of the room, assuming that the user has necessary 
 		 * permissions in order to do so. If the user does not, the server will return an error.
 		 *
-		 * @param occupantNick The nickname of the room occupant to kick
-		 * @param reason The reason for the kick
+		 * @param	occupantNick The nickname of the room occupant to kick
+		 * @param	reason The reason for the kick
 		 */
 		public function kickOccupant( occupantNick:String, reason:String ):void
 		{
@@ -453,8 +433,8 @@ package org.igniterealtime.xiff.conference
 		 * In a moderated room, sets voice status to a particular occupant, assuming the user 
 		 * has the necessary permissions to do so.
 		 *
-		 * @param occupantNick The nickname of the occupant to give voice
-		 * @param voice Whether to add voice (true) or remove voice (false). Having voice means
+		 * @param	occupantNick The nickname of the occupant to give voice
+		 * @param	voice Whether to add voice (true) or remove voice (false). Having voice means
 		 * that the user is actually able to talk. Without voice the user is effectively muted.
 		 */
 		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
@@ -478,8 +458,8 @@ package org.igniterealtime.xiff.conference
 	     * <p>To listen to invite events, add an event listener on your XMPPConnection to the
 	     * <code>InviteEvent.INVITED</code> event.</p>
 	     *
-	     * @param jid A string JID of the user to invite.
-	     * @param reason A string describing why you would like to invite the user.
+	     * @param	jid A string JID of the user to invite.
+	     * @param	reason A string describing why you would like to invite the user.
 	     */
 	    public function invite( jid:UnescapedJID, reason:String ):void
 	    {
@@ -503,7 +483,7 @@ package org.igniterealtime.xiff.conference
 	     * messages without joining first.  If using this version of conferencing
 	     * software, it is best to ignore invites.</p>
 	     *
-	     * @param reason A string describing why the invitiation was declined
+	     * @param	reason A string describing why the invitiation was declined
 	     */
 	    public function decline(jid:UnescapedJID, reason:String):void
 	    {
@@ -518,7 +498,7 @@ package org.igniterealtime.xiff.conference
 	
 		/**
 		 * <strong>DEPRECATED! Use <code>getRoomJID</code> instead.</strong>
-		 * Gets the fully qualified room name (room@server) of the current room.
+		 * Gets the fully qualified room name (roomserver) of the current room.
 		 *
 		 * @return The fully qualified room name.
 		 */
@@ -538,7 +518,7 @@ package org.igniterealtime.xiff.conference
 	    }
 		
 	    /**
-	     * Set the JID of the room in the form "room@conference.server"
+	     * Set the JID of the room in the form "roomconference.server"
 	     */
 	    public function set roomJID( jid:UnescapedJID ):void
 	    {
@@ -775,7 +755,7 @@ package org.igniterealtime.xiff.conference
 	
 	    /*
 	     * Room owner (creation/configuration/destruction) methods
-		 * @see http://xmpp.org/extensions/xep-0045.html#createroom
+		 * @see	http://xmpp.org/extensions/xep-0045.html#createroom
 	     */
 	    private function unlockRoom( isReserved:Boolean ):void
 	    {	
@@ -810,9 +790,9 @@ package org.igniterealtime.xiff.conference
 	     * You must be joined to the room and have the owner affiliation to request 
 	     * a configuration form
 		 *
-	     * @see #configureForm
-	     * @see #configure
-	     * @see #cancelConfiguration
+	     * @see	#configureForm
+	     * @see	#configure
+	     * @see	#cancelConfiguration
 		 */
 	    public function requestConfiguration():void
 	    {
@@ -843,9 +823,9 @@ package org.igniterealtime.xiff.conference
 	
 	        if( form.type == FormExtension.REQUEST_TYPE ) 
 	        {
-	        	var e:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
-	        	e.data = form;
-	        	dispatchEvent(e);
+	        	var event:RoomEvent = new RoomEvent(RoomEvent.CONFIGURE_ROOM);
+	        	event.data = form;
+	        	dispatchEvent(event);
 	        }
 	    }
 	
@@ -854,10 +834,10 @@ package org.igniterealtime.xiff.conference
 	     *
 	     * You must be joined and have owner affiliation to configure the room
 	     *
-	     * @param fieldmap FormExtension, or a hash that is an object with keys being the room configuration
+	     * @param	fieldmap FormExtension, or a hash that is an object with keys being the room configuration
 	     * form variables and the values being arrays. For single value fields, use a single 
 	     * element array.
-	     * @see #configureForm
+	     * @see	#configureForm
 		 */
 	    public function configure(fieldmap:Object):void
 	    {
@@ -887,8 +867,8 @@ package org.igniterealtime.xiff.conference
 	     * <p>You must have joined the room and have the owner affiliation to 
 	     * configure the room.</p>
 	     *
-	     * @see #configureForm
-	     * @see #join
+	     * @see	#configureForm
+	     * @see	#join
 		 */
 	    public function cancelConfiguration():void
 	    {
@@ -911,13 +891,13 @@ package org.igniterealtime.xiff.conference
 	     * affiliation will be replaced with the one passed. If the process could not be 
 	     * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.
 	     * 
-	     * @param affiliation Use one of the 
+	     * @param	affiliation Use one of the 
 	     * following affiliations: <code>Room.MEMBER_AFFILIATION</code>,
 	     * <code>Room.ADMIN_AFFILIATION</code>,
 	     * <code>Room.OWNER_AFFILIATION</code>
-	     * @param jids An array of UnescapedJIDs to grant these permissions to
-	     * @see #revoke
-	     * @see #allow
+	     * @param	jids An array of UnescapedJIDs to grant these permissions to
+	     * @see	#revoke
+	     * @see	#allow
 	     */
 	    public function grant(affiliation:String, jids:Array):void
 	    {
@@ -944,9 +924,9 @@ package org.igniterealtime.xiff.conference
 	     * <code>RoomEvent.ADMIN_ERROR</code>. Note: if the JID is banned from this room, 
 	     * then this will also revoke the banned status.</p>
 	     * 
-	     * @param jids An array of UnescapedJIDs to revoke affiliations from
-	     * @see #grant
-	     * @see #allow
+	     * @param	jids An array of UnescapedJIDs to revoke affiliations from
+	     * @see	#grant
+	     * @see	#allow
 	     */
 	    public function revoke(jids:Array):void
 	    {
@@ -959,7 +939,7 @@ package org.igniterealtime.xiff.conference
 	     * <p>If the process could not be completed, the room will dispatch the event
 	     * <code>RoomEvent.ADMIN_ERROR</code>.</p>
 	     * 
-	     * @param jids An arry of JIDs to ban
+	     * @param	jids An arry of JIDs to ban
 	     */
 	    public function ban(jids:Array):void
 	    {
@@ -985,9 +965,9 @@ package org.igniterealtime.xiff.conference
 	     * <p>If the process could not be completed, the room will dispatch the event
 	     * <code>RoomEvent.ADMIN_ERROR</code></p>
 	     * 
-	     * @param jids An array of JIDs to allow
-	     * @see #grant
-	     * @see #revoke
+	     * @param	jids An array of JIDs to allow
+	     * @see	#grant
+	     * @see	#revoke
 	     */
 	    public function allow( jids:Array ):void
 	    {
@@ -1016,14 +996,14 @@ package org.igniterealtime.xiff.conference
 	     * This will either dispatch the event <code>RoomEvent.AFFILIATIONS</code> or 
 	     * <code>RoomEvent.ADMIN_ERROR</code> depending on the result of the request.
 	     *
-	     * @param affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
+	     * @param	affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
 	     * <code>Room.OUTCAST_AFFILIATION</code>,
 	     * <code>Room.MEMBER_AFFILIATION</code>,
 	     * <code>Room.ADMIN_AFFILIATION</code>,
 	     * <code>Room.OWNER_AFFILIATION</code>
-	     * @see #revoke
-	     * @see #grant
-	     * @see #affiliations
+	     * @see	#revoke
+	     * @see	#grant
+	     * @see	#affiliations
 	     */
 	    public function requestAffiliations( affiliation:String ):void
 	    {
@@ -1059,8 +1039,8 @@ package org.igniterealtime.xiff.conference
 		 * Destroys a reserved room.  If the room has been configured to be persistent,
 	     * then it is optional that the server will permanently remove the room.
 	     *
-	     * @param reason A short description of why the room is being destroyed
-	     * @param alternateJID A JID for current members to use as an alternate room to join 
+	     * @param	reason A short description of why the room is being destroyed
+	     * @param	alternateJID A JID for current members to use as an alternate room to join 
 	     * after the room has been destroyed. Like a postal forwarding address.
 		 */
 	    public function destroy( reason:String, alternateJID:UnescapedJID = null, callback:Function = null ):void
@@ -1159,7 +1139,7 @@ package org.igniterealtime.xiff.conference
 		 * Determines if the <code>sender</code> parameter is the same
 		 * as the room's JID.
 		 *
-		 * @param the room JID to test
+		 * @param	the room JID to test
 		 * @return true if the passed JID matches the getRoomJID
 		 */
 		public function isThisRoom( sender:UnescapedJID ):Boolean
@@ -1169,10 +1149,10 @@ package org.igniterealtime.xiff.conference
 		}
 	
 		/**
-		 * Determines if the <code>sender</code> param is the
+		 * Determines if the <code>sender</code>@param is the
 		 * same as the user's JID.
 		 *
-		 * @param the room JID to test
+		 * @param	the room JID to test
 		 * @return true if the passed JID matches the userJID
 		 */
 		public function isThisUser( sender:UnescapedJID ):Boolean
@@ -1195,7 +1175,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function set conferenceServer( aServer:String ):void
 		{
-			roomJID = new UnescapedJID(roomName + "@" + aServer);
+			roomJID = new UnescapedJID(roomName + "" + aServer);
 		}
 		
 		/**
@@ -1211,7 +1191,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function set roomName( aName:String ):void
 		{
-			roomJID = new UnescapedJID(aName + "@" + conferenceServer);
+			roomJID = new UnescapedJID(aName + "" + conferenceServer);
 		}
 		
 		/**

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.bookmark
 {
 	import flash.events.EventDispatcher;
@@ -31,7 +34,8 @@ package org.igniterealtime.xiff.bookmark
 			this._privateDataManager = privateDataManager;
 		}
 		
-		public function fetchBookmarks():void {
+		public function fetchBookmarks():void 
+		{
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarks"]));
 			}
@@ -40,7 +44,8 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 		
-		public function addGroupChatBookmark(serverBookmark:GroupChatBookmark):void {
+		public function addGroupChatBookmark(serverBookmark:GroupChatBookmark):void 
+		{
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksAdd"], serverBookmark));
 			}
@@ -49,7 +54,8 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 		
-		public function isGroupChatBookmarked(jid:UnescapedJID):Boolean {
+		public function isGroupChatBookmarked(jid:UnescapedJID):Boolean 
+		{
 			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
 				if (bookmark.jid.unescaped.equals(jid, false)) {
 					return true;
@@ -67,7 +73,8 @@ package org.igniterealtime.xiff.bookmark
 			return null;		
 		}
 		
-		public function removeGroupChatBookmark(jid:UnescapedJID):void {
+		public function removeGroupChatBookmark(jid:UnescapedJID):void 
+		{
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksRemove"], jid));
 			}
@@ -76,7 +83,8 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 		
-		public function setAutoJoin(jid:UnescapedJID, state:Boolean):void {
+		public function setAutoJoin(jid:UnescapedJID, state:Boolean):void 
+		{
 			if(!this._bookmarks) {
 				this._privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksSetAuto"], jid, state));
 			}		
@@ -89,23 +97,27 @@ package org.igniterealtime.xiff.bookmark
 			return _bookmarks;
 		}
 		
-		private function _processBookmarks(bookmarksIq:XMPPStanza):void {
+		private function _processBookmarks(bookmarksIq:XMPPStanza):void 
+		{
 			var privateData:PrivateDataExtension = bookmarksIq.getAllExtensionsByNS("jabber:iq:private")[0];
 			_bookmarks = BookmarkPrivatePayload(privateData.payload);
 			dispatchEvent(new BookmarkRetrievedEvent());
 		}
 		
-		private function _processBookmarksAdd(bookmark:ISerializable, bookmarksIq:XMPPStanza):void {
+		private function _processBookmarksAdd(bookmark:ISerializable, bookmarksIq:XMPPStanza):void 
+		{
 			this._processBookmarks(bookmarksIq);
 			this._addBookmark(bookmark);
 		}
 		
-		private function _processBookmarksRemove(jid:UnescapedJID, bookmarksIq:XMPPStanza):void {
+		private function _processBookmarksRemove(jid:UnescapedJID, bookmarksIq:XMPPStanza):void 
+		{
 			this._processBookmarks(bookmarksIq);
 			this._removeBookmark(jid);
 		}
 		
-		private function _processBookmarksSetAuto(jid:UnescapedJID, state:Boolean, bookmarksIq:XMPPStanza):void {
+		private function _processBookmarksSetAuto(jid:UnescapedJID, state:Boolean, bookmarksIq:XMPPStanza):void 
+		{
 			this._processBookmarks(bookmarksIq);
 			this._setAutoJoin(jid, state);
 		}
@@ -128,13 +140,15 @@ package org.igniterealtime.xiff.bookmark
 			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_ADDED, bookmark));
 		}
 		
-		private function _removeBookmark(jid:UnescapedJID):void {
+		private function _removeBookmark(jid:UnescapedJID):void 
+		{
 			var removedBookmark:GroupChatBookmark = _bookmarks.removeGroupChatBookmark(jid);
 			this._updateBookmarks();
 			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED, removedBookmark));		
 		}
 		
-		private function _setAutoJoin(jid:UnescapedJID, state:Boolean):void {
+		private function _setAutoJoin(jid:UnescapedJID, state:Boolean):void 
+		{
 			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
 				if (bookmark.jid.unescaped.equals(jid, false)) {
 					bookmark.autoJoin = state;
@@ -143,7 +157,8 @@ package org.igniterealtime.xiff.bookmark
 			this._updateBookmarks();						
 		}
 		
-		private function _updateBookmarks():void {
+		private function _updateBookmarks():void 
+		{
 			var groupChats:Array = _bookmarks.groupChatBookmarks;
 			var urls:Array = _bookmarks.urlBookmarks;
 			

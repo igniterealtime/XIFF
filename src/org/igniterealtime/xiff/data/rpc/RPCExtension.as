@@ -1,25 +1,8 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.rpc{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+
 	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
@@ -30,9 +13,6 @@ package org.igniterealtime.xiff.data.rpc{
 	
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
-	 *
-	 * @author Sean Treadway
-	 * @toc-path Extensions/RPC/2
 	 */
 	public class RPCExtension extends Extension implements IExtension, ISerializable
 	{
@@ -51,9 +31,9 @@ package org.igniterealtime.xiff.data.rpc{
 		 *
 		 * If this extension is being returned, then check the result property instead.
 		 *
-		 * @param methodName The name of the remote procedure to call
-		 * @param params A collection of parameters of any type
-		 * @see #result
+		 * @param	methodName The name of the remote procedure to call
+		 *@param@params A collection of parameters of any type
+		 * @see	#result
 		 */
 	
 		public function call(methodName:String, params:Array):void
@@ -73,7 +53,8 @@ package org.igniterealtime.xiff.data.rpc{
 	
 		/**
 		 * Check this if property if you wish to determine the remote procedure call produced an error.
-		 * If the XMPP stanza never made it to the RPC service, then the error would be on the stanza object instead of this extension.
+		 * If the XMPP stanza never made it to the RPC service, then the error would be on the
+		 * stanza object instead of this extension.
 		 *
 		 * @return True if the remote procedure call produced an error
 		 */
@@ -83,7 +64,8 @@ package org.igniterealtime.xiff.data.rpc{
 		}
 	
 		/**
-		 * The object containing the fault of the remote procedure call.  This object could have any properties, as fault results are only structurally defined.
+		 * The object containing the fault of the remote procedure call.  
+		 * This object could have any properties, as fault results are only structurally defined.
 		 *
 		 */
 		public function get fault():Object
@@ -112,7 +94,7 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.igniterealtime.xiff.data.IExtension
+		 * @see	org.igniterealtime.xiff.data.IExtension
 		 */
 		public function getNS():String
 		{
@@ -122,7 +104,7 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.igniterealtime.xiff.data.IExtension
+		 * @see	org.igniterealtime.xiff.data.IExtension
 		 */
 		public function getElementName():String
 		{
@@ -141,7 +123,7 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
@@ -154,7 +136,7 @@ package org.igniterealtime.xiff.data.rpc{
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{

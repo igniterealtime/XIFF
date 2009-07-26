@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.core
 {	 
 	import flash.events.Event;
@@ -42,7 +22,7 @@ package org.igniterealtime.xiff.core
 	 * This gets rid of issues related to the <code>XMLSocket</code>'s appending
 	 * of a null-byte to all outgoing data.
 	 * 
-	 * @see org.igniterealtime.xiff.core.XMPPConnection
+	 * @see	org.igniterealtime.xiff.core.XMPPConnection
 	 */
 	public class XMPPSocketConnection extends XMPPConnection
 	{
@@ -58,7 +38,8 @@ package org.igniterealtime.xiff.core
 			configureSocket();
 		}
 		
-		private function configureSocket():void {
+		private function configureSocket():void 
+		{
 			binarySocket = new SocketConn();
 			
 	        binarySocket.addEventListener(Event.CLOSE, socketClosed);
@@ -175,7 +156,7 @@ package org.igniterealtime.xiff.core
 				event.data = xmlData;
 				dispatchEvent( event );
 				
-				for (var i:int = 0; i<xmlData.childNodes.length; i++)
+				for (var i:int = 0; i<xmlData.childNodes.length; ++i)
 				{
 					// Read the data and send it to the appropriate parser
 					var currentNode:XMLNode = xmlData.childNodes[i];

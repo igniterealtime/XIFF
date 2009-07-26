@@ -1,27 +1,9 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data
 {
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+
 	 
 	import flash.xml.XMLNode;
 	
@@ -29,8 +11,6 @@ package org.igniterealtime.xiff.data
 	
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
-	 *
-	 * @author Sean Voisen
 	 */
 	public class Presence extends XMPPStanza implements ISerializable 
 	{
@@ -56,12 +36,12 @@ package org.igniterealtime.xiff.data
 	
 		/**
 		 * 
-		 * @param recipient The recipient of the presence, usually in the form of a JID.
-		 * @param sender The sender of the presence, usually in the form of a JID.
-		 * @param presenceType The type of presence as a string. There are predefined static variables for this.
-		 * @param showVal What to show for this presence (away, online, etc.) There are predefined static variables for this.
-		 * @param statusVal The status; usually used for the "away message."
-		 * @param priorityVal The priority of this presence; usually on a scale of 1-5.
+		 * @param	recipient The recipient of the presence, usually in the form of a JID.
+		 * @param	sender The sender of the presence, usually in the form of a JID.
+		 * @param	presenceType The type of presence as a string. There are predefined static variables for this.
+		 * @param	showVal What to show for this presence (away, online, etc.) There are predefined static variables for this.
+		 * @param	statusVal The status; usually used for the "away message."
+		 * @param	priorityVal The priority of this presence; usually on a scale of 1-5.
 		 */
 		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
 		{		
@@ -85,7 +65,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Deserializes an XML object and populates the Presence instance with its data.
 		 *
-		 * @param xmlNode The XML to deserialize
+		 * @param	xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean 

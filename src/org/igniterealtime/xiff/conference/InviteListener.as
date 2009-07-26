@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-20077
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.conference
 {	
 	import flash.events.EventDispatcher;
@@ -34,9 +14,9 @@ package org.igniterealtime.xiff.conference
 	/**
 	 * Dispatched when an invitations has been received.
 	 * 
-	 * @eventType org.igniterealtime.xiff.InviteEvent.INVITED
-	 * @see org.igniterealtime.xiff.conference.Room
-	 * @see org.igniterealtime.xiff.conference.Room.#invite
+	 * eventType org.igniterealtime.xiff.InviteEvent.INVITED
+	 * @see	org.igniterealtime.xiff.conference.Room
+	 * @see	org.igniterealtime.xiff.conference.Room.#invite
 	 */
 	[Event( name="invited", type="org.igniterealtime.xiff.events.InviteEvent" )]
 	
@@ -48,7 +28,7 @@ package org.igniterealtime.xiff.conference
 	 * <p>You only need a single instance of this class to listen for all invite
 	 * or decline events.</p>
 	 *
-	 * @param connection An XMPPConnection instance that is providing the primary server 
+	 * @param	connection An XMPPConnection instance that is providing the primary server 
 	 * connection.
 	 */
 	public class InviteListener extends EventDispatcher
@@ -64,8 +44,8 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @param connection The XMPPConnection instance to use.
-		 * @see org.igniterealtime.xiff.core.XMPPConnection
+		 * @param	connection The XMPPConnection instance to use.
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function setConnection( connection:XMPPConnection ):void
 		{
@@ -79,8 +59,8 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @returns The XMPPConnection used
-		 * @see org.igniterealtime.xiff.core.XMPPConnection
+		 * @return	The XMPPConnection used
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function getConnection():XMPPConnection
 		{
@@ -105,12 +85,12 @@ package org.igniterealtime.xiff.conference
 	                        var room:Room = new Room(myConnection);
 	                        room.roomJID = msg.from.unescaped;
 	                        room.password = muc.password;
-							var e:InviteEvent = new InviteEvent();
-							e.from = muc.from.unescaped;
-							e.reason = muc.reason;
-							e.room = room;
-							e.data = msg;
-							dispatchEvent(e);
+							var inviteEvent:InviteEvent = new InviteEvent();
+							inviteEvent.from = muc.from.unescaped;
+							inviteEvent.reason = muc.reason;
+							inviteEvent.room = room;
+							inviteEvent.data = msg;
+							dispatchEvent(inviteEvent);
 	                    }
     				 }
     				 catch (e:Error)

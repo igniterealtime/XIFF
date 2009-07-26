@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.privatedata
 {
 	import org.igniterealtime.xiff.data.IExtension;

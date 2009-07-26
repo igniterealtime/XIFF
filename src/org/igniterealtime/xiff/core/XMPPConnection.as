@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.core
 {	 
 	import flash.events.DataEvent;
@@ -58,70 +38,70 @@ package org.igniterealtime.xiff.core
 	/**
 	 * Dispatched when a password change is successful.
 	 * 
-	 * @eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
+	 * eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
 	 */
     [Event(name="changePasswordSuccess", type="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent")]
     
     /**
      * Dispatched when the connection is successfully made to the server.
      * 
-     * @eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
+     * eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
      */
     [Event(name="connection", type="org.igniterealtime.xiff.events.ConnectionSuccessEvent")]
     
     /**
      * Dispatched when there is a disconnection from the server.
      * 
-     * @eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
+     * eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
      */
     [Event(name="disconnection", type="org.igniterealtime.xiff.events.DisconnectionEvent")]
     
     /**
      * Dispatched when there is some type of XMPP error.
      * 
-     * @eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
+     * eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
      */
     [Event(name="error", type="org.igniterealtime.xiff.events.XIFFErrorEvent")]
     
     /**
      * Dispatched whenever there is incoming XML data.
      * 
-     * @eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
+     * eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
      */
     [Event(name="incomingData", type="org.igniterealtime.xiff.events.IncomingDataEvent")]
     
     /**
      * Dispatched on successful authentication (login) with the server.
      * 
-     * @eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
+     * eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
      */
     [Event(name="login", type="org.igniterealtime.xiff.events.LoginEvent")]
     
     /**
      * Dispatched on incoming messages.
      * 
-     * @eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
+     * eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
      */
     [Event(name="message", type="org.igniterealtime.xiff.events.MessageEvent")]
     
     /**
      * Dispatched whenever data is sent to the server.
      * 
-     * @eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
+     * eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
      */
     [Event(name="outgoingData", type="org.igniterealtime.xiff.events.OutgoingDataEvent")]
     
     /**
      * Dispatched on incoming presence data.
      * 
-     * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
+     * eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
      */
     [Event(name="presence", type="org.igniterealtime.xiff.events.PresenceEvent")]
     
     /**
      * Dispatched on when new user account registration is successful.
      * 
-     * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
+     * eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
      */
     [Event(name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent")]
     
@@ -223,7 +203,7 @@ package org.igniterealtime.xiff.core
 		protected static var saslMechanisms:Object = {
 			"PLAIN":Plain,
 			"ANONYMOUS":Anonymous,
-      "EXTERNAL":External
+			"EXTERNAL":External
 		};
 		
 		public function XMPPConnection()
@@ -249,7 +229,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Connects to the server.
 		 *
-		 * @param streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;. 
+		 * @param	streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;. 
 		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from a Flash client instead of the standard &lt;stream:stream&gt;.
 		 * The options for this parameter are: "flash", "terminatedFlash", "standard" and "terminatedStandard". The default is "terminatedStandard".
 		 *
@@ -322,10 +302,10 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a <code>SerializeException</code>.
 		 *
-		 * @param o The data to send. This must be an instance of a class that implements the ISerializable interface.
-		 * @see org.igniterealtime.xiff.data.ISerializable
-		 * @example The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".<br />
-		 * <pre>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
+		 * @param	o The data to send. This must be an instance of a class that implements the ISerializable interface.
+		 * @see	org.igniterealtime.xiff.data.ISerializable
+		 * @example	The following example sends a basic chat message to the user with the JID "sideshowbobspringfieldpenitentiary.gov".<br />
+		 * <pre>var msg:Message = new Message( "sideshowbobspringfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
 		 * myXMPPConnection.send( msg );</pre>
 		 */
 		public function send( o:XMPPStanza ):void
@@ -363,7 +343,7 @@ package org.igniterealtime.xiff.core
 		 * For login status, use the <code>isLoggedIn()</code> method.)
 		 * 
 		 * @return A boolean indicating whether the connection is active.
-		 * @see org.igniterealtime.xiff.core.XMPPConnection#isLoggedIn
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isLoggedIn
 		 */
 		public function isActive():Boolean
 		{
@@ -374,7 +354,7 @@ package org.igniterealtime.xiff.core
 		 * Determines whether the user is connected and logged into the server.
 		 * 
 		 * @return A boolean indicating whether the user is logged in.
-		 * @see org.igniterealtime.xiff.core.XMPPConnection#isActive
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isActive
 		 */
 		public function isLoggedIn():Boolean
 		{
@@ -395,11 +375,11 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Registers a new account with the server, sending the registration data as specified in the fieldMap paramter.
+		 * Registers a new account with the server, sending the registration data as specified in the fieldMap@paramter.
 		 *
-		 * @param fieldMap An object map containing the data to use for registration. The map should be composed of 
+		 * @param	fieldMap An object map containing the data to use for registration. The map should be composed of 
 		 * attribute:value pairs for each registration data item.
-		 * @param key (Optional) If a key was passed in the "data" field of the "registrationFields" event, 
+		 * @param	key (Optional) If a key was passed in the "data" field of the "registrationFields" event, 
 		 * that key must also be passed here.
 		 * required field needed for registration.
 		 */
@@ -423,7 +403,7 @@ package org.igniterealtime.xiff.core
 		 * Changes the user's account password on the server. If the password change is successful, 
 		 * the class will broadcast a <code>ChangePasswordSuccessEvent.PASSWORD_SUCCESS</code> event.
 		 *
-		 * @param newPassword The new password
+		 * @param	newPassword The new password
 		 */
 		public function changePassword( newPassword:String ):void
 		{
@@ -438,15 +418,15 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Gets the fully qualified JID (user@server/resource) of the user. A fully-qualified JID includes 
+		 * Gets the fully qualified JID (userserver/resource) of the user. A fully-qualified JID includes 
 		 * the resource. A bare JID does not. To get the bare JID, use the <code>getBareJID()</code> method.
 		 *
 		 * @return The fully qualified JID
-		 * @see #getBareJID
+		 * @see	#getBareJID
 		 */
 		public function get jid():UnescapedJID
 		{
-			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
+			return new UnescapedJID(myUsername + "" + myDomain + "/" + myResource);
 		}
 		
 		/**
@@ -654,7 +634,7 @@ package org.igniterealtime.xiff.core
 					
 		        }
 		        
-				if(useAnonymousLogin || (username != null && username.length > 0))
+				if (useAnonymousLogin || (username != null && username.length > 0))
 				{
 					beginAuthentication();
 				}
@@ -843,29 +823,28 @@ package org.igniterealtime.xiff.core
 	        return pres;
 		}
 		
-		protected function flushPresenceQueue(evt:TimerEvent):void
+		protected function flushPresenceQueue(event:TimerEvent):void
 		{
-			var event:PresenceEvent = new PresenceEvent();
-			event.data = presenceQueue;
-			dispatchEvent( event );
+			var presenceEvent:PresenceEvent = new PresenceEvent();
+			presenceEvent.data = presenceQueue;
+			dispatchEvent( presenceEvent );
 			presenceQueue = [];
 		}
 		
 		/**
+		 * This fires the standard dispatchError method. need to add the appropriate error code
 		 * @private
 		 */
-		protected function onIOError(event:IOErrorEvent):void{
-			/*
-			this fires the standard dispatchError method. need to add
-			the appropriate error code
-			*/
+		protected function onIOError(event:IOErrorEvent):void
+		{
 			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
 		}
 		
 		/**
 		 * @private
 		 */
-		protected function securityError(event:SecurityErrorEvent):void{
+		protected function securityError(event:SecurityErrorEvent):void
+		{
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}

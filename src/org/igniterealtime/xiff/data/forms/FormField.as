@@ -1,26 +1,8 @@
-package org.igniterealtime.xiff.data.forms{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
-	 
+/*
+ * License
+ */
+package org.igniterealtime.xiff.data.forms
+{
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.ISerializable;
@@ -32,11 +14,9 @@ package org.igniterealtime.xiff.data.forms{
 	 * while containing different kinds of data, some optional some not.
 	 *
 	 *
-	 * @author Sean Treadway
-	 * @see org.igniterealtime.xiff.data.forms.FormExtension
-	 * @see http://xmpp.org/extensions/xep-0004.html
-	 * @param parent The parent XMLNode
-	 * @toc-path Extensions/Instant Messaging/2
+	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
+	 * @see	http://xmpp.org/extensions/xep-0004.html
+	 * @param	parent The parent XMLNode
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
@@ -52,7 +32,7 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Serializes the FormField data to XML for sending.
 		 *
-		 * @param parent The parent node that this item should be serialized into
+		 * @param	parent The parent node that this item should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -69,7 +49,7 @@ package org.igniterealtime.xiff.data.forms{
 		/**
 		 * Deserializes the FormField data.
 		 *
-		 * @param node The XML node associated this data
+		 * @param	node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
 		public function deserialize( node:XMLNode ):Boolean
@@ -102,7 +82,8 @@ package org.igniterealtime.xiff.data.forms{
 	     * this field uses <code>name</code> to describe the name of this field.
 	     *
 	     */
-	    public function get name():String { return getNode().attributes["var"]; }
+	    public function get name():String 
+		{ return getNode().attributes["var"]; }
 	    public function set name(val:String) :void
 	    { 
 	        getNode().attributes["var"] = val; 
@@ -125,9 +106,10 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_TEXT_PRIVATE</code>
 	     * <code>FormExtension.FIELD_TYPE_TEXT_SINGLE</code>
 	     *
-	     * @see http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
+	     * @see	http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
 	     */
-	    public function get type():String { return getNode().attributes.type; }
+	    public function get type():String 
+		{ return getNode().attributes.type; }
 	    public function set type(val:String) :void
 	    { 
 	        getNode().attributes.type = val; 
@@ -138,7 +120,8 @@ package org.igniterealtime.xiff.data.forms{
 	     * title of this field
 	     *
 	     */
-	    public function get label():String { return getNode().attributes.label; }
+	    public function get label():String 
+		{ return getNode().attributes.label; }
 	    public function set label(val:String) :void
 	    { 
 	        getNode().attributes.label = val; 
@@ -163,7 +146,8 @@ package org.igniterealtime.xiff.data.forms{
 	     * Suggested values can typically be retrieved in <code>getAllOptions</code>
 	     *
 	     */
-	    public function get value():String {
+	    public function get value():String 
+		{
 	    	try 
 	    	{
 	    		if (myValueNodes[0] != null && myValueNodes[0].firstChild != null)
@@ -195,7 +179,7 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
 	     * <code>FormExtension.FIELD_TYPE_TEXT_MULTI</code>
 	     *
-	     * @returns Array containing strings representing the values of this field
+	     * @return	Array containing strings representing the values of this field
 	     */
 	    public function getAllValues():Array
 	    {
@@ -210,7 +194,7 @@ package org.igniterealtime.xiff.data.forms{
 	    /**
 	     * Sets all the values of this field from an array of strings
 	     *
-	     * @param val Array of Strings
+	     * @param	val Array of Strings
 	     */
 	    public function setAllValues(val:Array) :void
 	    {
@@ -236,7 +220,7 @@ package org.igniterealtime.xiff.data.forms{
 	     * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
 	     * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
 	     *
-	     * @returns Array of objects with the properties <code>label</code> and <code>value</code>
+	     * @return	Array of objects with the properties <code>label</code> and <code>value</code>
 	     */
 	    public function getAllOptions():Array
 	    {
@@ -253,7 +237,7 @@ package org.igniterealtime.xiff.data.forms{
 	    /**
 	     * Sets all the options available from an array of objects
 	     *
-	     * @param Array containing objects with the properties <code>label</code> and
+	     * @param	Array containing objects with the properties <code>label</code> and
 	     * <code>value</code>
 	     */
 	    public function setAllOptions(val:Array):void

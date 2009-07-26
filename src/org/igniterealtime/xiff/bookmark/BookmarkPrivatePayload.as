@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.bookmark
 {
 	import flash.xml.XMLNode;
@@ -15,23 +18,27 @@ package org.igniterealtime.xiff.bookmark
 		public function BookmarkPrivatePayload(groupChatBookmarks:Array = null, urlBookmarks:Array = null) {
 			if(groupChatBookmarks) {
 				for each(var bookmark:GroupChatBookmark in groupChatBookmarks) {
-					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean { return testGroupChatBookmark.jid != bookmark.jid; }))
+					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean 
+		{ return testGroupChatBookmark.jid != bookmark.jid; }))
 						_groupChatBookmarks.push(bookmark);
 				}
 			}
 			if(urlBookmarks) {
 				for each(var urlBookmark:UrlBookmark in urlBookmarks) {
-					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean { return testURLBookmark.url != urlBookmark.url; }))
+					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean 
+		{ return testURLBookmark.url != urlBookmark.url; }))
 						_urlBookmarks.push(urlBookmark);
 				}
 			}
 		}
 		
-		public function getNS():String {
+		public function getNS():String 
+		{
 			return "storage:bookmarks";
 		}
 		
-		public function getElementName():String {
+		public function getElementName():String 
+		{
 			return "storage";
 		}
 		
@@ -57,10 +64,12 @@ package org.igniterealtime.xiff.bookmark
 			return removedItem;
 		}
 		
-		public function serialize(parentNode:XMLNode):Boolean {
+		public function serialize(parentNode:XMLNode):Boolean 
+		{
 			var node:XMLNode = new XMLNode(1, getElementName());
 			node.attributes.xmlns = getNS();
-			var serializer:Function = function(element:ISerializable, index:int, arr:Array):void {
+			var serializer:Function = function(element:ISerializable, index:int, arr:Array):void 
+		{
 				element.serialize(parentNode);
 			};
 			_groupChatBookmarks.forEach(serializer);
@@ -77,7 +86,8 @@ package org.igniterealtime.xiff.bookmark
 					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark();
 					groupChatBookmark.deserialize(child);
 					//don't add it if it's a duplicate
-					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean { return testGroupChatBookmark.jid != groupChatBookmark.jid; }))
+					if(_groupChatBookmarks.every(function(testGroupChatBookmark:GroupChatBookmark, index:int, array:Array):Boolean 
+		{ return testGroupChatBookmark.jid != groupChatBookmark.jid; }))
 						_groupChatBookmarks.push(groupChatBookmark);
 				}
 				else if(child.nodeName == "url") 
@@ -85,7 +95,8 @@ package org.igniterealtime.xiff.bookmark
 					var urlBookmark:UrlBookmark = new UrlBookmark();
 					urlBookmark.deserialize(child);
 					//don't add it if it's a duplicate
-					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean { return testURLBookmark.url != urlBookmark.url; }))
+					if(_urlBookmarks.every(function(testURLBookmark:UrlBookmark, index:int, array:Array):Boolean 
+		{ return testURLBookmark.url != urlBookmark.url; }))
 						_urlBookmarks.push(urlBookmark);
 				}
 				else {

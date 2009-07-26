@@ -1,23 +1,6 @@
 /*
- * Copyright 2003-2009
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- *
- *   http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and 
- * limitations under the License. 
+ * License
  */
-
 package org.igniterealtime.xiff.core
 {
   /**
@@ -39,8 +22,8 @@ package org.igniterealtime.xiff.core
     /**
      * Creates a new AbstractJID object.
      *
-     * @param inJID The JID as a String.
-     * @param validate True if the JID should be validated.
+     * @param	inJID The JID as a String.
+     * @param	validate True if the JID should be validated.
      */
     public function AbstractJID(inJID:String, validate:Boolean=false) 
     {
@@ -73,7 +56,7 @@ package org.igniterealtime.xiff.core
     /**
      * Provides functionality to convert a JID to an escaped format.
      *
-     * @param n The string to escape.
+     * @param	n The string to escape.
      *
      * @return The escaped string.
      */
@@ -108,7 +91,7 @@ package org.igniterealtime.xiff.core
     /**
      * Provides functionality to return an escaped JID into a normal String.
      *
-     * @param n The string to unescape.
+     * @param	n The string to unescape.
      *
      * @return The unescaped string.
      */

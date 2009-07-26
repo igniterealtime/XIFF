@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.session
 {
 	import flash.xml.XMLNode;

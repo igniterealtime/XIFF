@@ -1,28 +1,8 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data
 {
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
-	 
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
@@ -31,8 +11,6 @@ package org.igniterealtime.xiff.data
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
-	 *
-	 * @author Sean Voisen/Base Classes/2
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
@@ -66,8 +44,8 @@ package org.igniterealtime.xiff.data
 		 * (Static method) Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
 		 *
-		 * @see org.igniterealtime.xiff.data.id.IncrementalGenerator
-		 * @param prefix The prefix for the ID to be generated
+		 * @see	org.igniterealtime.xiff.data.id.IncrementalGenerator
+		 * @param	prefix The prefix for the ID to be generated
 		 * @return The generated ID
 		 */
 		public static function generateID( prefix:String ):String
@@ -86,8 +64,8 @@ package org.igniterealtime.xiff.data
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
 		 * IQs could use the shared object ID generation scheme provided by the SharedObjectGenerator class.
 		 *
-		 * @param generator The ID generator class
-		 * @example The following sets the ID generator for the Message stanza type to the IncrementalGenerator
+		 * @param	generator The ID generator class
+		 * @example	The following sets the ID generator for the Message stanza type to the IncrementalGenerator
 		 * class found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
 		 * <pre>Message.setIDGenerator( org.igniterealtime.xiff.data.id.IncrementalGenerator );</pre>
 		 */
@@ -99,7 +77,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Prepares the XML version of the stanza for transmission to the server.
 		 *
-		 * @param parentNode (Optional) The parent node that the stanza should be appended to during serialization
+		 * @param	parentNode (Optional) The parent node that the stanza should be appended to during serialization
 		 * @return An indication as to whether serialization was successful
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
@@ -234,7 +212,7 @@ package org.igniterealtime.xiff.data
 		 * The unique identifier of this stanza. ID generation is accomplished using
 		 * the static <code>generateID</code> method.
 		 *
-		 * @see #generateID
+		 * @see	#generateID
 		 */
 		public function get id():String
 		{

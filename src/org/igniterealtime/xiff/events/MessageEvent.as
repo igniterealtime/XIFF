@@ -1,9 +1,7 @@
 /*
  * Copyright (C) 2003-2007
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
+ * Nick Velloff <nick.velloffgmail.com>
+ * Derrick Grigg <dgriggrogers.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-	
+	/*
+ * License
+ */
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;

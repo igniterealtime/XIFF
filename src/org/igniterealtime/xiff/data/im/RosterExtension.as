@@ -1,26 +1,8 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.im{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+
 	
 	import flash.xml.XMLNode;
 	
@@ -34,10 +16,8 @@ package org.igniterealtime.xiff.data.im{
 	 * An IQ extension for roster data. Roster data is typically any data
 	 * that is sent or received with the "jabber:iq:roster" namespace.
 	 *
-	 * @author Sean Voisen
-	 * @param theRoot The extension root
-	 * @param theNode The extension node
-	 * @toc-path Extensions/Instant Messaging/2
+	 * @param	theRoot The extension root
+	 * @param	theNode The extension node
 	 */
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
@@ -99,7 +79,7 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Serializes the RosterExtension data to XML for sending.
 		 *
-		 * @param parent The parent node that this extension should be serialized into
+		 * @param	parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -123,7 +103,7 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Deserializes the RosterExtension data.
 		 *
-		 * @param node The XML node associated this data
+		 * @param	node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
 		public function deserialize( node:XMLNode ):Boolean
@@ -176,10 +156,10 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Adds a single roster item to the extension payload.
 		 *
-		 * @param jid The JID of the contact to add
-		 * @param subscription The subscription type of the roster item contact. There are pre-defined static variables for these string options in this class definition.
-		 * @param displayName The display name or nickname of the contact.
-		 * @param groups An array of strings of the group names that this contact should be placed in.
+		 * @param	jid The JID of the contact to add
+		 * @param	subscription The subscription type of the roster item contact. There are pre-defined static variables for these string options in this class definition.
+		 * @param	displayName The display name or nickname of the contact.
+		 * @param	groups An array of strings of the group names that this contact should be placed in.
 		 */
 		public function addItem( jid:EscapedJID=null, subscription:String="", displayName:String="", groups:Array=null ):void
 		{

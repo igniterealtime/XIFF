@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.bookmark
 {
 	import flash.xml.XMLNode;
@@ -37,7 +40,8 @@ package org.igniterealtime.xiff.bookmark
 			this._groupChatNode = groupChatNode;
 		}
 		
-		public function get name():String {
+		public function get name():String 
+		{
 			return _groupChatNode.attributes.name;
 		}
 		
@@ -45,19 +49,23 @@ package org.igniterealtime.xiff.bookmark
 			return new EscapedJID(_groupChatNode.attributes.jid);
 		}
 		
-		public function get autoJoin():Boolean {
+		public function get autoJoin():Boolean 
+		{
 			return _groupChatNode.attributes.autojoin == "true";
 		}
 		
-		public function set autoJoin(state:Boolean):void {
+		public function set autoJoin(state:Boolean):void 
+		{
 			_groupChatNode.attributes.autojoin = state.toString();
 		}
 		
-		public function get nickname():String {
+		public function get nickname():String 
+		{
 			return _nickNode.firstChild.nodeValue;
 		}
 		
-		public function get password():String {
+		public function get password():String 
+		{
 			return _passwordNode.firstChild.nodeValue;
 		}
 		

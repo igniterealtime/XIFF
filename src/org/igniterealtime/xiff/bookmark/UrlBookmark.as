@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.bookmark
 {
 	
@@ -22,20 +25,24 @@ package org.igniterealtime.xiff.bookmark
 			node.attributes.url = url;
 		}
 		
-		public function get name():String {
+		public function get name():String 
+		{
 			return node.attributes.name;
 		}
 		
-		public function get url():String {
+		public function get url():String 
+		{
 			return node.attributes.uri;
 		}
 		
-		public function serialize(parentNode:XMLNode):Boolean {
+		public function serialize(parentNode:XMLNode):Boolean 
+		{
 			parentNode.appendChild(node.cloneNode(true));
 			return true;
 		}
 		
-		public function deserialize(node:XMLNode):Boolean {
+		public function deserialize(node:XMLNode):Boolean 
+		{
 			this.node = node.cloneNode(true);
 			return true;
 		}

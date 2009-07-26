@@ -1,25 +1,9 @@
-package org.igniterealtime.xiff.data.whiteboard{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 * Media Insites, Inc.
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+/*
+ * License
+ */
+package org.igniterealtime.xiff.data.whiteboard
+{
+
 	
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -30,9 +14,6 @@ package org.igniterealtime.xiff.data.whiteboard{
 	/**
 	 * A message extension for whitboard exchange. This class is the base class
 	 * for other extension classes such as Path
-	 *
-	 * @author Sean Treadway
-	 * @toc-path Extensions/Whiteboard/2
 	 */
 	public class Path implements ISerializable
 	{
@@ -56,7 +37,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Serializes the Path data to XML for sending.
 		 *
-		 * @param parent The parent node that this extension should be serialized into
+		 * @param	parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -73,7 +54,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 		/**
 		 * Deserializes the Path data.
 		 *
-		 * @param node The XML node associated this data
+		 * @param	node The XML node associated this data
 		 * @return true if deserialization was successful
 		 */
 		public function deserialize( node:XMLNode ):Boolean
@@ -101,7 +82,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 		 * in the fomrmat defined by SVG
 		 * Example: M100 200L14 -15 L 125 100L150 200 300 400M10 20L30 40 50 60 z
 	     *
-		 * @returns String containging the compact version
+		 * @return	String containging the compact version
 		 */
 		public function serializeSegments():String
 		{
@@ -109,7 +90,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 			var p:String = '';
 			var segs:Array = segments;
 	
-			for (var i:int=0; i < segs.length; i++) {
+			for (var i:int=0; i < segs.length; ++i) {
 				var seg:* = segs[i];
 	
 				// Serialize the compact form (don't repeat command ids, remove extra spaces)
@@ -131,11 +112,11 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * to the nearest integer to save serialization space.  10.0000001 takes 
 	     * 4 times as much spaces as 10
 	     *
-	     * @param seg An object containing the properties "from" and "to" which
+	     * @param	seg An object containing the properties "from" and "to" which
 	     * are objects with the properties "x" and "y".  An example would 
 	     * be { from: { x: 100, y: 200 }, to: { x: 200, y: 300 } }
 	     * @return the segment parameter with the rounded values
-	     * @see #addPoints
+	     * @see	#addPoints
 	     */
 		public function addSegment(seg:Object):Object
 		{
@@ -157,10 +138,10 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * an object, you can pass parameters that will be converted into a segment
 	     * and passed to addSegment
 	     *
-	     * @param from_x the start x coordinate
-	     * @param from_y the start y coordinate
-	     * @param to_x the destination x coordinate
-	     * @param to_y the destination y coordinate
+	     * @param	from_x the start x coordinate
+	     * @param	from_y the start y coordinate
+	     * @param	to_x the destination x coordinate
+	     * @param	to_y the destination y coordinate
 	     * @return the segment object created from the parameters with the rounded values
 	     * from being modified in addSegment
 	     */
@@ -175,7 +156,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     *
 	     * You should not modify this list.  Segments should be added with addSegment
 	     *
-	     * @see #addSegment
+	     * @see	#addSegment
 	     */
 	    public function get segments():Array { return mySegments; }
 	
@@ -183,7 +164,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * The Stroke object that contains the properties describing the stroke of this
 	     * path
 	     *
-	     * @see org.igniterealtime.xiff.data.whiteboard.Stroke
+	     * @see	org.igniterealtime.xiff.data.whiteboard.Stroke
 	     */
 	    public function get stroke():Stroke { return myStroke; }
 	
@@ -191,7 +172,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	     * The Fill object that contains the properties describing the fill of this
 	     * path
 	     *
-	     * @see org.igniterealtime.xiff.data.whiteboard.Fill
+	     * @see	org.igniterealtime.xiff.data.whiteboard.Fill
 	     */
 	    public function get fill():Fill { return myFill; }
 	
@@ -199,7 +180,7 @@ package org.igniterealtime.xiff.data.whiteboard{
 	
 		private static function indexOfNextCommand(str:String):Number
 		{
-			for (var i:int=0; i < str.length; i++) {
+			for (var i:int=0; i < str.length; ++i) {
 				if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z' ||
 					str.charAt(i) >= 'a' && str.charAt(i) <= 'z')
 				{
@@ -214,14 +195,14 @@ package org.igniterealtime.xiff.data.whiteboard{
 			// Example
 			// M100 200L14 -15 L 125 100L150 200 300 400M10 20L30 40 50 60 z
 			// Command ID or space acts as delimeter
-			// Parameter tuples inherit last command
+			// parameter tuples inherit last command
 	
 			// Find the next command to split on, so we preserve order
 			var idx:Number = indexOfNextCommand(str);
 			if (idx >= 0) {
 				var cmd:String = str.charAt(idx);
 				var commands:Array = str.split(cmd);
-				for (var i:int=0; i < commands.length; i++) {
+				for (var i:int=0; i < commands.length; ++i) {
 					if (commands[i].length > 0) {
 						loadCommand(cmd, commands[i]);
 					}

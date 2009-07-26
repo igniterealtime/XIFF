@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.core
 {
 	import flash.events.TimerEvent;
@@ -270,7 +273,7 @@ package org.igniterealtime.xiff.core
 	    }
 	    
 	    /**
-	    * returns true if pause request is sent
+	    * @return	true if pause request is sent
 	    */
 	    public function pauseSession(seconds:uint):Boolean
 	    {
@@ -309,10 +312,10 @@ package org.igniterealtime.xiff.core
 			}
 		}
 
-		private function httpResponse(req:XMLNode, isPollResponse:Boolean, evt:ResultEvent):void
+		private function httpResponse(req:XMLNode, isPollResponse:Boolean, event:ResultEvent):void
 		{
 			requestCount--;
-			var rawXML:String = evt.result as String;
+			var rawXML:String = event.result as String;
 			
 			logger.info("INCOMING {0}", rawXML);
 			
@@ -321,11 +324,11 @@ package org.igniterealtime.xiff.core
 			xmlData.parseXML(rawXML);
 			var bodyNode:XMLNode = xmlData.firstChild;
 			
-			var event:IncomingDataEvent = new IncomingDataEvent();
-			event.data = xmlData;
-			dispatchEvent(event);
+			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
+			incomingEvent.data = xmlData;
+			dispatchEvent(incomingEvent);
 			
-			if(streamRestarted && !bodyNode.hasChildNodes())
+			if (streamRestarted && !bodyNode.hasChildNodes())
 			{
 				streamRestarted = false;
 				bindConnection();
@@ -366,10 +369,10 @@ package org.igniterealtime.xiff.core
 				pollServer();
 		}
 		
-		private function httpError(req:XMLNode, isPollResponse:Boolean, evt:FaultEvent):void
+		private function httpError(req:XMLNode, isPollResponse:Boolean, event:FaultEvent):void
 		{
 			disconnect();
-			dispatchError("Unknown HTTP Error", evt.fault.rootCause.text, "", -1);
+			dispatchError("Unknown HTTP Error", event.fault.rootCause.text, "", -1);
 		}
 		
 		protected override function sendXML(body:*):void
@@ -404,7 +407,7 @@ package org.igniterealtime.xiff.core
 				else
 				{
 					var temp:Array = [];
-					for(var i:uint = 0; i < 10 && requestQueue.length > 0; i++)
+					for(var i:uint = 0; i < 10 && requestQueue.length > 0; ++i)
 					{
 						temp.push(requestQueue.shift());
 					}
@@ -483,6 +486,7 @@ package org.igniterealtime.xiff.core
 	    }
 	    
 		//do nothing, we use polling instead
-		public override function sendKeepAlive():void {}
+		public override function sendKeepAlive():void 
+		{}
 	}
 }

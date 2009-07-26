@@ -1,24 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.data.browse
 {
 	
@@ -85,9 +67,9 @@ package org.igniterealtime.xiff.data.browse
 		 * If you are generating a browse response to a browse request, then
 		 * fill out the items list with this method.
 		 *
-		 * @param item BrowseItem which contains the info related to the browsed resource
-		 * @returns the item added
-		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
+		 * @param	item BrowseItem which contains the info related to the browsed resource
+		 * @return	the item added
+		 * @see	org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
 		public function addItem(item:BrowseItem):BrowseItem
 		{
@@ -98,8 +80,8 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * An array of BrowseItems containing information about the browsed resource
 		 *
-		 * @returns array of BrowseItems
-		 * @see org.igniterealtime.xiff.data.browse.BrowseItem
+		 * @return	array of BrowseItems
+		 * @see	org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
 		public function get items():Array
 		{
@@ -109,7 +91,7 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * ISerializable implementation which loads this extension from XML
 		 *
-		 * @see org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function serialize(parentNode:XMLNode):Boolean
 		{
@@ -128,7 +110,7 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * ISerializable implementation which saves this extension to XML
 		 *
-		 * @see org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
 		override public function deserialize(node:XMLNode):Boolean
 		{

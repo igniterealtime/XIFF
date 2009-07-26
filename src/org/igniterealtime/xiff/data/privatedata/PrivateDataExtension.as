@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.privatedata
 {
 	import flash.xml.XMLNode;
@@ -28,11 +31,13 @@ package org.igniterealtime.xiff.data.privatedata
 			return "query";
 		}
 		
-		public function get privateName():String {
+		public function get privateName():String 
+		{
 			return this._extension.nodeName;
 		}
 		
-		public function get privateNamespace():String {
+		public function get privateNamespace():String 
+		{
 			return this._extension.attributes["xmlns"];
 		}
 		
@@ -51,7 +56,8 @@ package org.igniterealtime.xiff.data.privatedata
 			return _serializePayload(extension);
 		}
 		
-		private function _serializePayload(parentNode:XMLNode):Boolean {
+		private function _serializePayload(parentNode:XMLNode):Boolean 
+		{
 			if(_payload == null) {
 				return true;
 			}

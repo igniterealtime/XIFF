@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.muc
 {
 	import flash.xml.XMLNode;

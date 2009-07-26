@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data
 {
 	import flash.xml.XMLNode;
@@ -11,7 +14,7 @@ package org.igniterealtime.xiff.data
 		{
 			var node:XMLNode = getNode().cloneNode(true);
 			var extensions:Array = getAllExtensions();
-			for (var i:int = 0; i < extensions.length; i++) {
+			for (var i:int = 0; i < extensions.length; ++i) {
 				if (extensions[i] is ISerializable) {
 					ISerializable(extensions[i]).serialize(node);
 				}

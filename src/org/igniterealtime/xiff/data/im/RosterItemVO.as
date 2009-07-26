@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.im
 {
   import flash.events.Event;
@@ -164,7 +167,8 @@ package org.igniterealtime.xiff.data.im
 
     [Bindable(event=changeAskType)]
       [Bindable(event=changeSubscription)]
-      public function get pending():Boolean {
+      public function get pending():Boolean 
+		{
         return askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM);
       }
 

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.logging
 {
   import mx.controls.TextArea;

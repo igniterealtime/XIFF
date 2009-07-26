@@ -1,24 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.data.auth
 {	
 	import org.igniterealtime.xiff.data.IExtension;
@@ -34,7 +16,7 @@ package org.igniterealtime.xiff.data.auth
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a> 
 	 * for non SASL authentication.
-	 * @see http://xmpp.org/extensions/xep-0078.html
+	 * @see	http://xmpp.org/extensions/xep-0078.html
 	 */
 	public class AuthExtension extends Extension implements IExtension, ISerializable
 	{
@@ -122,8 +104,8 @@ package org.igniterealtime.xiff.data.auth
 		 * Computes the SHA1 digest of the password and session ID for use when 
 		 * authenticating with the server.
 		 *
-		 * @param sessionID The session ID provided by the server
-		 * @param password The user's password
+		 * @param	sessionID The session ID provided by the server
+		 * @param	password The user's password
 		 */
 		public static function computeDigest( sessionID:String, password:String ):String
 		{
@@ -222,7 +204,7 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * The resource to use for authentication.
 		 *
-		 * @see org.igniterealtime.xiff.core.XMPPConnection#resource
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection#resource
 		 */
 		public function get resource():String
 		{

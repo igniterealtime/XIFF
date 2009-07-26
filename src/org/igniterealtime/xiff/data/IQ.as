@@ -1,26 +1,6 @@
 /*
- * Copyright (C) 2003-2007 
- * Nick Velloff <nick.velloff@gmail.com>
- * Derrick Grigg <dgrigg@rogers.com>
- * Sean Voisen <sean@voisen.org>
- * Sean Treadway <seant@oncotype.dk>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *
+ * License
  */
-	 
 package org.igniterealtime.xiff.data
 {
 	
@@ -30,12 +10,12 @@ package org.igniterealtime.xiff.data
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
 	 * 
-	 * @param recipient The JID of the IQ recipient
-	 * @param sender The JID of the IQ sender - the server should report an error if this is falsified
-	 * @param iqType The type of the IQ - there are static variables declared for each type
-	 * @param iqID The unique ID of the IQ
-	 * @param iqCallback The function to be called when the server responds to the IQ
-	 * @param iqCallbackScope The object instance containing the callback method
+	 * @param	recipient The JID of the IQ recipient
+	 * @param	sender The JID of the IQ sender - the server should report an error if this is falsified
+	 * @param	iqType The type of the IQ - there are static variables declared for each type
+	 * @param	iqID The unique ID of the IQ
+	 * @param	iqCallback The function to be called when the server responds to the IQ
+	 * @param	iqCallbackScope The object instance containing the callback method
 	 */
 	public class IQ extends XMPPStanza implements ISerializable
 	{
@@ -77,7 +57,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Deserializes an XML object and populates the IQ instance with its data.
 		 *
-		 * @param xmlNode The XML to deserialize
+		 * @param	xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
 		 */
 		override public function deserialize( xmlNode:XMLNode ):Boolean
@@ -104,8 +84,8 @@ package org.igniterealtime.xiff.data
 	     * <p>This isn't a required property, but is useful if you
 		 * need to respond to server responses to an IQ.</p>
 		 *
-		 * @see #callbackScope
-		 * @see #callbackName
+		 * @see	#callbackScope
+		 * @see	#callbackName
 		 */
 	    public function get callback():Function
 	    {
@@ -122,8 +102,8 @@ package org.igniterealtime.xiff.data
 		 * is received. This isn't a required property, but is useful if you
 		 * need to respond to server responses to an IQ.
 		 *
-		 * @see #callbackScope
-	     * @see #callback
+		 * @see	#callbackScope
+	     * @see	#callback
 		 */
 		public function get callbackName():String
 		{
@@ -140,8 +120,8 @@ package org.igniterealtime.xiff.data
 		 * is received. This isn't a required property, but is useful if you
 		 * need to respond to server responses to an IQ.
 		 *
-		 * @see #callbackName
-	     * @see #callback
+		 * @see	#callbackName
+	     * @see	#callback
 		 */
 		public function get callbackScope():Object
 		{

@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.search{
 	
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -8,11 +11,6 @@ package org.igniterealtime.xiff.data.search{
 	 * This class is used by the SearchExtension for internal representation of
 	 * information pertaining to items matching the search query.
 	 *
-	 * @author Daniel Henninger
-	 * @since 2.0.0
-	 * @availability Flash Player 7
-	 * @toc-path Extensions/Search
-	 * @toc-sort 1/2
 	 */
 	public class SearchItem extends XMLStanza implements ISerializable
 	{
@@ -75,22 +73,34 @@ package org.igniterealtime.xiff.data.search{
 			getNode().attributes.jid = val;
 		}
 		
-		public function get username():String { return getField("jid"); }
-		public function set username(val:String):void { setField("jid", val); }
+		public function get username():String 
+		{ return getField("jid"); }
+		public function set username(val:String):void 
+		{ setField("jid", val); }
 	
-		public function get nick():String { return getField("nick"); }
-		public function set nick(val:String):void { setField("nick", val); }
+		public function get nick():String 
+		{ return getField("nick"); }
+		public function set nick(val:String):void 
+		{ setField("nick", val); }
 	
-		public function get first():String { return getField("first"); }
-		public function set first(val:String):void { setField("first", val); }
+		public function get first():String 
+		{ return getField("first"); }
+		public function set first(val:String):void 
+		{ setField("first", val); }
 	
-		public function get last():String { return getField("last"); }
-		public function set last(val:String):void { setField("last", val); }
+		public function get last():String 
+		{ return getField("last"); }
+		public function set last(val:String):void 
+		{ setField("last", val); }
 	
-		public function get email():String { return getField("email"); }
-		public function set email(val:String):void { setField("email", val); }
+		public function get email():String 
+		{ return getField("email"); }
+		public function set email(val:String):void 
+		{ setField("email", val); }
 		
-		public function get name():String { return getField("name"); }
-		public function set name(val:String):void { setField("name", val); }
+		public function get name():String 
+		{ return getField("name"); }
+		public function set name(val:String):void 
+		{ setField("name", val); }
 	}
 }

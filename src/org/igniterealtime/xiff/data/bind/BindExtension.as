@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.bind
 {
 	import flash.xml.XMLNode;

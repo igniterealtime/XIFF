@@ -1,3 +1,6 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.conference
 {
 	import mx.collections.ArrayCollection;

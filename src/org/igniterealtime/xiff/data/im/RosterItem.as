@@ -1,26 +1,8 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.im{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+
 	 
 	import flash.xml.XMLNode;
 	
@@ -34,10 +16,8 @@ package org.igniterealtime.xiff.data.im{
 	 * contact, and this class is used to represent, abstract, and serialize/deserialize
 	 * this data.
 	 *
-	 * @author Sean Voisen
-	 * @see org.igniterealtime.xiff.data.im.RosterExtension
-	 * @param parent The parent XMLNode
-	 * @toc-path Extensions/Instant Messaging/2
+	 * @see	org.igniterealtime.xiff.data.im.RosterExtension
+	 * @param	parent The parent XMLNode
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
@@ -47,7 +27,7 @@ package org.igniterealtime.xiff.data.im{
 		
 		public function RosterItem( parent:XMLNode=null )
 		{
-			//<query xmlns="jabber:iq:roster"><item jid="herb@vaio.lymabean.com" subscription="both"><group>Buddies</group></item><item jid="alex@vaio.lymabean.com" subscription="both"><group>Co-workers</group></item><item jid="jack@vaio.lymabean.com" subscription="both"><group>Buddies</group></item></query>
+			//<query xmlns="jabber:iq:roster"><item jid="herbvaio.lymabean.com" subscription="both"><group>Buddies</group></item><item jid="alexvaio.lymabean.com" subscription="both"><group>Co-workers</group></item><item jid="jackvaio.lymabean.com" subscription="both"><group>Buddies</group></item></query>
 
 			super();
 			
@@ -62,7 +42,7 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Serializes the RosterItem data to XML for sending.
 		 *
-		 * @param parent The parent node that this item should be serialized into
+		 * @param	parent The parent node that this item should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -82,7 +62,7 @@ package org.igniterealtime.xiff.data.im{
 		/**
 		 * Deserializes the RosterItem data.
 		 *
-		 * @param node The XML node associated this data
+		 * @param	node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
 		public function deserialize( node:XMLNode ):Boolean
@@ -106,7 +86,7 @@ package org.igniterealtime.xiff.data.im{
 		 * Adds a group to the roster item. Contacts in the roster can be associated
 		 * with multiple groups.
 		 *
-		 * @param groupName The name of the group to add
+		 * @param	groupName The name of the group to add
 		 */
 		public function addGroupNamed( groupName:String ):void
 		{

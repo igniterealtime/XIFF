@@ -1,26 +1,8 @@
+/*
+ * License
+ */
 package org.igniterealtime.xiff.data.register{
-	/*
-	 * Copyright (C) 2003-2007 
-	 * Nick Velloff <nick.velloff@gmail.com>
-	 * Derrick Grigg <dgrigg@rogers.com>
-	 * Sean Voisen <sean@voisen.org>
-	 * Sean Treadway <seant@oncotype.dk>
-	 *
-	 * This library is free software; you can redistribute it and/or
-	 * modify it under the terms of the GNU Lesser General Public
-	 * License as published by the Free Software Foundation; either
-	 * version 2.1 of the License, or (at your option) any later version.
-	 * 
-	 * This library is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	 * Lesser General Public License for more details.
-	 * 
-	 * You should have received a copy of the GNU Lesser General Public
-	 * License along with this library; if not, write to the Free Software
-	 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-	 *
-	 */
+
 	
 	import flash.xml.XMLNode;
 	
@@ -35,9 +17,7 @@ package org.igniterealtime.xiff.data.register{
 	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in getRequiredFieldNames set on this extension.  
 	 * Check the result and re-establish the connection with the new account.
 	 *
-	 * @author Sean Treadway
-	 * @param parent (Optional) The parent node used to build the XML tree.
-	 * @toc-path Extensions/Registration/2
+	 * @param	parent (Optional) The parent node used to build the XML tree.
 	 */
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
@@ -176,49 +156,79 @@ package org.igniterealtime.xiff.data.register{
 			myFields[name] = replaceTextNode(getNode(), myFields[name], name, val);
 		}
 	
-		public function get username():String { return getField("username"); }
-		public function set username(val:String):void { setField("username", val); }
+		public function get username():String 
+		{ return getField("username"); }
+		public function set username(val:String):void 
+		{ setField("username", val); }
 	
-		public function get nick():String { return getField("nick"); }
-		public function set nick(val:String):void { setField("nick", val); }
+		public function get nick():String 
+		{ return getField("nick"); }
+		public function set nick(val:String):void 
+		{ setField("nick", val); }
 	
-		public function get password():String { return getField("password"); }
-		public function set password(val:String):void { setField("password", val); }
+		public function get password():String 
+		{ return getField("password"); }
+		public function set password(val:String):void 
+		{ setField("password", val); }
 	
-		public function get first():String { return getField("first"); }
-		public function set first(val:String):void { setField("first", val); }
+		public function get first():String 
+		{ return getField("first"); }
+		public function set first(val:String):void 
+		{ setField("first", val); }
 	
-		public function get last():String { return getField("last"); }
-		public function set last(val:String):void { setField("last", val); }
+		public function get last():String 
+		{ return getField("last"); }
+		public function set last(val:String):void 
+		{ setField("last", val); }
 	
-		public function get email():String { return getField("email"); }
-		public function set email(val:String):void { setField("email", val); }
+		public function get email():String 
+		{ return getField("email"); }
+		public function set email(val:String):void 
+		{ setField("email", val); }
 	
-		public function get address():String { return getField("address"); }
-		public function set address(val:String):void { setField("address", val); }
+		public function get address():String 
+		{ return getField("address"); }
+		public function set address(val:String):void 
+		{ setField("address", val); }
 	
-		public function get city():String { return getField("city"); }
-		public function set city(val:String):void { setField("city", val); }
+		public function get city():String 
+		{ return getField("city"); }
+		public function set city(val:String):void 
+		{ setField("city", val); }
 	
-		public function get state():String { return getField("state"); }
-		public function set state(val:String):void { setField("state", val); }
+		public function get state():String 
+		{ return getField("state"); }
+		public function set state(val:String):void 
+		{ setField("state", val); }
 	
-		public function get zip():String { return getField("zip"); }
-		public function set zip(val:String):void { setField("zip", val); }
+		public function get zip():String 
+		{ return getField("zip"); }
+		public function set zip(val:String):void 
+		{ setField("zip", val); }
 	
-		public function get phone():String { return getField("phone"); }
-		public function set phone(val:String):void { setField("phone", val); }
+		public function get phone():String 
+		{ return getField("phone"); }
+		public function set phone(val:String):void 
+		{ setField("phone", val); }
 	
-		public function get url():String { return getField("url"); }
-		public function set url(val:String):void { setField("url", val); }
+		public function get url():String 
+		{ return getField("url"); }
+		public function set url(val:String):void 
+		{ setField("url", val); }
 	
-		public function get date():String { return getField("date"); }
-		public function set date(val:String):void { setField("date", val); }
+		public function get date():String 
+		{ return getField("date"); }
+		public function set date(val:String):void 
+		{ setField("date", val); }
 	
-		public function get misc():String { return getField("misc"); }
-		public function set misc(val:String):void { setField("misc", val); }
+		public function get misc():String 
+		{ return getField("misc"); }
+		public function set misc(val:String):void 
+		{ setField("misc", val); }
 	
-		public function get text():String { return getField("text"); }
-		public function set text(val:String):void { setField("text", val); }
+		public function get text():String 
+		{ return getField("text"); }
+		public function set text(val:String):void 
+		{ setField("text", val); }
 	}
 }
