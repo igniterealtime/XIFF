@@ -19,10 +19,12 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function UrlBookmark(name:String = null, url:String = null)
 		{
-			if(!name && !url) {
+			if (!name && !url)
+			{
 				return;
 			}
-			else if(!name || !url) {
+			else if (!name || !url) 
+			{
 				throw new Error("Name and url cannot be null, they must either both be null or an Object");
 			}
 			
@@ -49,7 +51,7 @@ package org.igniterealtime.xiff.bookmark
 		
 		public function deserialize(node:XMLNode):Boolean 
 		{
-			node = node.cloneNode(true);
+			this.node = node.cloneNode(true);
 			return true;
 		}
 		

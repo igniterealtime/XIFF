@@ -2,7 +2,7 @@
  * License
  */
 package org.igniterealtime.xiff.im
-{	
+{
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
@@ -75,7 +75,7 @@ package org.igniterealtime.xiff.im
 	 *
 	 * @param	aConnection A reference to an XMPPConnection class instance
 	 * @param	externalDataProvider (Optional) A reference to an instance of a data provider
-	 */ 
+	 */
 	public class Roster extends ArrayCollection
 	{
 		private var myConnection:XMPPConnection;
@@ -87,7 +87,7 @@ package org.igniterealtime.xiff.im
 		[Bindable]
 		public var groups:ArrayCollection = new ArrayCollection();
 		
-		private static const staticConstructorDependencies:Array = [			
+		private static const staticConstructorDependencies:Array = [
 			ExtensionClassRegistry,
 			RosterExtension
 		]
@@ -95,9 +95,9 @@ package org.igniterealtime.xiff.im
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
 		public function Roster( aConnection:XMPPConnection = null)
-		{	
+		{
 			
-			if (aConnection != null){ 
+			if (aConnection != null){
 				connection = aConnection;
 			}
 			var groupSort:Sort = new Sort();
@@ -106,7 +106,7 @@ package org.igniterealtime.xiff.im
 		}
 		
 		private static function RosterStaticConstructor():Boolean
-		{	
+		{
 			ExtensionClassRegistry.register( RosterExtension );
 			return true;
 		}
@@ -187,7 +187,7 @@ package org.igniterealtime.xiff.im
 		 * This method will only attempt action if the contact you are trying to remove is currently on the
 		 * roster in the first place.
 		 *
-		 * @param	id The JID of the contact to remove
+		 * @param	rosterItem The value object which is to be removed
 		 */
 		public function removeContact( rosterItem:RosterItemVO):void
 		{
@@ -223,7 +223,7 @@ package org.igniterealtime.xiff.im
 		 * is granted, the user can see whether you are offline, online, away, etc. Subscriptions can
 		 * be revoked at any time using the <code>denySubscription()</code> method.
 		 *
-		 * @param	to The JID of the user or service to grant subscription to
+		 * @param	tojid The JID of the user or service to grant subscription to
 		 * @param	requestAfterGrant Whether or not a reciprocal subscription request should be sent
 		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
 		 */
@@ -244,7 +244,7 @@ package org.igniterealtime.xiff.im
 		 * if a user already has a granted presence subscription, you can use this method to revoke that
 		 * subscription.
 		 *
-		 * @param	to The JID of the user or service that you are denying subscription
+		 * @param	tojid The JID of the user or service that you are denying subscription
 		 */
 		public function denySubscription( tojid:UnescapedJID ):void
 		{
@@ -256,16 +256,16 @@ package org.igniterealtime.xiff.im
 		 * Updates the information for an existing contact. You can use this method to change the
 		 * display name or associated group for a contact in your roster.
 		 *
-		 * @param	id The JID of the contact to update
+		 * @param	rosterItem The value object of the contact to update
 		 * @param	newName The new display name for this contact
 		 * @param	newGroups The new groups to associate the contact with
 		 */
-		private function updateContact( contact:RosterItemVO, newName:String, groupNames:Array ):void
+		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
 		{
 			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			
-			ext.addItem( contact.jid.escaped, contact.subscribeType, newName, groupNames );
+			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName, groupNames );
 			tempIQ.addExtension( ext );
 			myConnection.send( tempIQ );
 		}
@@ -273,7 +273,7 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the display name for an existing contact.
 		 *
-		 * @param	id The JID of the contact to update
+		 * @param	rosterItem The value object of the contact to update
 		 * @param	newName The new display name for this contact
 		 */
 		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
@@ -286,6 +286,11 @@ package org.igniterealtime.xiff.im
 			updateContact( rosterItem, newName, groupNames);
 		}
 		
+		/**
+		 *
+		 * @param	item
+		 * @return
+		 */
 		public function getContainingGroups(item:RosterItemVO):Array
 		{
 			var result:Array = [];
@@ -300,7 +305,7 @@ package org.igniterealtime.xiff.im
 		/**
 		 * Updates the groups associated with an existing contact.
 		 *
-		 * @param	id The JID of the contact to update
+		 * @param	rosterItem The value object of the contact to update
 		 * @param	newGroups The new groups to associate the contact with
 		 */
 		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
@@ -341,15 +346,15 @@ package org.igniterealtime.xiff.im
 			try
 			{
 				disableAutoUpdate()
-				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS )) 
+				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ))
 				{
-					for each(var item:* in ext.getAllItems()) 
+					for each(var item:* in ext.getAllItems())
 					{
 						//var classInfo:XML = flash.utils.describeType(item);
 						if (!item is XMLStanza)
 							continue;
 						
-						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);		
+						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);
 					}
 				}
 				enableAutoUpdate();
@@ -385,7 +390,7 @@ package org.igniterealtime.xiff.im
 		{
 
 			switch( eventObj.type )
-			{	
+			{
 				// Handle any incoming presence items
 				case "presence":
 					handlePresences( eventObj.data );
@@ -435,17 +440,17 @@ package org.igniterealtime.xiff.im
 										updateRosterItemSubscription(rosterItemVO, item.subscription.toLowerCase(), item.name, item.groupNames);
 										break;
 								}
-							} 
-							else 
+							}
+							else
 							{
 								var groups:Array = item.groupNames;
 
-								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE) 
+								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE)
 								{
 									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
 									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
 								}
-								else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE ) 
+								else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
 								{
 									// A contact was added to the roster, and its authorization is still pending.
 									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
@@ -511,12 +516,12 @@ package org.igniterealtime.xiff.im
 						
 						break;
 				}
-			}	
+			}
 		}
 		
 		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String="none" ):Boolean
 		{
-			if(!jid) 
+			if(!jid)
 				return false;
 			
 			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
@@ -579,7 +584,7 @@ package org.igniterealtime.xiff.im
 		private function updateRosterItemPresence( item:RosterItemVO, presence:Presence ):void
 		{
 			try
-			{	
+			{
 				item.status = presence.status;
 				item.show = presence.show;
 				item.priority = presence.priority;
@@ -600,7 +605,7 @@ package org.igniterealtime.xiff.im
 			}
 		}
 		
-		public function getPresence(jid:UnescapedJID):String 
+		public function getPresence(jid:UnescapedJID):String
 		{
 			return _presenceMap[jid.toString()];
 		}
