@@ -13,8 +13,7 @@ package org.igniterealtime.xiff.data.forms
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
-	 *
-	 * @param	parent (Optional) The containing XMLNode for this extension
+	 * @see http://xmpp.org/extensions/xep-0004.html
 	 */
 	public class FormExtension extends Extension implements IExtension, ISerializable
 	{
@@ -47,6 +46,10 @@ package org.igniterealtime.xiff.data.forms
 	    private var myInstructionsNode:XMLNode;
 	    private var myTitleNode:XMLNode;
 	
+		/**
+		 *
+		 * @param	parent (Optional) The containing XMLNode for this extension
+		 */
 		public function FormExtension( parent:XMLNode=null )
 		{
 			super(parent);
@@ -71,7 +74,7 @@ package org.igniterealtime.xiff.data.forms
 	        return true;
 	    }
 		/**
-		 * Called when this extension is being put back on the network. 
+		 * Called when this extension is being put back on the network.
 		 * Perform any further serialization for Extensions and items
 		 */
 		public function serialize( parent:XMLNode ):Boolean
@@ -104,7 +107,7 @@ package org.igniterealtime.xiff.data.forms
 	                case "instructions": myInstructionsNode = c; break;
 	                case "title": myTitleNode = c; break;
 	                case "reported":
-	                	for each(var reportedFieldXML:XMLNode in c.childNodes) 
+	                	for each(var reportedFieldXML:XMLNode in c.childNodes)
 	                	{
 	                		field = new FormField();
 	                		field.deserialize(reportedFieldXML);
@@ -114,7 +117,7 @@ package org.igniterealtime.xiff.data.forms
 	
 					case "item":
 						var itemFields:Array = [];
-	                    for each(var itemFieldXML:XMLNode in c.childNodes) 
+	                    for each(var itemFieldXML:XMLNode in c.childNodes)
 	                    {
 	                        field = new FormField();
 	                        field.deserialize(itemFieldXML);
@@ -134,7 +137,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 	
 	    /**
-	     * This is an accessor to the hidden field type <code>FORM_TYPE</code> 
+	     * This is an accessor to the hidden field type <code>FORM_TYPE</code>
 	     * easily check what kind of form this is.
 	     *
 		 * @return String the registered namespace of this form type
@@ -155,13 +158,13 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * @return Array containing Arrays of FormFields objects
 		 */
-	    public function getAllItems():Array 
-	    { 
-	        return myItems; 
+	    public function getAllItems():Array
+	    {
+	        return myItems;
 	    }
-	    
+	
 	    /**
-		 * 
+		 *
 	     * @param	value the name of the form field to retrieve
 	     * @return	FormField the matching form field
 	     */
@@ -180,9 +183,9 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * @return Array of FormFields objects
 		 */
-	    public function getAllFields():Array 
-	    { 
-	        return myFields; 
+	    public function getAllFields():Array
+	    {
+	        return myFields;
 	    }
 	
 	    /**
@@ -236,17 +239,17 @@ package org.igniterealtime.xiff.data.forms
 	     * Instructions describing what to do with this form
 	     *
 	     */
-	    public function get instructions():String 
+	    public function get instructions():String
 	    {
 	    	if(myInstructionsNode && myInstructionsNode.firstChild)
 	    		return myInstructionsNode.firstChild.nodeValue;
-	    	
+	
 	    	return null;
 	    }
-	    
-	    
+	
+	
 	    public function set instructions(val:String) :void
-	    { 
+	    {
 	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
 	    }
 	
@@ -258,13 +261,13 @@ package org.igniterealtime.xiff.data.forms
 	    {
 	    	if(myTitleNode && myTitleNode.firstChild)
 	    		return myTitleNode.firstChild.nodeValue;
-	    	
+	
 	    	return null;
 	    }
-	    
-	    
+	
+	
 	    public function set title(val:String) :void
-	    { 
+	    {
 	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", val);
 	    }
 	
@@ -275,8 +278,8 @@ package org.igniterealtime.xiff.data.forms
 	     * in the fields retrieved by getAllItems
 	     */
 	    public function getReportedFields():Array
-	    { 
-	        return myReportedFields; 
+	    {
+	        return myReportedFields;
 	    }
 	
 	    /**
@@ -289,15 +292,15 @@ package org.igniterealtime.xiff.data.forms
 	     *
 	     */
 	
-	    public function get type():String 
-		{ 
+	    public function get type():String
+		{
 			return getNode().attributes.type;
 		}
 	    public function set type(val:String) :void
-	    { 
+	    {
 	        // TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 	        // TODO Change the behavior of the serialization depending on the type
-	        getNode().attributes.type = val; 
+	        getNode().attributes.type = val;
 	    }
 	}
 }

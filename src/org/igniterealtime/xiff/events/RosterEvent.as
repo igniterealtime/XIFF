@@ -46,6 +46,17 @@ package org.igniterealtime.xiff.events
 		{
 			_jid = s;
 		}
+		
+		/**
+		 * Data can be of type:
+		 * <ul>
+		 * <li><code>Presence</code></li>
+		 * <li><code>RosterItemVO</code></li>
+		 * <li>...</li>
+		 * </ul>
+		 * @see org.igniterealtime.xiff.data.Presence
+		 * @see org.igniterealtime.xiff.data.im.RosterItemVO
+		 */
 		public function get data():*
 		{
 			return _data;

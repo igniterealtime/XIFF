@@ -14,8 +14,10 @@ package org.igniterealtime.xiff.data.browse
 	 * Implements jabber:iq:browse namespace.  Use this extension to request the items
 	 * of an agent or service such as the rooms of a conference server or the members of
 	 * a room.
+	 * OBSOLETE
+	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
-	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable 
+	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:browse";
@@ -56,7 +58,7 @@ package org.igniterealtime.xiff.data.browse
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
+	     * Performs the registration of this extension into the extension registry.
 	     */
 	    public static function enable():void
 	    {

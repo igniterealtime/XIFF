@@ -7,13 +7,17 @@ import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
+	/**
+	 * OBSOLETE
+	 * @see http://xmpp.org/extensions/xep-0022.html
+	 */
 	public class MessageEventExtension implements IExtension, ISerializable {
 		
 		public function getNS():String{
 			return "jabber:x:event";
 		}
 		
-		public function getElementName():String 
+		public function getElementName():String
 		{
 			return "x";
 		}
@@ -24,13 +28,13 @@ import org.igniterealtime.xiff.data.IExtension;
 		 * @param	parentNode (XMLNode) The container of the XML.
 		 * @return	On success, return true.
 		 */
-		public function serialize( parentNode:XMLNode ):Boolean 
+		public function serialize( parentNode:XMLNode ):Boolean
 		{
 			var xmlNode:XMLNode = new XMLNode(1, 'x');
 			xmlNode.attributes.xmlns = "jabber:x:event";
 			var childNode:XMLNode = new XMLNode(1, "composing");
 			xmlNode.appendChild(childNode);
-			parentNode.appendChild(xmlNode);			
+			parentNode.appendChild(xmlNode);
 			return true;
 		}
 	
@@ -39,7 +43,7 @@ import org.igniterealtime.xiff.data.IExtension;
 		 * @param	node (XMLNode) The node that should be used as the data container.
 		 * @return	On success, return true.
 		 */
-		public function deserialize( node:XMLNode ):Boolean 
+		public function deserialize( node:XMLNode ):Boolean
 		{
 			return true;
 		}

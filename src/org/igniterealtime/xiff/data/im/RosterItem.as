@@ -3,7 +3,7 @@
  */
 package org.igniterealtime.xiff.data.im{
 
-	 
+	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
@@ -139,7 +139,7 @@ package org.igniterealtime.xiff.data.im{
 			}
 			
 			return false;
-		}	
+		}
 		
 		/**
 		 * The JID for this roster item.
@@ -199,18 +199,18 @@ package org.igniterealtime.xiff.data.im{
 		 * <li>RosterExtension.ASK_TYPE_SUBSCRIBE</li>
 		 * <li>RosterExtension.ASK_TYPE_UNSUBSCRIBE</li>
 		 * </ul>
-		 * 
+		 *
 		 */
 		 public function get askType():String
 		 {
 		 	return getNode().attributes.ask;
 		 }
-		 
+		
 		 public function set askType( newAskType:String ):void
 		 {
 		 	getNode().attributes.ask = newAskType;
 		 }
-		 
+		
 		 /**
 		 * Convenience routine to determine if a roster item is considered "pending" or not.
 		 */

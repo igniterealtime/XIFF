@@ -10,7 +10,6 @@ package org.igniterealtime.xiff.data
 	/**
 	 * This is a base class for all classes that encapsulate XML stanza data. It provides
 	 * a set of methods that faciliate easy manipulation of XML data.
-	 * /Base Classes/2
 	 */
 	public class XMLStanza extends ExtensionContainer implements INodeProxy, IExtendable
 	{
@@ -18,6 +17,15 @@ package org.igniterealtime.xiff.data
 		public static var XMLFactory:XMLDocument = new XMLDocument();
 		private var myXML:XMLNode;
 	
+		public static var XMLData:XML = new XML();
+		
+		/**
+		 * Three types can exist:
+		 * - message
+		 * - presence
+		 * - iq
+		 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
+		 */
 		public function XMLStanza()
 		{
 			super();
@@ -31,7 +39,6 @@ package org.igniterealtime.xiff.data
 		 * @param	val The value to check for existance
 		 * @return Whether the value checked is both not null and not undefined
 		 */
-		//private static function exists( val:* ):Boolean
 		public static function exists( val:* ):Boolean
 		{
 			if( val != null && val !== undefined )
@@ -89,7 +96,7 @@ package org.igniterealtime.xiff.data
 			// XXX Investigate on whether a remove/create is as efficient
 			// as replacing the contents of the first text element nodeValue
 			
-			// Through the magic of AS, this will not fail if the 
+			// Through the magic of AS, this will not fail if the
 			// original node is undefined
 			
 			//if (original == null) original = XMLStanza.XMLFactory.createElement('');

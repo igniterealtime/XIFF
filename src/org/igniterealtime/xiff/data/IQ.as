@@ -9,13 +9,6 @@ package org.igniterealtime.xiff.data
 	
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
-	 * 
-	 * @param	recipient The JID of the IQ recipient
-	 * @param	sender The JID of the IQ sender - the server should report an error if this is falsified
-	 * @param	iqType The type of the IQ - there are static variables declared for each type
-	 * @param	iqID The unique ID of the IQ
-	 * @param	iqCallback The function to be called when the server responds to the IQ
-	 * @param	iqCallbackScope The object instance containing the callback method
 	 */
 	public class IQ extends XMPPStanza implements ISerializable
 	{
@@ -31,7 +24,17 @@ package org.igniterealtime.xiff.data
 		public static const GET_TYPE:String = "get";
 		public static const RESULT_TYPE:String = "result";
 		public static const ERROR_TYPE:String = "error";
-	
+		
+		/**
+		 * A class for abstraction and encapsulation of IQ (info-query) data.
+		 *
+		 * @param	recipient The JID of the IQ recipient
+		 * @param	iqType The type of the IQ - there are static variables declared for each type
+		 * @param	sender The JID of the IQ sender - the server should report an error if this is falsified
+		 * @param	iqID The unique ID of the IQ
+		 * @param	iqCallback The function to be called when the server responds to the IQ
+		 * @param	iqCallbackScope The object instance containing the callback method
+		 */
 		public function IQ( recipient:EscapedJID=null, iqType:String=null, iqID:String=null, iqCallback:String=null, iqCallbackScope:Object=null, iqCallbackFunc:Function=null )
 		{
 			var id:String = exists( iqID ) ? iqID : generateID("iq_");
@@ -41,7 +44,7 @@ package org.igniterealtime.xiff.data
 			callbackName = iqCallback;
 			callbackScope = iqCallbackScope;
 	        callback = iqCallbackFunc;
-	        
+	
 		}
 	
 		/**
@@ -66,16 +69,16 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
-		 * The function that will be called when an IQ result or error 
+		 * The function that will be called when an IQ result or error
 		 * is received with the same ID as one you send.  The function will
 	     * be called in the scope of the IQ, so if you wish to have this
 	     * called with the scope of your class wrap your function with a
 	     * mx.utils.Delegate class.
 	     *
-	     * <p>If both <code>callbackName/callbackScope</code> and callback are 
+	     * <p>If both <code>callbackName/callbackScope</code> and callback are
 	     * set then both functions will be called.</p>
 	     *
-	     * <p>This is an alternative to the <code>callbackName/callbackScope</code> 
+	     * <p>This is an alternative to the <code>callbackName/callbackScope</code>
 	     * method of receiving callbacks.</p>
 	     *
 	     * <p>Callback functions take one parameter which will be the IQ instance

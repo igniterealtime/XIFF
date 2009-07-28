@@ -13,6 +13,7 @@ package org.igniterealtime.xiff.data.rpc{
 	
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
+	 * @see http://xmpp.org/extensions/xep-0009.html
 	 */
 	public class RPCExtension extends Extension implements IExtension, ISerializable
 	{
@@ -26,7 +27,7 @@ package org.igniterealtime.xiff.data.rpc{
 		private var myFault:Object;
 	
 		/**
-		 * Place the remote call.  This method serializes the remote procedure call to XML.  
+		 * Place the remote call.  This method serializes the remote procedure call to XML.
 		 * The call will be made on the remote machine when the stanza containing this extension is sent to the server.
 		 *
 		 * If this extension is being returned, then check the result property instead.
@@ -63,7 +64,7 @@ package org.igniterealtime.xiff.data.rpc{
 		}
 	
 		/**
-		 * The object containing the fault of the remote procedure call.  
+		 * The object containing the fault of the remote procedure call.
 		 * This object could have any properties, as fault results are only structurally defined.
 		 *
 		 */
@@ -76,7 +77,7 @@ package org.igniterealtime.xiff.data.rpc{
 		 * A common result from most RPC servers to describe a fault
 		 *
 		 */
-		public function get faultCode():Number 
+		public function get faultCode():Number
 		{
 			return myFault.faultCode;
 		}
@@ -111,8 +112,8 @@ package org.igniterealtime.xiff.data.rpc{
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
-	     * 
+	     * Performs the registration of this extension into the extension registry.
+	     *
 	     */
 	    public static function enable():void
 	    {

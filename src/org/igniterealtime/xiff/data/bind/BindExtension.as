@@ -12,6 +12,9 @@ package org.igniterealtime.xiff.data.bind
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
+	/**
+	 * @see http://xmpp.org/extensions/xep-0193.html
+	 */
 	public class BindExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
@@ -52,7 +55,7 @@ package org.igniterealtime.xiff.data.bind
 		}
 		
 		/**
-	     * Registers this extension with the extension registry.  
+	     * Registers this extension with the extension registry.
 	     */
 	    public static function enable():void
 	    {

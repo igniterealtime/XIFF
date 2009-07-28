@@ -11,6 +11,9 @@ package org.igniterealtime.xiff.data.session
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
+	/**
+	 * @see http://tools.ietf.org/html/rfc3921#section-3
+	 */
 	public class SessionExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-session";
@@ -47,7 +50,7 @@ package org.igniterealtime.xiff.data.session
 		}
 		
 		/**
-	     * Registers this extension with the extension registry.  
+	     * Registers this extension with the extension registry.
 	     */
 	    public static function enable():void
 	    {

@@ -10,8 +10,9 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a> 
+	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a>
 	 * for service item discovery.
+	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class ItemDiscoExtension extends DiscoExtension implements IExtension
 	{
@@ -36,8 +37,8 @@ package org.igniterealtime.xiff.data.disco
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension 
-	     * registry.  
+	     * Performs the registration of this extension into the extension
+	     * registry.
 	     */
 	    public static function enable():void
 	    {
@@ -47,15 +48,15 @@ package org.igniterealtime.xiff.data.disco
 		/**
 		 * An array of objects that represent the items discovered
 		 *
-		 * <p>The objects in the array have the following possible 
+		 * <p>The objects in the array have the following possible
 		 * attributes:</p>
-		 * 
+		 *
 		 * <ul>
 		 * <li><code>jid</code>: the resource name</li>
-		 * <li><code>node</code>: a path to a resource that can be discovered 
+		 * <li><code>node</code>: a path to a resource that can be discovered
 		 * without a JID</li>
 		 * <li><code>name</code>: the friendly name of the jid</li>
-		 * <li><code>action</code>: the kind of action that occurs during 
+		 * <li><code>action</code>: the kind of action that occurs during
 		 * publication of services it can be either "remove" or "update"</li>
 		 * </ul>
 		 */
@@ -71,7 +72,7 @@ package org.igniterealtime.xiff.data.disco
 				
 			myItems = [];
 			
-			for each(var item:XMLNode in getNode().childNodes) 
+			for each(var item:XMLNode in getNode().childNodes)
 			{
 				myItems.push(item.attributes);
 			}

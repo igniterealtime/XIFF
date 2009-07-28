@@ -7,9 +7,10 @@ package org.igniterealtime.xiff.data
 	
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.IExtendable;
-	 
+	
 	/**
-	 * Contains the implementation for a generic extension container.  Use the static method "decorate" to implement the IExtendable interface on a class.
+	 * Contains the implementation for a generic extension container.
+	 * Use the static method "decorate" to implement the IExtendable interface on a class.
 	 */
 	public class ExtensionContainer implements IExtendable
 	{
@@ -57,7 +58,7 @@ package org.igniterealtime.xiff.data
 		
 		public function getExtension( name:String ):Extension
 		{
-			return getAllExtensions().filter(function(obj:IExtension, idx:int, arr:Array):Boolean 
+			return getAllExtensions().filter(function(obj:IExtension, idx:int, arr:Array):Boolean
 		{ return obj.getElementName() == name; })[0];
 		}
 	

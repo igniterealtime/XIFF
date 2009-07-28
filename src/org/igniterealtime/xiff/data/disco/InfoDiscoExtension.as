@@ -11,10 +11,9 @@ package org.igniterealtime.xiff.data.disco
 	
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a> for service info discovery.
-	 * Also, take a look at <a href="http://xmpp.org/extensions/xep-0020.html">XEP-0020</a> and 
+	 * Also, take a look at <a href="http://xmpp.org/extensions/xep-0020.html">XEP-0020</a> and
 	 * <a href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</a>.
-	 *
-	 * @param	parent (Optional) The XMLNode that contains this extension
+	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
 	{
@@ -24,6 +23,11 @@ package org.igniterealtime.xiff.data.disco
 		private var myIdentities:Array;
 		private var myFeatures:Array;
 		
+		/**
+		 *
+		 * @param	xmlNode (Optional) The XMLNode that contains this extension
+		 * @see http://xmpp.org/extensions/xep-0030.html
+		 */
 		public function InfoDiscoExtension(xmlNode:XMLNode = null)
 		{
 			super(xmlNode);
@@ -40,8 +44,8 @@ package org.igniterealtime.xiff.data.disco
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
-	     * 
+	     * Performs the registration of this extension into the extension registry.
+	     *
 	     */
 	    public static function enable():void
 	    {
@@ -83,9 +87,9 @@ package org.igniterealtime.xiff.data.disco
 			myIdentities = [];
 			myFeatures = [];
 			
-			for each(var child:XMLNode in getNode().childNodes) 
+			for each(var child:XMLNode in getNode().childNodes)
 			{
-				switch (child.nodeName) 
+				switch (child.nodeName)
 				{
 					case "identity":
 						myIdentities.push(child.attributes);

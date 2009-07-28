@@ -12,6 +12,7 @@ package org.igniterealtime.xiff.data.disco
 	
 	/**
 	 * Base class for service discovery extensions.
+	 * @see http://xmpp.org/protocols/disco/
 	 */
 	public class DiscoExtension extends Extension implements ISerializable
 	{
@@ -22,8 +23,8 @@ package org.igniterealtime.xiff.data.disco
 		public var myService:EscapedJID;
 	
 		/**
-		 * The name of the resource of the service queried if the resource 
-		 * doesn't have a JID. For more information, see 
+		 * The name of the resource of the service queried if the resource
+		 * doesn't have a JID. For more information, see
 		 * <a href="http://www.jabber.org/registrar/disco-nodes.html">
 		 * http://www.jabber.org/registrar/disco-nodes.html</a>.
 		 */
@@ -32,8 +33,8 @@ package org.igniterealtime.xiff.data.disco
 			super(xmlNode);
 		}
 		
-		public function get serviceNode():String 
-		{ 
+		public function get serviceNode():String
+		{
 			return getNode().parentNode.attributes.node;
 		}
 	

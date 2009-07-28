@@ -16,6 +16,7 @@ package org.igniterealtime.xiff.data.muc{
 	/**
 	 * Implements the base functionality shared by all MUC extensions
 	 *
+	 * @see http://xmpp.org/extensions/xep-0045.html
 	 * @param	parent (Optional) The containing XMLNode for this extension
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
