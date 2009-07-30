@@ -4,32 +4,49 @@
 package org.igniterealtime.xiff.core
 {
   /**
-   * This is a base class for the JID (Jabber ID) classes. It provides
-   * functionality to determine if a JID is valid, as well as extract the
-   * node, domain and resource from the JID.
-   *
+   * This is a base class for the JID (Jabber ID) classes.
    * This class should not be instantiated directly, but should be subclassed
    * instead.
+   *
+   * It provides functionality to determine if a JID is valid, as well as extract the
+   * node, domain and resource from the JID.
+   *
+   * The structure of JID is defined in RFC3920.
+   * <code>jid = [ node "@" ] domain [ "/" resource ]</code>
+   * <code>domain = fqdn / address-literal</code>
+   * <code>fqdn = (sub-domain 1*("." sub-domain))</code>
+   * <code>sub-domain = (internationalized domain label)</code>
+   * <code>address-literal = IPv4address / IPv6address</code>
+   *
+   * @exampleText user@host/resource
+   * @exampleText room@service/nick
    */
   public class AbstractJID
   {
+	private const BYTE_LIMIT_ITEM:uint = 1023;
+	private const BYTE_LIMIT_TOTAL:uint = 3071;
+	
     //TODO: this doesn't actually validate properly in some cases; need separate nodePrep, etc...
     protected static var jidNodeValidator:RegExp = /^([\x29\x23-\x25\x28-\x2E\x30-\x39\x3B\x3D\x3F\x41-\x7E\xA0 \u1680\u202F\u205F\u3000\u2000-\u2009\u200A-\u200B\u06DD \u070F\u180E\u200C-\u200D\u2028-\u2029\u0080-\u009F \u2060-\u2063\u206A-\u206F\uFFF9-\uFFFC\uE000-\uF8FF\uFDD0-\uFDEF \uFFFE-\uFFFF\uD800-\uDFFF\uFFF9-\uFFFD\u2FF0-\u2FFB]{1,1023})/;
     protected var _node:String = "";
     protected var _domain:String = "";
     protected var _resource:String = "";
 
-    /**
-     * Creates a new AbstractJID object.
-     *
-     * @param	inJID The JID as a String.
-     * @param	validate True if the JID should be validated.
-     */
-    public function AbstractJID(inJID:String, validate:Boolean=false) 
+	/**
+	 * Creates a new AbstractJID object. Used via EscapedJID or UnescapedJID.
+	 *
+	 * Each allowable portion of a JID (node identifier, domain identifier, and resource identifier)
+	 * MUST NOT be more than 1023 bytes in length, resulting in a maximum total size
+	 * (including the ’@’ and ’/’ separators) of 3071 bytes.
+	 *
+	 * @param	inJID The JID as a String.
+	 * @param	validate True if the JID should be validated.
+	 */
+    public function AbstractJID(inJID:String, validate:Boolean=false)
     {
       if(validate)
       {
-        if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1) 
+        if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1 || inJID.length > BYTE_LIMIT_TOTAL)
         {
           // TODO: Get rid of trace (use Logger) and create
           // better exception
@@ -40,7 +57,7 @@ package org.igniterealtime.xiff.core
       var separatorIndex:int = inJID.lastIndexOf("@");
       var slashIndex:int = inJID.lastIndexOf("/");
 
-      if(slashIndex >= 0) 
+      if(slashIndex >= 0)
         _resource = inJID.substring(slashIndex + 1);
 
       _domain = inJID.substring(separatorIndex + 1, slashIndex >= 0 ? slashIndex : inJID.length);
@@ -128,7 +145,7 @@ package org.igniterealtime.xiff.core
      *
      * @return The JID as a String.
      */
-    public function toString():String 
+    public function toString():String
     {
       var j:String = "";
       if(node)
@@ -143,7 +160,7 @@ package org.igniterealtime.xiff.core
     /**
      * The JID without the resource.
      */
-    public function get bareJID():String 
+    public function get bareJID():String
     {
       var str:String = toString();
       var slashIndex:int = str.lastIndexOf("/");
@@ -155,7 +172,7 @@ package org.igniterealtime.xiff.core
     /**
      * The resource portion of the JID.
      */
-    public function get resource():String 
+    public function get resource():String
     {
       if(_resource.length > 0)
         return _resource;
@@ -165,7 +182,7 @@ package org.igniterealtime.xiff.core
     /**
      * The node portion of the JID.
      */
-    public function get node():String 
+    public function get node():String
     {
       if(_node.length > 0)
         return _node;
@@ -175,7 +192,7 @@ package org.igniterealtime.xiff.core
     /**
      * The domain portion of the JID.
      */
-    public function get domain():String 
+    public function get domain():String
     {
       return _domain;
     }
