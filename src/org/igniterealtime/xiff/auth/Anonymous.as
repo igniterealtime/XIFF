@@ -14,40 +14,34 @@ package org.igniterealtime.xiff.auth
 	public class Anonymous extends SASLAuth
 	{
 		private const MECHANISM:String = "ANONYMOUS";
+
 		private const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
-		
+
 		/**
 		 * Creates a new Anonymous authentication object.
 		 *
 		 * @param	connection A reference to the XMPPConnection instance to use.
 		 */
-		public function Anonymous(connection:XMPPConnection)
+		public function Anonymous( connection:XMPPConnection )
 		{
-			req = new XMLNode(1, "auth");
-			req.attributes = {
-				mechanism: MECHANISM,
-				xmlns: NS
-			};
+			req = new XMLNode( 1, "auth" );
+			req.attributes = { mechanism: MECHANISM, xmlns: NS };
 
 			stage = 0;
 		}
 
 		/**
 		 * Called when a response to this authentication is received.
-		 * 
+		 *
 		 * @param	stage The current stage in the authentication process.
 		 * @param	response The XML of the actual authentication response.
 		 *
 		 * @return An object specifying the current state of the authentication.
 		 */
-		public override function handleResponse(stage:int, response:XMLNode):Object 
+		override public function handleResponse( stage:int, response:XMLNode ):Object
 		{
-		  var success:Boolean = response.nodeName == "success";
-		  return {
-			authComplete: true,
-			authSuccess: success,
-			authStage: stage++
-		  };
+			var success:Boolean = response.nodeName == "success";
+			return { authComplete: true, authSuccess: success, authStage: stage++ };
 		}
 	}
 }
