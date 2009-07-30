@@ -2,7 +2,7 @@
  * License
  */
 package org.igniterealtime.xiff.core
-{	 
+{
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
@@ -21,7 +21,7 @@ package org.igniterealtime.xiff.core
 	 * Flash AVM2 binary socket instead of the older <code>XMLSocket</code>.
 	 * This gets rid of issues related to the <code>XMLSocket</code>'s appending
 	 * of a null-byte to all outgoing data.
-	 * 
+	 *
 	 * @see	org.igniterealtime.xiff.core.XMPPConnection
 	 */
 	public class XMPPSocketConnection extends XMPPConnection
@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.core
 			configureSocket();
 		}
 		
-		private function configureSocket():void 
+		private function configureSocket():void
 		{
 			binarySocket = new SocketConn();
 			
@@ -48,7 +48,7 @@ package org.igniterealtime.xiff.core
 	        binarySocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityError);
 	        binarySocket.addEventListener(SocketDataEvent.SOCKET_DATA_RECEIVED, bSocketReceivedData);
 	    }
-	    
+	
 	    override protected function sendXML( someData:* ):void
 		{
 			logger.info("OUTGOING: {0}", someData);
@@ -77,42 +77,20 @@ package org.igniterealtime.xiff.core
 			active = false;
 			loggedIn = false;
 			
-			// Stream type lets user set opening/closing tag - some servers (jadc2s) prefer <stream:flash> to the standard
-			// <stream:stream>
-			switch( streamType ) {
-				case "flash":
-					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">";
-					closingStreamTag = "</flash:stream>";
-					break;
-					
-				case "terminatedFlash":
-					openingStreamTag = "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />";
-					closingStreamTag = "</flash:stream>";
-					break;
-					
-				case "standard":
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">";
-					closingStreamTag = "</stream:stream>";
-					break;
+			chooseStreamTags(streamType);
 			
-				case "terminatedStandard":
-				default:
-					openingStreamTag = "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />";
-					closingStreamTag = "</stream:stream>";
-					break;
-			}
 			binarySocket.connect( server, port );
 			return true;
 		}
 		
-		protected function bSocketReceivedData( ev:SocketDataEvent ):void 
+		protected function bSocketReceivedData( event:SocketDataEvent ):void
 		{
-			var rawXML:String = _incompleteRawXML + ev.data as String;
+			var rawXML:String = _incompleteRawXML + event.data as String;
 			
 			logger.info("INCOMING: {0}", rawXML);
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
-			if (!_expireTagSearch) 
+			if (!_expireTagSearch)
 			{
 				var pattern:RegExp = new RegExp("<flash:stream");
 				var resultObj:Object = pattern.exec(rawXML);
@@ -123,7 +101,7 @@ package org.igniterealtime.xiff.core
 				}
 			}
 			
-			if (!_expireTagSearch) 
+			if (!_expireTagSearch)
 			{
 				var pattern2:RegExp = new RegExp("<stream:stream");
 				var resultObj2:Object = pattern2.exec(rawXML);
@@ -137,7 +115,7 @@ package org.igniterealtime.xiff.core
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
 			
-			//error handling to catch incomplete xml strings that have 
+			//error handling to catch incomplete xml strings that have
 			//been truncated by the socket
 			try{
 				var isComplete: Boolean = true;
@@ -146,15 +124,15 @@ package org.igniterealtime.xiff.core
 			}
 			catch(err:Error){
 				isComplete = false;
-				_incompleteRawXML += ev.data as String;//concatenate the raw xml to the previous xml
+				_incompleteRawXML += event.data as String;//concatenate the raw xml to the previous xml
 			}
 			
 			if (isComplete){
 				
 	
-				var event:IncomingDataEvent = new IncomingDataEvent();
-				event.data = xmlData;
-				dispatchEvent( event );
+				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
+				incomingEvent.data = xmlData;
+				dispatchEvent( incomingEvent );
 				
 				for (var i:int = 0; i<xmlData.childNodes.length; ++i)
 				{

@@ -2,7 +2,7 @@
  * License
  */
 package org.igniterealtime.xiff.core
-{	 
+{
 	import flash.events.DataEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -37,86 +37,86 @@ package org.igniterealtime.xiff.core
 
 	/**
 	 * Dispatched when a password change is successful.
-	 * 
+	 *
 	 * @eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
 	 */
     [Event(name="changePasswordSuccess", type="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent")]
-    
+
     /**
      * Dispatched when the connection is successfully made to the server.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.ConnectionSuccessEvent.CONNECT_SUCCESS
      */
     [Event(name="connection", type="org.igniterealtime.xiff.events.ConnectionSuccessEvent")]
-    
+
     /**
      * Dispatched when there is a disconnection from the server.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.DisconnectionEvent.DISCONNECT
      */
     [Event(name="disconnection", type="org.igniterealtime.xiff.events.DisconnectionEvent")]
-    
+
     /**
      * Dispatched when there is some type of XMPP error.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.XIFFErrorEvent.XIFF_ERROR
      */
     [Event(name="error", type="org.igniterealtime.xiff.events.XIFFErrorEvent")]
-    
+
     /**
      * Dispatched whenever there is incoming XML data.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.IncomingDataEvent.INCOMING_DATA
      */
     [Event(name="incomingData", type="org.igniterealtime.xiff.events.IncomingDataEvent")]
-    
+
     /**
      * Dispatched on successful authentication (login) with the server.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.LoginEvent.LOGIN
      */
     [Event(name="login", type="org.igniterealtime.xiff.events.LoginEvent")]
-    
+
     /**
      * Dispatched on incoming messages.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.MessageEvent.MESSAGE
      */
     [Event(name="message", type="org.igniterealtime.xiff.events.MessageEvent")]
-    
+
     /**
      * Dispatched whenever data is sent to the server.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.OutgoingDataEvent.OUTGOING_DATA
      */
     [Event(name="outgoingData", type="org.igniterealtime.xiff.events.OutgoingDataEvent")]
-    
+
     /**
      * Dispatched on incoming presence data.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
      */
     [Event(name="presence", type="org.igniterealtime.xiff.events.PresenceEvent")]
-    
+
     /**
      * Dispatched on when new user account registration is successful.
-     * 
+     *
      * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
      */
     [Event(name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent")]
-    
+
     /**
      * This class is used to connect to and manage data coming from an XMPP server. Use one instance
      * of this class per connection.
-     */ 
+     */
 	public class XMPPConnection extends EventDispatcher
 	{
 		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPConnection");
-		
+			
 		/**
 		 * @private
 		 */
-		protected var _useAnonymousLogin:Boolean;
+		protected var _useAnonymousLogin:Boolean = false;
 		
 		/**
 		 * @private
@@ -141,7 +141,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var myResource:String;
+		protected var myResource:String = "xiff";
 		
 		/**
 		 * @private
@@ -151,7 +151,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var myPort:Number;
+		protected var myPort:Number = 5222;
+		
+		/**
+		 * @see http://xmpp.org/extensions/xep-0138.html
+		 */
+		protected var _compress:Boolean = false;
 		
 		/**
 		 * @private
@@ -161,12 +166,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var loggedIn:Boolean;
+		protected var loggedIn:Boolean = false;
 		
 		/**
 		 * @private
 		 */
-		protected var ignoreWhitespace:Boolean;
+		protected var ignoreWhitespace:Boolean = true;
 		
 		/**
 		 * @private
@@ -184,9 +189,10 @@ package org.igniterealtime.xiff.core
 		protected var sessionID:String;
 		
 		/**
+		 * Hash to hold callbacks for IQs
 		 * @private
 		 */
-		protected var pendingIQs:Object;
+		protected var pendingIQs:Object = { };
 		
 		/**
 		 * @private
@@ -200,24 +206,21 @@ package org.igniterealtime.xiff.core
 		
 		protected static var _openConnections:Array = [];
 		
+		/**
+		 * The types of SASL mechanisms available.
+		 * @see org.igniterealtime.xiff.auth.Anonymous
+		 * @see org.igniterealtime.xiff.auth.External
+		 * @see org.igniterealtime.xiff.auth.Plain
+		 */
 		protected static var saslMechanisms:Object = {
-			"PLAIN":Plain,
-			"ANONYMOUS":Anonymous,
-			"EXTERNAL":External
+			"PLAIN": Plain,
+			"ANONYMOUS": Anonymous,
+			"EXTERNAL": External
 		};
 		
 		public function XMPPConnection()
-		{	
-			
-			// Hash to hold callbacks for IQs
-			pendingIQs = {};
-			
-			_useAnonymousLogin = false;
+		{
 			active = false;
-			loggedIn = false;
-			ignoreWhitespace = true;
-			resource = "xiff";
-			port = 5222;
 			
 			AuthExtension.enable();
 			BindExtension.enable();
@@ -228,50 +231,38 @@ package org.igniterealtime.xiff.core
 		
 		/**
 		 * Connects to the server.
+		 * Possible options are:
+		 * <ul>
+		 * <li>flash</li>
+		 * <li>terminatedFlash</li>
+		 * <li>standard</li>
+		 * <li>terminatedStandard (default)</li>
+		 * </ul>
+		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from
+		 * a Flash client instead of the standard &lt;stream:stream&gt;.
 		 *
-		 * @param	streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;. 
-		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from a Flash client instead of the standard &lt;stream:stream&gt;.
-		 * The options for this parameter are: "flash", "terminatedFlash", "standard" and "terminatedStandard". The default is "terminatedStandard".
+		 * @param	streamType (Optional) The type of initial stream negotiation, either &lt;flash:stream&gt; or &lt;stream:stream&gt;.
 		 *
 		 * @return A boolean indicating whether the server was found.
 		 */
 		public function connect( streamType:String = "terminatedStandard" ):Boolean
 		{
-			
-			// Create the socket
-			_socket = _createXmlSocket(); 
+			_socket = _createXmlSocket();
 			
 			active = false;
 			loggedIn = false;
 			
-			// Stream type lets user set opening/closing tag - some servers (jadc2s) prefer <stream:flash> to the standard
-			// <stream:stream>
-			switch( streamType ) {
-				case "flash":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\">" );
-					closingStreamTag = new String( "</flash:stream>" );
-					break;
-					
-				case "terminatedFlash":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><flash:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:flash=\"http://www.jabber.com/streams/flash\" version=\"1.0\" />" );
-					closingStreamTag = new String( "</flash:stream>" );
-					break;
-					
-				case "standard":
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\">" );
-					closingStreamTag = new String( "</stream:stream>" );
-					break;
+			chooseStreamTags(streamType);
 			
-				case "terminatedStandard":
-				default:
-					openingStreamTag = new String( "<?xml version=\"1.0\"?><stream:stream to=\"" + domain + "\" xmlns=\"jabber:client\" xmlns:stream=\"http://etherx.jabber.org/streams\" version=\"1.0\" />" );
-					closingStreamTag = new String( "</stream:stream>" );
-					break;
-			}
 			_socket.connect( server, port );
 			return true;
 		}
 		
+		/**
+		 *
+		 * @param	name
+		 * @param	authClass
+		 */
 		public static function registerSASLMechanism(name:String, authClass:Class):void
 		{
 			saslMechanisms[name] = authClass;
@@ -283,7 +274,7 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Disconnects from the server if currently connected. After disconnect, 
+		 * Disconnects from the server if currently connected. After disconnect,
 		 * a <code>DisconnectionEvent.DISCONNECT</code> event is broadcast.
 		 */
 		public function disconnect():void
@@ -316,7 +307,7 @@ package org.igniterealtime.xiff.core
 	                if ((iq.callbackName != null && iq.callbackScope != null) || iq.callback != null)
 	                {
 	                	addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
-	                }		
+	                }
 				}
 				var root:XMLNode = o.getNode().parentNode;
 				if (root == null) {
@@ -341,7 +332,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Determines whether the connection with the server is currently active. (Not necessarily logged in.
 		 * For login status, use the <code>isLoggedIn()</code> method.)
-		 * 
+		 *
 		 * @return A boolean indicating whether the connection is active.
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isLoggedIn
 		 */
@@ -352,7 +343,7 @@ package org.igniterealtime.xiff.core
 		
 		/**
 		 * Determines whether the user is connected and logged into the server.
-		 * 
+		 *
 		 * @return A boolean indicating whether the user is logged in.
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isActive
 		 */
@@ -363,7 +354,7 @@ package org.igniterealtime.xiff.core
 		
 		/**
 		 * Issues a request for the information that must be submitted for registration with the server.
-		 * When the data returns, a <code>RegistrationFieldsEvent.REG_FIELDS</code> event is dispatched 
+		 * When the data returns, a <code>RegistrationFieldsEvent.REG_FIELDS</code> event is dispatched
 		 * containing the requested data.
 		 */
 		public function getRegistrationFields():void
@@ -377,9 +368,9 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Registers a new account with the server, sending the registration data as specified in the fieldMap@paramter.
 		 *
-		 * @param	fieldMap An object map containing the data to use for registration. The map should be composed of 
+		 * @param	fieldMap An object map containing the data to use for registration. The map should be composed of
 		 * attribute:value pairs for each registration data item.
-		 * @param	key (Optional) If a key was passed in the "data" field of the "registrationFields" event, 
+		 * @param	key (Optional) If a key was passed in the "data" field of the "registrationFields" event,
 		 * that key must also be passed here.
 		 * required field needed for registration.
 		 */
@@ -400,7 +391,7 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Changes the user's account password on the server. If the password change is successful, 
+		 * Changes the user's account password on the server. If the password change is successful,
 		 * the class will broadcast a <code>ChangePasswordSuccessEvent.PASSWORD_SUCCESS</code> event.
 		 *
 		 * @param	newPassword The new password
@@ -418,15 +409,56 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Gets the fully qualified JID (userserver/resource) of the user. A fully-qualified JID includes 
-		 * the resource. A bare JID does not. To get the bare JID, use the <code>getBareJID()</code> method.
+		 * Gets the fully qualified unescaped JID (user@server/resource) of the user. A fully-qualified JID includes
+		 * the resource. A bare JID does not. To get the bare JID, use the <code>bareJID</code> property.
 		 *
-		 * @return The fully qualified JID
-		 * @see	#getBareJID
+		 * @return The fully qualified unescaped JID
+		 * @see	org.igniterealtime.xiff.core.UnescapedJID#bareJID
 		 */
 		public function get jid():UnescapedJID
 		{
 			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
+		}
+		
+		/**
+		 * Choose the stream start and ending tags based on the given type.
+		 * @param	type	One of: flash, terminatedFlash, standard, terminatedStandard.
+		 */
+		protected function chooseStreamTags(type:String):void
+		{
+			// Stream type lets user set opening/closing tag - some servers (jadc2s) prefer <stream:flash> to the standard
+			// <stream:stream>
+			
+			openingStreamTag = '<?xml version="1.0"?>';
+			if (type == "flash" || type == "terminatedFlash")
+			{
+				openingStreamTag += '<flash';
+				closingStreamTag = '</flash:stream>';
+			}
+			else
+			{
+				openingStreamTag += '<stream';
+				closingStreamTag = '</stream:stream>';
+			}
+			
+			openingStreamTag += ':stream xmlns="' + XMPPStanza.CLIENT_NAMESPACE + '" ';
+			
+			if (type == "flash" || type == "terminatedFlash")
+			{
+				openingStreamTag += 'xmlns:flash="' + XMPPStanza.NAMESPACE_FLASH + '"';
+			}
+			else
+			{
+				openingStreamTag += 'xmlns:stream="' + XMPPStanza.NAMESPACE_STREAM + '"';
+			}
+			openingStreamTag += ' to="' + domain + '" version="' + XMPPStanza.CLIENT_VERSION + '"';
+			
+			if (type.indexOf("terminated") != -1)
+			{
+				openingStreamTag += ' /';
+			}
+			
+			openingStreamTag += '>';
 		}
 		
 		/**
@@ -486,12 +518,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function socketConnected(ev:Event):void
+		protected function socketConnected(event:Event):void
 		{
 			active = true;
 			sendXML( openingStreamTag );
-			var event:ConnectionSuccessEvent = new ConnectionSuccessEvent();
-			dispatchEvent( event );
+			var connectionEvent:ConnectionSuccessEvent = new ConnectionSuccessEvent();
+			dispatchEvent( connectionEvent );
 		}
 		
 		/**
@@ -501,7 +533,7 @@ package org.igniterealtime.xiff.core
 		{
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
-			if (!_expireTagSearch) 
+			if (!_expireTagSearch)
 			{
 				var pattern:RegExp = new RegExp("<flash:stream");
 				var resultObj:Object = pattern.exec(ev.data);
@@ -515,8 +547,8 @@ package org.igniterealtime.xiff.core
 			if(ev.data == "</flash:stream>")
 			{
 				socketClosed(null);
-				return;	
-			}	
+				return;
+			}
 			
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
@@ -586,7 +618,7 @@ package org.igniterealtime.xiff.core
 		 * @private
 		 */
 		protected function socketClosed(event:Event):void
-		{	
+		{
 			var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( disconnectionEvent );
 		}
@@ -631,9 +663,17 @@ package org.igniterealtime.xiff.core
 					{
 						configureAuthMechanisms(feature);
 					}
+					else if (feature.nodeName == "compression")
+					{
+						// TODO: check for having "zlib" method.
+						if (_compress)
+						{
+							configureStreamCompression();
+						}
+					}
 					
 		        }
-		        
+		
 				if (useAnonymousLogin || (username != null && username.length > 0))
 				{
 					beginAuthentication();
@@ -648,7 +688,7 @@ package org.igniterealtime.xiff.core
 				bindConnection();
 			}
 		}
-	    
+	
 	    /**
 		 * @private
 		 */
@@ -656,7 +696,7 @@ package org.igniterealtime.xiff.core
 	    {
 	        var authMechanism:SASLAuth;
 	        var authClass:Class;
-	        for each(var mechanism:XMLNode in mechanisms.childNodes) 
+	        for each(var mechanism:XMLNode in mechanisms.childNodes)
 	        {
 	        	authClass = saslMechanisms[mechanism.firstChild.nodeValue];
 	   			if(useAnonymousLogin)
@@ -667,16 +707,24 @@ package org.igniterealtime.xiff.core
 	   			else
 	   			{
 	   				if(authClass) break;
-	   			}	   			
+	   			}
 	        }
 	
 	        if (!authClass) {
 	        	dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
 	        	return;
 	        }
-	        
+	
 	        auth = new authClass(this);
 	    }
+		
+		/**
+		 *
+		 */
+		protected function configureStreamCompression():void
+		{
+			
+		}
 		
 		/**
 		 * @private
@@ -746,8 +794,8 @@ package org.igniterealtime.xiff.core
 					
 					if(callbackInfo.methodScope && callbackInfo.methodName) {
 						callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );
-					}			
-					if (callbackInfo.func != null) { 
+					}
+					if (callbackInfo.func != null) {
 						callbackInfo.func( iq );
 					}
 					pendingIQs[iq.id] = null;
@@ -776,7 +824,7 @@ package org.igniterealtime.xiff.core
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var msg:Message = new Message();
-			logger.debug("MESSAGE: {0}", msg);	
+			logger.debug("MESSAGE: {0}", msg);
 			// Populate with data
 			if( !msg.deserialize( node ) ) {
 				throw new SerializationException();
@@ -790,7 +838,7 @@ package org.igniterealtime.xiff.core
 			{
 				var event:MessageEvent = new MessageEvent();
 				event.data = msg;
-				dispatchEvent( event );		
+				dispatchEvent( event );
 			}
 	        return msg;
 		}
@@ -884,7 +932,7 @@ package org.igniterealtime.xiff.core
 		{
 	        sendXML(auth.request);
 		}
-	    
+	
 		/**
 		 * @private
 		 */
@@ -905,7 +953,7 @@ package org.igniterealtime.xiff.core
 	            }
 	        }
 	    }
-	    
+	
 		/**
 		 * @private
 		 */
@@ -913,26 +961,26 @@ package org.igniterealtime.xiff.core
 	    {
 	        sendXML(openingStreamTag);
 	    }
-	    
+	
 		/**
 		 * @private
 		 */
-	    protected function bindConnection():void 
+	    protected function bindConnection():void
 	    {
 	    	var bindIQ:IQ = new IQ(null, "set");
 	
 			var bindExt:BindExtension = new BindExtension();
 			if(resource)
 	        	bindExt.resource = resource;
-	        
+	
 	        bindIQ.addExtension(bindExt);
-	        
+	
 			bindIQ.callback = handleBindResponse;
 			bindIQ.callbackScope = this;
 	
 	        send(bindIQ);
 	    }
-	    
+	
 		/**
 		 * @private
 		 */
@@ -942,14 +990,14 @@ package org.igniterealtime.xiff.core
 	    	var bind:BindExtension = packet.getExtension("bind") as BindExtension;
 	
             var jid:UnescapedJID = bind.jid.unescaped;
-            
+
             myResource = jid.resource;
             myUsername = jid.node;
             domain = jid.domain;
-            
+
             establishSession();
 	    }
-	    
+	
 		/**
 		 * @private
 		 */
@@ -958,13 +1006,13 @@ package org.igniterealtime.xiff.core
 	        var sessionIQ:IQ = new IQ(null, "set");
 
 	        sessionIQ.addExtension(new SessionExtension());
-	        
+	
 	        sessionIQ.callback = handleSessionResponse;
 	        sessionIQ.callbackScope = this;
 	
 	        send(sessionIQ);
 	    }
-	    
+	
 		/**
 		 * @private
 		 */
@@ -1049,8 +1097,8 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * The resource to use when logging in. A resource is required (defaults to "XIFF") and 
-		 * allows a user to login using the same account simultaneously (most likely from multiple machines). 
+		 * The resource to use when logging in. A resource is required (defaults to "XIFF") and
+		 * allows a user to login using the same account simultaneously (most likely from multiple machines).
 		 * Typical examples of the resource include "Home" or "Office" to indicate the user's current location.
 		 */
 		public function get resource():String
@@ -1072,15 +1120,15 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Whether to use anonymous login or not.
 		 */
-		public function get useAnonymousLogin():Boolean 
-		{ 
-			return _useAnonymousLogin; 
+		public function get useAnonymousLogin():Boolean
+		{
+			return _useAnonymousLogin;
 		}
 		
 		/**
 		 * @private
 		 */
-		public function set useAnonymousLogin(value:Boolean):void 
+		public function set useAnonymousLogin(value:Boolean):void
 		{
 			// set only if not connected
 			if(!isActive()) _useAnonymousLogin = value;
@@ -1113,6 +1161,24 @@ package org.igniterealtime.xiff.core
 			ignoreWhitespace = val;
 		}
 		
+		/**
+		 * Shall the zlib compression be allowed if the server supports it.
+		 * @see http://xmpp.org/extensions/xep-0138.html
+		 */
+		public function get compress():Boolean
+		{
+			return _compress;
+		}
+		
+		public function set compress(value:Boolean):void
+		{
+			_compress = value;
+		}
+		
+		/**
+		 *
+		 * @return
+		 */
 		private function _createXmlSocket():XMLSocket {
 			var socket:XMLSocket = new XMLSocket(server, port);
 			socket.addEventListener(Event.CONNECT,socketConnected);
