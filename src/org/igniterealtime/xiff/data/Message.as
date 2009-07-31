@@ -160,7 +160,7 @@ package org.igniterealtime.xiff.data
 		
 		/**
 		 * The message body in XHTML format. Internally, this uses the XHTML data extension.
-		 *
+		 * @see http://xmpp.org/extensions/xep-0071.html
 		 * @see	org.igniterealtime.xiff.data.xhtml.XHTMLExtension
 		 */
 		public function get htmlBody():String

@@ -14,7 +14,19 @@ package org.igniterealtime.xiff.data
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
-		public static const CLIENT_NS:String = "jabber:client";
+		public static const CLIENT_NAMESPACE:String = "jabber:client";
+		
+		/**
+		 * The version of XMPP specified in RFC 3920 is "1.0"; in particular, this
+		 * encapsulates the stream-related protocols (Use of TLS (Section 5),
+		 * Use of SASL (Section 6), and Stream Errors (Section 4.7)), as well as
+		 * the semantics of the three defined XML stanza types (<message/>,
+		 * <presence/>, and <iq/>).
+		 */
+		public static const CLIENT_VERSION:String = "1.0";
+		
+		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
+		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
 
 	
 		private var myErrorNode:XMLNode;
@@ -58,7 +70,7 @@ package org.igniterealtime.xiff.data
 	 	 * (Static method) Sets the ID generator for this stanza type. ID generators must implement
 		 * the IIDGenerator interface. The XIFF library comes with a few default
 		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
-		 * 
+		 *
 		 * Setting the ID generator by stanza type is useful if you'd like to use
 		 * different ID generation schemes for each type. For instance, messages could
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
@@ -81,7 +93,7 @@ package org.igniterealtime.xiff.data
 		 * @return An indication as to whether serialization was successful
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
-		{		
+		{
 			var node:XMLNode = getNode();
 			var exts:Array = getAllExtensions();
 	
@@ -108,7 +120,7 @@ package org.igniterealtime.xiff.data
 				var nName:String = children[i].nodeName;
 				var nNamespace:String = children[i].attributes.xmlns;
 				
-				nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NS;
+				nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NAMESPACE;
 				
 				if( nName == "error" ) {
 					myErrorNode = children[i];
@@ -166,7 +178,7 @@ package org.igniterealtime.xiff.data
 		 * The stanza type. There are MANY types available, depending on what kind of stanza this is.
 		 * The XIFF Library defines the types for IQ, Presence, and Message in each respective class
 		 * as static string variables. Below is a listing of each:
-		 * 
+		 *
 		 * <b>IQ</b>
 		 * <ul>
 		 * <li>IQ.SET_TYPE</li>
@@ -311,8 +323,8 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
-		 * The error code, assuming this stanza contains error information. Error codes are 
-		 * deprecated in standard XMPP, but they are commonly used by older Jabber servers 
+		 * The error code, assuming this stanza contains error information. Error codes are
+		 * deprecated in standard XMPP, but they are commonly used by older Jabber servers
 		 * like Jabberd 1.4. For more information on error codes, and corresponding error
 		 * conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
 		 *
