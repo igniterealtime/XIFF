@@ -9,19 +9,21 @@ package org.igniterealtime.xiff.data.privatedata
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
-
+	
 	public class PrivateDataExtension implements IExtension, ISerializable
 	{
 		private var _extension:XMLNode;
+		
 		private var _payload:IPrivatePayload;
 		
 		/**
-		 * 
+		 *
 		 * @param	privateName
 		 * @param	privateNamespace
 		 * @param	payload
 		 */
-		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null, payload:IPrivatePayload = null) 
+		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null,
+											 payload:IPrivatePayload = null)
 		{
 			_extension = new XMLNode(1, privateName);
 			_extension.attributes["xmlns"] = privateNamespace;
@@ -38,17 +40,18 @@ package org.igniterealtime.xiff.data.privatedata
 			return "query";
 		}
 		
-		public function get privateName():String 
+		public function get privateName():String
 		{
 			return _extension.nodeName;
 		}
 		
-		public function get privateNamespace():String 
+		public function get privateNamespace():String
 		{
 			return _extension.attributes["xmlns"];
 		}
 		
-		public function get payload():IPrivatePayload {
+		public function get payload():IPrivatePayload
+		{
 			return _payload;
 		}
 		
@@ -59,16 +62,18 @@ package org.igniterealtime.xiff.data.privatedata
 			query.attributes.xmlns = "jabber:iq:private";
 			query.appendChild(extension);
 			parentNode.appendChild(query);
-
+			
 			return _serializePayload(extension);
 		}
 		
-		private function _serializePayload(parentNode:XMLNode):Boolean 
+		private function _serializePayload(parentNode:XMLNode):Boolean
 		{
-			if(_payload == null) {
+			if (_payload == null)
+			{
 				return true;
 			}
-			else {
+			else
+			{
 				return _payload.serialize(parentNode);
 			}
 		}
@@ -77,27 +82,31 @@ package org.igniterealtime.xiff.data.privatedata
 		{
 			var payloadNode:XMLNode = node.firstChild;
 			var ns:String = payloadNode.attributes["xmlns"];
-			if(ns == null) {
+			if (ns == null)
+			{
 				return false;
-			}	
+			}
 			
 			_extension = new XMLNode(1, payloadNode.nodeName);
 			_extension.attributes["xmlns"] = ns;
 			
 			var extClass:Class = ExtensionClassRegistry.lookup(ns);
-			if(extClass == null) {
+			if (extClass == null)
+			{
 				return false;
 			}
 			var ext:IPrivatePayload = new extClass();
-			if (ext != null && ext is IPrivatePayload) {
+			if (ext != null && ext is IPrivatePayload)
+			{
 				ext.deserialize(payloadNode);
 				_payload = ext;
 				return true;
 			}
-			else {
+			else
+			{
 				return false;
 			}
 		}
-		
+	
 	}
 }

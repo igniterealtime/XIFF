@@ -13,11 +13,13 @@ package org.igniterealtime.xiff.data.register{
 		
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
-	 * Send an empty IQ.GET_TYPE packet with this extension and the return will either be a conflict, or the fields you will need to fill out.  
-	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in getRequiredFieldNames set on this extension.  
+	 * Send an empty IQ.GET_TYPE packet with this extension and the return will either be a conflict,
+	 * or the fields you will need to fill out.
+	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in 
+	 * getRequiredFieldNames set on this extension.
 	 * Check the result and re-establish the connection with the new account.
 	 *
-	 * @param	parent (Optional) The parent node used to build the XML tree.
+	 * @see http://xmpp.org/extensions/xep-0077.html
 	 */
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
@@ -32,6 +34,10 @@ package org.igniterealtime.xiff.data.register{
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
+		/**
+		 *
+		 * @param	parent (Optional) The parent node used to build the XML tree.
+		 */
 		public function RegisterExtension( parent:XMLNode=null )
 		{
 			super(parent);
@@ -49,14 +55,19 @@ package org.igniterealtime.xiff.data.register{
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
-	     * 
+	     * Performs the registration of this extension into the extension registry.
+	     *
 	     */
 	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(RegisterExtension);
 	    }
 		
+		/**
+		 * 
+		 * @param	parentNode
+		 * @return
+		 */
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
 			if (!exists(getNode().parentNode)) {
@@ -65,6 +76,11 @@ package org.igniterealtime.xiff.data.register{
 			return true;
 		}
 	
+		/**
+		 * 
+		 * @param	node
+		 * @return
+		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{
 			setNode(node);
@@ -94,16 +110,22 @@ package org.igniterealtime.xiff.data.register{
 	
 		}
 	
-		public function get unregister():Boolean 
+		/**
+		 * 
+		 */
+		public function get unregister():Boolean
 		{
 			return exists(myRemoveNode);
 		}
-	
 		public function set unregister(val:Boolean):void
 		{
 			myRemoveNode = replaceTextNode(getNode(), myRemoveNode, "remove", "");
 		}
 	
+		/**
+		 * 
+		 * @return
+		 */
 		public function getRequiredFieldNames():Array
 		{
 			var fields:Array = [];
@@ -116,32 +138,41 @@ package org.igniterealtime.xiff.data.register{
 		}
 	
 	
-		public function get key():String 
-		{ 
+		/**
+		 * 
+		 */
+		public function get key():String
+		{
 			if(myKeyNode && myKeyNode.firstChild)
 				return myKeyNode.firstChild.nodeValue;
 			
-			return null; 
+			return null;
 		}
-	
 		public function set key(val:String):void
 		{
 			myKeyNode = replaceTextNode(getNode(), myKeyNode, "key", val);
 		}
 	
-		public function get instructions():String 
+		/**
+		 * 
+		 */
+		public function get instructions():String
 		{
 			if(myInstructionsNode && myInstructionsNode.firstChild)
 				return myInstructionsNode.firstChild.nodeValue;
 			
 			return null;
 		}
-	
 		public function set instructions(val:String):void
 		{
 			myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
 		}
 	
+		/**
+		 * 
+		 * @param	name
+		 * @return
+		 */
 		public function getField(name:String):String
 		{
 			var node:XMLNode = myFields[name];
@@ -150,85 +181,195 @@ package org.igniterealtime.xiff.data.register{
 				
 			return null;
 		}
-	
+		
+		/**
+		 * 
+		 * @param	name
+		 * @param	val
+		 */
 		public function setField(name:String, val:String):void
 		{
 			myFields[name] = replaceTextNode(getNode(), myFields[name], name, val);
 		}
 	
-		public function get username():String 
-		{ return getField("username"); }
-		public function set username(val:String):void 
-		{ setField("username", val); }
+		/**
+		 * 
+		 */
+		public function get username():String
+		{ 
+			return getField("username");
+		}
+		public function set username(val:String):void
+		{ 
+			setField("username", val); 
+		}
 	
-		public function get nick():String 
-		{ return getField("nick"); }
-		public function set nick(val:String):void 
-		{ setField("nick", val); }
+		/**
+		 * 
+		 */
+		public function get nick():String
+		{ 
+			return getField("nick"); 
+		}
+		public function set nick(val:String):void
+		{ 
+			setField("nick", val); 
+		}
 	
-		public function get password():String 
-		{ return getField("password"); }
-		public function set password(val:String):void 
-		{ setField("password", val); }
+		/**
+		 * 
+		 */
+		public function get password():String
+		{ 
+			return getField("password"); 
+		}
+		public function set password(val:String):void
+		{ 
+			setField("password", val);
+		}
 	
-		public function get first():String 
-		{ return getField("first"); }
-		public function set first(val:String):void 
-		{ setField("first", val); }
+		/**
+		 * 
+		 */
+		public function get first():String
+		{ 
+			return getField("first"); 
+		}
+		public function set first(val:String):void
+		{ 
+			setField("first", val); 
+		}
 	
-		public function get last():String 
-		{ return getField("last"); }
-		public function set last(val:String):void 
-		{ setField("last", val); }
+		/**
+		 * 
+		 */
+		public function get last():String
+		{ 
+			return getField("last"); 
+		}
+		public function set last(val:String):void
+		{ 
+			setField("last", val);
+		}
 	
-		public function get email():String 
-		{ return getField("email"); }
-		public function set email(val:String):void 
-		{ setField("email", val); }
+		/**
+		 * 
+		 */
+		public function get email():String
+		{ 
+			return getField("email");
+		}
+		public function set email(val:String):void
+		{ 
+			setField("email", val); 
+		}
 	
-		public function get address():String 
-		{ return getField("address"); }
-		public function set address(val:String):void 
-		{ setField("address", val); }
+		/**
+		 * 
+		 */
+		public function get address():String
+		{
+			return getField("address");
+		}
+		public function set address(val:String):void
+		{ 
+			setField("address", val); 
+		}
 	
-		public function get city():String 
-		{ return getField("city"); }
-		public function set city(val:String):void 
-		{ setField("city", val); }
+		/**
+		 * 
+		 */
+		public function get city():String
+		{ 
+			return getField("city"); 
+		}
+		public function set city(val:String):void
+		{ 
+			setField("city", val); 
+		}
 	
-		public function get state():String 
-		{ return getField("state"); }
-		public function set state(val:String):void 
-		{ setField("state", val); }
+		/**
+		 * 
+		 */
+		public function get state():String
+		{
+			return getField("state"); 
+		}
+		public function set state(val:String):void
+		{ 
+			setField("state", val); 
+		}
 	
-		public function get zip():String 
-		{ return getField("zip"); }
-		public function set zip(val:String):void 
-		{ setField("zip", val); }
+		/**
+		 * 
+		 */
+		public function get zip():String
+		{ 
+			return getField("zip"); 
+		}
+		public function set zip(val:String):void
+		{ 
+			setField("zip", val); 
+		}
 	
-		public function get phone():String 
-		{ return getField("phone"); }
-		public function set phone(val:String):void 
-		{ setField("phone", val); }
+		/**
+		 * 
+		 */
+		public function get phone():String
+		{ 
+			return getField("phone"); 
+		}
+		public function set phone(val:String):void
+		{ 
+			setField("phone", val); 
+		}
 	
-		public function get url():String 
-		{ return getField("url"); }
-		public function set url(val:String):void 
-		{ setField("url", val); }
+		/**
+		 * 
+		 */
+		public function get url():String
+		{ 
+			return getField("url");
+		}
+		public function set url(val:String):void
+		{ 
+			setField("url", val); 
+		}
 	
-		public function get date():String 
-		{ return getField("date"); }
-		public function set date(val:String):void 
-		{ setField("date", val); }
+		/**
+		 * 
+		 */
+		public function get date():String
+		{ 
+			return getField("date"); 
+		}
+		public function set date(val:String):void
+		{ 
+			setField("date", val); 
+		}
 	
-		public function get misc():String 
-		{ return getField("misc"); }
-		public function set misc(val:String):void 
-		{ setField("misc", val); }
+		/**
+		 * 
+		 */
+		public function get misc():String
+		{ 
+			return getField("misc"); 
+		}
+		public function set misc(val:String):void
+		{ 
+			setField("misc", val); 
+		}
 	
-		public function get text():String 
-		{ return getField("text"); }
-		public function set text(val:String):void 
-		{ setField("text", val); }
+		/**
+		 * 
+		 */
+		public function get text():String
+		{ 
+			return getField("text"); 
+		}
+		public function set text(val:String):void
+		{ 
+			setField("text", val);
+		}
 	}
 }
