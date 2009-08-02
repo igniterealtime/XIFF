@@ -4,7 +4,7 @@
 package org.igniterealtime.xiff.data
 {
 
-	 
+	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
@@ -12,16 +12,16 @@ package org.igniterealtime.xiff.data
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
 	 */
-	public class Presence extends XMPPStanza implements ISerializable 
+	public class Presence extends XMPPStanza implements ISerializable
 	{
 		// Static constants for specific type strings
-		public static const UNAVAILABLE_TYPE:String = "unavailable";
+		public static const ERROR_TYPE:String = "error";
 		public static const PROBE_TYPE:String = "probe";
 		public static const SUBSCRIBE_TYPE:String = "subscribe";
-		public static const UNSUBSCRIBE_TYPE:String = "unsubscribe";
 		public static const SUBSCRIBED_TYPE:String = "subscribed";
+		public static const UNAVAILABLE_TYPE:String = "unavailable";
+		public static const UNSUBSCRIBE_TYPE:String = "unsubscribe";
 		public static const UNSUBSCRIBED_TYPE:String = "unsubscribed";
-		public static const ERROR_TYPE:String = "error";
 		
 		// Static constants for show values
 		public static const SHOW_AWAY:String = "away";
@@ -35,16 +35,16 @@ package org.igniterealtime.xiff.data
 		private var myPriorityNode:XMLNode;
 	
 		/**
-		 * 
+		 *
 		 * @param	recipient The recipient of the presence, usually in the form of a JID.
 		 * @param	sender The sender of the presence, usually in the form of a JID.
-		 * @param	presenceType The type of presence as a string. There are predefined static variables for 
-		 * @param	showVal What to show for this presence (away, online, etc.) There are predefined static variables for 
+		 * @param	presenceType The type of presence as a string. There are predefined static variables for
+		 * @param	showVal What to show for this presence (away, online, etc.) There are predefined static variables for
 		 * @param	statusVal The status; usually used for the "away message."
 		 * @param	priorityVal The priority of this presence; usually on a scale of 1-5.
 		 */
-		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 ) 
-		{		
+		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:Number=0 )
+		{
 			super( recipient, sender, presenceType, null, "presence" );
 			
 			show = showVal;
@@ -57,7 +57,7 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @return An indication as to whether serialization was successful
 		 */
-		override public function serialize( parentNode:XMLNode ):Boolean 
+		override public function serialize( parentNode:XMLNode ):Boolean
 		{
 			return super.serialize( parentNode );
 		}
@@ -68,15 +68,15 @@ package org.igniterealtime.xiff.data
 		 * @param	xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
 		 */
-		override public function deserialize( xmlNode:XMLNode ):Boolean 
-		{	
+		override public function deserialize( xmlNode:XMLNode ):Boolean
+		{
 			var isDeserialized:Boolean = super.deserialize( xmlNode );
 			
-			if (isDeserialized) { 
+			if (isDeserialized) {
 				var children:Array = xmlNode.childNodes;
-				for( var i:String in children ) 
+				for( var i:String in children )
 				{
-					switch( children[i].nodeName ) 
+					switch( children[i].nodeName )
 					{
 						case "show":
 							myShowNode = children[i];
@@ -106,14 +106,14 @@ package org.igniterealtime.xiff.data
 		 * </ul>
 		 *
 		 */
-		public function get show():String 
+		public function get show():String
 		{
 			if (!myShowNode || !exists(myShowNode.firstChild)) return null;
 			
 			return myShowNode.firstChild.nodeValue;
 		}
 		
-		public function set show( showVal:String ):void 
+		public function set show( showVal:String ):void
 		{
 			if(showVal != SHOW_AWAY
 			&& showVal != SHOW_CHAT
@@ -140,7 +140,7 @@ package org.igniterealtime.xiff.data
 			return myStatusNode.firstChild.nodeValue;
 		}
 		
-		public function set status( statusVal:String ):void 
+		public function set status( statusVal:String ):void
 		{
 			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", statusVal);
 		}
@@ -149,7 +149,7 @@ package org.igniterealtime.xiff.data
 		 * The priority of the presence, usually on a scale of 1-5.
 		 *
 		 */
-		public function get priority():Number 
+		public function get priority():Number
 		{
 			if (myPriorityNode == null) return NaN;
 			var p:Number = Number(myPriorityNode.firstChild.nodeValue);
@@ -161,7 +161,7 @@ package org.igniterealtime.xiff.data
 			}
 		}
 		
-		public function set priority( priorityVal:Number ):void 
+		public function set priority( priorityVal:Number ):void
 		{
 			myPriorityNode = replaceTextNode(getNode(), myPriorityNode, "priority", priorityVal.toString());
 		}

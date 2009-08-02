@@ -10,10 +10,15 @@ package org.igniterealtime.xiff.data
 	
 	/**
 	 * This is a base class for all data extensions.
-	 * @param	parent The parent node that this extension should be appended to
+	 * @see http://xmpp.org/registrar/namespaces.html
+	 * @see http://xmpp.org/extensions/
 	 */
 	public class Extension extends XMLStanza
 	{
+		/**
+		 *
+		 * @param	parent The parent node that this extension should be appended to
+		 */
 		public function Extension(parent:XMLNode=null)
 		{
 			super();

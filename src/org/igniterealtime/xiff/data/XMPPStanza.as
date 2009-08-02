@@ -11,6 +11,8 @@ package org.igniterealtime.xiff.data
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
+	 *
+	 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
 	{
@@ -27,7 +29,6 @@ package org.igniterealtime.xiff.data
 		
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
-
 	
 		private var myErrorNode:XMLNode;
 		private var myErrorConditionNode:XMLNode;
@@ -36,6 +37,15 @@ package org.igniterealtime.xiff.data
 		private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
+		/**
+		 * The following four first attributes are common to message, presence, and IQ stanzas.
+		 * The fifth, xml:lang, is not included here.
+		 * @param	recipient	to
+		 * @param	sender		from
+		 * @param	theType		type
+		 * @param	theID		id
+		 * @param	nName
+		 */
 		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nName:String )
 		{
 			super();
@@ -153,7 +163,10 @@ package org.igniterealtime.xiff.data
 		public function set to( recipient:EscapedJID ):void
 		{
 			delete getNode().attributes.to;
-			if (exists(recipient)) { getNode().attributes.to = recipient.toString(); }
+			if (exists(recipient))
+			{
+				getNode().attributes.to = recipient.toString();
+			}
 		}
 		
 		/**
@@ -164,12 +177,14 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get from():EscapedJID
 		{
+			// .@from.toString();
 			var jid:String = getNode().attributes.from;
 			return jid ? new EscapedJID(jid) : null;
 		}
 		
 		public function set from( sender:EscapedJID ):void
 		{
+			// .@from = sender.toString();
 			delete getNode().attributes.from;
 			if (exists(sender)) { getNode().attributes.from = sender.toString(); }
 		}
@@ -181,31 +196,30 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <b>IQ</b>
 		 * <ul>
-		 * <li>IQ.SET_TYPE</li>
+		 * <li>IQ.ERROR_TYPE</li>
 		 * <li>IQ.GET_TYPE</li>
 		 * <li>IQ.RESULT_TYPE</li>
-		 * <li>IQ.ERROR_TYPE</li>
+		 * <li>IQ.SET_TYPE</li>
 		 * </ul>
 		 *
 		 * <b>Presence</b>
 		 * <ul>
-		 * <li>Presence.AVAILABLE_TYPE</li>
-		 * <li>Presence.UNAVAILABLE_TYPE</li>
+		 * <li>Presence.ERROR_TYPE</li>
 		 * <li>Presence.PROBE_TYPE</li>
 		 * <li>Presence.SUBSCRIBE_TYPE</li>
-		 * <li>Presence.UNSUBSCRIBE_TYPE</li>
 		 * <li>Presence.SUBSCRIBED_TYPE</li>
+		 * <li>Presence.UNAVAILABLE_TYPE</li>
+		 * <li>Presence.UNSUBSCRIBE_TYPE</li>
 		 * <li>Presence.UNSUBSCRIBED_TYPE</li>
-		 * <li>Presence.ERROR_TYPE</li>
 		 * </ul>
 		 *
 		 * <b>Message</b>
 		 * <ul>
-		 * <li>Message.NORMAL_TYPE</li>
 		 * <li>Message.CHAT_TYPE</li>
+		 * <li>Message.ERROR_TYPE</li>
 		 * <li>Message.GROUPCHAT_TYPE</li>
 		 * <li>Message.HEADLINE_TYPE</li>
-		 * <li>Message.ERROR_TYPE</li>
+		 * <li>Message.NORMAL_TYPE</li>
 		 * </ul>
 		 *
 		 */

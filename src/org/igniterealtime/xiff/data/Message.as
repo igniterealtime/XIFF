@@ -12,26 +12,17 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
 	
 	/**
-	 * A class for abstraction and encapsulation of message data.
-	 *
-	 * @param	recipient The JID of the message recipient
-	 * @param	sender The JID of the message sender - the server should report an error if this is falsified
-	 * @param	msgID The message ID
-	 * @param	msgBody The message body in plain-text format
-	 * @param	msgHTMLBody The message body in XHTML format
-	 * @param	msgType The message type
-	 * @param	msgSubject (Optional) The message subject
-	 * @param	chatState (Optional) The chat state
+	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
 	public class Message extends XMPPStanza implements ISerializable
 	{
 		
 		// Static variables for specific type strings
-		public static const NORMAL_TYPE:String = "normal";
 		public static const CHAT_TYPE:String = "chat";
+		public static const ERROR_TYPE:String = "error";
 		public static const GROUPCHAT_TYPE:String = "groupchat";
 		public static const HEADLINE_TYPE:String = "headline";
-		public static const ERROR_TYPE:String = "error";
+		public static const NORMAL_TYPE:String = "normal";
 	
 		// Private references to nodes within our XML
 		private var myBodyNode:XMLNode;
@@ -42,7 +33,19 @@ package org.igniterealtime.xiff.data
 			
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
-	
+		
+		/**
+		 * A class for abstraction and encapsulation of message data.
+		 *
+		 * @param	recipient The JID of the message recipient
+		 * @param	sender The JID of the message sender - the server should report an error if this is falsified
+		 * @param	msgID The message ID
+		 * @param	msgBody The message body in plain-text format
+		 * @param	msgHTMLBody The message body in XHTML format
+		 * @param	msgType The message type
+		 * @param	msgSubject (Optional) The message subject
+		 * @param	chatState (Optional) The chat state
+		 */
 		public function Message( recipient:EscapedJID = null, msgID:String = null, msgBody:String = null, msgHTMLBody:String = null, msgType:String = null, msgSubject:String = null, chatState:String = null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
@@ -287,8 +290,12 @@ package org.igniterealtime.xiff.data
 				throw new Error("Invalid state value: " + value + " for ChatState");
 			}
 			
+			// XML.name().uri == ChatStateExtension.NS
+			// XML.setName(value);
+			
 			if (myStateNode && (value == null || value == ""))
 			{
+				// XML.delete
 				myStateNode.removeNode();
 				myStateNode = null;
 			}

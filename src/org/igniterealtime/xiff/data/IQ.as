@@ -20,10 +20,10 @@ package org.igniterealtime.xiff.data
 		private var myQueryFields:Array;
 		
 		// Static variables for specific type strings
-		public static const SET_TYPE:String = "set";
+		public static const ERROR_TYPE:String = "error";
 		public static const GET_TYPE:String = "get";
 		public static const RESULT_TYPE:String = "result";
-		public static const ERROR_TYPE:String = "error";
+		public static const SET_TYPE:String = "set";
 		
 		/**
 		 * A class for abstraction and encapsulation of IQ (info-query) data.
