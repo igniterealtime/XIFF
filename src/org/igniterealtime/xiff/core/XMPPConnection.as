@@ -291,12 +291,13 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * Sends data to the server. If the data to send cannot be serialized properly, this method throws a <code>SerializeException</code>.
+		 * Sends data to the server. If the data to send cannot be serialized properly, 
+		 * this method throws a <code>SerializeException</code>.
 		 *
 		 * @param	o The data to send. This must be an instance of a class that implements the ISerializable interface.
 		 * @see	org.igniterealtime.xiff.data.ISerializable
-		 * @example	The following example sends a basic chat message to the user with the JID "sideshowbobspringfieldpenitentiary.gov".<br />
-		 * <pre>var msg:Message = new Message( "sideshowbobspringfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
+		 * @example	The following example sends a basic chat message to the user with the JID "sideshowbob@springfieldpenitentiary.gov".<br />
+		 * <pre>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.", "<b>Hi Bob.</b>", Message.CHAT_TYPE );
 		 * myXMPPConnection.send( msg );</pre>
 		 */
 		public function send( o:XMPPStanza ):void
