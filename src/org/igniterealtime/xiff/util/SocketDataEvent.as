@@ -11,14 +11,12 @@ package org.igniterealtime.xiff.util
 	public class SocketDataEvent extends Event
 	{
 		/**
-		 *
-		 * @default
+		 * 
 		 */
 		public static const SOCKET_DATA_RECEIVED:String = "socketDataReceived";
 
 		/**
-		 *
-		 * @default
+		 * Data of this event, if any
 		 */
 		private var _data:String;
 
@@ -31,18 +29,12 @@ package org.igniterealtime.xiff.util
 		}
 
 		/**
-		 *
-		 * @return
+		 * Data of this event, if any
 		 */
 		public function get data():String
 		{
 			return _data;
 		}
-
-		/**
-		 *
-		 * @param s
-		 */
 		public function set data( s:String ):void
 		{
 			_data = s;

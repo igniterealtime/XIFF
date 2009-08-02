@@ -7,16 +7,15 @@ package org.igniterealtime.xiff.util
 	import flash.net.Socket;
 
 	/**
-	 *
+	 * Utility to make the use of Socket easier.
 	 */
 	public class SocketConn extends Socket
 	{
 
 		/**
-		 *
-		 * @default
+		 * Seems to be unused, but why is it here?
 		 */
-		private var input:String;
+		private var input:String = "";
 
 		/**
 		 *
@@ -27,7 +26,6 @@ package org.igniterealtime.xiff.util
 		{
 			super( host, port );
 			addEventListener( ProgressEvent.SOCKET_DATA, onRead );
-			input = '';
 		}
 
 		/**
