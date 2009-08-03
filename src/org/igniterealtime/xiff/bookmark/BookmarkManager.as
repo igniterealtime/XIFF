@@ -4,7 +4,7 @@
 package org.igniterealtime.xiff.bookmark
 {
 	import flash.events.EventDispatcher;
-	
+
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.ISerializable;
@@ -15,162 +15,190 @@ package org.igniterealtime.xiff.bookmark
 	import org.igniterealtime.xiff.privatedata.PrivateDataManager;
 	import org.igniterealtime.xiff.util.Callback;
 
-	[Event("GroupChatBookmarkChanged")]
-	
+	[Event( "GroupChatBookmarkChanged" )]
 	public class BookmarkManager extends EventDispatcher
 	{
 		private static var bookmarkManagerConstructed:Boolean = bookmarkManagerStaticConstructor();
-		
-		private static function bookmarkManagerStaticConstructor():Boolean
-		{	
-			ExtensionClassRegistry.register( BookmarkPrivatePayload );
-			return true;
-		}
-		
-		private var _privateDataManager:PrivateDataManager;
+
 		private var _bookmarks:BookmarkPrivatePayload;
-		
+
+		private var _privateDataManager:PrivateDataManager;
+
 		/**
-		 * 
+		 *
 		 * @param	privateDataManager
 		 */
-		public function BookmarkManager(privateDataManager:PrivateDataManager)
+		public function BookmarkManager( privateDataManager:PrivateDataManager )
 		{
 			_privateDataManager = privateDataManager;
 		}
-		
-		public function fetchBookmarks():void 
+
+		private static function bookmarkManagerStaticConstructor():Boolean
 		{
-			if (!_bookmarks) 
+			ExtensionClassRegistry.register( BookmarkPrivatePayload );
+			return true;
+		}
+
+		public function addGroupChatBookmark( serverBookmark:GroupChatBookmark ):void
+		{
+			if ( !_bookmarks )
 			{
-				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarks"]));
+				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
+													new Callback( this, this[ "_processBookmarksAdd" ],
+																  serverBookmark ));
 			}
-			else 
+			else
 			{
-				dispatchEvent(new BookmarkRetrievedEvent());
+				_addBookmark( serverBookmark );
 			}
 		}
-		
-		public function addGroupChatBookmark(serverBookmark:GroupChatBookmark):void 
+
+		public function get bookmarks():BookmarkPrivatePayload
 		{
-			if(!_bookmarks) {
-				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksAdd"], serverBookmark));
+			return _bookmarks;
+		}
+
+		public function fetchBookmarks():void
+		{
+			if ( !_bookmarks )
+			{
+				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
+													new Callback( this, this[ "_processBookmarks" ]));
 			}
-			else {
-				_addBookmark(serverBookmark);
+			else
+			{
+				dispatchEvent( new BookmarkRetrievedEvent());
 			}
 		}
-		
-		public function isGroupChatBookmarked(jid:UnescapedJID):Boolean 
+
+		public function getGroupChatBookmark( jid:UnescapedJID ):GroupChatBookmark
 		{
-			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.unescaped.equals(jid, false)) {
+			for each ( var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks )
+			{
+				if ( bookmark.jid.unescaped.equals( jid, false ))
+				{
+					return bookmark;
+				}
+			}
+			return null;
+		}
+
+		public function isGroupChatBookmarked( jid:UnescapedJID ):Boolean
+		{
+			for each ( var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks )
+			{
+				if ( bookmark.jid.unescaped.equals( jid, false ))
+				{
 					return true;
 				}
 			}
 			return false;
 		}
-		
-		public function getGroupChatBookmark(jid:UnescapedJID):GroupChatBookmark {
-			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.unescaped.equals(jid, false)) {
-					return bookmark;
-				}
-			}	
-			return null;		
-		}
-		
-		public function removeGroupChatBookmark(jid:UnescapedJID):void 
+
+		public function removeGroupChatBookmark( jid:UnescapedJID ):void
 		{
-			if(!_bookmarks) {
-				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksRemove"], jid));
+			if ( !_bookmarks )
+			{
+				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
+													new Callback( this, this[ "_processBookmarksRemove" ],
+																  jid ));
 			}
-			else {
-				_removeBookmark(jid);				
+			else
+			{
+				_removeBookmark( jid );
 			}
 		}
-		
-		public function setAutoJoin(jid:UnescapedJID, state:Boolean):void 
+
+		public function setAutoJoin( jid:UnescapedJID, state:Boolean ):void
 		{
-			if(!_bookmarks) {
-				_privateDataManager.getPrivateData("storage", "storage:bookmarks", new Callback(this, this["_processBookmarksSetAuto"], jid, state));
-			}		
-			else {
-				_setAutoJoin(jid, state);
-			}	
+			if ( !_bookmarks )
+			{
+				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
+													new Callback( this, this[ "_processBookmarksSetAuto" ],
+																  jid, state ));
+			}
+			else
+			{
+				_setAutoJoin( jid, state );
+			}
 		}
-		
-		public function get bookmarks():BookmarkPrivatePayload {
-			return _bookmarks;
-		}
-		
-		private function _processBookmarks(bookmarksIq:XMPPStanza):void 
-		{
-			var privateData:PrivateDataExtension = bookmarksIq.getAllExtensionsByNS("jabber:iq:private")[0];
-			_bookmarks = BookmarkPrivatePayload(privateData.payload);
-			dispatchEvent(new BookmarkRetrievedEvent());
-		}
-		
-		private function _processBookmarksAdd(bookmark:ISerializable, bookmarksIq:XMPPStanza):void 
-		{
-			_processBookmarks(bookmarksIq);
-			_addBookmark(bookmark);
-		}
-		
-		private function _processBookmarksRemove(jid:UnescapedJID, bookmarksIq:XMPPStanza):void 
-		{
-			_processBookmarks(bookmarksIq);
-			_removeBookmark(jid);
-		}
-		
-		private function _processBookmarksSetAuto(jid:UnescapedJID, state:Boolean, bookmarksIq:XMPPStanza):void 
-		{
-			_processBookmarks(bookmarksIq);
-			_setAutoJoin(jid, state);
-		}
-		
-		private function _addBookmark(bookmark:ISerializable):void 
+
+		private function _addBookmark( bookmark:ISerializable ):void
 		{
 			var groupChats:Array = _bookmarks.groupChatBookmarks;
 			var urls:Array = _bookmarks.urlBookmarks;
-			
-			if(bookmark is GroupChatBookmark) {
-				groupChats.push(bookmark);
+
+			if ( bookmark is GroupChatBookmark )
+			{
+				groupChats.push( bookmark );
 			}
-			else if(bookmark is UrlBookmark) {
-				urls.push(bookmark);
+			else if ( bookmark is UrlBookmark )
+			{
+				urls.push( bookmark );
 			}
-			
-			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload(groupChats, urls);
-			_privateDataManager.setPrivateData("storage", "storage:bookmarks", payload);
+
+			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload( groupChats,
+																			 urls );
+			_privateDataManager.setPrivateData( "storage", "storage:bookmarks", payload );
 			_bookmarks = payload;
-			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_ADDED, bookmark));
+			dispatchEvent( new BookmarkChangedEvent( BookmarkChangedEvent.GROUPCHAT_BOOKMARK_ADDED,
+													 bookmark ));
 		}
-		
-		private function _removeBookmark(jid:UnescapedJID):void 
+
+		private function _processBookmarks( bookmarksIq:XMPPStanza ):void
 		{
-			var removedBookmark:GroupChatBookmark = _bookmarks.removeGroupChatBookmark(jid);
+			var privateData:PrivateDataExtension = bookmarksIq.getAllExtensionsByNS( "jabber:iq:private" )[ 0 ];
+			_bookmarks = BookmarkPrivatePayload( privateData.payload );
+			dispatchEvent( new BookmarkRetrievedEvent());
+		}
+
+		private function _processBookmarksAdd( bookmark:ISerializable, bookmarksIq:XMPPStanza ):void
+		{
+			_processBookmarks( bookmarksIq );
+			_addBookmark( bookmark );
+		}
+
+		private function _processBookmarksRemove( jid:UnescapedJID, bookmarksIq:XMPPStanza ):void
+		{
+			_processBookmarks( bookmarksIq );
+			_removeBookmark( jid );
+		}
+
+		private function _processBookmarksSetAuto( jid:UnescapedJID, state:Boolean,
+												   bookmarksIq:XMPPStanza ):void
+		{
+			_processBookmarks( bookmarksIq );
+			_setAutoJoin( jid, state );
+		}
+
+		private function _removeBookmark( jid:UnescapedJID ):void
+		{
+			var removedBookmark:GroupChatBookmark = _bookmarks.removeGroupChatBookmark( jid );
 			_updateBookmarks();
-			dispatchEvent(new BookmarkChangedEvent(BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED, removedBookmark));		
+			dispatchEvent( new BookmarkChangedEvent( BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED,
+													 removedBookmark ));
 		}
-		
-		private function _setAutoJoin(jid:UnescapedJID, state:Boolean):void 
+
+		private function _setAutoJoin( jid:UnescapedJID, state:Boolean ):void
 		{
-			for each (var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks) {
-				if (bookmark.jid.unescaped.equals(jid, false)) {
+			for each ( var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks )
+			{
+				if ( bookmark.jid.unescaped.equals( jid, false ))
+				{
 					bookmark.autoJoin = state;
 				}
-			}	
-			_updateBookmarks();						
+			}
+			_updateBookmarks();
 		}
-		
-		private function _updateBookmarks():void 
+
+		private function _updateBookmarks():void
 		{
 			var groupChats:Array = _bookmarks.groupChatBookmarks;
 			var urls:Array = _bookmarks.urlBookmarks;
-			
-			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload(groupChats, urls);
-			_privateDataManager.setPrivateData("storage", "storage:bookmarks", payload);			
+
+			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload( groupChats,
+																			 urls );
+			_privateDataManager.setPrivateData( "storage", "storage:bookmarks", payload );
 		}
 	}
 }

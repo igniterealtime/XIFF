@@ -360,8 +360,8 @@ package org.igniterealtime.xiff.im
 				enableAutoUpdate();
 				
 				// Fire Roster Loaded Event
-				var ev: RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
-				dispatchEvent(ev);
+				var rosterEvent:RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
+				dispatchEvent(rosterEvent);
 			}
 			catch (e:Error)
 			{
@@ -466,30 +466,29 @@ package org.igniterealtime.xiff.im
 			}
 		}
 		
+		/**
+		 * Dispathing <code>RosterEvent</code> based on the types of the <code>Presence</code>.
+		 * @param	presenceArray	A pile of presences received at one time
+		 */
 		private function handlePresences( presenceArray:Array):void
 		{
 			for each(var aPresence:Presence in presenceArray)
 			{
 				var type:String = aPresence.type ? aPresence.type.toLowerCase() : null;
+				var rosterEvent:RosterEvent = null;
 				
 				switch( type )
 				{
 					case Presence.SUBSCRIBE_TYPE:
-						var sReq:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
-						sReq.jid = aPresence.from.unescaped;
-						dispatchEvent(sReq);
+						rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
 						break;
 						
 					case Presence.UNSUBSCRIBED_TYPE:
-						var sDeny:RosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
-						sDeny.jid = aPresence.from.unescaped;
-						dispatchEvent(sDeny);
+						rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
 						break;
 					
 					case Presence.UNAVAILABLE_TYPE:
-						var unavailEv:RosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
-						unavailEv.jid = aPresence.from.unescaped;
-						dispatchEvent(unavailEv);
+						rosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
 	
 						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from.unescaped, false);
 						if(!unavailableItem) return;
@@ -499,12 +498,8 @@ package org.igniterealtime.xiff.im
 					
 					// null means available
 					default:
-						var availEv:RosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-						// from can sometimes not be set
-						if(aPresence.from)
-							availEv.jid = aPresence.from.unescaped;
-						availEv.data = aPresence;
-						dispatchEvent(availEv);
+						rosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
+						rosterEvent.data = aPresence;
 						
 						// Change the item on the roster
 						var availableItem:RosterItemVO;
@@ -515,6 +510,16 @@ package org.igniterealtime.xiff.im
 						updateRosterItemPresence( availableItem, aPresence );
 						
 						break;
+				}
+				
+				if (rosterEvent != null)
+				{
+					// from can sometimes not be set
+					if (aPresence.from)
+					{
+						rosterEvent.jid = aPresence.from.unescaped;
+					}
+					dispatchEvent(rosterEvent);
 				}
 			}
 		}

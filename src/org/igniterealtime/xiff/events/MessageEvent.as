@@ -4,34 +4,41 @@
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
+
 	import org.igniterealtime.xiff.data.Message;
-	
+
 	public class MessageEvent extends Event
 	{
 		public static const MESSAGE:String = "message";
+
 		private var _data:Message;
-		
+
 		public function MessageEvent()
 		{
-			super(MessageEvent.MESSAGE, false, false);
+			super( MessageEvent.MESSAGE, false, false );
 		}
+
 		override public function clone():Event
 		{
 			var event:MessageEvent = new MessageEvent();
 			event.data = _data;
 			return event;
 		}
-		override public function toString():String
-		{
-			return '[MessageEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' + cancelable + ' eventPhase=' + eventPhase + ']';
-		}
+
 		public function get data():Message
 		{
 			return _data;
 		}
-		public function set data(m:Message):void
+
+		public function set data( m:Message ):void
 		{
 			_data = m;
+		}
+
+		override public function toString():String
+		{
+			return '[MessageEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' +
+				cancelable + ' eventPhase=' + eventPhase + ']';
 		}
 	}
 }
