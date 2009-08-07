@@ -28,6 +28,12 @@ package org.igniterealtime.xiff.data.im
       jid = newJID;
     }
 
+	/**
+	 * Returns an Roster item value object if it exists or the "create" parameter is set to <code>true</code>.
+	 * @param	jid
+	 * @param	create
+	 * @return
+	 */
     public static function get(jid:UnescapedJID, create:Boolean):RosterItemVO
     {
       var bareJID:String = jid.bareJID;
@@ -88,7 +94,7 @@ package org.igniterealtime.xiff.data.im
     [Bindable]
       public function get askType():String
     {
-      return _askType;	
+      return _askType;
     }
 
     public function set status(newStatus:String):void
@@ -167,7 +173,7 @@ package org.igniterealtime.xiff.data.im
 
     [Bindable(event=changeAskType)]
       [Bindable(event=changeSubscription)]
-      public function get pending():Boolean 
+      public function get pending():Boolean
 		{
         return askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM);
       }

@@ -35,8 +35,7 @@ package org.igniterealtime.xiff.vcard
 		 * Flush the vcard cache every 6 hours
 		 * @default
 		 */
-		private static var cacheFlushTimer:Timer = new Timer( 6 * 60 * 60 * 1000,
-															  0 );
+		private static var cacheFlushTimer:Timer = new Timer( 6 * 60 * 60 * 1000, 0 );
 
 		/**
 		 *
@@ -246,19 +245,15 @@ package org.igniterealtime.xiff.vcard
 		 *
 		 * @default
 		 */
-		private var _loader:Loader;
-
-		/**
-		 *
-		 * @default
-		 */
 		private var contact:RosterItemVO;
 
 		/**
-		 *
+		 * Seems to be the way a vcard is requested and then later referred to:
+		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
+		 * vCard.addEventListener(VCardEvent.LOADED, onVCard);</code>
 		 * @param con
 		 * @param user
-		 * @return
+		 * @return Reference to the VCard which will be filled once the loaded event occurs.
 		 */
 		public static function getVCard( con:XMPPConnection, user:RosterItemVO ):VCard
 		{
@@ -351,8 +346,8 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
-		 * @return
+		 * Get the byte array to be used with a Loader.loadBytes or similar.
+		 * @return Avatar bytes if any
 		 */
 		public function get avatar():ByteArray
 		{
@@ -387,7 +382,6 @@ package org.igniterealtime.xiff.vcard
 								var value:String = sChild.childNodes[ 0 ].nodeValue;
 								if ( value.length > 0 )
 								{
-									_loader = new Loader();
 									var decoder:Base64Decoder = new Base64Decoder();
 									decoder.decode( value );
 									_imageBytes = decoder.flush();
