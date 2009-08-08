@@ -89,14 +89,19 @@ package org.igniterealtime.xiff.data.whiteboard
 			var lastSeg:* = null;
 			var p:String = '';
 			var segs:Array = segments;
+			var len:uint = segs.length;
 	
-			for (var i:int=0; i < segs.length; ++i) {
+			for (var i:int = 0; i < len; ++i)
+			{
 				var seg:* = segs[i];
 	
 				// Serialize the compact form (don't repeat command ids, remove extra spaces)
-				if (lastSeg.to.x != seg.from.x && lastSeg.to.y != seg.from.y) {
+				if (lastSeg.to.x != seg.from.x && lastSeg.to.y != seg.from.y)
+				{
 					p += 'M' + seg.from.x + ' ' + seg.from.y + 'l';
-				} else {
+				} 
+				else 
+				{
 					p += ' ';
 				}
 	
@@ -125,9 +130,12 @@ package org.igniterealtime.xiff.data.whiteboard
 			seg.to.x = Math.round(seg.to.x);
 			seg.to.y = Math.round(seg.to.y);
 	
-			if (mySegments.addItem) {
+			if (mySegments.addItem)
+			{
 				mySegments.addItem(seg);
-			} else {
+			} 
+			else 
+			{
 				mySegments.push(seg);
 			}
 	        return seg;
@@ -180,7 +188,9 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 		private static function indexOfNextCommand(str:String):Number
 		{
-			for (var i:int=0; i < str.length; ++i) {
+			var len:uint = str.length;
+			for (var i:int = 0; i < len; ++i)
+			{
 				if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z' ||
 					str.charAt(i) >= 'a' && str.charAt(i) <= 'z')
 				{

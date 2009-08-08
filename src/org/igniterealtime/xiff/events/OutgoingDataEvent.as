@@ -4,6 +4,7 @@
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
+	import flash.utils.ByteArray;
 	import flash.xml.XMLDocument;
 
 	public class OutgoingDataEvent extends Event
@@ -11,7 +12,7 @@ package org.igniterealtime.xiff.events
 
 		public static const OUTGOING_DATA:String = "outgoingData";
 
-		private var _data:*;
+		private var _data:ByteArray;
 
 		public function OutgoingDataEvent()
 		{
@@ -25,12 +26,12 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
-		public function get data():*
+		public function get data():ByteArray
 		{
 			return _data;
 		}
 
-		public function set data( d:* ):void
+		public function set data( d:ByteArray ):void
 		{
 			_data = d;
 		}

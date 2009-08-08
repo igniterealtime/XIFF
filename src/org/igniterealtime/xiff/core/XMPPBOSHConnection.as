@@ -4,6 +4,7 @@
 package org.igniterealtime.xiff.core
 {
 	import flash.events.TimerEvent;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
@@ -265,8 +266,11 @@ package org.igniterealtime.xiff.core
 			xmlData.parseXML( rawXML );
 			var bodyNode:XMLNode = xmlData.firstChild;
 
+			var byteData:ByteArray = new ByteArray();
+			byteData.writeUTFBytes(xmlData.toString());
+			
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
-			incomingEvent.data = xmlData;
+			incomingEvent.data = byteData;
 			dispatchEvent( incomingEvent );
 
 			if ( streamRestarted && !bodyNode.hasChildNodes())
@@ -436,9 +440,10 @@ package org.igniterealtime.xiff.core
 
 			request.send( data );
 
-			
+			var byteData:ByteArray = new ByteArray();
+			byteData.writeUTFBytes(data.toString());
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			event.data = data;
+			event.data = byteData;
 			dispatchEvent( event );
 
 			if ( isPoll )

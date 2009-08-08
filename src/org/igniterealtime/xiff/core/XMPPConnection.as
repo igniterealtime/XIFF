@@ -300,7 +300,7 @@ package org.igniterealtime.xiff.core
 		{
 			if ( isActive() )
 			{
-				sendXML( closingStreamTag );
+				sendXML( closingStreamTag ); // String
 				if (socket)
 				{
 					socket.close();
@@ -345,7 +345,7 @@ package org.igniterealtime.xiff.core
 
 				if (o.serialize(root))
 				{
-					sendXML( root.firstChild );
+					sendXML( root.firstChild ); // XMLNode
 				}
 				else
 				{
@@ -361,7 +361,7 @@ package org.igniterealtime.xiff.core
 		{
 			if ( isActive() )
 			{
-				sendXML("< />");
+				sendXML("< />"); // String
 			}
 		}
 
@@ -727,7 +727,7 @@ package org.igniterealtime.xiff.core
 		{
 			// TODO: Build a proper extension which takes care XML building.
 			var ask:XML = <compress xmlns="http://jabber.org/protocol/compress"><method>zlib</method></compress>;
-			sendXML(ask);
+			sendXML(ask); // XML
 
 		}
 
@@ -906,6 +906,9 @@ package org.igniterealtime.xiff.core
 			var data:String = bytedata.readUTFBytes(bytedata.length);
 
 			var rawXML:String = _incompleteRawXML + data;
+			
+			var rawData:ByteArray = new ByteArray();
+			rawData.writeUTFBytes(rawXML);
 
 			logger.info("INCOMING: {0}", rawXML);
 			
@@ -963,8 +966,9 @@ package org.igniterealtime.xiff.core
 			if (isComplete)
 			{
 				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
-				incomingEvent.data = xmlData;
+				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );
+				
 				var len:uint = xmlData.childNodes.length;
 				for (var i:int = 0; i < len; ++i)
 				{
@@ -992,7 +996,7 @@ package org.igniterealtime.xiff.core
 		protected function socketConnected(event:Event):void
 		{
 			active = true;
-			sendXML( openingStreamTag );
+			sendXML( openingStreamTag ); // String
 			var connectionEvent:ConnectionSuccessEvent = new ConnectionSuccessEvent();
 			dispatchEvent( connectionEvent );
 		}
@@ -1037,6 +1041,8 @@ package org.igniterealtime.xiff.core
 		protected function sendXML( someData:* ):void
 		{
 			logger.info("OUTGOING: {0}", someData);
+			
+			trace("sendXML. someData type: " + (typeof someData));
 
 			var bytedata:ByteArray = new ByteArray();
 			bytedata.writeUTFBytes(someData);
@@ -1053,7 +1059,7 @@ package org.igniterealtime.xiff.core
 			_outgoingBytes += bytedata.length;
 
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			event.data = someData;
+			event.data = bytedata;
 			dispatchEvent( event );
 		}
 
@@ -1062,7 +1068,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function beginAuthentication():void
 		{
-			sendXML(auth.request);
+			sendXML(auth.request); // XMLNode
 		}
 
 		/**
@@ -1091,7 +1097,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function restartStream():void
 		{
-			sendXML(openingStreamTag);
+			sendXML(openingStreamTag); // String
 		}
 
 		/**

@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data
 		private var myErrorConditionNode:XMLNode;
 	
 		//private static var theIDGenerator:IIDGenerator = new IncrementalGenerator();
-		private static var staticDependencies:* = [ IncrementalGenerator, ExtensionContainer ];
+		private static var staticDependencies:Array = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
 		/**

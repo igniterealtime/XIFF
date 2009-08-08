@@ -4,13 +4,14 @@
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
+	import flash.utils.ByteArray;
 	import flash.xml.XMLDocument;
 
 	public class IncomingDataEvent extends Event
 	{
 		public static const INCOMING_DATA:String = "incomingData";
 
-		private var _data:XMLDocument;
+		private var _data:ByteArray;
 
 		public function IncomingDataEvent()
 		{
@@ -24,12 +25,12 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
-		public function get data():XMLDocument
+		public function get data():ByteArray
 		{
 			return _data;
 		}
 
-		public function set data( x:XMLDocument ):void
+		public function set data( x:ByteArray ):void
 		{
 			_data = x;
 		}

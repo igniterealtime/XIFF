@@ -128,8 +128,11 @@ package org.igniterealtime.xiff.data.muc{
 		 */
 		public function removeAllItems():void
 		{
-			for each(var i:* in myItems) {
-				i.setNode(null);
+			var len:uint = myItems.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				var item:MUCItem = myItems[i] as MUCItem;
+				item.setNode(null);
 			}
 		 	myItems = [];
 		}
