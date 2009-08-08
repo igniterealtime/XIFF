@@ -355,7 +355,7 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
+		 * Deserializes the incoming IQ to fill the values of this vcard.
 		 * @param iq
 		 */
 		public function handleVCard( iq:IQ ):void
