@@ -12,7 +12,7 @@
     import mx.logging.ILogger;
     import mx.logging.LogEventLevel;
 
-    import org.igniterealtime.xiff.core.XMPPSocketConnection;
+    import org.igniterealtime.xiff.core.XMPPConnection;
     import org.igniterealtime.xiff.auth.Anonymous;
     import org.igniterealtime.xiff.events.ConnectionSuccessEvent;
     import org.igniterealtime.xiff.events.DisconnectionEvent;
@@ -20,12 +20,12 @@
     import org.igniterealtime.xiff.events.XIFFErrorEvent;
     import org.igniterealtime.xiff.logging.LoggerFactory;
 
-    private var connection:XMPPSocketConnection;
+    private var connection:XMPPConnection;
     private var logger:ILogger;
 
     private function init():void
     {
-      connection = new XMPPSocketConnection();
+      connection = new XMPPConnection();
       connection.port = 5222;
       connection.resource = "xiff";
       connection.addEventListener( ConnectionSuccessEvent.CONNECT_SUCCESS, handleConnection );
