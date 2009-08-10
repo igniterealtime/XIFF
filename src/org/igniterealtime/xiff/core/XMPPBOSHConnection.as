@@ -98,7 +98,7 @@ package org.igniterealtime.xiff.core
 			responseTimer = new Timer( 0.0, 1 );
 		}
 
-		override public function connect( streamType:String = null ):Boolean
+		override public function connect( streamType:uint = 1 ):Boolean
 		{
 			logger.debug( "BOSH connect()" );
 
@@ -269,7 +269,6 @@ package org.igniterealtime.xiff.core
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
 			xmlData.parseXML( rawXML );
-			var bodyNode:XMLNode = xmlData.firstChild;
 
 			var byteData:ByteArray = new ByteArray();
 			byteData.writeUTFBytes(xmlData.toString());
@@ -277,6 +276,8 @@ package org.igniterealtime.xiff.core
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
 			dispatchEvent( incomingEvent );
+			
+			var bodyNode:XMLNode = xmlData.firstChild;
 
 			if ( streamRestarted && !bodyNode.hasChildNodes())
 			{

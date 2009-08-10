@@ -98,6 +98,28 @@ package org.igniterealtime.xiff.core
 	 */
 	public class XMPPConnection extends EventDispatcher
 	{
+		/**
+		 * Stream type lets user set opening/closing tag.
+		 * <code><stream:stream></code>
+		 */
+		public static const STREAM_TYPE_STANDARD:uint = 0;
+		/**
+		 * Stream type lets user set opening/closing tag.
+		 * <code><stream:stream /></code>
+		 */
+		public static const STREAM_TYPE_STANDAND_TERMINATED:uint = 1;
+		/**
+		 * Stream type lets user set opening/closing tag.
+		 * <code><flash:stream></code>
+		 */
+		public static const STREAM_TYPE_FLASH:uint = 2;
+		/**
+		 * Stream type lets user set opening/closing tag.
+		 * <code><flash:stream /></code>
+		 */
+		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
+		
+		
 		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPConnection");
 
 		/**
@@ -179,7 +201,7 @@ package org.igniterealtime.xiff.core
 		protected var pendingIQs:Object = {};
 
 		/**
-		 * @see http://xmpp.org/extensions/xep-0138.html
+		 * @private
 		 */
 		protected var _compress:Boolean = false;
 
@@ -222,11 +244,18 @@ package org.igniterealtime.xiff.core
 		 */
 		protected var _incompleteRawXML:String = "";
 
-		private var _streamType:String;
+		private var _streamType:uint = 1;
 		private var presenceQueue:Array = [];
 		private var presenceQueueTimer:Timer;
-		
+
+		/**
+		 * @private
+		 */
 		private var _outgoingBytes:uint = 0;
+
+		/**
+		 * @private
+		 */
 		private var _incomingBytes:uint = 0;
 
 		/**
@@ -242,7 +271,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Connects to the server.
+		 * Connects to the server. Use one of the STREAM_TYPE_.. constants.
 		 * Possible options are:
 		 * <ul>
 		 * <li>flash</li>
@@ -258,7 +287,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @return A boolean indicating whether the server was found.
 		 */
-		public function connect( streamType:String = "terminatedStandard" ):Boolean
+		public function connect( streamType:uint = 1 ):Boolean
 		{
 			createSocket();
 			_streamType = streamType;
@@ -451,15 +480,12 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Choose the stream start and ending tags based on the given type.
-		 * @param	type	One of: flash, terminatedFlash, standard, terminatedStandard.
+		 * @param	type	One of the <code>STREAM_TYPE_...</code> constants of this class.
 		 */
-		protected function chooseStreamTags(type:String):void
+		protected function chooseStreamTags(type:uint):void
 		{
-			// Stream type lets user set opening/closing tag - some servers (jadc2s) prefer <stream:flash> to the standard
-			// <stream:stream>
-
 			openingStreamTag = '<?xml version="1.0"?>';
-			if (type == "flash" || type == "terminatedFlash")
+			if (type == STREAM_TYPE_FLASH || type == STREAM_TYPE_FLASH_TERMINATED)
 			{
 				openingStreamTag += '<flash';
 				closingStreamTag = '</flash:stream>';
@@ -472,7 +498,7 @@ package org.igniterealtime.xiff.core
 
 			openingStreamTag += ':stream xmlns="' + XMPPStanza.CLIENT_NAMESPACE + '" ';
 
-			if (type == "flash" || type == "terminatedFlash")
+			if (type == STREAM_TYPE_FLASH || type == STREAM_TYPE_FLASH_TERMINATED)
 			{
 				openingStreamTag += 'xmlns:flash="' + XMPPStanza.NAMESPACE_FLASH + '"';
 			}
@@ -482,7 +508,7 @@ package org.igniterealtime.xiff.core
 			}
 			openingStreamTag += ' to="' + domain + '" version="' + XMPPStanza.CLIENT_VERSION + '"';
 
-			if (type.indexOf("terminated") != -1)
+			if (type == STREAM_TYPE_FLASH_TERMINATED || type == STREAM_TYPE_STANDAND_TERMINATED)
 			{
 				openingStreamTag += ' /';
 			}
@@ -1288,6 +1314,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Shall the zlib compression be allowed if the server supports it.
 		 * @see http://xmpp.org/extensions/xep-0138.html
+		 * @default false
 		 */
 		public function get compress():Boolean
 		{
@@ -1301,7 +1328,7 @@ package org.igniterealtime.xiff.core
 
 
 		/**
-		 * Gets the fully qualified unescaped JID (user@server/resource) of the user.
+		 * Gets the fully qualified unescaped JID (user\@server/resource) of the user.
 		 * A fully-qualified JID includes the resource. A bare JID does not.
 		 * To get the bare JID, use the <code>bareJID</code> property of the UnescapedJID.
 		 *
