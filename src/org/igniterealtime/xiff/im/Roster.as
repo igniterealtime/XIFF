@@ -7,17 +7,9 @@ package org.igniterealtime.xiff.im
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	
-	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.core.XMPPConnection;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.IQ;
-	import org.igniterealtime.xiff.data.Presence;
-	import org.igniterealtime.xiff.data.XMLStanza;
-	import org.igniterealtime.xiff.data.XMPPStanza;
-	import org.igniterealtime.xiff.data.im.RosterExtension;
-	import org.igniterealtime.xiff.data.im.RosterGroup;
-	import org.igniterealtime.xiff.data.im.RosterItemVO;
+	import org.igniterealtime.xiff.core.*;
+	import org.igniterealtime.xiff.data.*;
+	import org.igniterealtime.xiff.data.im.*;
 	import org.igniterealtime.xiff.events.*;
 	
 	/**
@@ -28,15 +20,17 @@ package org.igniterealtime.xiff.im
 	 *
 	 * The event object contains an attribute <code>jid</code> with the JID of
 	 * the user who revoked your subscription.
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.SUBSCRIPTION_REVOCATION
 	 */
-	[Event("subscriptionRevocation")]
+	[Event(name="subscriptionRevocation", type="org.igniterealtime.xiff.events.RosterEvent")]
 	
 	/**
 	 * Broadcast whenever someone requests to subscribe to your presence. The event object
 	 * contains an attribute <code>jid</code> with the JID of the user who is requesting
 	 * a presence subscription.
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.SUBSCRIPTION_REQUEST
 	 */
-	[Event("subscriptionRequest")]
+	[Event(name="subscriptionRequest", type="org.igniterealtime.xiff.events.RosterEvent")]
 	
 	/**
 	 * Broadcast whenever a subscription request that you make (via the <code>addContact()</code>
@@ -44,22 +38,45 @@ package org.igniterealtime.xiff.im
 	 *
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * denied the request.
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.SUBSCRIPTION_DENIAL
 	 */
-	[Event("subscriptionDenial")]
+	[Event(name="subscriptionDenial", type="org.igniterealtime.xiff.events.RosterEvent")]
 	
 	/**
 	 * Broadcast whenever a contact in the roster becomes unavailable. (Goes from online to offline.)
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became unavailable.
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.USER_UNAVAILABLE
 	 */
-	[Event("userUnavailable")]
+	[Event(name="userAvailable", type="org.igniterealtime.xiff.events.RosterEvent")]
 	
 	/**
 	 * Broadcast whenever a contact in the roster becomes available. (Goes from offline to online.)
 	 * The event object contains an attribute <code>jid</code> with the JID of the user who
 	 * became available.
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.USER_AVAILABLE
 	 */
-	[Event("userAvailable")]
+	[Event(name="userAvailable", type="org.igniterealtime.xiff.events.RosterEvent")]
+	
+	/**
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.ROSTER_LOADED
+	 */
+	[Event(name="rosterLoaded", type="org.igniterealtime.xiff.events.RosterEvent")]
+	
+	/**
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.USER_REMOVED
+	 */
+	[Event(name="userRemoved", type="org.igniterealtime.xiff.events.RosterEvent")]
+	
+	/**
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.USER_PRESENCE_UPDATED
+	 */
+	[Event(name="userPresenceUpdated", type="org.igniterealtime.xiff.events.RosterEvent")]
+	
+	/**
+	 * @eventType org.igniterealtime.xiff.events.RosterEvent.USER_SUBSCRIPTION_UPDATED
+	 */
+	[Event(name="userSubscriptionUpdated", type="org.igniterealtime.xiff.events.RosterEvent")]
 	
 	/**
 	 * Manages a user's server-side instant messaging roster (or "buddy list"). By default,
@@ -73,14 +90,15 @@ package org.igniterealtime.xiff.im
 	 * API decorations, like in the case of a Macromedia Central LCDataProvider. Overall,
 	 * however, its probably a rare occurence.
 	 *
-	 * @param	aConnection A reference to an XMPPConnection class instance
 	 * @param	externalDataProvider (Optional) A reference to an instance of a data provider
 	 */
 	public class Roster extends ArrayCollection
 	{
 		private var myConnection:XMPPConnection;
+		
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:UnescapedJID;
+		
 		//FIXME: maps should not be arrays
 		private var _presenceMap:Array = [];
 		
@@ -94,10 +112,15 @@ package org.igniterealtime.xiff.im
 		
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
+		/**
+		 * 
+		 * @param	aConnection A reference to an XMPPConnection class instance
+		 */
 		public function Roster( aConnection:XMPPConnection = null)
 		{
 			
-			if (aConnection != null){
+			if (aConnection != null)
+			{
 				connection = aConnection;
 			}
 			var groupSort:Sort = new Sort();
@@ -105,6 +128,10 @@ package org.igniterealtime.xiff.im
 			groups.sort = groupSort;
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		private static function RosterStaticConstructor():Boolean
 		{
 			ExtensionClassRegistry.register( RosterExtension );
@@ -153,7 +180,8 @@ package org.igniterealtime.xiff.im
 			myConnection.send( tempIQ );
 	
 			
-			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, [groupName], subscription, askType );
+			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, 
+				[groupName], subscription, askType );
 		}
 		
 		/**
@@ -175,7 +203,7 @@ package org.igniterealtime.xiff.im
 				return;
 			}
 			// Only request for items in the roster
-			if(contains(RosterItemVO.get(id, false)))
+			if (contains(RosterItemVO.get(id, false)))
 			{
 				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
 				myConnection.send( tempPresence );
@@ -339,6 +367,10 @@ package org.igniterealtime.xiff.im
 			myConnection.send( tempPresence );
 		}
 		
+		/**
+		 * 
+		 * @param	resultIQ
+		 */
 		public function fetchRoster_result( resultIQ:IQ ):void
 		{
 			// Clear out the old roster
@@ -354,7 +386,9 @@ package org.igniterealtime.xiff.im
 						if (!item is XMLStanza)
 							continue;
 						
-						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", item.groupNames, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE);
+						var askType:String = item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
+						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, 
+							"Offline", item.groupNames, item.subscription.toLowerCase(), askType);
 					}
 				}
 				enableAutoUpdate();
@@ -369,6 +403,10 @@ package org.igniterealtime.xiff.im
 			}
 		}
 	
+		/**
+		 * 
+		 * @param	resultIQ
+		 */
 		public function addContact_result( resultIQ:IQ ):void
 		{
 			// Contact was added, request subscription
@@ -376,28 +414,31 @@ package org.igniterealtime.xiff.im
 			pendingSubscriptionRequestJID = null;
 		}
 		
+		/**
+		 * 
+		 * @param	resultIQ
+		 */
 		public function unsubscribe_result( resultIQ:IQ ):void
 		{
 			// Does nothing for now
 		}
-		
-		public override function set filterFunction(f:Function):void
-		{
-			throw new Error("Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that.");
-		}
-		
+			
+		/**
+		 * 
+		 * @param	eventObj PresenceEvent, LoginEvent or RosterExtension
+		 */
 		private function handleEvent( eventObj:* ):void
 		{
 
 			switch( eventObj.type )
 			{
 				// Handle any incoming presence items
-				case "presence":
+				case PresenceEvent.PRESENCE:
 					handlePresences( eventObj.data );
 					break;
 				
 				// Fetch the roster immediately after login
-				case "login":
+				case LoginEvent.LOGIN:
 					fetchRoster();
 					// Tell the server we are online and available
 					//setPresence( Presence.SHOW_NORMAL, "Online", 5 );
@@ -444,16 +485,23 @@ package org.igniterealtime.xiff.im
 							else
 							{
 								var groups:Array = item.groupNames;
+								var askType:String = item.askType != null ? 
+									item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
 
-								if( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&  item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE)
+								if ( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&
+									item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE)
 								{
 									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline",
+										groups, item.subscription.toLowerCase(), askType );
 								}
-								else if( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
+								else if ( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || 
+									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && 
+										item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
 								{
 									// A contact was added to the roster, and its authorization is still pending.
-									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups, item.subscription.toLowerCase(), item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE );
+									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups,
+										item.subscription.toLowerCase(), askType );
 								}
 							}
 						}
@@ -615,27 +663,6 @@ package org.igniterealtime.xiff.im
 			return _presenceMap[jid.toString()];
 		}
 		
-		/**
-		 * The instance of the XMPPConnection class to use for the roster to use for
-		 * sending and receiving data.
-		 *
-		 */
-		public function get connection():XMPPConnection
-		{
-			return myConnection;
-		}
-		
-		private static var counter:int = 0;
-		public function set connection( aConnection:XMPPConnection ):void
-		{
-			trace(++counter);
-			myConnection = aConnection;
-			// Set up listeners
-			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
-			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
-			myConnection.addEventListener( RosterExtension.NS, handleEvent );
-		}
-		
 		public function getGroup(name:String):RosterGroup
 		{
 			for each(var group:RosterGroup in groups)
@@ -644,6 +671,27 @@ package org.igniterealtime.xiff.im
 					return group;
 			}
 			return null;
+		}
+		
+		/**
+		 * The instance of the XMPPConnection class to use for the roster to use for
+		 * sending and receiving data.
+		 */
+		public function get connection():XMPPConnection
+		{
+			return myConnection;
+		}
+		public function set connection( aConnection:XMPPConnection ):void
+		{
+			myConnection = aConnection;
+			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
+			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
+			myConnection.addEventListener( RosterExtension.NS, handleEvent );
+		}
+		
+		public override function set filterFunction(f:Function):void
+		{
+			throw new Error("Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that.");
 		}
 	}
 }
