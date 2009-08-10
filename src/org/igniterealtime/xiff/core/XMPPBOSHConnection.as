@@ -3,7 +3,8 @@
  */
 package org.igniterealtime.xiff.core
 {
-	import flash.events.TimerEvent;
+	import flash.events.*;
+	import flash.net.*;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
@@ -30,6 +31,9 @@ package org.igniterealtime.xiff.core
 
 		private static const HTTP_PORT:int = 7070;
 
+		/**
+		 * Keys should match URLRequestMethod constants.
+		 */
 		private static const headers:Object = {
 			"post": [],
 			"get": [ 'Cache-Control',
@@ -75,7 +79,7 @@ package org.igniterealtime.xiff.core
 
 		private var responseQueue:Array = [];
 
-		private const responseTimer:Timer = new Timer( 0.0, 1 );
+		private var responseTimer:Timer;
 
 		private var rid:Number;
 
@@ -91,6 +95,7 @@ package org.igniterealtime.xiff.core
 		{
 			super();
 			this.secure = secure;
+			responseTimer = new Timer( 0.0, 1 );
 		}
 
 		override public function connect( streamType:String = null ):Boolean
@@ -420,6 +425,19 @@ package org.igniterealtime.xiff.core
 					data = createRequest( temp );
 				}
 			}
+			/*
+			var req:URLRequest = new URLRequest(httpServer);
+			req.method = URLRequestMethod.POST;
+			req.contentType = "text/xml";
+			req.requestHeaders = headers[ req.method ];
+			req.data = data;
+			var loader:URLLoader = new URLLoader();
+			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			loader.addEventListener(Event.COMPLETE, onRequestComplete);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, socketSecurityError);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, socketIOError);
+			loader.load(req);
+			*/
 			
 			// TODO: Could this be replaced with URLLoader ?
 			//build the http request
