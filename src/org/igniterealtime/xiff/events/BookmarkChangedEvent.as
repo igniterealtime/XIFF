@@ -17,13 +17,13 @@ package org.igniterealtime.xiff.events
 		 *
 		 * @default
 		 */
-		public static const GROUPCHAT_BOOKMARK_ADDED:String = "groupchat bookmark retrieved";
+		public static const GROUPCHAT_BOOKMARK_ADDED:String = "groupchatBookmarkAdded";
 
 		/**
 		 *
 		 * @default
 		 */
-		public static const GROUPCHAT_BOOKMARK_REMOVED:String = "groupchat bookmark removed";
+		public static const GROUPCHAT_BOOKMARK_REMOVED:String = "groupchatBookmarkRemoved";
 
 		//add url types here when needed
 

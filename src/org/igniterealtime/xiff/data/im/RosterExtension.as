@@ -21,7 +21,6 @@ package org.igniterealtime.xiff.data.im{
 	 */
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:roster";
 		public static const ELEMENT:String = "query";
 		

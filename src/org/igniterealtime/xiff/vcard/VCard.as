@@ -19,6 +19,21 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
 	import org.igniterealtime.xiff.events.VCardEvent;
 
+	/**
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_LOADED
+	 */
+	[Event(name="vcardAvatarLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
+
+	/**
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.LOADED
+	 */
+	[Event(name="vcardLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
+
+	/**
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.ERROR
+	 */
+	[Event(name="vcardError", type="org.igniterealtime.xiff.events.VCardEvent")]
+	
 	[Bindable]
 	/**
 	 *

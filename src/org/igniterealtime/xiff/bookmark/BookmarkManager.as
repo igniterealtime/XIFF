@@ -15,6 +15,22 @@ package org.igniterealtime.xiff.bookmark
 	import org.igniterealtime.xiff.privatedata.PrivateDataManager;
 	import org.igniterealtime.xiff.util.Callback;
 
+	/**
+	 * @eventType org.igniterealtime.xiff.events.BookmarkChangedEvent.GROUPCHAT_BOOKMARK_ADDED
+	 */
+	[Event(name="groupchatBookmarkAdded", type="org.igniterealtime.xiff.events.BookmarkChangedEvent")]
+
+	/**
+	 * @eventType org.igniterealtime.xiff.events.BookmarkChangedEvent.GROUPCHAT_BOOKMARK_REMOVED
+	 */
+	[Event(name="groupchatBookmarkRemoved", type="org.igniterealtime.xiff.events.BookmarkChangedEvent")]
+
+	/**
+	 * @eventType org.igniterealtime.xiff.events.BookmarkRetrievedEvent.BOOKMARK_RETRIEVED
+	 */
+	[Event(name="bookmarkRetrieved", type="org.igniterealtime.xiff.events.BookmarkRetrievedEvent")]
+
+	
 	[Event( "GroupChatBookmarkChanged" )]
 	public class BookmarkManager extends EventDispatcher
 	{
