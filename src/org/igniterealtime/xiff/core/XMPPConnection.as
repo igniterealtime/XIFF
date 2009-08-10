@@ -107,7 +107,7 @@ package org.igniterealtime.xiff.core
 		 * Stream type lets user set opening/closing tag.
 		 * <code><stream:stream /></code>
 		 */
-		public static const STREAM_TYPE_STANDAND_TERMINATED:uint = 1;
+		public static const STREAM_TYPE_STANDARD_TERMINATED:uint = 1;
 		/**
 		 * Stream type lets user set opening/closing tag.
 		 * <code><flash:stream></code>
@@ -244,7 +244,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected var _incompleteRawXML:String = "";
 
-		private var _streamType:uint = 1;
+		private var _streamType:uint = 0;
 		private var presenceQueue:Array = [];
 		private var presenceQueueTimer:Timer;
 
@@ -274,20 +274,19 @@ package org.igniterealtime.xiff.core
 		 * Connects to the server. Use one of the STREAM_TYPE_.. constants.
 		 * Possible options are:
 		 * <ul>
+		 * <li>standard (default)</li>
+		 * <li>standard terminated</li>
 		 * <li>flash</li>
-		 * <li>terminatedFlash</li>
-		 * <li>standard</li>
-		 * <li>terminatedStandard (default)</li>
+		 * <li>flash terminated</li>
 		 * </ul>
 		 * Some servers, like Jabber, Inc.'s XCP and Jabberd 1.4 expect &lt;flash:stream&gt; from
 		 * a Flash client instead of the standard &lt;stream:stream&gt;.
 		 *
-		 * @param	streamType (Optional) The type of initial stream negotiation,
-		 * either &lt;flash:stream&gt; or &lt;stream:stream&gt;.
+		 * @param	streamType Any of the STREAM_TYPE_.. constants.
 		 *
 		 * @return A boolean indicating whether the server was found.
 		 */
-		public function connect( streamType:uint = 1 ):Boolean
+		public function connect( streamType:uint = 0 ):Boolean
 		{
 			createSocket();
 			_streamType = streamType;
@@ -508,7 +507,7 @@ package org.igniterealtime.xiff.core
 			}
 			openingStreamTag += ' to="' + domain + '" version="' + XMPPStanza.CLIENT_VERSION + '"';
 
-			if (type == STREAM_TYPE_FLASH_TERMINATED || type == STREAM_TYPE_STANDAND_TERMINATED)
+			if (type == STREAM_TYPE_FLASH_TERMINATED || type == STREAM_TYPE_STANDARD_TERMINATED)
 			{
 				openingStreamTag += ' /';
 			}
