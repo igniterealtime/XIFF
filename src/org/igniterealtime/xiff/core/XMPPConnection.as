@@ -9,8 +9,6 @@ package org.igniterealtime.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 
-	import mx.logging.ILogger;
-
 	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
@@ -20,7 +18,6 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.exception.SerializationException;
-	import org.igniterealtime.xiff.logging.LoggerFactory;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -119,9 +116,6 @@ package org.igniterealtime.xiff.core
 		 */
 		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
 		
-		
-		private static const logger:ILogger = LoggerFactory.getLogger("org.igniterealtime.xiff.core.XMPPConnection");
-
 		/**
 		 * Binary socket used to connect to the XMPP server.
 		 */
@@ -578,7 +572,7 @@ package org.igniterealtime.xiff.core
 		protected function handleNodeType(node:XMLNode):void
 		{
 			var nodeName:String = node.nodeName.toLowerCase();
-			logger.info("handleNodeType: {0}", node);
+			trace("handleNodeType: {0}", node);
 
 			switch( nodeName )
 			{
@@ -840,7 +834,7 @@ package org.igniterealtime.xiff.core
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var message:Message = new Message();
-			logger.debug("MESSAGE: {0}", message);
+			trace("MESSAGE: {0}", message);
 			// Populate with data
 			if ( !message.deserialize( node ) )
 			{
@@ -935,7 +929,7 @@ package org.igniterealtime.xiff.core
 			var rawData:ByteArray = new ByteArray();
 			rawData.writeUTFBytes(rawXML);
 
-			logger.info("INCOMING: {0}", rawXML);
+			trace("INCOMING: {0}", rawXML);
 			
 			// data comign in could also be parts of base64 encoded stuff.
 			
@@ -1049,7 +1043,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function dispatchError( condition:String, message:String, type:String, code:Number, extension:Extension = null ):void
 		{
-			logger.error("Error: {0} - {1}", condition, message);
+			trace("Error: {0} - {1}", condition, message);
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
 			event.errorMessage = message;
@@ -1065,7 +1059,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			logger.info("OUTGOING: {0}", someData);
+			trace("OUTGOING: {0}", someData);
 			
 			trace("sendXML. someData type: " + (typeof someData));
 
@@ -1149,7 +1143,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleBindResponse(packet:IQ):void
 		{
-			logger.debug("handleBindResponse: {0}", packet.getNode());
+			trace("handleBindResponse: {0}", packet.getNode());
 			var bind:BindExtension = packet.getExtension("bind") as BindExtension;
 
 			var jid:UnescapedJID = bind.jid.unescaped;
@@ -1181,7 +1175,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function handleSessionResponse(packet:IQ):void
 		{
-			logger.debug("handleSessionResponse: {0}", packet.getNode());
+			trace("handleSessionResponse: {0}", packet.getNode());
 			dispatchEvent(new LoginEvent());
 		}
 

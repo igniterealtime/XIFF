@@ -32,6 +32,10 @@ package org.igniterealtime.xiff.core
     protected var _domain:String = "";
     protected var _resource:String = "";
 
+    //if we use the literal regexp notation, flex gets confused and thinks the quote starts a string
+    private static var quoteregex:RegExp = new RegExp('"', "g");
+    private static var quoteregex2:RegExp = new RegExp("'", "g");
+
 	/**
 	 * Creates a new AbstractJID object. Used via EscapedJID or UnescapedJID.
 	 *
@@ -65,11 +69,7 @@ package org.igniterealtime.xiff.core
       if(separatorIndex >= 1)
         _node = inJID.substring(0, separatorIndex);
     }
-
-    //if we use the literal regexp notation, flex gets confused and thinks the quote starts a string
-    private static var quoteregex:RegExp = new RegExp('"', "g");
-    private static var quoteregex2:RegExp = new RegExp("'", "g");
-
+	
     /**
      * Provides functionality to convert a JID to an escaped format.
      *

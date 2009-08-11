@@ -513,17 +513,6 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * <strong>DEPRECATED! Use <code>getRoomJID</code> instead.</strong>
-		 * Gets the fully qualified room name (room@server) of the current room.
-		 *
-		 * @return The fully qualified room name.
-		 */
-		public function get fullRoomName():String
-		{
-			return roomJID.toString();
-		}
-
-		/**
 		 * Gets an instance of the <code>Message</code> class that has been pre-configured to be
 		 * sent from this room. Use this method to get a <code>Message</code> in order to add extensions
 		 * to outgoing room messages.
@@ -843,7 +832,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Get the JID of the room.
+		 * The unescaped JID of the room. <code>room&at;conference.server</code>
 		 *
 		 * @return The room's JID.
 		 */
@@ -851,10 +840,6 @@ package org.igniterealtime.xiff.conference
 		{
 			return myJID;
 		}
-
-		/**
-		 * Set the JID of the room in the form "room@conference.server"
-		 */
 		public function set roomJID( jid:UnescapedJID ):void
 		{
 			myJID = jid;
@@ -867,10 +852,6 @@ package org.igniterealtime.xiff.conference
 		{
 			return myJID.node;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set roomName( aName:String ):void
 		{
 			roomJID = new UnescapedJID( aName + "@" + conferenceServer );

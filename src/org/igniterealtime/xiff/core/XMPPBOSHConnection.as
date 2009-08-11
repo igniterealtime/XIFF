@@ -10,13 +10,11 @@ package org.igniterealtime.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 
-	import mx.logging.ILogger;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 
 	import org.igniterealtime.xiff.events.*;
-	import org.igniterealtime.xiff.logging.LoggerFactory;
 	import org.igniterealtime.xiff.util.Callback;
 
 	/**
@@ -42,8 +40,6 @@ package org.igniterealtime.xiff.core
 					 'no-cache',
 					 'Pragma', 'no-cache' ]
 		};
-
-		private static const logger:ILogger = LoggerFactory.getLogger( "org.igniterealtime.xiff.core.XMPPBOSHConnection" );
 
 		private var _boshPath:String = "http-bind/";
 
@@ -100,7 +96,7 @@ package org.igniterealtime.xiff.core
 
 		override public function connect( streamType:uint = 1 ):Boolean
 		{
-			logger.debug( "BOSH connect()" );
+			trace( "BOSH connect()" );
 
 			var attrs:Object = {
 				"xml:lang": "en",
@@ -140,7 +136,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function pauseSession( seconds:uint ):Boolean
 		{
-			logger.debug( "Pausing session for {0} seconds", seconds );
+			trace( "Pausing session for {0} seconds", seconds );
 
 			var pauseDuration:uint = seconds * 1000;
 			if ( !pauseEnabled || pauseDuration > maxPause || pauseDuration <= boshPollingInterval )
@@ -186,10 +182,10 @@ package org.igniterealtime.xiff.core
 				maxConcurrentRequests = attributes.requests;
 			}
 
-			logger.debug( "Polling interval: {0}", boshPollingInterval );
-			logger.debug( "Inactivity timeout: {0}", inactivity );
-			logger.debug( "Max requests: {0}", maxConcurrentRequests );
-			logger.debug( "Max pause: {0}", maxPause );
+			trace( "Polling interval: {0}", boshPollingInterval );
+			trace( "Inactivity timeout: {0}", inactivity );
+			trace( "Max requests: {0}", maxConcurrentRequests );
+			trace( "Max pause: {0}", maxPause );
 
 			active = true;
 
@@ -247,7 +243,7 @@ package org.igniterealtime.xiff.core
 
 		private function handlePauseTimeout( event:TimerEvent ):void
 		{
-			logger.debug( "handlePauseTimeout" );
+			trace( "handlePauseTimeout" );
 			pollingEnabled = true;
 			pollServer();
 		}
@@ -264,7 +260,7 @@ package org.igniterealtime.xiff.core
 			requestCount--;
 			var rawXML:String = event.result as String;
 
-			logger.info( "INCOMING {0}", rawXML );
+			trace( "INCOMING {0}", rawXML );
 
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
@@ -468,10 +464,10 @@ package org.igniterealtime.xiff.core
 			if ( isPoll )
 			{
 				lastPollTime = new Date();
-				logger.info( "Polling" );
+				trace( "Polling" );
 			}
 
-			logger.info( "OUTGOING {0}", data );
+			trace( "OUTGOING {0}", data );
 
 			return true;
 		}
@@ -507,7 +503,7 @@ package org.igniterealtime.xiff.core
 		}
 		public function set secure( flag:Boolean ):void
 		{
-			logger.debug( "set secure: {0}", flag );
+			trace( "set secure: {0}", flag );
 			_secure = flag;
 			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
@@ -518,7 +514,7 @@ package org.igniterealtime.xiff.core
 		}
 		override public function set port( portnum:Number ):void
 		{
-			logger.debug( "set port: {0}", portnum );
+			trace( "set port: {0}", portnum );
 			_port = portnum;
 		}
 

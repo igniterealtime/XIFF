@@ -11,10 +11,20 @@ package org.igniterealtime.xiff.data.im
 	import org.igniterealtime.xiff.core.UnescapedJID;
 
 	/**
-	 * 
+	 *
+	 */
+	[Event(name="changeAskType")]
+	
+	/**
+	 *
 	 */
 	[Event(name="changeDisplayName")]
-  
+	
+	/**
+	 *
+	 */
+	[Event(name="changeSubscription")]
+
 	public class RosterItemVO extends EventDispatcher implements Contact
 	{
 		private static var allContacts:Object = {};
@@ -33,9 +43,9 @@ package org.igniterealtime.xiff.data.im
 		  jid = newJID;
 		}
 
-	/**
-	 * Returns an Roster item value object if it exists or the "create" parameter is set to <code>true</code>.
-	 * @param	jid
+		/**
+		 * Returns an Roster item value object if it exists or the "create" parameter is set to <code>true</code>.
+		 * @param	jid
 		 * @param	create
 		 * @return
 		 */
