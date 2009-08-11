@@ -84,7 +84,7 @@
           break;
       }
 
-      connection.connect( "standard" );
+      connection.connect();
     }
 
     private function doDisconnect():void
