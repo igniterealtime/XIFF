@@ -97,22 +97,22 @@ package org.igniterealtime.xiff.core
 	{
 		/**
 		 * Stream type lets user set opening/closing tag.
-		 * <code><stream:stream></code>
+		 * <code>&lt;stream:stream&gt;</code>
 		 */
 		public static const STREAM_TYPE_STANDARD:uint = 0;
 		/**
 		 * Stream type lets user set opening/closing tag.
-		 * <code><stream:stream /></code>
+		 * <code>&lt;stream:stream /&gt;</code>
 		 */
 		public static const STREAM_TYPE_STANDARD_TERMINATED:uint = 1;
 		/**
 		 * Stream type lets user set opening/closing tag.
-		 * <code><flash:stream></code>
+		 * <code>&lt;flash:stream&gt;</code>
 		 */
 		public static const STREAM_TYPE_FLASH:uint = 2;
 		/**
 		 * Stream type lets user set opening/closing tag.
-		 * <code><flash:stream /></code>
+		 * <code>&lt;flash:stream /&gt;</code>
 		 */
 		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
 		
@@ -343,9 +343,9 @@ package org.igniterealtime.xiff.core
 		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 * @example	The following example sends a basic chat message to the user with the
 		 * JID "sideshowbob@springfieldpenitentiary.gov".<br />
-		 * <pre>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.",
+		 * <code>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.",
 		 * "<b>Hi Bob.</b>", Message.CHAT_TYPE );
-		 * myXMPPConnection.send( msg );</pre>
+		 * myXMPPConnection.send( msg );</code>
 		 */
 		public function send( o:XMPPStanza ):void
 		{
@@ -378,12 +378,13 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Sends empty data in order to keep the connection alive.
+		 * TODO: Replace with XMPP ping extension.
 		 */
 		public function sendKeepAlive():void
 		{
 			if ( isActive() )
 			{
-				sendXML("< />"); // String
+				sendXML(" "); // String
 			}
 		}
 
@@ -899,7 +900,7 @@ package org.igniterealtime.xiff.core
 			socket = new Socket();
 			socket.addEventListener(Event.CLOSE, socketClosed);
 			socket.addEventListener(Event.CONNECT, socketConnected);
-			socket.addEventListener(IOErrorEvent.IO_ERROR, onSecurityError);
+			socket.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataReceived);
 			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 		}
@@ -1059,7 +1060,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			trace("OUTGOING: {0}", someData);
+			trace("OUTGOING: {0}" + someData);
 			
 			trace("sendXML. someData type: " + (typeof someData));
 
@@ -1321,7 +1322,7 @@ package org.igniterealtime.xiff.core
 
 
 		/**
-		 * Gets the fully qualified unescaped JID (user\@server/resource) of the user.
+		 * Gets the fully qualified unescaped JID of the user.
 		 * A fully-qualified JID includes the resource. A bare JID does not.
 		 * To get the bare JID, use the <code>bareJID</code> property of the UnescapedJID.
 		 *
