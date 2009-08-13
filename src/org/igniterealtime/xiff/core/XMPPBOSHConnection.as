@@ -431,8 +431,8 @@ package org.igniterealtime.xiff.core
 			var loader:URLLoader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.addEventListener(Event.COMPLETE, onRequestComplete);
-			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, socketSecurityError);
-			loader.addEventListener(IOErrorEvent.IO_ERROR, socketIOError);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.load(req);
 			*/
 			

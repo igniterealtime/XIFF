@@ -899,9 +899,9 @@ package org.igniterealtime.xiff.core
 			socket = new Socket();
 			socket.addEventListener(Event.CLOSE, socketClosed);
 			socket.addEventListener(Event.CONNECT, socketConnected);
-			socket.addEventListener(IOErrorEvent.IO_ERROR, socketSecurityError);
+			socket.addEventListener(IOErrorEvent.IO_ERROR, onSecurityError);
 			socket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataReceived);
-			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, socketSecurityError);
+			socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 		}
 
 		/**
@@ -1024,7 +1024,7 @@ package org.igniterealtime.xiff.core
 		 * This fires the standard dispatchError method. need to add the appropriate error code
 		 * @private
 		 */
-		protected function socketIOError(event:IOErrorEvent):void
+		protected function onIOError(event:IOErrorEvent):void
 		{
 			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
 		}
@@ -1032,7 +1032,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function socketSecurityError(event:SecurityErrorEvent):void
+		protected function onSecurityError(event:SecurityErrorEvent):void
 		{
 			trace("there was a security error of type: " + event.type + "\nError: " + event.text);
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
