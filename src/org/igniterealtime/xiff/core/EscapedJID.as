@@ -5,6 +5,7 @@ package org.igniterealtime.xiff.core
 {
   /**
    * This class provides access to a JID (Jabber ID) in escaped form.
+   * @see http://xmpp.org/extensions/xep-0106.html
    */
   public class EscapedJID extends AbstractJID
   {

@@ -419,7 +419,7 @@ package org.igniterealtime.xiff.core
 		public function getRegistrationFields():void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.GET_TYPE,
-								   XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
+									 XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 
 			send( regIQ );
@@ -437,7 +437,7 @@ package org.igniterealtime.xiff.core
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE,
-								   XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+									 XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 
 			for ( var i:String in fieldMap )
@@ -462,7 +462,7 @@ package org.igniterealtime.xiff.core
 		public function changePassword( newPassword:String ):void
 		{
 			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE,
-									  XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
+										XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 
 			ext.username = jid.escaped.bareJID;
@@ -511,7 +511,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * 
+		 * @param	resultIQ
 		 */
 		protected function changePassword_result( resultIQ:IQ ):void
 		{
@@ -528,7 +529,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * 
+		 * @param	resultIQ
 		 */
 		protected function getRegistrationFields_result( resultIQ:IQ ):void
 		{
@@ -573,7 +575,6 @@ package org.igniterealtime.xiff.core
 		protected function handleNodeType(node:XMLNode):void
 		{
 			var nodeName:String = node.nodeName.toLowerCase();
-			trace("handleNodeType: {0}", node);
 
 			switch( nodeName )
 			{
@@ -587,6 +588,10 @@ package org.igniterealtime.xiff.core
 					handleStreamError( node );
 					break;
 
+				case "stream:features":
+					handleStreamFeatures( node );
+					break;
+
 				case "iq":
 					handleIQ( node );
 					break;
@@ -597,10 +602,6 @@ package org.igniterealtime.xiff.core
 
 				case "presence":
 					handlePresence( node );
-					break;
-
-				case "stream:features":
-					handleStreamFeatures( node );
 					break;
 
 				case "success":
@@ -643,7 +644,7 @@ package org.igniterealtime.xiff.core
 
 			for each(var childNode:XMLNode in node.childNodes)
 			{
-				if(childNode.nodeName == "stream:features")
+				if (childNode.nodeName == "stream:features")
 				{
 					handleStreamFeatures(childNode);
 				}
@@ -661,13 +662,7 @@ package org.igniterealtime.xiff.core
 				{
 					if (feature.nodeName == "starttls")
 					{
-						if (feature.firstChild && feature.firstChild.nodeName == "required")
-						{
-							// No TLS support yet
-							dispatchError("TLS required", "The server requires TLS, but this feature is not implemented.", "cancel", 501);
-							disconnect();
-							return;
-						}
+						handleStreamTLS(feature);
 					}
 					else if (feature.nodeName == "mechanisms")
 					{
@@ -675,18 +670,18 @@ package org.igniterealtime.xiff.core
 					}
 					else if (feature.nodeName == "compression")
 					{
-						// TODO: check for having "zlib" method.
+						// zlib is the most common and the one which is required to be implemented.
 						if (_compress)
 						{
 							configureStreamCompression();
 						}
 					}
-
 				}
 
 				// Authenticate only after the possible compression
 				if ((compress && compressionNegotiated) || !compress)
 				{
+					// TODO: Why is the username required here but it is not used at the backend?
 					if (useAnonymousLogin || (username != null && username.length > 0))
 					{
 						beginAuthentication();
@@ -700,6 +695,21 @@ package org.igniterealtime.xiff.core
 			else
 			{
 				bindConnection();
+			}
+		}
+		
+		/**
+		 * 
+		 * @param	node The feature containing starttls tag.
+		 */
+		protected function handleStreamTLS( node:XMLNode ):void
+		{
+			if (node.firstChild && node.firstChild.nodeName == "required")
+			{
+				// No TLS support yet
+				dispatchError("TLS required", "The server requires TLS, but this feature is not implemented.", "cancel", 501);
+				disconnect();
+				return;
 			}
 		}
 
@@ -734,10 +744,11 @@ package org.igniterealtime.xiff.core
 			if (!authClass)
 			{
 				dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
-				return;
 			}
-
-			auth = new authClass(this);
+			else 
+			{
+				auth = new authClass(this);
+			}
 		}
 
 		/**
@@ -835,7 +846,6 @@ package org.igniterealtime.xiff.core
 		protected function handleMessage( node:XMLNode ):Message
 		{
 			var message:Message = new Message();
-			trace("MESSAGE: {0}", message);
 			// Populate with data
 			if ( !message.deserialize( node ) )
 			{
@@ -846,7 +856,7 @@ package org.igniterealtime.xiff.core
 			{
 				var exts:Array = message.getAllExtensions();
 				dispatchError( message.errorCondition, message.errorMessage,
-							   message.errorType, message.errorCode, exts.length > 0 ? exts[0] : null);
+					message.errorType, message.errorCode, exts.length > 0 ? exts[0] : null);
 			}
 			else
 			{
@@ -929,13 +939,12 @@ package org.igniterealtime.xiff.core
 			
 			var rawData:ByteArray = new ByteArray();
 			rawData.writeUTFBytes(rawXML);
-
-			trace("INCOMING: {0}", rawXML);
 			
 			// data comign in could also be parts of base64 encoded stuff.
 			
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
+			// TODO: use constants and the current setting against finding the start/end tags of stream.
 			if (!_expireTagSearch)
 			{
 				var pattern:RegExp = new RegExp("<flash:stream");
@@ -1044,7 +1053,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function dispatchError( condition:String, message:String, type:String, code:Number, extension:Extension = null ):void
 		{
-			trace("Error: {0} - {1}", condition, message);
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
 			event.errorMessage = message;
@@ -1055,18 +1063,15 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Data is untyped because it could be a string or XML
+		 * Data is untyped because it could be a string or XML.
+		 * TODO: Accept only XML.
 		 * @param	someData
 		 */
 		protected function sendXML( someData:* ):void
 		{
-			trace("OUTGOING: {0}" + someData);
-			
-			trace("sendXML. someData type: " + (typeof someData));
-
 			var bytedata:ByteArray = new ByteArray();
 			bytedata.writeUTFBytes(someData);
-
+			
 			bytedata.position = 0;
 			if (compressionNegotiated)
 			{
@@ -1088,7 +1093,14 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function beginAuthentication():void
 		{
-			sendXML(auth.request); // XMLNode
+			if (auth != null)
+			{
+				sendXML(auth.request); // XMLNode
+			}
+			else 
+			{
+				// We did not have a suitable auth method for this connection.
+			}
 		}
 
 		/**
@@ -1144,7 +1156,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleBindResponse(packet:IQ):void
 		{
-			trace("handleBindResponse: {0}", packet.getNode());
 			var bind:BindExtension = packet.getExtension("bind") as BindExtension;
 
 			var jid:UnescapedJID = bind.jid.unescaped;
@@ -1176,7 +1187,6 @@ package org.igniterealtime.xiff.core
 		 */
 		private function handleSessionResponse(packet:IQ):void
 		{
-			trace("handleSessionResponse: {0}", packet.getNode());
 			dispatchEvent(new LoginEvent());
 		}
 

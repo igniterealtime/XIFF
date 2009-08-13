@@ -131,7 +131,7 @@ package org.igniterealtime.xiff.conference
 	 */
 	[Event( name="userBanned",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
-	 * Dispatched when the user's preferred nickname already exists in the room.  The
+	 * Dispatched when the user's preferred nickname already exists in the room.	The
 	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname
 	 * already existing in the room.
 	 *
@@ -139,8 +139,8 @@ package org.igniterealtime.xiff.conference
 	 */
 	[Event( name="nickConflict",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
-	 * Dispatched when a room configuration form is required.  This can occur during the
-	 * creation of a room, or if a room configuration is requested.  The <code>RoomEvent</code>
+	 * Dispatched when a room configuration form is required.	This can occur during the
+	 * creation of a room, or if a room configuration is requested.	The <code>RoomEvent</code>
 	 * instance will contain an attribute <code>data</code> that is an instance of an object
 	 * with the following attributes:
 	 *
@@ -198,9 +198,9 @@ package org.igniterealtime.xiff.conference
 		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 
 		private static var staticConstructorDependencies:Array = [ FormExtension,
-																   MUC ]
+																	 MUC ]
 
-		//	    private var _fileRepo:RoomFileRepository;
+		//			private var _fileRepo:RoomFileRepository;
 
 		private var _active:Boolean;
 
@@ -254,7 +254,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Allow a previously banned JIDs to enter this room.  This is the same as:
+		 * Allow a previously banned JIDs to enter this room.	This is the same as:
 		 * Room.grant(NO_AFFILIATION, jid)
 		 *
 		 * <p>If the process could not be completed, the room will dispatch the event
@@ -304,7 +304,7 @@ package org.igniterealtime.xiff.conference
 			for each ( var banJID:UnescapedJID in jids )
 			{
 				adminExt.addItem( Room.OUTCAST_AFFILIATION, null, null, banJID.escaped,
-								  null, null );
+									null, null );
 			}
 
 			iq.addExtension( adminExt );
@@ -312,7 +312,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Cancels the configuration process.  The room may still be locked if
+		 * Cancels the configuration process.	The room may still be locked if
 		 * you cancel the configuration process when attempting to join a
 		 * reserved room.
 		 *
@@ -346,8 +346,8 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, null,
-													   null, Message.GROUPCHAT_TYPE,
-													   newSubject );
+														 null, Message.GROUPCHAT_TYPE,
+														 newSubject );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -426,31 +426,31 @@ package org.igniterealtime.xiff.conference
 				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
 				myConnection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
 				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
-												  handleEvent );
+													handleEvent );
 			}
 
 			myConnection = connection;
 
 			myConnection.addEventListener( MessageEvent.MESSAGE, handleEvent, false,
-										   0, true );
+											 0, true );
 			myConnection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false,
-										   0, true );
+											 0, true );
 			myConnection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent,
-										   false, 0, true );
+											 false, 0, true );
 
 			//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+myConnection.server,"")+"/"+roomName+"/";
 			//			_fileRepo = new RoomFileRepository(baserepo);
 		}
 
 		/**
-		 * Actively decline an invitation.  You can optionally ignore invitations
+		 * Actively decline an invitation.	You can optionally ignore invitations
 		 * but if you choose to decline an invitation, you call this method on
 		 * a room instance that represents the room the invite originated from.
 		 *
 		 * <p>You do not need to have joined this room to decline an invitation</p>
 		 *
 		 * <p>Note: mu-conference-0.6 does not allow users to send decline
-		 * messages without joining first.  If using this version of conferencing
+		 * messages without joining first.	If using this version of conferencing
 		 * software, it is best to ignore invites.</p>
 		 *
 		 * @param	jid	An unescaped JID of the user to invite.
@@ -468,7 +468,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Destroys a reserved room.  If the room has been configured to be persistent,
+		 * Destroys a reserved room.	If the room has been configured to be persistent,
 		 * then it is optional that the server will permanently remove the room.
 		 *
 		 * @param	reason A short description of why the room is being destroyed
@@ -524,7 +524,7 @@ package org.igniterealtime.xiff.conference
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
 			var tempMessage:Message = new Message( roomJID.escaped, null, body, htmlBody,
-												   Message.GROUPCHAT_TYPE );
+													 Message.GROUPCHAT_TYPE );
 			return tempMessage;
 		}
 
@@ -625,11 +625,11 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Joins a conference room based on the parameters specified by the room
-		 * properties.  This call will create an instant room based on a default
+		 * properties.	This call will create an instant room based on a default
 		 * server configuration if the room doesn't exist.
 		 *
 		 * <p>To create and begin the configuration process of a reserved room, pass
-		 * <code>true</code> to this method to begin the configuration process.  When
+		 * <code>true</code> to this method to begin the configuration process.	When
 		 * The configuration is complete, the room will be unlocked for others to join.
 		 * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and
 		 * either return or cancel the configuration of the room.
@@ -696,14 +696,14 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var leavePresence:Presence = new Presence( userJID.escaped, null,
-														   Presence.UNAVAILABLE_TYPE );
+															 Presence.UNAVAILABLE_TYPE );
 				myConnection.send( leavePresence );
 
 				// Clear out the roster items
 				removeAll();
 				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
 				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
-												  handleEvent );
+													handleEvent );
 			}
 		}
 
@@ -725,7 +725,7 @@ package org.igniterealtime.xiff.conference
 				pendingNickname = theNickname;
 				// var tempPresence:Presence = new Presence( userJID );
 				var tempPresence:Presence = new Presence( new EscapedJID( userJID +
-																		  "/" + pendingNickname ));
+																			"/" + pendingNickname ));
 				myConnection.send( tempPresence );
 			}
 			else
@@ -779,7 +779,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Requests a configuration form from the room.  Listen to <code>configureForm</code>
+		 * Requests a configuration form from the room.	Listen to <code>configureForm</code>
 		 * event to fill out the form then call either <code>configure</code> or
 		 * <code>cancelConfiguration</code> to complete the configuration process
 		 *
@@ -833,7 +833,7 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * The unescaped JID of the room. <code>room&at;conference.server</code>
-		 *
+		 * Set this after initiating a new Room.
 		 * @return The room's JID.
 		 */
 		public function get roomJID():UnescapedJID
@@ -868,7 +868,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, body,
-													   htmlBody, Message.GROUPCHAT_TYPE );
+														 htmlBody, Message.GROUPCHAT_TYPE );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -901,8 +901,8 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( new EscapedJID( roomJID +
-																	   "/" + recipientNickname ),
-													   null, body, htmlBody, Message.CHAT_TYPE );
+																		 "/" + recipientNickname ),
+														 null, body, htmlBody, Message.CHAT_TYPE );
 				myConnection.send( tempMessage );
 			}
 		}
@@ -1161,7 +1161,7 @@ package org.igniterealtime.xiff.conference
 									e = new RoomEvent( RoomEvent.ROOM_LEAVE );
 								dispatchEvent( e );
 								myConnection.removeEventListener( PresenceEvent.PRESENCE,
-																  handleEvent );
+																	handleEvent );
 							}
 						}
 					}
@@ -1199,8 +1199,8 @@ package org.igniterealtime.xiff.conference
 				// Send an empty configuration form to open the instant room
 
 				// The IQ.result for this request will signify that the room is
-				// unlocked.  Sometimes there are messages that are sent before
-				// the request is returned.  It may be smart to either block those
+				// unlocked.	Sometimes there are messages that are sent before
+				// the request is returned.	It may be smart to either block those
 				// messages, or provide 2 events "beginConfiguration" and "endConfiguration"
 				// so the application can decide to block configuration messages
 
@@ -1276,8 +1276,8 @@ package org.igniterealtime.xiff.conference
 			{
 				// We didn't know about this occupant yet, so we add them, then let everyone know that we did.
 				addItem( new RoomOccupant( userNickname, aPresence.show, item.affiliation,
-										   item.role, item.jid ? item.jid.unescaped :
-										   null, this ));
+											 item.role, item.jid ? item.jid.unescaped :
+											 null, this ));
 
 				e = new RoomEvent( RoomEvent.USER_JOIN );
 				e.nickname = userNickname;

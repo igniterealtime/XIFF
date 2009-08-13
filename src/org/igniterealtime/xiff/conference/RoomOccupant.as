@@ -26,7 +26,7 @@ package org.igniterealtime.xiff.conference
 		private var _uid:String;
 
 		public function RoomOccupant( nickname:String, show:String, affiliation:String,
-									  role:String, jid:UnescapedJID, room:Room )
+										role:String, jid:UnescapedJID, room:Room )
 		{
 			this.displayName = nickname;
 			this.show = show;

@@ -16,13 +16,15 @@ package org.igniterealtime.xiff.data
 	{
 		public var _exts:Object;
 		
-		public function ExtensionContainer(){
+		public function ExtensionContainer()
+		{
 			_exts = {};
 		}
 	
 		public function addExtension( ext:IExtension ):IExtension
 		{
-			if (_exts[ext.getNS()] == null){
+			if (_exts[ext.getNS()] == null)
+			{
 				_exts[ext.getNS()] = [];
 			}
 			_exts[ext.getNS()].push(ext);
@@ -32,9 +34,10 @@ package org.igniterealtime.xiff.data
 		public function removeExtension( ext:IExtension ):Boolean
 		{
 			var extensions:Object = _exts[ext.getNS()];
-			for (var i:String in extensions) {
-			//for (var i in extensions) { untyped var throws compiler warning
-				if (extensions[i] === ext) {
+			for (var i:String in extensions) 
+			{
+				if (extensions[i] === ext) 
+				{
 					extensions[i].remove();
 					extensions.splice(Number(i), 1);
 					return true;
@@ -44,8 +47,8 @@ package org.igniterealtime.xiff.data
 		}
 		public function removeAllExtensions( ns:String ):void
 		{
-			//for (var i in this[_exts][namespace]) {
-			for (var i:String in _exts[ns]) {
+			for (var i:String in _exts[ns])
+			{
 				_exts[ns][i].ns();
 			}
 			_exts[ns] = [];
@@ -65,8 +68,8 @@ package org.igniterealtime.xiff.data
 		public function getAllExtensions():Array
 		{
 			var exts:Array = [];
-			for (var ns:String in _exts) {
-			//for (var ns in this[_exts]) {
+			for (var ns:String in _exts) 
+			{
 				exts = exts.concat(_exts[ns]);
 			}
 			return exts;
