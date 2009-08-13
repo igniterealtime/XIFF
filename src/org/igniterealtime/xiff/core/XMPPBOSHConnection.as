@@ -14,6 +14,8 @@ package org.igniterealtime.xiff.core
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.http.HTTPService;
 
+	import org.igniterealtime.xiff.core.*;
+	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.util.Callback;
 
@@ -23,10 +25,19 @@ package org.igniterealtime.xiff.core
 	 */
 	public class XMPPBOSHConnection extends XMPPConnection
 	{
+		/**
+		 * @default 1.6
+		 */
 		private static const BOSH_VERSION:String = "1.6";
 
+		/**
+		 * @default 7443
+		 */
 		private static const HTTPS_PORT:int = 7443;
 
+		/**
+		 * @default 7070
+		 */
 		private static const HTTP_PORT:int = 7070;
 
 		/**
@@ -94,7 +105,7 @@ package org.igniterealtime.xiff.core
 			responseTimer = new Timer( 0.0, 1 );
 		}
 
-		override public function connect( streamType:uint = 1 ):Boolean
+		override public function connect( streamType:uint = 0 ):Boolean
 		{
 			trace( "BOSH connect()" );
 
@@ -102,7 +113,7 @@ package org.igniterealtime.xiff.core
 				"xml:lang": "en",
 				"xmlns": "http://jabber.org/protocol/httpbind",
 				"xmlns:xmpp": "urn:xmpp:xbosh",
-				"xmpp:version": "1.0",
+				"xmpp:version": XMPPStanza.CLIENT_VERSION,
 				"hold": hold,
 				"rid": nextRID,
 				"secure": secure,
@@ -155,6 +166,10 @@ package org.igniterealtime.xiff.core
 			return true;
 		}
 
+		/**
+		 *
+		 * @param	responseBody
+		 */
 		public function processConnectionResponse( responseBody:XMLNode ):void
 		{
 			dispatchEvent( new ConnectionSuccessEvent());
@@ -214,6 +229,11 @@ package org.igniterealtime.xiff.core
 			sendQueuedRequests( body );
 		}
 
+		/**
+		 *
+		 * @param	bodyContent
+		 * @return
+		 */
 		private function createRequest( bodyContent:Array = null ):XMLNode
 		{
 			var attrs:Object = {
@@ -235,12 +255,20 @@ package org.igniterealtime.xiff.core
 			return req;
 		}
 
+		/**
+		 *
+		 * @param	e
+		 */
 		private function handleLogin( e:LoginEvent ):void
 		{
 			pollingEnabled = true;
 			pollServer();
 		}
 
+		/**
+		 *
+		 * @param	event
+		 */
 		private function handlePauseTimeout( event:TimerEvent ):void
 		{
 			trace( "handlePauseTimeout" );
@@ -248,13 +276,24 @@ package org.igniterealtime.xiff.core
 			pollServer();
 		}
 
+		/**
+		 *
+		 * @param	req
+		 * @param	isPollResponse
+		 * @param	event
+		 */
 		private function httpError( req:XMLNode, isPollResponse:Boolean, event:FaultEvent ):void
 		{
 			disconnect();
-			dispatchError( "Unknown HTTP Error", event.fault.rootCause.text, "",
-						   -1 );
+			dispatchError( "Unknown HTTP Error", event.fault.rootCause.text, "", -1 );
 		}
 
+		/**
+		 *
+		 * @param	req
+		 * @param	isPollResponse
+		 * @param	event
+		 */
 		private function httpResponse( req:XMLNode, isPollResponse:Boolean, event:ResultEvent ):void
 		{
 			requestCount--;
@@ -283,8 +322,7 @@ package org.igniterealtime.xiff.core
 
 			if ( bodyNode.attributes[ "type" ] == "terminate" )
 			{
-				dispatchError( "BOSH Error", bodyNode.attributes[ "condition" ],
-							   "", -1 );
+				dispatchError( "BOSH Error", bodyNode.attributes[ "condition" ], "", -1 );
 				active = false;
 			}
 
@@ -317,6 +355,9 @@ package org.igniterealtime.xiff.core
 				pollServer();
 		}
 
+		/**
+		 *
+		 */
 		private function pollServer():void
 		{
 			//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
@@ -328,6 +369,10 @@ package org.igniterealtime.xiff.core
 			sendRequests( null, true );
 		}
 
+		/**
+		 *
+		 * @param	event
+		 */
 		private function processResponse( event:TimerEvent = null ):void
 		{
 			// Read the data and send it to the appropriate parser
@@ -373,6 +418,9 @@ package org.igniterealtime.xiff.core
 			resetResponseProcessor();
 		}
 
+		/**
+		 *
+		 */
 		private function resetResponseProcessor():void
 		{
 			if ( responseQueue.length > 0 )
@@ -382,6 +430,11 @@ package org.igniterealtime.xiff.core
 			}
 		}
 
+		/**
+		 *
+		 * @param	body
+		 * @return
+		 */
 		private function sendQueuedRequests( body:* = null ):Boolean
 		{
 			if ( body )
@@ -396,7 +449,12 @@ package org.igniterealtime.xiff.core
 			return sendRequests();
 		}
 
-		//returns true if any requests were sent
+		/**
+		 * Returns true if any requests were sent
+		 * @param	data
+		 * @param	isPoll
+		 * @return
+		 */
 		private function sendRequests( data:XMLNode = null, isPoll:Boolean = false ):Boolean
 		{
 			if ( requestCount >= maxConcurrentRequests )
@@ -445,18 +503,17 @@ package org.igniterealtime.xiff.core
 			request.resultFormat = HTTPService.RESULT_FORMAT_TEXT;
 			request.contentType = "text/xml";
 
-			var responseCallback:Callback = new Callback( this, httpResponse, data,
-														  isPoll );
+			var responseCallback:Callback = new Callback( this, httpResponse, data, isPoll );
 			var errorCallback:Callback = new Callback( this, httpError, data, isPoll );
 
-			request.addEventListener( ResultEvent.RESULT, responseCallback.call,
-									  false );
+			request.addEventListener( ResultEvent.RESULT, responseCallback.call, false );
 			request.addEventListener( FaultEvent.FAULT, errorCallback.call, false );
 
 			request.send( data );
 
 			var byteData:ByteArray = new ByteArray();
 			byteData.writeUTFBytes(data.toString());
+			
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
 			event.data = byteData;
 			dispatchEvent( event );
@@ -472,6 +529,9 @@ package org.igniterealtime.xiff.core
 			return true;
 		}
 
+		/**
+		 *
+		 */
 		public function get boshPath():String
 		{
 			return _boshPath;
@@ -481,6 +541,9 @@ package org.igniterealtime.xiff.core
 			_boshPath = value;
 		}
 
+		/**
+		 *
+		 */
 		private function get nextRID():Number
 		{
 			if ( !rid )
@@ -488,6 +551,9 @@ package org.igniterealtime.xiff.core
 			return ++rid;
 		}
 
+		/**
+		 *
+		 */
 		public function get wait():uint
 		{
 			return _wait;
@@ -497,6 +563,9 @@ package org.igniterealtime.xiff.core
 			_wait = value;
 		}
 
+		/**
+		 * The usage of the secure or less secure port.
+		 */
 		public function get secure():Boolean
 		{
 			return _secure;
@@ -508,16 +577,9 @@ package org.igniterealtime.xiff.core
 			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
 
-		override public function get port():Number
-		{
-			return _port;
-		}
-		override public function set port( portnum:Number ):void
-		{
-			trace( "set port: {0}", portnum );
-			_port = portnum;
-		}
-
+		/**
+		 *
+		 */
 		public function get hold():uint
 		{
 			return _hold;
@@ -527,12 +589,18 @@ package org.igniterealtime.xiff.core
 			_hold = value;
 		}
 
+		/**
+		 * Server URI
+		 */
 		public function get httpServer():String
 		{
 			return ( secure ? "https" : "http" ) + "://" + server + ":" + port +
 				"/" + boshPath;
 		}
 
+		/**
+		 *
+		 */
 		public function get maxConcurrentRequests():uint
 		{
 			return _maxConcurrentRequests;
@@ -540,6 +608,16 @@ package org.igniterealtime.xiff.core
 		public function set maxConcurrentRequests( value:uint ):void
 		{
 			_maxConcurrentRequests = value;
+		}
+
+		override public function get port():Number
+		{
+			return _port;
+		}
+		override public function set port( portnum:Number ):void
+		{
+			trace( "set port: {0}", portnum );
+			_port = portnum;
 		}
 	}
 }
