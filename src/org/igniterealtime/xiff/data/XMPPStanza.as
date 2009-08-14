@@ -29,6 +29,7 @@ package org.igniterealtime.xiff.data
 		
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
+		public static const XML_LANG:String = "en";
 	
 		private var myErrorNode:XMLNode;
 		private var myErrorConditionNode:XMLNode;

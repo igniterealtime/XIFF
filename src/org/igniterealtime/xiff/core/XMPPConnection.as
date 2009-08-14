@@ -478,7 +478,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function chooseStreamTags(type:uint):void
 		{
-			openingStreamTag = '<?xml version="1.0"?>';
+			openingStreamTag = '<?xml version="1.0" encoding="UTF-8"?>';
 			if (type == STREAM_TYPE_FLASH || type == STREAM_TYPE_FLASH_TERMINATED)
 			{
 				openingStreamTag += '<flash';
@@ -500,7 +500,9 @@ package org.igniterealtime.xiff.core
 			{
 				openingStreamTag += 'xmlns:stream="' + XMPPStanza.NAMESPACE_STREAM + '"';
 			}
-			openingStreamTag += ' to="' + domain + '" version="' + XMPPStanza.CLIENT_VERSION + '"';
+			openingStreamTag += ' to="' + domain + '"'
+				+ ' xml:lang="' + XMPPStanza.XML_LANG + '"'
+				+ ' version="' + XMPPStanza.CLIENT_VERSION + '"';
 
 			if (type == STREAM_TYPE_FLASH_TERMINATED || type == STREAM_TYPE_STANDARD_TERMINATED)
 			{
