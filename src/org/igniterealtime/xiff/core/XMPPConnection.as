@@ -15,7 +15,8 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.bind.BindExtension;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.register.RegisterExtension;
-	import org.igniterealtime.xiff.data.session.SessionExtension;
+	import org.igniterealtime.xiff.data.session.SessionExtension;;
+	import org.igniterealtime.xiff.data.ping.PingExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.exception.SerializationException;
 
@@ -238,19 +239,23 @@ package org.igniterealtime.xiff.core
 		 */
 		protected var _incompleteRawXML:String = "";
 
-		private var _streamType:uint = 0;
+		/**
+		 * One of the STREAM_TYPE_.. constants.
+		 * @default STREAM_TYPE_STANDARD
+		 */
+		protected var _streamType:uint = 0;
 		private var presenceQueue:Array = [];
 		private var presenceQueueTimer:Timer;
 
 		/**
 		 * @private
 		 */
-		private var _outgoingBytes:uint = 0;
+		protected var _outgoingBytes:uint = 0;
 
 		/**
 		 * @private
 		 */
-		private var _incomingBytes:uint = 0;
+		protected var _incomingBytes:uint = 0;
 
 		/**
 		 *
@@ -262,6 +267,7 @@ package org.igniterealtime.xiff.core
 			SessionExtension.enable();
 			RegisterExtension.enable();
 			FormExtension.enable();
+			PingExtension.enable();
 		}
 
 		/**
@@ -377,15 +383,13 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Sends empty data in order to keep the connection alive.
-		 * TODO: Replace with XMPP ping extension.
+		 * Sends ping to server in order to keep the connection alive.
 		 */
 		public function sendKeepAlive():void
 		{
-			if ( isActive() )
-			{
-				sendXML(" "); // String
-			}
+			var ping:IQ = new IQ(new EscapedJID(server), IQ.GET_TYPE);
+			ping.addExtension(new PingExtension());
+			send(ping);
 		}
 
 		/**
@@ -1148,7 +1152,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function bindConnection():void
 		{
-			var bindIQ:IQ = new IQ(null, "set");
+			var bindIQ:IQ = new IQ(null, IQ.SET_TYPE);
 
 			var bindExt:BindExtension = new BindExtension();
 			if(resource)
@@ -1183,7 +1187,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function establishSession():void
 		{
-			var sessionIQ:IQ = new IQ(null, "set");
+			var sessionIQ:IQ = new IQ(null, IQ.SET_TYPE);
 
 			sessionIQ.addExtension(new SessionExtension());
 
@@ -1288,10 +1292,6 @@ package org.igniterealtime.xiff.core
 		{
 			return _useAnonymousLogin;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set useAnonymousLogin(value:Boolean):void
 		{
 			// set only if not connected
@@ -1305,7 +1305,6 @@ package org.igniterealtime.xiff.core
 		{
 			return myPort;
 		}
-
 		public function set port( portNum:Number ):void
 		{
 			myPort = portNum;
@@ -1319,7 +1318,6 @@ package org.igniterealtime.xiff.core
 		{
 			return ignoreWhitespace;
 		}
-
 		public function set ignoreWhite( val:Boolean ):void
 		{
 			ignoreWhitespace = val;
@@ -1335,12 +1333,10 @@ package org.igniterealtime.xiff.core
 		{
 			return _compress;
 		}
-
 		public function set compress(value:Boolean):void
 		{
 			_compress = value;
 		}
-
 
 		/**
 		 * Gets the fully qualified unescaped JID of the user.
@@ -1354,7 +1350,6 @@ package org.igniterealtime.xiff.core
 		{
 			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
 		}
-
 
 		/**
 		 *

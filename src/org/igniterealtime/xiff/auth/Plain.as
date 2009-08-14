@@ -15,6 +15,7 @@ package org.igniterealtime.xiff.auth
 	 * This class provides SASL authentication using the PLAIN mechanism.
 	 * This is used for plain text password authentication with an XMPP
 	 * server.
+	 * @see http://tools.ietf.org/html/rfc4616
 	 */
 	public class Plain extends SASLAuth
 	{

@@ -10,6 +10,7 @@ package org.igniterealtime.xiff.auth
 	/**
 	 * This class provides SASL authentication using the ANONYMOUS mechanism.
 	 * @see http://xmpp.org/extensions/xep-0175.html
+	 * @see http://tools.ietf.org/html/rfc4505
 	 */
 	public class Anonymous extends SASLAuth
 	{

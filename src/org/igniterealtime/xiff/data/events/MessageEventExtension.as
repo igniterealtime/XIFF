@@ -3,7 +3,7 @@
  */
 package org.igniterealtime.xiff.data.events
 {
-import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
@@ -11,9 +11,11 @@ import org.igniterealtime.xiff.data.IExtension;
 	 * OBSOLETE
 	 * @see http://xmpp.org/extensions/xep-0022.html
 	 */
-	public class MessageEventExtension implements IExtension, ISerializable {
+	public class MessageEventExtension implements IExtension, ISerializable
+	{
 		
-		public function getNS():String{
+		public function getNS():String
+		{
 			return "jabber:x:event";
 		}
 		
@@ -23,7 +25,10 @@ import org.igniterealtime.xiff.data.IExtension;
 		}
 		
 		/**
-		 * Called when the library need to retrieve the state of the instance.  If the instance manages its own state, then the state should be copied into the XMLNode passed.  If the instance also implements INodeProxy, then the parent should be verified against the parent XMLNode passed to determine if the serialization is in the same namespace.
+		 * Called when the library need to retrieve the state of the instance.
+		 * If the instance manages its own state, then the state should be copied into the XMLNode passed.
+		 * If the instance also implements INodeProxy, then the parent should be verified against the
+		 * parent XMLNode passed to determine if the serialization is in the same namespace.
 		 *
 		 * @param	parentNode (XMLNode) The container of the XML.
 		 * @return	On success, return true.
@@ -47,8 +52,5 @@ import org.igniterealtime.xiff.data.IExtension;
 		{
 			return true;
 		}
-		
-		
-		
 	}
 }
