@@ -513,7 +513,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * 
+		 *
 		 * @param	resultIQ
 		 */
 		protected function changePassword_result( resultIQ:IQ ):void
@@ -531,7 +531,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * 
+		 *
 		 * @param	resultIQ
 		 */
 		protected function getRegistrationFields_result( resultIQ:IQ ):void
@@ -701,7 +701,7 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * 
+		 *
 		 * @param	node The feature containing starttls tag.
 		 */
 		protected function handleStreamTLS( node:XMLNode ):void
@@ -747,7 +747,7 @@ package org.igniterealtime.xiff.core
 			{
 				dispatchError("SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1);
 			}
-			else 
+			else
 			{
 				auth = new authClass(this);
 			}
@@ -925,8 +925,17 @@ package org.igniterealtime.xiff.core
 		{
 			var bytedata:ByteArray = new ByteArray();
 			// The default value of 0 causes all available data to be read.
-			socket.readBytes(bytedata);
-			
+			socket.readBytes( bytedata );
+			parseDataReceived( bytedata );
+		}
+		
+		/**
+		 * Parses the data which the socket just received.
+		 * Used to simplify the overrides from classes extending this one.
+		 * @param	bytedata
+		 */
+		protected function parseDataReceived( bytedata:ByteArray ):void
+		{
 			// Increase the incoming data counter.
 			_incomingBytes += bytedata.length;
 			
@@ -935,12 +944,12 @@ package org.igniterealtime.xiff.core
 				bytedata.uncompress();
 			}
 			bytedata.position = 0;
-			var data:String = bytedata.readUTFBytes(bytedata.length);
+			var data:String = bytedata.readUTFBytes( bytedata.length );
 
 			var rawXML:String = _incompleteRawXML + data;
 			
 			var rawData:ByteArray = new ByteArray();
-			rawData.writeUTFBytes(rawXML);
+			rawData.writeUTFBytes( rawXML );
 			
 			// data comign in could also be parts of base64 encoded stuff.
 			
@@ -1099,7 +1108,7 @@ package org.igniterealtime.xiff.core
 			{
 				sendXML(auth.request); // XMLNode
 			}
-			else 
+			else
 			{
 				// We did not have a suitable auth method for this connection.
 			}
