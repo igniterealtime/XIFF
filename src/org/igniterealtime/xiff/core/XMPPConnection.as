@@ -152,7 +152,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @default 5222
 		 */
-		protected var myPort:Number = 5222;
+		protected var myPort:uint = 5222;
 
 		/**
 		 * True if both sides of the connected parties have accepted the zlib compression.
@@ -1301,11 +1301,11 @@ package org.igniterealtime.xiff.core
 		/**
 		 * The port to use when connecting. The default XMPP port is 5222.
 		 */
-		public function get port():Number
+		public function get port():uint
 		{
 			return myPort;
 		}
-		public function set port( portNum:Number ):void
+		public function set port( portNum:uint ):void
 		{
 			myPort = portNum;
 		}

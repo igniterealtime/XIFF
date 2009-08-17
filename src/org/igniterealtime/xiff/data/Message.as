@@ -152,13 +152,9 @@ package org.igniterealtime.xiff.data
 			}
 			return value;
 		}
-		
-		/**
-		 * @private
-		 */
-		public function set body( bodyText:String ):void
+		public function set body( value:String ):void
 		{
-			myBodyNode = replaceTextNode(getNode(), myBodyNode, "body", bodyText);
+			myBodyNode = replaceTextNode(getNode(), myBodyNode, "body", value);
 		}
 		
 		/**
@@ -179,18 +175,15 @@ package org.igniterealtime.xiff.data
 			}
 			return null;
 		}
-		
-		/**
-		 * @private
-		 */
-		public function set htmlBody( bodyHTML:String ):void
+		public function set htmlBody( value:String ):void
 		{
 			// Removes any existing HTML body text first
 	        removeAllExtensions(XHTMLExtension.NS);
 	
-	        if (exists(bodyHTML) && bodyHTML.length > 0) {
+	        if (exists(value) && value.length > 0) 
+			{
 	            var ext:XHTMLExtension = new XHTMLExtension(getNode());
-	            ext.body = bodyHTML;
+	            ext.body = value;
 	            addExtension(ext);
 	        }
 		}
@@ -204,13 +197,9 @@ package org.igniterealtime.xiff.data
 			if (mySubjectNode == null || mySubjectNode.firstChild == null) return null;
 			return mySubjectNode.firstChild.nodeValue;
 		}
-		
-		/**
-		 * @private
-		 */
-		public function set subject( aSubject:String ):void
+		public function set subject( value:String ):void
 		{
-			mySubjectNode = replaceTextNode(getNode(), mySubjectNode, "subject", aSubject);
+			mySubjectNode = replaceTextNode(getNode(), mySubjectNode, "subject", value);
 		}
 	
 		/**
@@ -223,18 +212,9 @@ package org.igniterealtime.xiff.data
 			if (myThreadNode == null || myThreadNode.firstChild == null) return null;
 			return myThreadNode.firstChild.nodeValue;
 		}
-		
-		/**
-		 * @private
-		 */
-		public function set thread( theThread:String ):void
+		public function set thread( value:String ):void
 		{
-			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", theThread);
-		}
-		
-		public function set time( theTime:Date ): void
-		{
-			
+			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", value);
 		}
 		
 		public function get time():Date
@@ -242,19 +222,19 @@ package org.igniterealtime.xiff.data
 			if(myTimeStampNode == null) return null;
 			var stamp:String = myTimeStampNode.attributes.stamp;
 			
+			// CCYYMMDDThh:mm:ss
 			var t:Date = new Date();
-			//CCYYMMDDThh:mm:ss
-			//20020910T23:41:07
-			t.setUTCFullYear(stamp.slice(0, 4)); //2002
-			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1); //09
-			t.setUTCDate(stamp.slice(6, 8)); //10
-											 //T
-			t.setUTCHours(stamp.slice(9, 11)); //23
-												//:
-			t.setUTCMinutes(stamp.slice(12, 14)); //41
-												//:
-			t.setUTCSeconds(stamp.slice(15, 17)); //07
+			t.setUTCFullYear(stamp.slice(0, 4)); 
+			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1);
+			t.setUTCDate(stamp.slice(6, 8));
+			t.setUTCHours(stamp.slice(9, 11)); 
+			t.setUTCMinutes(stamp.slice(12, 14)); 
+			t.setUTCSeconds(stamp.slice(15, 17));
 			return t;
+		}
+		public function set time( value:Date ): void
+		{
+			
 		}
 		
 		/**
@@ -276,7 +256,6 @@ package org.igniterealtime.xiff.data
 			}
 			return myStateNode.nodeName;
 		}
-		
 		public function set state( value:String ):void
 		{
 			if (value != ChatState.ACTIVE

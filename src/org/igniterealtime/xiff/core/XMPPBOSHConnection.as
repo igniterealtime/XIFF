@@ -10,17 +10,13 @@ package org.igniterealtime.xiff.core
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 
-	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
-	import mx.rpc.http.HTTPService;
-
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.events.*;
-	import org.igniterealtime.xiff.util.Callback;
 
 	/**
 	 * Bidirectional-streams Over Synchronous HTTP (BOSH)
+	 * @see http://xmpp.org/extensions/xep-0124.html
 	 * @see http://xmpp.org/extensions/xep-0206.html
 	 */
 	public class XMPPBOSHConnection extends XMPPConnection
@@ -28,17 +24,19 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @default 1.6
 		 */
-		private static const BOSH_VERSION:String = "1.6";
+		public static const BOSH_VERSION:String = "1.6";
 
 		/**
-		 * @default 7443
-		 */
-		private static const HTTPS_PORT:int = 7443;
-
-		/**
+		 * The default port as per XMPP specification.
 		 * @default 7070
 		 */
-		private static const HTTP_PORT:int = 7070;
+		public static const HTTP_PORT:uint = 7070;
+
+		/**
+		 * The default secure port as per XMPP specification.
+		 * @default 7443
+		 */
+		public static const HTTPS_PORT:uint = 7443;
 
 		/**
 		 * Keys should match URLRequestMethod constants.
@@ -54,14 +52,25 @@ package org.igniterealtime.xiff.core
 
 		private var _boshPath:String = "http-bind/";
 
+		/**
+		 * This attribute specifies the maximum number of requests the connection
+		 * manager is allowed to keep waiting at any one time during the session.
+		 * If the client is not able to use HTTP Pipelining then this SHOULD be set to "1".
+		 */
 		private var _hold:uint = 1;
 
 		private var _maxConcurrentRequests:uint = 2;
 
-		private var _port:Number;
+		private var _port:uint;
 
 		private var _secure:Boolean;
 
+		/**
+		 * This attribute specifies the longest time (in seconds) that the connection
+		 * manager is allowed to wait before responding to any request during the session.
+		 * This enables the client to limit the delay before it discovers any network
+		 * failure, and to prevent its HTTP/TCP connection from expiring due to inactivity.
+		 */
 		private var _wait:uint = 20;
 
 		private var boshPollingInterval:uint = 10000;
@@ -88,7 +97,10 @@ package org.igniterealtime.xiff.core
 
 		private var responseTimer:Timer;
 
-		private var rid:Number;
+		/**
+		 * Optional, positive integer.
+		 */
+		private var rid:uint;
 
 		private var sid:String;
 
@@ -107,10 +119,8 @@ package org.igniterealtime.xiff.core
 
 		override public function connect( streamType:uint = 0 ):Boolean
 		{
-			trace( "BOSH connect()" );
-
 			var attrs:Object = {
-				"xml:lang": "en",
+				"xml:lang": XMPPStanza.XML_LANG,
 				"xmlns": "http://jabber.org/protocol/httpbind",
 				"xmlns:xmpp": "urn:xmpp:xbosh",
 				"xmpp:version": XMPPStanza.CLIENT_VERSION,
@@ -257,9 +267,9 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 *
-		 * @param	e
+		 * @param	event
 		 */
-		private function handleLogin( e:LoginEvent ):void
+		private function handleLogin( event:LoginEvent ):void
 		{
 			pollingEnabled = true;
 			pollServer();
@@ -271,35 +281,16 @@ package org.igniterealtime.xiff.core
 		 */
 		private function handlePauseTimeout( event:TimerEvent ):void
 		{
-			trace( "handlePauseTimeout" );
 			pollingEnabled = true;
 			pollServer();
 		}
-
-		/**
-		 *
-		 * @param	req
-		 * @param	isPollResponse
-		 * @param	event
-		 */
-		private function httpError( req:XMLNode, isPollResponse:Boolean, event:FaultEvent ):void
+		
+		private function onRequestComplete( event:Event ):void
 		{
-			disconnect();
-			dispatchError( "Unknown HTTP Error", event.fault.rootCause.text, "", -1 );
-		}
-
-		/**
-		 *
-		 * @param	req
-		 * @param	isPollResponse
-		 * @param	event
-		 */
-		private function httpResponse( req:XMLNode, isPollResponse:Boolean, event:ResultEvent ):void
-		{
+			var loader:URLLoader = event.target as URLLoader;
+			
 			requestCount--;
-			var rawXML:String = event.result as String;
-
-			trace( "INCOMING {0}", rawXML );
+			var rawXML:String = loader.data as String;
 
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = this.ignoreWhite;
@@ -334,7 +325,9 @@ package org.igniterealtime.xiff.core
 				for each ( var child:XMLNode in bodyNode.childNodes )
 				{
 					if ( child.nodeName == "stream:features" )
+					{
 						featuresFound = true;
+					}
 				}
 				if ( !featuresFound )
 				{
@@ -352,7 +345,9 @@ package org.igniterealtime.xiff.core
 
 			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
 			if ( requestCount == 0 && !sendQueuedRequests())
+			{
 				pollServer();
+			}
 		}
 
 		/**
@@ -360,12 +355,21 @@ package org.igniterealtime.xiff.core
 		 */
 		private function pollServer():void
 		{
-			//We shouldn't poll if the connection is dead, if we had requests to send instead, or if there's already one in progress
+			/*
+			 * We shouldn't poll if the connection is dead, if we had requests
+			 * to send instead, or if there's already one in progress
+			 */
 			if ( !isActive() || !pollingEnabled || sendQueuedRequests() || requestCount >
 				0 )
+			{
 				return;
+			}
 
-			//this should be safe since sendRequests checks to be sure it's not over the concurrent requests limit, and we just ensured that the queue is empty by calling sendQueuedRequests()
+			/*
+			 * this should be safe since sendRequests checks to be sure it's not 
+			 * over the concurrent requests limit, and we just ensured that the queue 
+			 * is empty by calling sendQueuedRequests()
+			 */
 			sendRequests( null, true );
 		}
 
@@ -475,41 +479,24 @@ package org.igniterealtime.xiff.core
 					var temp:Array = [];
 					for ( var i:uint = 0; i < 10 && requestQueue.length > 0; ++i )
 					{
-						temp.push( requestQueue.shift());
+						temp.push( requestQueue.shift() );
 					}
 					data = createRequest( temp );
 				}
 			}
-			/*
-			var req:URLRequest = new URLRequest(httpServer);
+			
+			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
 			req.requestHeaders = headers[ req.method ];
 			req.data = data;
+			
 			var loader:URLLoader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.addEventListener(Event.COMPLETE, onRequestComplete);
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.load(req);
-			*/
-			
-			// TODO: Could this be replaced with URLLoader ?
-			//build the http request
-			var request:HTTPService = new HTTPService();
-			request.method = "post";
-			request.headers = headers[ request.method ];
-			request.url = httpServer;
-			request.resultFormat = HTTPService.RESULT_FORMAT_TEXT;
-			request.contentType = "text/xml";
-
-			var responseCallback:Callback = new Callback( this, httpResponse, data, isPoll );
-			var errorCallback:Callback = new Callback( this, httpError, data, isPoll );
-
-			request.addEventListener( ResultEvent.RESULT, responseCallback.call, false );
-			request.addEventListener( FaultEvent.FAULT, errorCallback.call, false );
-
-			request.send( data );
 
 			var byteData:ByteArray = new ByteArray();
 			byteData.writeUTFBytes(data.toString());
@@ -523,8 +510,6 @@ package org.igniterealtime.xiff.core
 				lastPollTime = new Date();
 				trace( "Polling" );
 			}
-
-			trace( "OUTGOING {0}", data );
 
 			return true;
 		}
@@ -544,10 +529,10 @@ package org.igniterealtime.xiff.core
 		/**
 		 *
 		 */
-		private function get nextRID():Number
+		private function get nextRID():uint
 		{
 			if ( !rid )
-				rid = Math.floor( Math.random() * 1000000 );
+				rid = Math.floor( Math.random() * 1000000 + 10 );
 			return ++rid;
 		}
 
@@ -610,11 +595,11 @@ package org.igniterealtime.xiff.core
 			_maxConcurrentRequests = value;
 		}
 
-		override public function get port():Number
+		override public function get port():uint
 		{
 			return _port;
 		}
-		override public function set port( portnum:Number ):void
+		override public function set port( portnum:uint ):void
 		{
 			trace( "set port: {0}", portnum );
 			_port = portnum;
