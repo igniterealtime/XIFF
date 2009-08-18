@@ -262,9 +262,12 @@ package org.igniterealtime.xiff.vcard
 		 */
 		private var contact:RosterItemVO;
 
+		/**
+		 * Don't call directly VCard, use a static method and add a callback.
+		 */
 		public function VCard()
 		{
-			throw new Error( "Don't call directly VCard, use a static method and add a callback." );
+			
 		}
 		
 		/**

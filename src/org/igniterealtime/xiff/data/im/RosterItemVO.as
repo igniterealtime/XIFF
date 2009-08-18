@@ -35,12 +35,16 @@ package org.igniterealtime.xiff.data.im
 		private var _subscribeType:String;
 		private var _status:String;
 		private var _show:String;
+		
+		/**
+		 * TODO: Check type from specs, assuming it could be int.
+		 */
 		private var _priority:Number;
 		private var _online:Boolean = false;
 
 		public function RosterItemVO(newJID:UnescapedJID)
 		{
-		  jid = newJID;
+			jid = newJID;
 		}
 
 		/**
@@ -58,11 +62,23 @@ package org.igniterealtime.xiff.data.im
 		  return item;
 		}
 
+		/**
+		 * 
+		 * @return
+		 */
+		public override function toString():String
+		{
+		  return jid.toString();
+		}
+
 		public function set uid(i:String):void
 		{
 
 		}
 
+		/**
+		 * 
+		 */
 		public function get uid():String
 		{
 		  return _jid.toString();
@@ -192,10 +208,5 @@ package org.igniterealtime.xiff.data.im
 			{
 			return askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscribeType == RosterExtension.SUBSCRIBE_TYPE_NONE || subscribeType == RosterExtension.SUBSCRIBE_TYPE_FROM);
 		  }
-
-		public override function toString():String
-		{
-		  return jid.toString();
-		}
 	}
 }

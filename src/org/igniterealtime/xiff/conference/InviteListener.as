@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.conference
 	 */
 	public class InviteListener extends EventDispatcher
 	{
-		private var myConnection:XMPPConnection;
+		private var _connection:XMPPConnection;
 
 		/**
 		 *
@@ -42,46 +42,23 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( aConnection != null )
 			{
-				setConnection( aConnection );
+				connection = aConnection;
 			}
 		}
-
+		
 		/**
-		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @return	The XMPPConnection used
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection
+		 * @param	event
 		 */
-		public function getConnection():XMPPConnection
+		private function handleEvent( event:Object ):void
 		{
-			return myConnection;
-		}
-
-		/**
-		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
-		 *
-		 * @param	connection The XMPPConnection instance to use.
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection
-		 */
-		public function setConnection( connection:XMPPConnection ):void
-		{
-			if ( myConnection != null )
-			{
-				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
-			}
-			myConnection = connection;
-			myConnection.addEventListener( MessageEvent.MESSAGE, handleEvent );
-		}
-
-		private function handleEvent( eventObj:Object ):void
-		{
-			switch ( eventObj.type )
+			switch ( event.type )
 			{
 				case MessageEvent.MESSAGE:
 
 					try
 					{
-						var msg:Message = eventObj.data as Message;
+						var msg:Message = event.data as Message;
 						var exts:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
 						if ( !exts || exts.length < 0 )
 						{
@@ -90,7 +67,7 @@ package org.igniterealtime.xiff.conference
 						var muc:MUCUserExtension = exts[ 0 ];
 						if ( muc.type == MUCUserExtension.INVITE_TYPE )
 						{
-							var room:Room = new Room( myConnection );
+							var room:Room = new Room( _connection );
 							room.roomJID = msg.from.unescaped;
 							room.password = muc.password;
 
@@ -109,6 +86,26 @@ package org.igniterealtime.xiff.conference
 
 					break;
 			}
+		}
+
+		/**
+		 * A reference to the XMPPConnection being used for incoming/outgoing XMPP data.
+		 *
+		 * @return	The XMPPConnection used
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
+		 */
+		public function get connection():XMPPConnection
+		{
+			return _connection;
+		}
+		public function set connection( value:XMPPConnection ):void
+		{
+			if ( _connection != null )
+			{
+				_connection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
+			}
+			_connection = value;
+			_connection.addEventListener( MessageEvent.MESSAGE, handleEvent );
 		}
 	}
 }

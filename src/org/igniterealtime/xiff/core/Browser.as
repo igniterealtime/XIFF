@@ -21,7 +21,7 @@ package org.igniterealtime.xiff.core
 	{
 		private var _connection:XMPPConnection;
 
-		private var _pending:Object;
+		private var _pending:Object = {};
 
 		private static var _staticDepends:Array = [ ItemDiscoExtension, InfoDiscoExtension,
 													BrowseExtension, ExtensionClassRegistry ];
@@ -31,13 +31,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Creates a new Browser object.
 		 *
-		 * @param	conn A reference to the <code>XMPPConnection</code> instance
+		 * @param	aConnection A reference to the <code>XMPPConnection</code> instance
 		 * to use.
 		 */
-		public function Browser( conn:XMPPConnection )
+		public function Browser( aConnection:XMPPConnection )
 		{
-			connection = conn;
-			_pending = {};
+			connection = aConnection;
 		}
 
 		/**
@@ -63,7 +62,7 @@ package org.igniterealtime.xiff.core
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( ext );
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		public function getNodeItems( service:EscapedJID, node:String, callback:String, scope:Object ):void
@@ -75,7 +74,7 @@ package org.igniterealtime.xiff.core
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( ext );
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -93,7 +92,7 @@ package org.igniterealtime.xiff.core
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new InfoDiscoExtension( iq.getNode()));
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -111,7 +110,7 @@ package org.igniterealtime.xiff.core
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new ItemDiscoExtension( iq.getNode()));
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -128,7 +127,7 @@ package org.igniterealtime.xiff.core
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new BrowseExtension( iq.getNode()));
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -139,15 +138,9 @@ package org.igniterealtime.xiff.core
 		{
 			return _connection;
 		}
-
-		/**
-		 * @private
-		 *
-		 * Read-only.
-		 */
-		public function set connection( val:XMPPConnection ):void
+		public function set connection( value:XMPPConnection ):void
 		{
-			_connection = val;
+			_connection = value;
 		}
 	}
 

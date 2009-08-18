@@ -1,8 +1,10 @@
 /*
  * License
  */
-package org.igniterealtime.xiff.data.muc{
-
+package org.igniterealtime.xiff.data.muc
+{
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.muc.*;
 	
 	/**
 	 * This class contains a series of static constants that are used throughout the
@@ -24,13 +26,6 @@ package org.igniterealtime.xiff.data.muc{
 	 * <li>VISITOR_ROLE</li>
 	 * </ul>
 	 */
-	
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.muc.MUCExtension;
-	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
-	import org.igniterealtime.xiff.data.muc.MUCOwnerExtension;
-	import org.igniterealtime.xiff.data.muc.MUCAdminExtension;
-	
 	public class MUC
 	{
 		public static const ADMIN_AFFILIATION:String = "admin";
@@ -44,11 +39,16 @@ package org.igniterealtime.xiff.data.muc{
 		public static const PARTICIPANT_ROLE:String = "participant";
 		public static const VISITOR_ROLE:String = "visitor";
 	
-		private static var staticDependencies:Array = [ ExtensionClassRegistry, MUCExtension, MUCUserExtension, MUCOwnerExtension, MUCAdminExtension ];
+		private static var staticDependencies:Array = [
+			ExtensionClassRegistry, 
+			MUCExtension, 
+			MUCUserExtension,
+			MUCOwnerExtension, 
+			MUCAdminExtension 
+		];
 	
 	    /** 
 	     * Register the multi-user chat extension capabilities with this method
-	     * availability Flash Player 7
 	     */
 	    public static function enable():void
 	    {

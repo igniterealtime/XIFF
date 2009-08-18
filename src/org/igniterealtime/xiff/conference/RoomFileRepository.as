@@ -3,19 +3,16 @@
  */
 package org.igniterealtime.xiff.conference
 {
-	import mx.collections.ArrayCollection;
 
 	public class RoomFileRepository
 	{
-		//		private _baseurl:String;
-		//		
-		//		[Bindable]
-		//		public files:ArrayCollection;
-		//		
+		//		private var _baseurl:String;
+		//
+		//		public var files:Array = [];
+		//
 		//		public function RoomFileRepository(fileRepoURL:String)
 		//		{
 		//			_baseurl = fileRepoURL;
-		//			files = new ArrayCollection();
 		//		}
 	}
 }
