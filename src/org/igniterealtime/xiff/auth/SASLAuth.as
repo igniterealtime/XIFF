@@ -26,7 +26,7 @@ package org.igniterealtime.xiff.auth
 		
 		public function SASLAuth()
 		{
-			throw new Error( "Don't call directly SASLAuth; use a subclass" );
+			// Don't call directly SASLAuth; use a subclass
 		}
 
 		/**
