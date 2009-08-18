@@ -19,8 +19,8 @@ package org.igniterealtime.xiff.conference
 	 * @see	org.igniterealtime.xiff.conference.Room.#invite
 	 */
 	[Event( name="invited",type="org.igniterealtime.xiff.events.InviteEvent" )]
-	
-	
+
+
 	/**
 	 * Manages the dispatching of events during invitations.  Add event
 	 * listeners to an instance of this class to monitor invite and decline

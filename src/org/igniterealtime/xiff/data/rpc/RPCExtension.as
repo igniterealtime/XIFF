@@ -1,13 +1,9 @@
 /*
  * License
  */
-package org.igniterealtime.xiff.data.rpc{
-
-	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
+package org.igniterealtime.xiff.data.rpc
+{
+	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.rpc.XMLRPC;
 	import flash.xml.XMLNode;
 	
@@ -26,6 +22,11 @@ package org.igniterealtime.xiff.data.rpc{
 		private var myResult:Array;
 		private var myFault:Object;
 	
+		public function RPCExtension()
+		{
+			throw new Error( "Don't call directly RPCExtension; use a subclass" );
+		}
+		
 		/**
 		 * Place the remote call.  This method serializes the remote procedure call to XML.
 		 * The call will be made on the remote machine when the stanza containing this extension is sent to the server.

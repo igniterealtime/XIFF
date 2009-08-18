@@ -113,7 +113,7 @@ package org.igniterealtime.xiff.im
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 		
 		/**
-		 * 
+		 *
 		 * @param	aConnection A reference to an XMPPConnection class instance
 		 */
 		public function Roster( aConnection:XMPPConnection = null)
@@ -129,7 +129,7 @@ package org.igniterealtime.xiff.im
 		}
 		
 		/**
-		 * 
+		 *
 		 * @return
 		 */
 		private static function RosterStaticConstructor():Boolean
@@ -180,7 +180,7 @@ package org.igniterealtime.xiff.im
 			myConnection.send( tempIQ );
 	
 			
-			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING, 
+			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
 				[groupName], subscription, askType );
 		}
 		
@@ -368,7 +368,7 @@ package org.igniterealtime.xiff.im
 		}
 		
 		/**
-		 * 
+		 *
 		 * @param	resultIQ
 		 */
 		public function fetchRoster_result( resultIQ:IQ ):void
@@ -377,7 +377,7 @@ package org.igniterealtime.xiff.im
 			removeAll();
 			try
 			{
-				disableAutoUpdate()
+				disableAutoUpdate();
 				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ))
 				{
 					for each(var item:* in ext.getAllItems())
@@ -387,7 +387,7 @@ package org.igniterealtime.xiff.im
 							continue;
 						
 						var askType:String = item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
-						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE, 
+						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE,
 							"Offline", item.groupNames, item.subscription.toLowerCase(), askType);
 					}
 				}
@@ -404,7 +404,7 @@ package org.igniterealtime.xiff.im
 		}
 	
 		/**
-		 * 
+		 *
 		 * @param	resultIQ
 		 */
 		public function addContact_result( resultIQ:IQ ):void
@@ -415,7 +415,7 @@ package org.igniterealtime.xiff.im
 		}
 		
 		/**
-		 * 
+		 *
 		 * @param	resultIQ
 		 */
 		public function unsubscribe_result( resultIQ:IQ ):void
@@ -424,7 +424,7 @@ package org.igniterealtime.xiff.im
 		}
 			
 		/**
-		 * 
+		 *
 		 * @param	eventObj PresenceEvent, LoginEvent or RosterExtension
 		 */
 		private function handleEvent( eventObj:* ):void
@@ -485,7 +485,7 @@ package org.igniterealtime.xiff.im
 							else
 							{
 								var groups:Array = item.groupNames;
-								var askType:String = item.askType != null ? 
+								var askType:String = item.askType != null ?
 									item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
 
 								if ( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&
@@ -495,8 +495,8 @@ package org.igniterealtime.xiff.im
 									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline",
 										groups, item.subscription.toLowerCase(), askType );
 								}
-								else if ( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE || 
-									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) && 
+								else if ( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ||
+									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) &&
 										item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
 								{
 									// A contact was added to the roster, and its authorization is still pending.

@@ -7,16 +7,11 @@ package org.igniterealtime.xiff.conference
 
 	import mx.collections.ArrayCollection;
 
-	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.muc.*;
-	import org.igniterealtime.xiff.events.DisconnectionEvent;
-	import org.igniterealtime.xiff.events.MessageEvent;
-	import org.igniterealtime.xiff.events.PresenceEvent;
-	import org.igniterealtime.xiff.events.RoomEvent;
+	import org.igniterealtime.xiff.events.*;
 
 	/**
 	 * Dispatched when the room subject changes.
@@ -29,7 +24,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the
 	 * group message as an instance of the <code>Message</code> class.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.GROUP_MESSAGE
 	 */
 	[Event( name="groupMessage",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -37,7 +32,7 @@ package org.igniterealtime.xiff.conference
 	 * contains an attribute <code>data</code> with the private message as an instance of the
 	 * <code>Message</code> class.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PRIVATE_MESSAGE
 	 */
 	[Event( name="privateMessage",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -45,13 +40,13 @@ package org.igniterealtime.xiff.conference
 	 * will be displayed to other users. The room's role and affiliation will
 	 * be visible from this point forward.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_JOIN
 	 */
 	[Event( name="roomJoin",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when the server acknoledges that you have the left the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_LEAVE
 	 */
 	[Event( name="roomLeave",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -61,13 +56,13 @@ package org.igniterealtime.xiff.conference
 	 * <p>To grant or revoke permissions based on this list, only send the changes you wish to
 	 * make, calling grant/revoke with the new affiliation and existing JID.</p>
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.AFFILIATIONS
 	 */
 	[Event( name="affiliations",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when an administration action failed.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ADMIN_ERROR
 	 * @see	org.igniterealtime.xiff.core.XMPPConnection.error
 	 */
 	[Event( name="adminError",type="org.igniterealtime.xiff.events.RoomEvent" )]
@@ -75,59 +70,65 @@ package org.igniterealtime.xiff.conference
 	 * Dispatched when the room requires a password and the user did not supply one (or
 	 * the password provided is incorrect).
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PASSWORD_ERROR
 	 */
 	[Event( name="passwordError",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when the room is members-only and the user is not on the member list.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.REGISTRATION_REQ_ERROR
 	 */
 	[Event( name="registrationReqError",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the room is removed.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_DESTROYED
+	 */
+	[Event( name="roomDestroyed",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched if the user attempted to join the room but was not allowed to do so because
 	 * they are banned (i.e., has an affiliation of "outcast").
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.BANNED_ERROR
 	 */
 	[Event( name="bannedError",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched if the room has reached its maximum number of occupants.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.MAX_USERS_ERROR
 	 */
 	[Event( name="maxUsersError",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
 	 * creator provides an initial configuration and therefore before the room officially exists).
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.LOCKED_ERROR
 	 */
 	[Event( name="lockedError",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_JOIN
 	 */
 	[Event( name="userJoin",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
 	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_DEPARTURE
 	 */
 	[Event( name="userDeparture",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a user is kicked from the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_KICKED
 	 */
 	[Event( name="userKicked",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a user is banned from the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_BANNED
 	 */
 	[Event( name="userBanned",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -135,7 +136,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname
 	 * already existing in the room.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.NICK_CONFLICT
 	 */
 	[Event( name="nickConflict",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -155,7 +156,7 @@ package org.igniterealtime.xiff.conference
 	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see	org.igniterealtime.xiff.data.forms.FormField
 	 * @see	#configure
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.CONFIGURE_ROOM
 	 */
 	[Event( name="configureForm",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -166,7 +167,7 @@ package org.igniterealtime.xiff.conference
 	 * <code>reason</code>: A string containing the reason to join the room<br />
 	 * <code>data</code>: The original message containing the decline</p>
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.DECLINED
 	 */
 	[Event( name="declined",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
@@ -198,9 +199,9 @@ package org.igniterealtime.xiff.conference
 		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 
 		private static var staticConstructorDependencies:Array = [ FormExtension,
-																	 MUC ]
+																   MUC ]
 
-		//			private var _fileRepo:RoomFileRepository;
+		//private var _fileRepo:RoomFileRepository;
 
 		private var _active:Boolean;
 
@@ -241,19 +242,6 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Gets the user's affiliation for this room.
-		 * Possible affiliations are "owner", "admin", "member", and "outcast".
-		 * It is also possible to have no defined affiliation.
-		 *
-		 * @return The user's affiliation
-		 */
-		[Bindable( event=affiliationSet )]
-		public function get affiliation():String
-		{
-			return myAffiliation;
-		}
-
-		/**
 		 * Allow a previously banned JIDs to enter this room.	This is the same as:
 		 * Room.grant(NO_AFFILIATION, jid)
 		 *
@@ -267,22 +255,6 @@ package org.igniterealtime.xiff.conference
 		public function allow( jids:Array ):void
 		{
 			grant( Room.NO_AFFILIATION, jids );
-		}
-
-		/**
-		 * Whether the room shows full JIDs or not; (Read-only)
-		 */
-		public function get anonymous():Boolean
-		{
-			return _anonymous;
-		}
-
-		/**
-		 * Don't call this; it would be private, but ActionScript apparently doesn't like mixed-visibility properties
-		 */
-		public function set anonymous( newState:Boolean ):void
-		{
-			_anonymous = newState;
 		}
 
 		/**
@@ -304,7 +276,7 @@ package org.igniterealtime.xiff.conference
 			for each ( var banJID:UnescapedJID in jids )
 			{
 				adminExt.addItem( Room.OUTCAST_AFFILIATION, null, null, banJID.escaped,
-									null, null );
+								  null, null );
 			}
 
 			iq.addExtension( adminExt );
@@ -346,27 +318,10 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, null,
-														 null, Message.GROUPCHAT_TYPE,
-														 newSubject );
+													   null, Message.GROUPCHAT_TYPE,
+													   newSubject );
 				myConnection.send( tempMessage );
 			}
-		}
-
-		/**
-		 * The conference server to use for this room. Usually, this is a subdomain of
-		 * the primary XMPP server, like conference.myserver.com.
-		 */
-		public function get conferenceServer():String
-		{
-			return myJID.domain;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set conferenceServer( aServer:String ):void
-		{
-			roomJID = new UnescapedJID( roomName + "@" + aServer );
 		}
 
 		/**
@@ -403,46 +358,6 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
-		 *
-		 * @return	The XMPPConnection used
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection
-		 */
-		public function get connection():XMPPConnection
-		{
-			return myConnection;
-		}
-
-		/**
-		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
-		 *
-		 * @param	connection The XMPPConnection instance to use.
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection
-		 */
-		public function set connection( connection:XMPPConnection ):void
-		{
-			if ( myConnection != null )
-			{
-				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
-				myConnection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
-				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
-													handleEvent );
-			}
-
-			myConnection = connection;
-
-			myConnection.addEventListener( MessageEvent.MESSAGE, handleEvent, false,
-											 0, true );
-			myConnection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false,
-											 0, true );
-			myConnection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent,
-											 false, 0, true );
-
-			//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+myConnection.server,"")+"/"+roomName+"/";
-			//			_fileRepo = new RoomFileRepository(baserepo);
-		}
-
-		/**
 		 * Actively decline an invitation.	You can optionally ignore invitations
 		 * but if you choose to decline an invitation, you call this method on
 		 * a room instance that represents the room the invite originated from.
@@ -475,8 +390,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	alternateJID A JID for current members to use as an alternate room to join
 		 * after the room has been destroyed. Like a postal forwarding address.
 		 */
-		public function destroy( reason:String, alternateJID:UnescapedJID = null,
-								 callback:Function = null ):void
+		public function destroy( reason:String, alternateJID:UnescapedJID = null, callback:Function = null ):void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
@@ -524,7 +438,7 @@ package org.igniterealtime.xiff.conference
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
 			var tempMessage:Message = new Message( roomJID.escaped, null, body, htmlBody,
-													 Message.GROUPCHAT_TYPE );
+												   Message.GROUPCHAT_TYPE );
 			return tempMessage;
 		}
 
@@ -576,25 +490,13 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function invite( jid:UnescapedJID, reason:String ):void
 		{
-			var msg:Message = new Message( roomJID.escaped )
+			var msg:Message = new Message( roomJID.escaped );
 			var muc:MUCUserExtension = new MUCUserExtension();
 
 			muc.invite( jid.escaped, undefined, reason );
 
 			msg.addExtension( muc );
 			myConnection.send( msg );
-		}
-
-		/**
-		 * Determines whether the connection to the room is active - that is, the user
-		 * is connected and has joined the room.
-		 *
-		 * @return True if the connection is active; false otherwise.
-		 */
-		[Bindable( event=activeStateUpdated )]
-		public function get isActive():Boolean
-		{
-			return _active;
 		}
 
 		/**
@@ -696,262 +598,15 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var leavePresence:Presence = new Presence( userJID.escaped, null,
-															 Presence.UNAVAILABLE_TYPE );
+														   Presence.UNAVAILABLE_TYPE );
 				myConnection.send( leavePresence );
 
 				// Clear out the roster items
 				removeAll();
 				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
 				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
-													handleEvent );
+												  handleEvent );
 			}
-		}
-
-		/**
-		 * The nickname to use when joining.
-		 */
-		public function get nickname():String
-		{
-			return myNickname == null ? myConnection.username : myNickname;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set nickname( theNickname:String ):void
-		{
-			if ( isActive )
-			{
-				pendingNickname = theNickname;
-				// var tempPresence:Presence = new Presence( userJID );
-				var tempPresence:Presence = new Presence( new EscapedJID( userJID +
-																			"/" + pendingNickname ));
-				myConnection.send( tempPresence );
-			}
-			else
-			{
-				myNickname = theNickname;
-			}
-		}
-
-		/**
-		 * The password.
-		 */
-		public function get password():String
-		{
-			return myPassword;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set password( aPassword:String ):void
-		{
-			myPassword = aPassword;
-		}
-
-		/**
-		 * Requests an affiliation list for a given affiliation with with room.
-		 * This will either dispatch the event <code>RoomEvent.AFFILIATIONS</code> or
-		 * <code>RoomEvent.ADMIN_ERROR</code> depending on the result of the request.
-		 *
-		 * @param	affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
-		 * <code>Room.OUTCAST_AFFILIATION</code>,
-		 * <code>Room.MEMBER_AFFILIATION</code>,
-		 * <code>Room.ADMIN_AFFILIATION</code>,
-		 * <code>Room.OWNER_AFFILIATION</code>
-		 * @see	#revoke
-		 * @see	#grant
-		 * @see	#affiliations
-		 */
-		public function requestAffiliations( affiliation:String ):void
-		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
-
-			iq.callbackScope = this;
-			iq.callbackName = "finish_requestAffiliates";
-
-			owner.addItem( affiliation );
-
-			iq.addExtension( owner );
-			connection.send( iq );
-		}
-
-		/**
-		 * Requests a configuration form from the room.	Listen to <code>configureForm</code>
-		 * event to fill out the form then call either <code>configure</code> or
-		 * <code>cancelConfiguration</code> to complete the configuration process
-		 *
-		 * You must be joined to the room and have the owner affiliation to request
-		 * a configuration form
-		 *
-		 * @see	#configureForm
-		 * @see	#configure
-		 * @see	#cancelConfiguration
-		 */
-		public function requestConfiguration():void
-		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
-
-			iq.callbackScope = this;
-			iq.callbackName = "finish_requestConfiguration";
-			iq.addExtension( owner );
-
-			myConnection.send( iq );
-		}
-
-		/**
-		 * Revokes all affiliations from the JIDs. This is the same as:
-		 * <code>grant( Room.NO_AFFILIATION, jids )</code>
-		 *
-		 * <p>If the process could not be completed, the room will dispatch the event
-		 * <code>RoomEvent.ADMIN_ERROR</code>. Note: if the JID is banned from this room,
-		 * then this will also revoke the banned status.</p>
-		 *
-		 * @param	jids An array of UnescapedJIDs to revoke affiliations from
-		 * @see	#grant
-		 * @see	#allow
-		 */
-		public function revoke( jids:Array ):void
-		{
-			grant( Room.NO_AFFILIATION, jids );
-		}
-
-		/**
-		 * Gets the user's role in the conference room.
-		 * Possible roles are "visitor", "participant", "moderator" or no defined role.
-		 *
-		 * @return The user's role
-		 */
-		[Bindable( event=roleSet )]
-		public function get role():String
-		{
-			return myRole;
-		}
-
-		/**
-		 * The unescaped JID of the room. <code>room&at;conference.server</code>
-		 * Set this after initiating a new Room.
-		 * @return The room's JID.
-		 */
-		public function get roomJID():UnescapedJID
-		{
-			return myJID;
-		}
-		public function set roomJID( jid:UnescapedJID ):void
-		{
-			myJID = jid;
-		}
-
-		/**
-		 * The room name that should be used when joining.
-		 */
-		public function get roomName():String
-		{
-			return myJID.node;
-		}
-		public function set roomName( aName:String ):void
-		{
-			roomJID = new UnescapedJID( aName + "@" + conferenceServer );
-		}
-
-		/**
-		 * Sends a message to the conference room.
-		 *
-		 * @param	body The message body
-		 * @param	htmlBody The message body with HTML formatting
-		 */
-		public function sendMessage( body:String = null, htmlBody:String = null ):void
-		{
-			if ( isActive )
-			{
-				var tempMessage:Message = new Message( roomJID.escaped, null, body,
-														 htmlBody, Message.GROUPCHAT_TYPE );
-				myConnection.send( tempMessage );
-			}
-		}
-
-		/**
-		 * Sends a message to the conference room with an extension attached.
-		 * Use this method in conjunction with the <code>getMessage</code> method.
-		 *
-		 * @param	msg The message to send
-		 */
-		public function sendMessageWithExtension( msg:Message ):void
-		{
-			if ( isActive )
-			{
-				myConnection.send( msg );
-			}
-		}
-
-		/**
-		 * Sends a private message to a specific participant in the conference room.
-		 *
-		 * @param	recipientNickname The conference room nickname of the recipient who should
-		 * receive the private message
-		 * @param	body The message body
-		 * @param	htmlBody The message body with HTML formatting
-		 */
-		public function sendPrivateMessage( recipientNickname:String, body:String = null,
-											htmlBody:String = null ):void
-		{
-			if ( isActive )
-			{
-				var tempMessage:Message = new Message( new EscapedJID( roomJID +
-																		 "/" + recipientNickname ),
-														 null, body, htmlBody, Message.CHAT_TYPE );
-				myConnection.send( tempMessage );
-			}
-		}
-
-		/**
-		 * In a moderated room, sets voice status to a particular occupant, assuming the user
-		 * has the necessary permissions to do so.
-		 *
-		 * @param	occupantNick The nickname of the occupant to give voice
-		 * @param	voice Whether to add voice (true) or remove voice (false). Having voice means
-		 * that the user is actually able to talk. Without voice the user is effectively muted.
-		 */
-		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
-		{
-			if ( isActive )
-			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE, XMPPStanza.generateID( "voice_" ));
-				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
-				ext.addItem( null, voice ? MUC.PARTICIPANT_ROLE : MUC.VISITOR_ROLE );
-				tempIQ.addExtension( ext );
-				myConnection.send( tempIQ );
-			}
-		}
-
-		/**
-		 * The subject. (Read-only)
-		 */
-		[Bindable( event=subjectChange )]
-		public function get subject():String
-		{
-			return mySubject;
-		}
-
-		/**
-		 * @private
-		 */
-		override public function toString():String
-		{
-			return '[object Room]';
-		}
-
-		/**
-		 * Get the JID of the conference room user.
-		 *
-		 * @return your JID in the room
-		 */
-		public function get userJID():UnescapedJID
-		{
-			return new UnescapedJID( roomJID.bareJID + "/" + nickname );
 		}
 
 		/*
@@ -1161,7 +816,7 @@ package org.igniterealtime.xiff.conference
 									e = new RoomEvent( RoomEvent.ROOM_LEAVE );
 								dispatchEvent( e );
 								myConnection.removeEventListener( PresenceEvent.PRESENCE,
-																	handleEvent );
+																  handleEvent );
 							}
 						}
 					}
@@ -1276,14 +931,360 @@ package org.igniterealtime.xiff.conference
 			{
 				// We didn't know about this occupant yet, so we add them, then let everyone know that we did.
 				addItem( new RoomOccupant( userNickname, aPresence.show, item.affiliation,
-											 item.role, item.jid ? item.jid.unescaped :
-											 null, this ));
+										   item.role, item.jid ? item.jid.unescaped :
+										   null, this ));
 
 				e = new RoomEvent( RoomEvent.USER_JOIN );
 				e.nickname = userNickname;
 				e.data = aPresence;
 				dispatchEvent( e );
 			}
+		}
+		
+		/**
+		 * Requests an affiliation list for a given affiliation with with room.
+		 * This will either dispatch the event <code>RoomEvent.AFFILIATIONS</code> or
+		 * <code>RoomEvent.ADMIN_ERROR</code> depending on the result of the request.
+		 *
+		 * @param	affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
+		 * <code>Room.OUTCAST_AFFILIATION</code>,
+		 * <code>Room.MEMBER_AFFILIATION</code>,
+		 * <code>Room.ADMIN_AFFILIATION</code>,
+		 * <code>Room.OWNER_AFFILIATION</code>
+		 * @see	#revoke
+		 * @see	#grant
+		 * @see	#affiliations
+		 */
+		public function requestAffiliations( affiliation:String ):void
+		{
+			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
+			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+
+			iq.callbackScope = this;
+			iq.callbackName = "finish_requestAffiliates";
+
+			owner.addItem( affiliation );
+
+			iq.addExtension( owner );
+			connection.send( iq );
+		}
+
+		/**
+		 * Requests a configuration form from the room.	Listen to <code>configureForm</code>
+		 * event to fill out the form then call either <code>configure</code> or
+		 * <code>cancelConfiguration</code> to complete the configuration process
+		 *
+		 * You must be joined to the room and have the owner affiliation to request
+		 * a configuration form
+		 *
+		 * @see	#configureForm
+		 * @see	#configure
+		 * @see	#cancelConfiguration
+		 */
+		public function requestConfiguration():void
+		{
+			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
+			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+
+			iq.callbackScope = this;
+			iq.callbackName = "finish_requestConfiguration";
+			iq.addExtension( owner );
+
+			myConnection.send( iq );
+		}
+
+		/**
+		 * Revokes all affiliations from the JIDs. This is the same as:
+		 * <code>grant( Room.NO_AFFILIATION, jids )</code>
+		 *
+		 * <p>If the process could not be completed, the room will dispatch the event
+		 * <code>RoomEvent.ADMIN_ERROR</code>. Note: if the JID is banned from this room,
+		 * then this will also revoke the banned status.</p>
+		 *
+		 * @param	jids An array of UnescapedJIDs to revoke affiliations from
+		 * @see	#grant
+		 * @see	#allow
+		 */
+		public function revoke( jids:Array ):void
+		{
+			grant( Room.NO_AFFILIATION, jids );
+		}
+
+		/**
+		 * Sends a message to the conference room.
+		 *
+		 * @param	body The message body
+		 * @param	htmlBody The message body with HTML formatting
+		 */
+		public function sendMessage( body:String = null, htmlBody:String = null ):void
+		{
+			if ( isActive )
+			{
+				var tempMessage:Message = new Message( roomJID.escaped, null, body,
+													   htmlBody, Message.GROUPCHAT_TYPE );
+				myConnection.send( tempMessage );
+			}
+		}
+
+		/**
+		 * Sends a message to the conference room with an extension attached.
+		 * Use this method in conjunction with the <code>getMessage</code> method.
+		 *
+		 * @param	msg The message to send
+		 */
+		public function sendMessageWithExtension( msg:Message ):void
+		{
+			if ( isActive )
+			{
+				myConnection.send( msg );
+			}
+		}
+
+		/**
+		 * Sends a private message to a specific participant in the conference room.
+		 *
+		 * @param	recipientNickname The conference room nickname of the recipient who should
+		 * receive the private message
+		 * @param	body The message body
+		 * @param	htmlBody The message body with HTML formatting
+		 */
+		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
+		{
+			if ( isActive )
+			{
+				var tempMessage:Message = new Message( new EscapedJID( roomJID +
+																	   "/" + recipientNickname ),
+													   null, body, htmlBody, Message.CHAT_TYPE );
+				myConnection.send( tempMessage );
+			}
+		}
+
+		/**
+		 * In a moderated room, sets voice status to a particular occupant, assuming the user
+		 * has the necessary permissions to do so.
+		 *
+		 * @param	occupantNick The nickname of the occupant to give voice
+		 * @param	voice Whether to add voice (true) or remove voice (false). Having voice means
+		 * that the user is actually able to talk. Without voice the user is effectively muted.
+		 */
+		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
+		{
+			if ( isActive )
+			{
+				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE, XMPPStanza.generateID( "voice_" ));
+				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
+				ext.addItem( null, voice ? MUC.PARTICIPANT_ROLE : MUC.VISITOR_ROLE );
+				tempIQ.addExtension( ext );
+				myConnection.send( tempIQ );
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override public function toString():String
+		{
+			return '[object Room]';
+		}
+
+		/**
+		 * Whether the room shows full JIDs or not; (Read-only)
+		 */
+		public function get anonymous():Boolean
+		{
+			return _anonymous;
+		}
+
+		/**
+		 * Don't call this; it would be private, but ActionScript apparently doesn't like mixed-visibility properties
+		 */
+		public function set anonymous( newState:Boolean ):void
+		{
+			_anonymous = newState;
+		}
+
+		/**
+		 * The nickname to use when joining.
+		 */
+		public function get nickname():String
+		{
+			return myNickname == null ? myConnection.username : myNickname;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set nickname( theNickname:String ):void
+		{
+			if ( isActive )
+			{
+				pendingNickname = theNickname;
+				// var tempPresence:Presence = new Presence( userJID );
+				var tempPresence:Presence = new Presence( new EscapedJID( userJID +
+																		  "/" + pendingNickname ));
+				myConnection.send( tempPresence );
+			}
+			else
+			{
+				myNickname = theNickname;
+			}
+		}
+
+		/**
+		 * The password.
+		 */
+		public function get password():String
+		{
+			return myPassword;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set password( aPassword:String ):void
+		{
+			myPassword = aPassword;
+		}
+
+		/**
+		 * Gets the user's affiliation for this room.
+		 * Possible affiliations are "owner", "admin", "member", and "outcast".
+		 * It is also possible to have no defined affiliation.
+		 *
+		 * @return The user's affiliation
+		 */
+		[Bindable( event=affiliationSet )]
+		public function get affiliation():String
+		{
+			return myAffiliation;
+		}
+
+		/**
+		 * Gets the user's role in the conference room.
+		 * Possible roles are "visitor", "participant", "moderator" or no defined role.
+		 *
+		 * @return The user's role
+		 */
+		[Bindable( event=roleSet )]
+		public function get role():String
+		{
+			return myRole;
+		}
+
+		/**
+		 * The unescaped JID of the room. <code>room&at;conference.server</code>
+		 * Set this after initiating a new Room.
+		 * @return The room's JID.
+		 */
+		public function get roomJID():UnescapedJID
+		{
+			return myJID;
+		}
+
+		public function set roomJID( jid:UnescapedJID ):void
+		{
+			myJID = jid;
+		}
+
+		/**
+		 * The room name that should be used when joining.
+		 */
+		public function get roomName():String
+		{
+			return myJID.node;
+		}
+
+		public function set roomName( aName:String ):void
+		{
+			roomJID = new UnescapedJID( aName + "@" + conferenceServer );
+		}
+
+		/**
+		 * The subject. (Read-only)
+		 */
+		[Bindable( event=subjectChange )]
+		public function get subject():String
+		{
+			return mySubject;
+		}
+
+		/**
+		 * Get the JID of the conference room user.
+		 *
+		 * @return your JID in the room
+		 */
+		public function get userJID():UnescapedJID
+		{
+			return new UnescapedJID( roomJID.bareJID + "/" + nickname );
+		}
+
+		/**
+		 * The conference server to use for this room. Usually, this is a subdomain of
+		 * the primary XMPP server, like conference.myserver.com.
+		 */
+		public function get conferenceServer():String
+		{
+			return myJID.domain;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set conferenceServer( aServer:String ):void
+		{
+			roomJID = new UnescapedJID( roomName + "@" + aServer );
+		}
+
+		/**
+		 * Determines whether the connection to the room is active - that is, the user
+		 * is connected and has joined the room.
+		 *
+		 * @return True if the connection is active; false otherwise.
+		 */
+		[Bindable( event=activeStateUpdated )]
+		public function get isActive():Boolean
+		{
+			return _active;
+		}
+
+		/**
+		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
+		 *
+		 * @return	The XMPPConnection used
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
+		 */
+		public function get connection():XMPPConnection
+		{
+			return myConnection;
+		}
+
+		/**
+		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
+		 *
+		 * @param	connection The XMPPConnection instance to use.
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection
+		 */
+		public function set connection( connection:XMPPConnection ):void
+		{
+			if ( myConnection != null )
+			{
+				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
+				myConnection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
+				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
+												  handleEvent );
+			}
+
+			myConnection = connection;
+
+			myConnection.addEventListener( MessageEvent.MESSAGE, handleEvent, false,
+										   0, true );
+			myConnection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false,
+										   0, true );
+			myConnection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent,
+										   false, 0, true );
+
+			//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+myConnection.server,"")+"/"+roomName+"/";
+			//			_fileRepo = new RoomFileRepository(baserepo);
 		}
 	}
 }

@@ -39,9 +39,9 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Creates a new AbstractJID object. Used via EscapedJID or UnescapedJID.
 		 *
-		 * Each allowable portion of a JID (node identifier, domain identifier, and resource identifier)
+		 * <p>Each allowable portion of a JID (node identifier, domain identifier, and resource identifier)
 		 * MUST NOT be more than 1023 bytes in length, resulting in a maximum total size
-		 * (including the ’@’ and ’/’ separators) of 3071 bytes.
+		 * (including the ’@’ and ’/’ separators) of 3071 bytes.</p>
 		 *
 		 * @param	inJID The JID as a String.
 		 * @param	validate True if the JID should be validated.
@@ -50,13 +50,11 @@ package org.igniterealtime.xiff.core
 		{
 			if(validate)
 			{
-			if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1 || inJID.length > BYTE_LIMIT_TOTAL)
-			{
-				// TODO: Get rid of trace (use Logger) and create
-				// better exception
-				trace("Invalid JID: %s", inJID);
-				throw "Invalid JID";
-			}
+				if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1 || inJID.length > BYTE_LIMIT_TOTAL)
+				{
+					trace("Invalid JID: %s", inJID);
+					throw "Invalid JID";
+				}
 			}
 			var separatorIndex:int = inJID.lastIndexOf("@");
 			var slashIndex:int = inJID.lastIndexOf("/");
@@ -91,16 +89,16 @@ package org.igniterealtime.xiff.core
 				n.indexOf("<") >= 0 ||
 				n.indexOf(">") >= 0))
 			{
-			n = n.replace(/\\/g, "\\5c");
-			n = n.replace(/@/g, "\\40");
-			n = n.replace(/ /g, "\\20");
-			n = n.replace(/&/g, "\\26");
-			n = n.replace(/>/g, "\\3e");
-			n = n.replace(/</g, "\\3c");
-			n = n.replace(/:/g, "\\3a");
-			n = n.replace(/\//g, "\\2f");
-			n = n.replace(quoteregex, "\\22");
-			n = n.replace(quoteregex2, "\\27");
+				n = n.replace(/\\/g, "\\5c");
+				n = n.replace(/@/g, "\\40");
+				n = n.replace(/ /g, "\\20");
+				n = n.replace(/&/g, "\\26");
+				n = n.replace(/>/g, "\\3e");
+				n = n.replace(/</g, "\\3c");
+				n = n.replace(/:/g, "\\3a");
+				n = n.replace(/\//g, "\\2f");
+				n = n.replace(quoteregex, "\\22");
+				n = n.replace(quoteregex2, "\\27");
 			}
 			return n;
 		}
@@ -126,16 +124,16 @@ package org.igniterealtime.xiff.core
 				n.indexOf("\\22") >= 0 ||
 				n.indexOf("\\27") >= 0) )
 			{
-			n = n.replace(/\40/g, "@");
-			n = n.replace(/\20/g, " ");
-			n = n.replace(/\26/g, "&");
-			n = n.replace(/\3e/g, ">");
-			n = n.replace(/\3c/g, "<");
-			n = n.replace(/\3a/g, ":");
-			n = n.replace(/\2f/g, "/");
-			n = n.replace(quoteregex, '"');
-			n = n.replace(quoteregex2, "'");
-			n = n.replace(/\5c/g, "\\");
+				n = n.replace(/\40/g, "@");
+				n = n.replace(/\20/g, " ");
+				n = n.replace(/\26/g, "&");
+				n = n.replace(/\3e/g, ">");
+				n = n.replace(/\3c/g, "<");
+				n = n.replace(/\3a/g, ":");
+				n = n.replace(/\2f/g, "/");
+				n = n.replace(quoteregex, '"');
+				n = n.replace(quoteregex2, "'");
+				n = n.replace(/\5c/g, "\\");
 			}
 			return n;
 		}
@@ -148,11 +146,15 @@ package org.igniterealtime.xiff.core
 		public function toString():String
 		{
 			var j:String = "";
-			if(node)
-			j += node + "@";
+			if (node)
+			{
+				j += node + "@";
+			}
 			j += domain;
-			if(resource)
-			j += "/" + resource;
+			if (resource)
+			{
+				j += "/" + resource;
+			}
 
 			return j;
 		}
@@ -164,8 +166,10 @@ package org.igniterealtime.xiff.core
 		{
 			var str:String = toString();
 			var slashIndex:int = str.lastIndexOf("/");
-			if(slashIndex > 0)
-			str = str.substring(0, slashIndex);
+			if (slashIndex > 0)
+			{
+				str = str.substring(0, slashIndex);
+			}
 			return str;
 		}
 
@@ -175,7 +179,7 @@ package org.igniterealtime.xiff.core
 		public function get resource():String
 		{
 			if(_resource.length > 0)
-			return _resource;
+				return _resource;
 			return null;
 		}
 
@@ -185,7 +189,7 @@ package org.igniterealtime.xiff.core
 		public function get node():String
 		{
 			if(_node.length > 0)
-			return _node;
+				return _node;
 			return null;
 		}
 

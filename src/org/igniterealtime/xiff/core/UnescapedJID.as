@@ -3,6 +3,7 @@
  */
 package org.igniterealtime.xiff.core
 {
+
 	/**
 	 * This class provides access to a JID (Jabber ID) in unescaped form.
 	 */
@@ -15,12 +16,13 @@ package org.igniterealtime.xiff.core
 		 * @param	validate Will validate the JID string if true. Invalid
 		 * JIDs will throw an error.
 		 */
-		public function UnescapedJID(inJID:String, validate:Boolean=false)
+		public function UnescapedJID( inJID:String, validate:Boolean = false )
 		{
-			super(inJID, validate);			
+			super( inJID, validate );
 
-			if(node) {
-				_node = unescapedNode(node);
+			if ( node )
+			{
+				_node = unescapedNode( node );
 			}
 		}
 
@@ -29,7 +31,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get escaped():EscapedJID
 		{
-			return new EscapedJID(toString());
+			return new EscapedJID( toString());
 		}
 
 		/**
@@ -39,9 +41,9 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @return True if the JIDs are equivalent.
 		 */
-		public function equals(testJID:UnescapedJID, shouldTestBareJID:Boolean):Boolean 
+		public function equals( testJID:UnescapedJID, shouldTestBareJID:Boolean ):Boolean
 		{
-			if(shouldTestBareJID)
+			if ( shouldTestBareJID )
 				return testJID.bareJID == bareJID;
 			else
 				return testJID.toString() == toString();

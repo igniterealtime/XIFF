@@ -23,6 +23,11 @@ package org.igniterealtime.xiff.auth
 		 * The current response stage.
 		 */
 		protected var stage:int;
+		
+		public function SASLAuth()
+		{
+			throw new Error( "Don't call directly SASLAuth; use a subclass" );
+		}
 
 		/**
 		 * Called when a response to this authentication is received.

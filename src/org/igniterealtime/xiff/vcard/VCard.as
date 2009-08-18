@@ -262,6 +262,11 @@ package org.igniterealtime.xiff.vcard
 		 */
 		private var contact:RosterItemVO;
 
+		public function VCard()
+		{
+			throw new Error( "Don't call directly VCard, use a static method and add a callback." );
+		}
+		
 		/**
 		 * Seems to be the way a vcard is requested and then later referred to:
 		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
