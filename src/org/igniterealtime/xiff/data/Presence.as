@@ -112,58 +112,62 @@ package org.igniterealtime.xiff.data
 			
 			return myShowNode.firstChild.nodeValue;
 		}
-		
-		public function set show( showVal:String ):void
+		public function set show( value:String ):void
 		{
-			if(showVal != SHOW_AWAY
-			&& showVal != SHOW_CHAT
-			&& showVal != SHOW_DND
-			&& showVal != SHOW_XA
-			&& showVal != null
-			&& showVal != "")
-				throw new Error("Invalid show value: " + showVal + " for presence");
+			if (value != SHOW_AWAY
+			&& value != SHOW_CHAT
+			&& value != SHOW_DND
+			&& value != SHOW_XA
+			&& value != null
+			&& value != "")
+				throw new Error("Invalid show value: " + value + " for presence");
 			
-			if(myShowNode && (showVal == null || showVal == ""))
+			if (myShowNode && (value == null || value == ""))
 			{
 				myShowNode.removeNode();
 				myShowNode = null;
 			}
-			myShowNode = replaceTextNode(getNode(), myShowNode, "show", showVal);
+			myShowNode = replaceTextNode(getNode(), myShowNode, "show", value);
 		}
 		
 		/**
 		 * The status; usually used for "away messages."
 		 *
 		 */
-		public function get status():String  {
+		public function get status():String
+		{
 			if (myStatusNode == null || myStatusNode.firstChild == null) return null;
 			return myStatusNode.firstChild.nodeValue;
 		}
-		
-		public function set status( statusVal:String ):void
+		public function set status( value:String ):void
 		{
-			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", statusVal);
+			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", value);
 		}
 		
 		/**
 		 * The priority of the presence, usually on a scale of 1-5.
-		 *
+		 * RFC: "The value MUST be an integer between -128 and +127"
 		 */
-		public function get priority():Number
+		public function get priority():int
 		{
-			if (myPriorityNode == null) return NaN;
-			var p:Number = Number(myPriorityNode.firstChild.nodeValue);
-			if( isNaN( p ) ) {
+			if (myPriorityNode == null)
+			{
 				return NaN;
 			}
-			else {
+			var p:int = int(myPriorityNode.firstChild.nodeValue);
+			if ( isNaN( p ) )
+			{
+				return NaN;
+			}
+			else
+			{
 				return p;
 			}
 		}
-		
-		public function set priority( priorityVal:Number ):void
+		public function set priority( value:int ):void
 		{
-			myPriorityNode = replaceTextNode(getNode(), myPriorityNode, "priority", priorityVal.toString());
+			// TODO: Check limits.
+			myPriorityNode = replaceTextNode(getNode(), myPriorityNode, "priority", value.toString());
 		}
 	}
 }

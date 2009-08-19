@@ -34,9 +34,8 @@ package org.igniterealtime.xiff.vcard
 	 */
 	[Event(name="vcardError", type="org.igniterealtime.xiff.events.VCardEvent")]
 	
-	[Bindable]
 	/**
-	 *
+	 * @see http://en.wikipedia.org/wiki/VCard
 	 */
 	public class VCard extends EventDispatcher
 	{
