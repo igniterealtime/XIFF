@@ -7,6 +7,7 @@ package org.igniterealtime.xiff.auth
 	import flash.xml.XMLNode;
 
 	import mx.utils.Base64Encoder;
+	//import com.hurlant.util.Base64;
 	
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
@@ -38,7 +39,7 @@ package org.igniterealtime.xiff.auth
 			authContent += '\u0000';
 			authContent += connection.password;
 
-			//authContent = com.hurlant.util.Base64.encode(authContent);
+			//authContent = Base64.encode(authContent);
 
 			var b64coder:Base64Encoder = new Base64Encoder();
 			b64coder.insertNewLines = false;

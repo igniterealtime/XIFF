@@ -10,6 +10,7 @@ package org.igniterealtime.xiff.vcard
 	import flash.xml.XMLNode;
 
 	import mx.utils.Base64Decoder;
+	//import com.hurlant.util.Base64;
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
@@ -407,6 +408,8 @@ package org.igniterealtime.xiff.vcard
 									var decoder:Base64Decoder = new Base64Decoder();
 									decoder.decode( value );
 									_imageBytes = decoder.flush();
+									
+									//_imageBytes = Base64.decodeToByteArray( value );
 									dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
 																   this, true, false ));
 								}
