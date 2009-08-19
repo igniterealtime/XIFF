@@ -3,63 +3,72 @@
  */
 package org.igniterealtime.xiff.data.im
 {
-	/*
-	 * Copyright (C) 2008
-	 * Jive Software
-
+	/**
+	 * Represents the groups in users roster.
 	 */
-	 
-	import mx.collections.ArrayCollection;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
-	
-	public class RosterGroup extends ArrayCollection
+	public class RosterGroup
 	{
 		public var label:String;
 		public var shared:Boolean = false;
 		
-		public function RosterGroup(l:String)
+		private var _items:Array = [];
+		
+		/**		
+		 * Create a new group with the given name	
+		 * @param	name	
+		 */		
+		public function RosterGroup(name:String)	
 		{
-			var s:Sort = new Sort();
-		    s.fields = [new SortField("displayName", true)];
-		    sort = s;
-		    refresh();
-			label = l;
+			label = name;
 		}
 		
-		public override function addItem(item:Object):void
+		/**
+		 * Insert a new roster item if it does not already exists in this group	
+		 * @param	item
+		 */	
+		public function addItem(item:RosterItemVO):void	
 		{
-			if(!item is RosterItemVO)
-				throw new Error("Assertion Failure: attempted to add something other than a RosterItemVO to a RosterGroup");
-			if(source.indexOf(item) == -1)
-				super.addItem(item);
-		}
-		
-		public function removeItem(item:RosterItemVO):void
-		{
-			var itemIndex:int = getItemIndex(item);
-			if(itemIndex >= 0)
-				removeItemAt(itemIndex);
-			else
+			if (_items.indexOf(item) == -1)
 			{
-				itemIndex =	source.indexOf(item);
-				if(itemIndex >= 0)
-					source.splice(itemIndex, 1);
+				_items.push(item);
 			}
 		}
 		
-		public override function set filterFunction(f:Function):void
+		/**		
+		 * Remove the given roster item from this group.
+		 * @param	item		
+		 */		
+		public function removeItem(item:RosterItemVO):void
 		{
-			throw new Error("Setting the filterFunction on RosterGroup is not allowed; Wrap it in a ListCollectionView and filter that.");
+			var index:int = _items.indexOf(item);
+			if (index != -1)
+			{
+				_items.splice(index, 1);
+			}
 		}
-
-		private function sortContacts(item1:RosterItemVO, item2:RosterItemVO, fields:Array = null):int
+		
+		/**
+		 * Does the given item exists in this group?
+		 * @param	item
+		 * @return		
+		 */		
+		public function contains(item:RosterItemVO):Boolean	
 		{
-			if(item1.displayName.toLowerCase() < item2.displayName.toLowerCase())
-				return -1;
-			else if(item1.displayName.toLowerCase() > item2.displayName.toLowerCase())
-				return 1;
-			return 0;
+			var value:Boolean = false;
+			var index:int = _items.indexOf(item);	
+			if (index != -1)	
+			{			
+				value = true;	
+			}		
+			return value;	
+		}
+		
+		/**
+		 * Roster items in this group.	
+		 */	
+		public function get items():Array
+		{
+			return _items;
 		}
 	}
 }
