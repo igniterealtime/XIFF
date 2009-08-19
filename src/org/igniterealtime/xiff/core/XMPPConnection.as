@@ -1318,10 +1318,10 @@ package org.igniterealtime.xiff.core
 		{
 			return ignoreWhitespace;
 		}
-		public function set ignoreWhite( val:Boolean ):void
+		public function set ignoreWhite( value:Boolean ):void
 		{
-			ignoreWhitespace = val;
-			XML.ignoreWhitespace = val;
+			ignoreWhitespace = value;
+			XML.ignoreWhitespace = value;
 		}
 
 		/**

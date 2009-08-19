@@ -37,9 +37,9 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * @private
 		 */
-		public function set jid(val:String):void
+		public function set jid(value:String):void
 		{
-			getNode().attributes.jid = val;
+			getNode().attributes.jid = value;
 		}
 	
 		/**
@@ -56,9 +56,9 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * @private
 		 */
-		public function set category(val:String):void
+		public function set category(value:String):void
 		{
-			getNode().attributes.category = val;
+			getNode().attributes.category = value;
 		}
 	
 		/**
@@ -72,9 +72,9 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * @private
 		 */
-		public function set name(val:String):void
+		public function set name(value:String):void
 		{
-			getNode().attributes.name = val;
+			getNode().attributes.name = value;
 		}
 	
 		/**
@@ -91,9 +91,9 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * @private
 		 */
-		public function set type(val:String):void
+		public function set type(value:String):void
 		{
-			getNode().attributes.type = val;
+			getNode().attributes.type = value;
 		}
 	
 		/**
@@ -110,18 +110,18 @@ package org.igniterealtime.xiff.data.browse
 		/**
 		 * @private
 		 */
-		public function set version(val:String):void
+		public function set version(value:String):void
 		{
-			getNode().attributes.version = val;
+			getNode().attributes.version = value;
 		}
 	
 		/**
 		 * Add new features that are supported if you are responding to a 
 		 * browse request
 		 */
-		public function addNamespace(ns:String):XMLNode
+		public function addNamespace(value:String):XMLNode
 		{
-			return addTextNode(getNode(), "ns", ns);
+			return addTextNode(getNode(), "ns", value);
 		}
 	 
 	 	/**
@@ -147,8 +147,10 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var res:Array = [];
 	
-			for each (var child:XMLNode in getNode().childNodes) {
-				if (child.nodeName == "ns") {
+			for each (var child:XMLNode in getNode().childNodes) 
+			{
+				if (child.nodeName == "ns") 
+				{
 					res.push(child.firstChild.nodeValue);
 				}
 			}
@@ -158,7 +160,8 @@ package org.igniterealtime.xiff.data.browse
 		public function serialize(parentNode:XMLNode):Boolean
 		{
 			var node:XMLNode = getNode();
-			if (!exists(node.parentNode)) {
+			if (!exists(node.parentNode))
+			{
 				parentNode.appendChild(node.cloneNode(true));
 			}
 	

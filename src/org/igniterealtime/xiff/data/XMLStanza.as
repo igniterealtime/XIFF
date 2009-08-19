@@ -36,12 +36,12 @@ package org.igniterealtime.xiff.data
 		 * A helper method to determine if a value is both not null
 		 * and not undefined.
 		 *
-		 * @param	val The value to check for existance
+		 * @param	value The value to check for existance
 		 * @return Whether the value checked is both not null and not undefined
 		 */
-		public static function exists( val:* ):Boolean
+		public static function exists( value:* ):Boolean
 		{
-			if( val != null && val !== undefined )
+			if ( value != null && value !== undefined )
 				return true;
 			
 			return false;

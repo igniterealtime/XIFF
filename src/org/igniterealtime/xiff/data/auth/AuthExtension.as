@@ -147,9 +147,9 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * @private
 		 */
-		public function set username(val:String):void 
+		public function set username(value:String):void 
 		{ 
-			myUsernameNode = replaceTextNode(getNode(), myUsernameNode, "username", val);
+			myUsernameNode = replaceTextNode(getNode(), myUsernameNode, "username", value);
 		}
 	
 		/**
@@ -157,8 +157,10 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function get password():String 
 		{
-			if(myPasswordNode && myPasswordNode.firstChild)
+			if (myPasswordNode && myPasswordNode.firstChild)
+			{
 				return myPasswordNode.firstChild.nodeValue;
+			}
 			
 			return null;
 		}
@@ -166,7 +168,7 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * @private
 		 */
-		public function set password(val:String):void
+		public function set password(value:String):void
 		{
 			// Either or for digest or password
 			myDigestNode = (myDigestNode==null)?(XMLStanza.XMLFactory.createElement('')):(myDigestNode);
@@ -174,7 +176,7 @@ package org.igniterealtime.xiff.data.auth
 			myDigestNode = null;
 			//delete myDigestNode;
 	
-			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
+			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", value);
 		}
 	
 		/**
@@ -182,8 +184,10 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function get digest():String 
 		{
-			if(myDigestNode && myDigestNode.firstChild)
+			if (myDigestNode && myDigestNode.firstChild)
+			{
 				return myDigestNode.firstChild.nodeValue;
+			}
 			
 			return null;
 		}
@@ -191,14 +195,14 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * @private
 		 */
-		public function set digest(val:String):void
+		public function set digest(value:String):void
 		{
 			// Either or for digest or password
 			myPasswordNode.removeNode();
 			myPasswordNode = null;
 			//delete myPasswordNode;
 	
-			myDigestNode = replaceTextNode(getNode(), myDigestNode, "digest", val);
+			myDigestNode = replaceTextNode(getNode(), myDigestNode, "digest", value);
 		}
 	
 		/**
@@ -208,8 +212,10 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function get resource():String
 		{
-			if(myResourceNode && myResourceNode.firstChild)
+			if (myResourceNode && myResourceNode.firstChild)
+			{
 				return myResourceNode.firstChild.nodeValue;
+			}
 			
 			return null;
 		}
@@ -217,9 +223,9 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * @private
 		 */
-		public function set resource(val:String):void
+		public function set resource(value:String):void
 		{
-			myResourceNode = replaceTextNode(getNode(), myResourceNode, "resource", val);
+			myResourceNode = replaceTextNode(getNode(), myResourceNode, "resource", value);
 		}
 	
 	}

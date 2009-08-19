@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.conference
 			this.room = room;
 		}
 
-		[Bindable]
+		
 		public function get affiliation():String
 		{
 			return _affiliation;
@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.conference
 			_affiliation = newAffil;
 		}
 
-		[Bindable]
+		
 		public function get displayName():String
 		{
 			return _nickname;
@@ -58,7 +58,7 @@ package org.igniterealtime.xiff.conference
 			_nickname = name;
 		}
 
-		[Bindable]
+		
 		public function get jid():UnescapedJID
 		{
 			return _jid;
@@ -69,7 +69,7 @@ package org.igniterealtime.xiff.conference
 			_jid = newJID;
 		}
 
-		[Bindable]
+		
 		public function get online():Boolean
 		{
 			return true;
@@ -80,7 +80,7 @@ package org.igniterealtime.xiff.conference
 			//RoomOccupants can't exist unless they're online
 		}
 
-		[Bindable]
+		
 		public function get role():String
 		{
 			return _role;
@@ -91,7 +91,7 @@ package org.igniterealtime.xiff.conference
 			_role = newRole;
 		}
 
-		[Bindable]
+		
 		public function get room():Room
 		{
 			return _room;
@@ -113,7 +113,7 @@ package org.igniterealtime.xiff.conference
 			return RosterItemVO.get( jid, true );
 		}
 
-		[Bindable]
+		
 		public function get show():String
 		{
 			return _show;

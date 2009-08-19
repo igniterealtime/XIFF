@@ -14,11 +14,14 @@ package org.igniterealtime.xiff.data.whiteboard
 	*/
 	public class Stroke implements ISerializable
 	{
-		private var myColor:Number;
-		private var myWidth:Number;
-		private var myOpacity:Number;
+		private var _color:uint;
+		private var _width:Number;
+		private var _opacity:Number;
 	
-		public function Stroke() { }
+		public function Stroke() 
+		{ 
+			
+		}
 	
 		/**
 		 * Serializes the Stroke into the parent node.  Because the stroke
@@ -30,9 +33,18 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
-	        if (myColor) { parent.attributes['stroke'] = "#" + myColor.toString(16); }
-	        if (myWidth) { parent.attributes['stroke-width'] = myWidth.toString(); }
-	        if (myOpacity) { parent.attributes['stroke-opacity'] = myOpacity.toString(); }
+	        if (_color) 
+			{ 
+				parent.attributes['stroke'] = "#" + _color.toString(16); 
+			}
+	        if (_width)
+			{ 
+				parent.attributes['stroke-width'] = _width.toString(); 
+			}
+	        if (_opacity) 
+			{
+				parent.attributes['stroke-opacity'] = _opacity.toString(); 
+			}
 	
 	        return true;
 	    }
@@ -45,14 +57,17 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{
-	        if (node.attributes['stroke']) {
-	            myColor = new Number('0x' + node.attributes['stroke'].slice(1));
+	        if (node.attributes['stroke'])
+			{
+	            _color = new Number('0x' + node.attributes['stroke'].slice(1));
 	        }
-	        if (node.attributes['stroke-width']) {
-	            myWidth = new Number(node.attributes['stroke-width']);
+	        if (node.attributes['stroke-width']) 
+			{
+	            _width = new Number(node.attributes['stroke-width']);
 	        }
-	        if (node.attributes['stroke-opacity']) {
-	            myOpacity = new Number(node.attributes['stroke-opacity']);
+	        if (node.attributes['stroke-opacity'])
+			{
+	            _opacity = new Number(node.attributes['stroke-opacity']);
 	        }
 	
 	        return true;
@@ -63,26 +78,41 @@ package org.igniterealtime.xiff.data.whiteboard
 	     * MovieClip.lineStyle
 	     *
 	     */
-		public function get color():Number { return myColor ? myColor : 0; }
-		public function set color(c:Number):void 
-		{ myColor =c }
+		public function get color():uint 
+		{ 
+			return _color ? _color : 0; 
+		}
+		public function set color(value:uint):void 
+		{
+			_color = value;
+		}
 	
 	    /**
 	     * The width of the stroke in pixels.  This is in a format used by
 	     * MovieClip.lineStyle
 	     *
 	     */
-	    public function get width():Number { return myWidth ? myWidth : 1; }
-	    public function set width(v:Number):void 
-		{ myWidth = v; }
+	    public function get width():Number
+		{ 
+			return _width ? _width : 1; 
+		}
+	    public function set width(value:Number):void 
+		{
+			_width = value; 
+		}
 	
 	    /**
 	     * The opacity of the stroke, in percent. 100 is solid, 0 is transparent.
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
 	     *
 	     */
-	    public function get opacity():Number { return myOpacity ? myOpacity : 100; }
-	    public function set opacity(v:Number):void 
-		{ myOpacity = v; }
+	    public function get opacity():Number
+		{ 
+			return _opacity ? _opacity : 100; 
+		}
+	    public function set opacity(value:Number):void 
+		{
+			_opacity = value;
+		}
 	}
 }

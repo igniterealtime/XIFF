@@ -41,9 +41,9 @@ package org.igniterealtime.xiff.data.disco
 		/**
 		 * @private
 		 */
-		public function set serviceNode(val:String):void
+		public function set serviceNode(value:String):void
 		{
-			getNode().parentNode.attributes.node = val;
+			getNode().parentNode.attributes.node = value;
 		}
 	
 		/**
@@ -63,14 +63,17 @@ package org.igniterealtime.xiff.data.disco
 		/**
 		 * @private
 		 */
-		public function set service(val:EscapedJID):void
+		public function set service(value:EscapedJID):void
 		{
 			var parent:XMLNode = getNode().parentNode;
 	
-			if (parent.attributes.type == "result") {
-				parent.attributes.from = val.toString();
-			} else {
-				parent.attributes.to = val.toString();
+			if (parent.attributes.type == "result")
+			{
+				parent.attributes.from = value.toString();
+			} 
+			else 
+			{
+				parent.attributes.to = value.toString();
 			}
 		}
 	

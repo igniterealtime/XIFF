@@ -3,8 +3,6 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-
-	
 	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
 	
@@ -16,10 +14,13 @@ package org.igniterealtime.xiff.data.whiteboard
 	*/
 	public class Fill implements ISerializable
 	{
-	    private var myColor:Number;
-	    private var myOpacity:Number;
+	    private var _color:uint;
+	    private var _opacity:Number;
 	
-	    public function Fill() { }
+	    public function Fill() 
+		{ 
+		
+		}
 	
 		/**
 		 * Serializes the Fill into the parent node.  Because the fill
@@ -31,8 +32,14 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
-	        if (myColor) { parent.attributes['fill'] = "#" + myColor.toString(16); }
-	        if (myOpacity) { parent.attributes['fill-opacity'] = myOpacity.toString(); }
+	        if (_color) 
+			{ 
+				parent.attributes['fill'] = "#" + _color.toString(16);
+			}
+	        if (_opacity)
+			{
+				parent.attributes['fill-opacity'] = _opacity.toString(); 
+			}
 	
 	        return true;
 	    }
@@ -45,11 +52,13 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function deserialize( node:XMLNode ):Boolean
 		{
-	        if (node.attributes['fill']) {
-	            myColor = new Number('0x' + node.attributes['fill'].slice(1));
+	        if (node.attributes['fill'])
+			{
+	            _color = new Number('0x' + node.attributes['fill'].slice(1));
 	        }
-	        if (node.attributes['fill-opacity']) {
-	            myOpacity = new Number(node.attributes['fill-opacity']);
+	        if (node.attributes['fill-opacity']) 
+			{
+	            _opacity = new Number(node.attributes['fill-opacity']);
 	        }
 	
 	        return true;
@@ -60,14 +69,13 @@ package org.igniterealtime.xiff.data.whiteboard
 	     * MovieClip.lineStyle
 	     *
 	     */
-		public function get color():Number 
+		public function get color():uint 
 		{
-			return myColor ? myColor : 0; 
+			return _color ? _color : 0; 
 		}
-		public function set color(c:Number):void
+		public function set color(value:uint):void
 		{
-			//myColor = Number(c.valueOf());
-			myColor = c;
+			_color = value;
 		}
 	
 	    /**
@@ -75,8 +83,13 @@ package org.igniterealtime.xiff.data.whiteboard
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
 	     *
 	     */
-	    public function get opacity():Number { return myOpacity ? myOpacity : 100; }
-	    public function set opacity(v:Number):void 
-		{ myOpacity = v; }
+	    public function get opacity():Number 
+		{ 
+			return _opacity ? _opacity : 100; 
+		}
+	    public function set opacity(value:Number):void 
+		{
+			_opacity = value;
+		}
 	}
 }

@@ -146,7 +146,8 @@ package org.igniterealtime.xiff.data.forms
 	    public function getFormType():String
 	    {
 	        // Most likely at the start of the array
-	        for each(var field:FormField in myFields) {
+	        for each(var field:FormField in myFields)
+			{
 	        	if(field.name == "FORM_TYPE")
 	        		return field.value;
 	        }
@@ -198,7 +199,8 @@ package org.igniterealtime.xiff.data.forms
 	    public function setFields(fieldmap:Object):void
 	    {
 	        removeAllFields();
-	        for (var f:String in fieldmap) {
+	        for (var f:String in fieldmap)
+			{
 	            var field:FormField = new FormField();
 	            field.name = f;
 	            field.setAllValues(fieldmap[f]);
@@ -212,8 +214,10 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllItems():void
 		{
-			for each(var item:FormField in myItems) {
-	            for each(var i:* in item) {
+			for each(var item:FormField in myItems)
+			{
+	            for each(var i:* in item) 
+				{
 	                i.getNode().removeNode();
 	                i.setNode(null);
 	            }
@@ -226,8 +230,10 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllFields():void
 		{
-			for each(var item:FormField in myFields) {
-	            for each(var i:* in item) {
+			for each(var item:FormField in myFields) 
+			{
+	            for each(var i:* in item)
+				{
 	                i.getNode().removeNode();
 	                i.setNode(null);
 	            }
@@ -241,16 +247,18 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function get instructions():String
 	    {
-	    	if(myInstructionsNode && myInstructionsNode.firstChild)
+	    	if (myInstructionsNode && myInstructionsNode.firstChild)
+			{
 	    		return myInstructionsNode.firstChild.nodeValue;
+			}
 	
 	    	return null;
 	    }
 	
 	
-	    public function set instructions(val:String) :void
+	    public function set instructions(value:String) :void
 	    {
-	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
+	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", value);
 	    }
 	
 	    /**
@@ -259,16 +267,18 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function get title():String
 	    {
-	    	if(myTitleNode && myTitleNode.firstChild)
+	    	if (myTitleNode && myTitleNode.firstChild)
+			{
 	    		return myTitleNode.firstChild.nodeValue;
+			}
 	
 	    	return null;
 	    }
 	
 	
-	    public function set title(val:String) :void
+	    public function set title(value:String) :void
 	    {
-	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", val);
+	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", value);
 	    }
 	
 	    /**
@@ -296,11 +306,11 @@ package org.igniterealtime.xiff.data.forms
 		{
 			return getNode().attributes.type;
 		}
-	    public function set type(val:String) :void
+	    public function set type(value:String) :void
 	    {
 	        // TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 	        // TODO Change the behavior of the serialization depending on the type
-	        getNode().attributes.type = val;
+	        getNode().attributes.type = value;
 	    }
 	}
 }

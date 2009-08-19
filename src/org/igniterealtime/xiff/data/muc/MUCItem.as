@@ -65,10 +65,10 @@ package org.igniterealtime.xiff.data.muc
 			return new EscapedJID(myActorNode.attributes.jid);
 		}
 	
-		public function set actor(val:EscapedJID):void
+		public function set actor(value:EscapedJID):void
 		{
 			myActorNode = ensureNode(myActorNode, "actor");
-			myActorNode.attributes.jid = val.toString();
+			myActorNode.attributes.jid = value.toString();
 		}
 	
 		public function get reason():String
@@ -79,9 +79,9 @@ package org.igniterealtime.xiff.data.muc
 			return null;
 		}
 	
-		public function set reason(val:String):void
+		public function set reason(value:String):void
 		{
-			myReasonNode = replaceTextNode(getNode(), myReasonNode, "reason", val);
+			myReasonNode = replaceTextNode(getNode(), myReasonNode, "reason", value);
 		}
 	
 		public function get affiliation():String
@@ -89,9 +89,9 @@ package org.igniterealtime.xiff.data.muc
 			return getNode().attributes.affiliation;
 		}
 	
-		public function set affiliation(val:String):void
+		public function set affiliation(value:String):void
 		{
-			getNode().attributes.affiliation = val;
+			getNode().attributes.affiliation = value;
 		}
 	
 		public function get jid():EscapedJID
@@ -101,9 +101,9 @@ package org.igniterealtime.xiff.data.muc
 			return new EscapedJID(getNode().attributes.jid);
 		}
 	
-		public function set jid(val:EscapedJID):void
+		public function set jid(value:EscapedJID):void
 		{
-			getNode().attributes.jid = val.toString();
+			getNode().attributes.jid = value.toString();
 		}
 	
 		/**
@@ -115,9 +115,9 @@ package org.igniterealtime.xiff.data.muc
 			return getNode().attributes.nick;
 		}
 	
-		public function set nick(val:String):void
+		public function set nick(value:String):void
 		{
-			getNode().attributes.nick = val;
+			getNode().attributes.nick = value;
 		}
 	
 		public function get role():String
@@ -125,9 +125,9 @@ package org.igniterealtime.xiff.data.muc
 			return getNode().attributes.role;
 		}
 	
-		public function set role(val:String):void
+		public function set role(value:String):void
 		{
-			getNode().attributes.role = val;
+			getNode().attributes.role = value;
 		}
 	}
 }

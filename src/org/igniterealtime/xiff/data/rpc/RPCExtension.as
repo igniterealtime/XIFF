@@ -19,8 +19,8 @@ package org.igniterealtime.xiff.data.rpc
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
-		private var myResult:Array;
-		private var myFault:Object;
+		private var _result:Array;
+		private var _fault:Object;
 	
 		public function RPCExtension()
 		{
@@ -40,56 +40,6 @@ package org.igniterealtime.xiff.data.rpc
 		public function call(methodName:String, params:Array):void
 		{
 			XMLRPC.toXML(getNode(), methodName, params);
-		}
-	
-		/**
-		 * The result of this remote procedure call.  It can contain elements of any type.
-		 *
-		 * @return Array of demarshalled results from the remote procedure
-		 */
-		public function get result():Array
-		{
-			return myResult;
-		}
-	
-		/**
-		 * Check this if property if you wish to determine the remote procedure call produced an error.
-		 * If the XMPP stanza never made it to the RPC service, then the error would be on the
-		 * stanza object instead of this extension.
-		 *
-		 * @return True if the remote procedure call produced an error
-		 */
-		public function get isFault():Boolean
-		{
-			return myFault.isFault;
-		}
-	
-		/**
-		 * The object containing the fault of the remote procedure call.
-		 * This object could have any properties, as fault results are only structurally defined.
-		 *
-		 */
-		public function get fault():Object
-		{
-			return myFault;
-		}
-	
-		/**
-		 * A common result from most RPC servers to describe a fault
-		 *
-		 */
-		public function get faultCode():Number
-		{
-			return myFault.faultCode;
-		}
-	
-		/**
-		 * A common result from most RPC servers to describe a fault
-		 *
-		 */
-		public function get faultString():String
-		{
-			return myFault.faultString;
 		}
 	
 		/**
@@ -128,7 +78,8 @@ package org.igniterealtime.xiff.data.rpc
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
-			if (!exists(getNode().parentNode)) {
+			if (!exists(getNode().parentNode)) 
+			{
 				parent.appendChild(getNode().cloneNode(true));
 			}
 			return true;
@@ -144,14 +95,66 @@ package org.igniterealtime.xiff.data.rpc
 			setNode(node);
 	
 			var res:Array = XMLRPC.fromXML(node);
-			if (res.isFault) {
-				myFault = res;
-			} else {
-				myResult = res[0];
+			if (res.isFault) 
+			{
+				_fault = res;
+			} 
+			else 
+			{
+				_result = res[0];
 			}
 	
 			return true;
 		}
 	
+		/**
+		 * The result of this remote procedure call.  It can contain elements of any type.
+		 *
+		 * @return Array of demarshalled results from the remote procedure
+		 */
+		public function get result():Array
+		{
+			return _result;
+		}
+	
+		/**
+		 * Check this if property if you wish to determine the remote procedure call produced an error.
+		 * If the XMPP stanza never made it to the RPC service, then the error would be on the
+		 * stanza object instead of this extension.
+		 *
+		 * @return True if the remote procedure call produced an error
+		 */
+		public function get isFault():Boolean
+		{
+			return _fault.isFault;
+		}
+	
+		/**
+		 * The object containing the fault of the remote procedure call.
+		 * This object could have any properties, as fault results are only structurally defined.
+		 *
+		 */
+		public function get fault():Object
+		{
+			return _fault;
+		}
+	
+		/**
+		 * A common result from most RPC servers to describe a fault
+		 *
+		 */
+		public function get faultCode():Number
+		{
+			return _fault.faultCode;
+		}
+	
+		/**
+		 * A common result from most RPC servers to describe a fault
+		 *
+		 */
+		public function get faultString():String
+		{
+			return _fault.faultString;
+		}
 	}
 }

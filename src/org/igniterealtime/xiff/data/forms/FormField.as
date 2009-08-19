@@ -84,9 +84,9 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function get name():String 
 		{ return getNode().attributes["var"]; }
-	    public function set name(val:String) :void
+	    public function set name(value:String) :void
 	    { 
-	        getNode().attributes["var"] = val; 
+	        getNode().attributes["var"] = value; 
 	    }
 	
 	    /**
@@ -110,9 +110,9 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function get type():String 
 		{ return getNode().attributes.type; }
-	    public function set type(val:String) :void
+	    public function set type(value:String) :void
 	    { 
-	        getNode().attributes.type = val; 
+	        getNode().attributes.type = value; 
 	    }
 	
 	    /**
@@ -122,9 +122,9 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function get label():String 
 		{ return getNode().attributes.label; }
-	    public function set label(val:String) :void
+	    public function set label(value:String) :void
 	    { 
-	        getNode().attributes.label = val; 
+	        getNode().attributes.label = value; 
 	    }
 	
 	    /**
@@ -160,12 +160,12 @@ package org.igniterealtime.xiff.data.forms
 		    return null;
 	    }
 	    
-	    public function set value(val:String) :void
+	    public function set value(value:String) :void
 	    {
 	    	if (myValueNodes == null)
 	    		myValueNodes = [];
 
-	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", val);
+	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", value);
 	    }
 	
 	    /**
@@ -194,15 +194,15 @@ package org.igniterealtime.xiff.data.forms
 	    /**
 	     * Sets all the values of this field from an array of strings
 	     *
-	     * @param	val Array of Strings
+	     * @param	value Array of Strings
 	     */
-	    public function setAllValues(val:Array) :void
+	    public function setAllValues(value:Array) :void
 	    {
 	        for each(var v:XMLNode in myValueNodes) {
 	            v.removeNode();
 	        }
 	
-	        myValueNodes = val.map( 
+	        myValueNodes = value.map( 
 	        	function(value:String, index:uint, arr:Array):* { 
 	        		return replaceTextNode(getNode(), undefined, "value", value); 
 	        	}
@@ -225,7 +225,8 @@ package org.igniterealtime.xiff.data.forms
 	    public function getAllOptions():Array
 	    {
 	        return myOptionNodes.map(
-	        	function(optionNode:XMLNode, index:uint, arr:Array):Object {
+	        	function(optionNode:XMLNode, index:uint, arr:Array):Object
+				{
 	        		return {
 	        			label: optionNode.attributes.label,
 	                	value: optionNode.firstChild.firstChild.nodeValue
@@ -240,13 +241,13 @@ package org.igniterealtime.xiff.data.forms
 	     * @param	Array containing objects with the properties <code>label</code> and
 	     * <code>value</code>
 	     */
-	    public function setAllOptions(val:Array):void
+	    public function setAllOptions(value:Array):void
 	    {
 	        for each(var optionNode:XMLNode in myOptionNodes) {
 	        	optionNode.removeNode();
 	        }
 	
-	        myOptionNodes = val.map(
+	        myOptionNodes = value.map(
 	        	function(v:Object, index:uint, arr:Array):XMLNode {
 	        		var option:XMLNode = replaceTextNode(getNode(), undefined, "value", v.value);
 	            	option.attributes.label = v.label;

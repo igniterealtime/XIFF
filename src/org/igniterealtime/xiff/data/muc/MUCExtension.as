@@ -91,9 +91,9 @@ package org.igniterealtime.xiff.data.muc
 			return null;
 		}
 	
-		public function set password(val:String):void
+		public function set password(value:String):void
 		{
-			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
+			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", value);
 		}
 	
 		/**
@@ -105,11 +105,14 @@ package org.igniterealtime.xiff.data.muc
 			return exists(myHistoryNode);
 		}
 	
-		public function set history(val:Boolean):void
+		public function set history(value:Boolean):void
 		{
-			if (val) {
+			if (value) 
+			{
 				myHistoryNode = ensureNode(myHistoryNode, "history");
-			} else {
+			} 
+			else 
+			{
 				myHistoryNode.removeNode();
 				myHistoryNode = null;
 				//delete myHistoryNode;
@@ -117,17 +120,19 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
-		 * Size based condition to evaluate by the server for the maximum characters to return during history retrieval
+		 * Size based condition to evaluate by the server for the maximum
+		 * characters to return during history retrieval
+		 * TODO: Propably should be uint
 		 */
 		public function get maxchars():Number
 		{
 			return Number(myHistoryNode.attributes.maxchars);
 		}
 	
-		public function set maxchars(val:Number):void
+		public function set maxchars(value:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
-			myHistoryNode.attributes.maxchars = val.toString();
+			myHistoryNode.attributes.maxchars = value.toString();
 		}
 	
 		/**
@@ -138,10 +143,10 @@ package org.igniterealtime.xiff.data.muc
 			return Number(myHistoryNode.attributes.maxstanzas);
 		}
 	
-		public function set maxstanzas(val:Number):void
+		public function set maxstanzas(value:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
-			myHistoryNode.attributes.maxstanzas = val.toString();
+			myHistoryNode.attributes.maxstanzas = value.toString();
 		}
 	
 		/**
@@ -152,10 +157,10 @@ package org.igniterealtime.xiff.data.muc
 			return Number(myHistoryNode.attributes.seconds);
 		}
 	
-		public function set seconds(val:Number):void
+		public function set seconds(value:Number):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
-			myHistoryNode.attributes.seconds = val.toString();
+			myHistoryNode.attributes.seconds = value.toString();
 		}
 	
 		/**
@@ -168,10 +173,10 @@ package org.igniterealtime.xiff.data.muc
 			return myHistoryNode.attributes.since;
 		}
 	
-		public function set since(val:String):void
+		public function set since(value:String):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
-			myHistoryNode.attributes.since = val;
+			myHistoryNode.attributes.since = value;
 		}
 	}
 }

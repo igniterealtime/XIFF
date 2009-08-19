@@ -3,11 +3,7 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-
-	
-	import org.igniterealtime.xiff.data.ISerializable;
-	import org.igniterealtime.xiff.data.XMLStanza;
-	
+	import org.igniterealtime.xiff.data.*;	
 	import org.igniterealtime.xiff.data.whiteboard.*;
 	import flash.xml.XMLNode;
 	 
@@ -17,21 +13,19 @@ package org.igniterealtime.xiff.data.whiteboard
 	 */
 	public class Path implements ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const ELEMENT:String = "path";
 	
-	    private var mySegments:Array;
-	    private var myStroke:Stroke;
-	    private var myFill:Fill;
+	    private var _segments:Array = [];
+	    private var _stroke:Stroke;
+	    private var _fill:Fill;
 	
 	    private var _lastLocation:Object;
 		
 		public function Path( parent:XMLNode=null )
 		{
 			//super( parent );
-	        mySegments = [];
-			myStroke = new Stroke();
-			myFill = new Fill();
+			_stroke = new Stroke();
+			_fill = new Fill();
 		}
 	
 		/**
@@ -63,15 +57,15 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 			// Divide and conquer, using commands as delims, joining
 			// the results in prefix order
-	        mySegments = [];
+	        _segments = [];
 	        _lastLocation = new Object;
 			loadNextCommand(p);
 	
-	        myStroke = new Stroke();
-	        myStroke.deserialize(node);
+	        _stroke = new Stroke();
+	        _stroke.deserialize(node);
 	
-	        myFill = new Fill();
-	        myFill.deserialize(node);
+	        _fill = new Fill();
+	        _fill.deserialize(node);
 	
 			return true;
 		}
@@ -130,13 +124,13 @@ package org.igniterealtime.xiff.data.whiteboard
 			seg.to.x = Math.round(seg.to.x);
 			seg.to.y = Math.round(seg.to.y);
 	
-			if (mySegments.addItem)
+			if (_segments.addItem)
 			{
-				mySegments.addItem(seg);
+				_segments.addItem(seg);
 			} 
 			else 
 			{
-				mySegments.push(seg);
+				_segments.push(seg);
 			}
 	        return seg;
 		}
@@ -166,7 +160,10 @@ package org.igniterealtime.xiff.data.whiteboard
 	     *
 	     * @see	#addSegment
 	     */
-	    public function get segments():Array { return mySegments; }
+	    public function get segments():Array 
+		{ 
+			return _segments; 
+		}
 	
 	    /**
 	     * The Stroke object that contains the properties describing the stroke of this
@@ -174,7 +171,10 @@ package org.igniterealtime.xiff.data.whiteboard
 	     *
 	     * @see	org.igniterealtime.xiff.data.whiteboard.Stroke
 	     */
-	    public function get stroke():Stroke { return myStroke; }
+	    public function get stroke():Stroke 
+		{
+			return _stroke;
+		}
 	
 	    /**
 	     * The Fill object that contains the properties describing the fill of this
@@ -182,9 +182,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     *
 	     * @see	org.igniterealtime.xiff.data.whiteboard.Fill
 	     */
-	    public function get fill():Fill { return myFill; }
-	
-	    // PRIVATE METHODS
+	    public function get fill():Fill 
+		{ 
+			return _fill; 
+		}
+
 	
 		private static function indexOfNextCommand(str:String):Number
 		{

@@ -1,17 +1,14 @@
 /*
  * License
  */
-package org.igniterealtime.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc
+{
 
 	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.IExtendable;
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.*;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -21,7 +18,7 @@ package org.igniterealtime.xiff.data.muc{
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
-		private var myItems:Array = [];
+		private var _items:Array = [];
 	
 		public function MUCBaseExtension( parent:XMLNode=null )
 		{
@@ -34,9 +31,9 @@ package org.igniterealtime.xiff.data.muc{
 		public function serialize( parent:XMLNode ):Boolean
 		{
 			var node:XMLNode = getNode();
-	
-			for each(var i:* in myItems) {
-				if (!i.serialize(node)) {
+			var len:uint = _items.length;
+			for (var i:uint = 0; i < len; ++i) {
+				if (!_items[i].serialize(node)) {
 					return false;
 				}
 			}
@@ -60,21 +57,25 @@ package org.igniterealtime.xiff.data.muc{
 			setNode(node);
 			removeAllItems();
 	
-			for each( var child:XMLNode in node.childNodes ) {
+			for each( var child:XMLNode in node.childNodes )
+			{
 				switch( child.nodeName )
 				{
 					case "item":
 						var item:MUCItem = new MUCItem(getNode());
 						item.deserialize(child);
-						myItems.push(item);
+						_items.push(item);
 						break;
 	
 					default:
 						var extClass:Class = ExtensionClassRegistry.lookup(child.attributes.xmlns);
-						if (extClass != null) {
+						if (extClass != null)
+						{
 							var ext:IExtension = new extClass();
-							if (ext != null) {
-								if (ext is ISerializable) {
+							if (ext != null) 
+							{
+								if (ext is ISerializable)
+								{
 									ISerializable(ext).deserialize(child);
 								}
 								addExtension(ext);
@@ -93,7 +94,7 @@ package org.igniterealtime.xiff.data.muc{
 		 */
 		public function getAllItems():Array
 		{
-			return myItems;
+			return _items;
 		}
 	
 		/**
@@ -118,7 +119,7 @@ package org.igniterealtime.xiff.data.muc{
 			if (exists(actor)) 		{ item.actor = new EscapedJID(actor); }
 			if (exists(reason)) 	{ item.reason = reason; }
 			
-			myItems.push(item);
+			_items.push(item);
 			return item;
 		}
 		
@@ -128,13 +129,13 @@ package org.igniterealtime.xiff.data.muc{
 		 */
 		public function removeAllItems():void
 		{
-			var len:uint = myItems.length;
+			var len:uint = _items.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				var item:MUCItem = myItems[i] as MUCItem;
+				var item:MUCItem = _items[i] as MUCItem;
 				item.setNode(null);
 			}
-		 	myItems = [];
+		 	_items = [];
 		}
 	}
 }

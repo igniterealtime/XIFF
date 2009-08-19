@@ -30,8 +30,9 @@ package org.igniterealtime.xiff.bookmark
 	 */
 	[Event(name="bookmarkRetrieved", type="org.igniterealtime.xiff.events.BookmarkRetrievedEvent")]
 
-	
-	[Event( "GroupChatBookmarkChanged" )]
+	/**
+	 * 
+	 */
 	public class BookmarkManager extends EventDispatcher
 	{
 		private static var bookmarkManagerConstructed:Boolean = bookmarkManagerStaticConstructor();
@@ -55,6 +56,10 @@ package org.igniterealtime.xiff.bookmark
 			return true;
 		}
 
+		/**
+		 * 
+		 * @param	serverBookmark
+		 */
 		public function addGroupChatBookmark( serverBookmark:GroupChatBookmark ):void
 		{
 			if ( !_bookmarks )
@@ -67,11 +72,6 @@ package org.igniterealtime.xiff.bookmark
 			{
 				_addBookmark( serverBookmark );
 			}
-		}
-
-		public function get bookmarks():BookmarkPrivatePayload
-		{
-			return _bookmarks;
 		}
 
 		public function fetchBookmarks():void
@@ -215,6 +215,14 @@ package org.igniterealtime.xiff.bookmark
 			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload( groupChats,
 																			 urls );
 			_privateDataManager.setPrivateData( "storage", "storage:bookmarks", payload );
+		}
+
+		/**
+		 * 
+		 */
+		public function get bookmarks():BookmarkPrivatePayload
+		{
+			return _bookmarks;
 		}
 	}
 }

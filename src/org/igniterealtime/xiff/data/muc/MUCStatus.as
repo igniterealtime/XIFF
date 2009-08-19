@@ -42,9 +42,9 @@ package org.igniterealtime.xiff.data.muc
 			return null;
 		}
 	
-		public function set message(val:String):void
+		public function set message(value:String):void
 		{
-			node = parent.replaceTextNode(parent.getNode(), node, "status", val);
+			node = parent.replaceTextNode(parent.getNode(), node, "status", value);
 		}
 	}
 }

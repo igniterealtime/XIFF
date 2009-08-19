@@ -102,7 +102,7 @@ package org.igniterealtime.xiff.im
 		//FIXME: maps should not be arrays
 		private var _presenceMap:Array = [];
 		
-		[Bindable]
+		
 		public var groups:ArrayCollection = new ArrayCollection();
 		
 		private static const staticConstructorDependencies:Array = [

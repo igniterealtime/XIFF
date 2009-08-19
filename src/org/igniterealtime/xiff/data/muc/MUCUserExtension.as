@@ -1,7 +1,8 @@
 /*
  * License
  */
-package org.igniterealtime.xiff.data.muc{
+package org.igniterealtime.xiff.data.muc
+{
 
 	
 	import flash.xml.XMLNode;
@@ -10,7 +11,8 @@ package org.igniterealtime.xiff.data.muc{
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements the base MUC user protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
+	 * Implements the base MUC user protocol schema from 
+	 * <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 * @see http://xmpp.org/extensions/xep-0045.html
 	 */
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension
@@ -24,9 +26,9 @@ package org.igniterealtime.xiff.data.muc{
 		public static const INVITE_TYPE:String = "invite";
 		public static const OTHER_TYPE:String = "other";
 	
-		private var myActionNode:XMLNode;
-		private var myPasswordNode:XMLNode;
-		private var myStatuses:Array = [];
+		private var _actionNode:XMLNode;
+		private var _passwordNode:XMLNode;
+		private var _statuses:Array = [];
 	
 		/**
 		 *
@@ -51,79 +53,33 @@ package org.igniterealtime.xiff.data.muc{
 		{
 			super.deserialize(node);
 	
-			for each( var child:XMLNode in node.childNodes ) {
+			for each( var child:XMLNode in node.childNodes )
+			{
 				switch( child.nodeName )
 				{
 					case DECLINE_TYPE:
-						myActionNode = child;
+						_actionNode = child;
 						break;
 						
 					case DESTROY_TYPE:
-						myActionNode = child;
+						_actionNode = child;
 						break;
 						
 					case INVITE_TYPE:
-						myActionNode = child;
+						_actionNode = child;
 						break;
 						
 					case "status":
-						myStatuses.push(new MUCStatus(child, this));
+						_statuses.push(new MUCStatus(child, this));
 						break;
 						
 					case "password":
-						myPasswordNode = child;
+						_passwordNode = child;
 						break;
 				}
 			}
 			return true;
 		}
-	
-		/**
-		 * The type of user extension this is
-		 */
-		public function get type():String
-		{
-			if (myActionNode == null)
-				return null;
-			return myActionNode.nodeName == null ? OTHER_TYPE : myActionNode.nodeName;
-		}
-	
-		/**
-		 * The to property for invite and decline action types
-		 */
-		public function get to():EscapedJID
-		{
-			return new EscapedJID(myActionNode.attributes.to);
-		}
-	
-		/**
-		 * The from property for invite and decline action types
-		 */
-		public function get from():EscapedJID
-		{
-			return new EscapedJID(myActionNode.attributes.from);
-		}
-	
-		/**
-		 * The jid property for destroy the action type
-		 */
-		public function get jid():EscapedJID
-		{
-			return new EscapedJID(myActionNode.attributes.jid);
-		}
-	
-	    /**
-	     * The reason for the invite/decline/destroy
-	     */
-	    public function get reason():String
-	    {
-	    	if (myActionNode.firstChild != null) {
-	    		if (myActionNode.firstChild.firstChild != null) {
-	    			return myActionNode.firstChild.firstChild.nodeValue;
-	    		}
-	    	}
-	        return null;
-	    }
 	
 		/**
 		 * Use this extension to invite another user
@@ -148,31 +104,6 @@ package org.igniterealtime.xiff.data.muc{
 		{
 			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
-	
-		/**
-		 * Property to use if the concerned room is password protected
-		 */
-		public function get password():String
-		{
-			if (myPasswordNode == null) return null;
-			return myPasswordNode.firstChild.nodeValue;
-		}
-	
-		public function set password(val:String):void
-		{
-			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", val);
-		}
-	
-		
-		public function get statuses():Array
-		{
-			return myStatuses;
-		}
-		
-		public function set statuses(newStatuses:Array):void
-		{
-			myStatuses = newStatuses;
-		}
 		
 		public function hasStatusCode(code:Number):Boolean
 		{
@@ -189,19 +120,91 @@ package org.igniterealtime.xiff.data.muc{
 		 */
 		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
-			if (myActionNode != null) myActionNode.removeNode();
+			if (_actionNode != null) _actionNode.removeNode();
 	
-			myActionNode = XMLFactory.createElement(type);
+			_actionNode = XMLFactory.createElement(type);
 			for (var i:String in attrs) {
 				if (exists(attrs[i])) {
-					myActionNode.attributes[i] = attrs[i];
+					_actionNode.attributes[i] = attrs[i];
 				}
 			}
-			getNode().appendChild(myActionNode);
+			getNode().appendChild(_actionNode);
 	
 			if (reason.length > 0) {
-				replaceTextNode(myActionNode, undefined, "reason", reason);
+				replaceTextNode(_actionNode, undefined, "reason", reason);
 			}
+		}
+	
+		/**
+		 * The type of user extension this is
+		 */
+		public function get type():String
+		{
+			if (_actionNode == null)
+				return null;
+			return _actionNode.nodeName == null ? OTHER_TYPE : _actionNode.nodeName;
+		}
+	
+		/**
+		 * The to property for invite and decline action types
+		 */
+		public function get to():EscapedJID
+		{
+			return new EscapedJID(_actionNode.attributes.to);
+		}
+	
+		/**
+		 * The from property for invite and decline action types
+		 */
+		public function get from():EscapedJID
+		{
+			return new EscapedJID(_actionNode.attributes.from);
+		}
+	
+		/**
+		 * The jid property for destroy the action type
+		 */
+		public function get jid():EscapedJID
+		{
+			return new EscapedJID(_actionNode.attributes.jid);
+		}
+	
+	    /**
+	     * The reason for the invite/decline/destroy
+	     */
+	    public function get reason():String
+	    {
+	    	if (_actionNode.firstChild != null)
+			{
+	    		if (_actionNode.firstChild.firstChild != null) {
+	    			return _actionNode.firstChild.firstChild.nodeValue;
+	    		}
+	    	}
+	        return null;
+	    }
+	
+		/**
+		 * Property to use if the concerned room is password protected
+		 */
+		public function get password():String
+		{
+			if (_passwordNode == null) return null;
+			return _passwordNode.firstChild.nodeValue;
+		}
+	
+		public function set password(value:String):void
+		{
+			_passwordNode = replaceTextNode(getNode(), _passwordNode, "password", value);
+		}
+	
+		
+		public function get statuses():Array
+		{
+			return _statuses;
+		}
+		public function set statuses(value:Array):void
+		{
+			_statuses = value;
 		}
 	}
 }

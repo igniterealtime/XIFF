@@ -3,17 +3,9 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-
-	
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
-	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	
+	import org.igniterealtime.xiff.data.*;	
 	import org.igniterealtime.xiff.data.whiteboard.Path;
 	import flash.xml.XMLNode;
-	
 	 
 	/**
 	 * A message extension for whitboard exchange. This class is the base class
@@ -23,18 +15,17 @@ package org.igniterealtime.xiff.data.whiteboard
 	 */
 	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
-		public static const NS:String = "xiff:wb";
 		public static const ELEMENT:String = "x";
+		public static const NS:String = "xiff:wb";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
-	    private var myPaths:Array;
+	    private var _paths:Array;
 		
-		public function WhiteboardExtension( parent:XMLNode=null )
+		public function WhiteboardExtension( parent:XMLNode = null )
 		{
 			super( parent );
-	        myPaths = [];
+	        _paths = [];
 		}
 	
 		/**
@@ -71,8 +62,9 @@ package org.igniterealtime.xiff.data.whiteboard
 	        var ext_node:XMLNode = XMLFactory.createElement(getElementName());
 	        ext_node.attributes.xmlns = getNS();
 	
-	        for (var i:int=0; i < myPaths.length; ++i) {
-	            myPaths[i].serialize(ext_node);
+	        for (var i:int = 0; i < _paths.length; ++i)
+			{
+	            _paths[i].serialize(ext_node);
 	        }
 	
 	        parent.appendChild(ext_node);
@@ -98,15 +90,17 @@ package org.igniterealtime.xiff.data.whiteboard
 		public function deserialize( node:XMLNode ):Boolean
 		{
 			setNode( node );
-	        myPaths = [];
-			
-	        for (var i:int=0; i < node.childNodes.length; ++i) {
+	        _paths = [];
+			var len:uint = node.childNodes.length;
+	        for (var i:int = 0; i < len; ++i)
+			{
 	            var child:XMLNode = node.childNodes[i];
-	            switch (child.nodeName) {
+	            switch (child.nodeName) 
+				{
 	                case "path":
 	                    var path:Path = new Path();
 	                    path.deserialize(child);
-	                    myPaths.push(path);
+	                    _paths.push(path);
 	                    break;
 	            }
 	        }
@@ -117,7 +111,10 @@ package org.igniterealtime.xiff.data.whiteboard
 	     * The paths available in this whiteboard message
 	     *
 	     */
-	    public function get paths():Array { return myPaths; }
+	    public function get paths():Array 
+		{ 
+			return _paths; 
+		}
 	
 	}
 }

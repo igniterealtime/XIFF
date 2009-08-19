@@ -12,7 +12,6 @@ package org.igniterealtime.xiff.data.muc
 	 * Implements the administration command data model in <a href="http://xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
 	 * @see http://xmpp.org/extensions/xep-0045.html
-	 * @param	parent (Optional) The containing XMLNode for this extension
 	 */
 	public class MUCOwnerExtension extends MUCBaseExtension implements IExtension
 	{
@@ -20,8 +19,12 @@ package org.igniterealtime.xiff.data.muc
 		public static const NS:String = "http://jabber.org/protocol/muc#owner";
 		public static const ELEMENT:String = "query";
 	
-		private var myDestroyNode:XMLNode;
+		private var _destroyNode:XMLNode;
 	
+		/**
+		 * 
+		 * @param	parent (Optional) The containing XMLNode for this extension
+		 */
 		public function MUCOwnerExtension( parent:XMLNode=null )
 		{
 			super(parent);
@@ -46,7 +49,7 @@ package org.igniterealtime.xiff.data.muc
 				switch( children[i].nodeName )
 				{
 					case "destroy":
-						myDestroyNode = children[i];
+						_destroyNode = children[i];
 						break;
 				}
 			}
@@ -68,13 +71,14 @@ package org.igniterealtime.xiff.data.muc
 	     */
 	    public function destroy(reason:String, alternateJID:EscapedJID):void
 	    {
-	        myDestroyNode = ensureNode(myDestroyNode, "destroy");
-	        for each(var child:XMLNode in myDestroyNode.childNodes) {
+	        _destroyNode = ensureNode(_destroyNode, "destroy");
+	        for each(var child:XMLNode in _destroyNode.childNodes)
+			{
 	            child.removeNode();
 	        }
 	
-	        if( exists(reason) ) { replaceTextNode(myDestroyNode, undefined, "reason", reason); }
-	        if( exists(alternateJID) ) { myDestroyNode.attributes.jid = alternateJID.toString(); }
+	        if( exists(reason) ) { replaceTextNode(_destroyNode, undefined, "reason", reason); }
+	        if( exists(alternateJID) ) { _destroyNode.attributes.jid = alternateJID.toString(); }
 	    }
 	}
 }

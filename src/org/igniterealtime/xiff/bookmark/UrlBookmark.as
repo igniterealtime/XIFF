@@ -9,7 +9,7 @@ package org.igniterealtime.xiff.bookmark
 
 	public class UrlBookmark implements ISerializable
 	{
-		private var node:XMLNode;
+		private var _node:XMLNode;
 
 		/**
 		 *
@@ -27,31 +27,31 @@ package org.igniterealtime.xiff.bookmark
 				throw new Error( "Name and url cannot be null, they must either both be null or an Object" );
 			}
 
-			node = new XMLNode( 1, "url" );
-			node.attributes.name = name;
-			node.attributes.url = url;
+			_node = new XMLNode( 1, "url" );
+			_node.attributes.name = name;
+			_node.attributes.url = url;
 		}
 
 		public function deserialize( node:XMLNode ):Boolean
 		{
-			this.node = node.cloneNode( true );
+			_node = node.cloneNode( true );
 			return true;
 		}
 
 		public function get name():String
 		{
-			return node.attributes.name;
+			return _node.attributes.name;
 		}
 
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
-			parentNode.appendChild( node.cloneNode( true ));
+			parentNode.appendChild( _node.cloneNode( true ));
 			return true;
 		}
 
 		public function get url():String
 		{
-			return node.attributes.uri;
+			return _node.attributes.uri;
 		}
 	}
 }

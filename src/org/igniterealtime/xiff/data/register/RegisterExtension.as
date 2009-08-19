@@ -1,15 +1,11 @@
 /*
  * License
  */
-package org.igniterealtime.xiff.data.register{
-
-	
+package org.igniterealtime.xiff.data.register
+{
 	import flash.xml.XMLNode;
 	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.*;
 		
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
@@ -23,16 +19,16 @@ package org.igniterealtime.xiff.data.register{
 	 */
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:register";
 		public static const ELEMENT:String = "query";
 	
-		private var myFields:Object;
-		private var myKeyNode:XMLNode;
-		private var myInstructionsNode:XMLNode;
-		private var myRemoveNode:XMLNode;
-	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
+		
+		private var _fields:Object = {};
+		private var _keyNode:XMLNode;
+		private var _instructionsNode:XMLNode;
+		private var _removeNode:XMLNode;
+	
 	
 		/**
 		 *
@@ -41,7 +37,6 @@ package org.igniterealtime.xiff.data.register{
 		public function RegisterExtension( parent:XMLNode=null )
 		{
 			super(parent);
-			myFields = {};
 		}
 	
 		public function getNS():String
@@ -70,7 +65,8 @@ package org.igniterealtime.xiff.data.register{
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
-			if (!exists(getNode().parentNode)) {
+			if (!exists(getNode().parentNode))
+			{
 				parentNode.appendChild(getNode().cloneNode( true ));
 			}
 			return true;
@@ -86,40 +82,30 @@ package org.igniterealtime.xiff.data.register{
 			setNode(node);
 	
 			var children:Array = getNode().childNodes;
-			for (var i:String in children) {
+			for (var i:String in children)
+			{
 	
-				switch (children[i].nodeName) {
+				switch (children[i].nodeName)
+				{
 					case "key":
-						myKeyNode = children[i];
+						_keyNode = children[i];
 						break;
 	
 					case "instructions":
-						myInstructionsNode = children[i];
+						_instructionsNode = children[i];
 						break;
 	
 					case "remove":
-						myRemoveNode = children[i];
+						_removeNode = children[i];
 						break;
 	
 					default:
-						myFields[children[i].nodeName] = children[i];
+						_fields[children[i].nodeName] = children[i];
 						break;
 				}
 			}
 			return true;
 	
-		}
-	
-		/**
-		 * 
-		 */
-		public function get unregister():Boolean
-		{
-			return exists(myRemoveNode);
-		}
-		public function set unregister(val:Boolean):void
-		{
-			myRemoveNode = replaceTextNode(getNode(), myRemoveNode, "remove", "");
 		}
 	
 		/**
@@ -130,42 +116,12 @@ package org.igniterealtime.xiff.data.register{
 		{
 			var fields:Array = [];
 	
-			for (var i:String in myFields) {
+			for (var i:String in _fields)
+			{
 				fields.push(i);
 			}
 	
 			return fields;
-		}
-	
-	
-		/**
-		 * 
-		 */
-		public function get key():String
-		{
-			if(myKeyNode && myKeyNode.firstChild)
-				return myKeyNode.firstChild.nodeValue;
-			
-			return null;
-		}
-		public function set key(val:String):void
-		{
-			myKeyNode = replaceTextNode(getNode(), myKeyNode, "key", val);
-		}
-	
-		/**
-		 * 
-		 */
-		public function get instructions():String
-		{
-			if(myInstructionsNode && myInstructionsNode.firstChild)
-				return myInstructionsNode.firstChild.nodeValue;
-			
-			return null;
-		}
-		public function set instructions(val:String):void
-		{
-			myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", val);
 		}
 	
 		/**
@@ -175,9 +131,11 @@ package org.igniterealtime.xiff.data.register{
 		 */
 		public function getField(name:String):String
 		{
-			var node:XMLNode = myFields[name];
-			if(node && node.firstChild)
+			var node:XMLNode = _fields[name];
+			if (node && node.firstChild)
+			{
 				return node.firstChild.nodeValue;
+			}
 				
 			return null;
 		}
@@ -185,11 +143,57 @@ package org.igniterealtime.xiff.data.register{
 		/**
 		 * 
 		 * @param	name
-		 * @param	val
+		 * @param	value
 		 */
-		public function setField(name:String, val:String):void
+		public function setField(name:String, value:String):void
 		{
-			myFields[name] = replaceTextNode(getNode(), myFields[name], name, val);
+			_fields[name] = replaceTextNode(getNode(), _fields[name], name, value);
+		}
+	
+		/**
+		 * 
+		 */
+		public function get unregister():Boolean
+		{
+			return exists(_removeNode);
+		}
+		public function set unregister(value:Boolean):void
+		{
+			_removeNode = replaceTextNode(getNode(), _removeNode, "remove", "");
+		}
+	
+		/**
+		 * 
+		 */
+		public function get key():String
+		{
+			if (_keyNode && _keyNode.firstChild)
+			{
+				return _keyNode.firstChild.nodeValue;
+			}
+			
+			return null;
+		}
+		public function set key(value:String):void
+		{
+			_keyNode = replaceTextNode(getNode(), _keyNode, "key", value);
+		}
+	
+		/**
+		 * 
+		 */
+		public function get instructions():String
+		{
+			if (_instructionsNode && _instructionsNode.firstChild)
+			{
+				return _instructionsNode.firstChild.nodeValue;
+			}
+			
+			return null;
+		}
+		public function set instructions(value:String):void
+		{
+			_instructionsNode = replaceTextNode(getNode(), _instructionsNode, "instructions", value);
 		}
 	
 		/**
@@ -199,9 +203,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("username");
 		}
-		public function set username(val:String):void
+		public function set username(value:String):void
 		{ 
-			setField("username", val); 
+			setField("username", value); 
 		}
 	
 		/**
@@ -211,9 +215,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("nick"); 
 		}
-		public function set nick(val:String):void
+		public function set nick(value:String):void
 		{ 
-			setField("nick", val); 
+			setField("nick", value); 
 		}
 	
 		/**
@@ -223,9 +227,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("password"); 
 		}
-		public function set password(val:String):void
+		public function set password(value:String):void
 		{ 
-			setField("password", val);
+			setField("password", value);
 		}
 	
 		/**
@@ -235,9 +239,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("first"); 
 		}
-		public function set first(val:String):void
+		public function set first(value:String):void
 		{ 
-			setField("first", val); 
+			setField("first", value); 
 		}
 	
 		/**
@@ -247,9 +251,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("last"); 
 		}
-		public function set last(val:String):void
+		public function set last(value:String):void
 		{ 
-			setField("last", val);
+			setField("last", value);
 		}
 	
 		/**
@@ -259,9 +263,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("email");
 		}
-		public function set email(val:String):void
+		public function set email(value:String):void
 		{ 
-			setField("email", val); 
+			setField("email", value); 
 		}
 	
 		/**
@@ -271,9 +275,9 @@ package org.igniterealtime.xiff.data.register{
 		{
 			return getField("address");
 		}
-		public function set address(val:String):void
+		public function set address(value:String):void
 		{ 
-			setField("address", val); 
+			setField("address", value); 
 		}
 	
 		/**
@@ -283,9 +287,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("city"); 
 		}
-		public function set city(val:String):void
+		public function set city(value:String):void
 		{ 
-			setField("city", val); 
+			setField("city", value); 
 		}
 	
 		/**
@@ -295,9 +299,9 @@ package org.igniterealtime.xiff.data.register{
 		{
 			return getField("state"); 
 		}
-		public function set state(val:String):void
+		public function set state(value:String):void
 		{ 
-			setField("state", val); 
+			setField("state", value); 
 		}
 	
 		/**
@@ -307,9 +311,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("zip"); 
 		}
-		public function set zip(val:String):void
+		public function set zip(value:String):void
 		{ 
-			setField("zip", val); 
+			setField("zip", value); 
 		}
 	
 		/**
@@ -319,9 +323,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("phone"); 
 		}
-		public function set phone(val:String):void
+		public function set phone(value:String):void
 		{ 
-			setField("phone", val); 
+			setField("phone", value); 
 		}
 	
 		/**
@@ -331,9 +335,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("url");
 		}
-		public function set url(val:String):void
+		public function set url(value:String):void
 		{ 
-			setField("url", val); 
+			setField("url", value); 
 		}
 	
 		/**
@@ -343,9 +347,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("date"); 
 		}
-		public function set date(val:String):void
+		public function set date(value:String):void
 		{ 
-			setField("date", val); 
+			setField("date", value); 
 		}
 	
 		/**
@@ -355,9 +359,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("misc"); 
 		}
-		public function set misc(val:String):void
+		public function set misc(value:String):void
 		{ 
-			setField("misc", val); 
+			setField("misc", value); 
 		}
 	
 		/**
@@ -367,9 +371,9 @@ package org.igniterealtime.xiff.data.register{
 		{ 
 			return getField("text"); 
 		}
-		public function set text(val:String):void
+		public function set text(value:String):void
 		{ 
-			setField("text", val);
+			setField("text", value);
 		}
 	}
 }
