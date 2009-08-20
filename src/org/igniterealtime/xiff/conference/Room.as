@@ -4,9 +4,9 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 
 	import mx.collections.ArrayCollection;
-
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
@@ -170,11 +170,10 @@ package org.igniterealtime.xiff.conference
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.DECLINED
 	 */
 	[Event( name="declined",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	
 	/**
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
-	 *
-	 * @param	connection An XMPPConnection instance that is providing the primary server connection
 	 */
 	public class Room extends ArrayCollection
 	{
@@ -211,9 +210,7 @@ package org.igniterealtime.xiff.conference
 
 		private var _connection:XMPPConnection;
 
-		private var myIsReserved:Boolean;
-
-		private var myJID:UnescapedJID
+		private var _roomJID:UnescapedJID
 
 		private var _nickname:String;
 
@@ -226,11 +223,20 @@ package org.igniterealtime.xiff.conference
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
 
+		private var myIsReserved:Boolean;
+		
+
+		/**
+		 *
+		 * @param	aConnection  A XMPPConnection instance that is providing the primary server connection
+		 */
 		public function Room( aConnection:XMPPConnection = null )
 		{
 			setActive( false );
-			if ( aConnection )
+			if ( aConnection != null )
+			{
 				connection = aConnection;
+			}
 		}
 
 		private static function RoomStaticConstructor():Boolean
@@ -243,7 +249,7 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Allow a previously banned JIDs to enter this room.	This is the same as:
-		 * Room.grant(NO_AFFILIATION, jid)
+		 * <code>Room.grant(NO_AFFILIATION, jid)</code>
 		 *
 		 * <p>If the process could not be completed, the room will dispatch the event
 		 * <code>RoomEvent.ADMIN_ERROR</code></p>
@@ -280,7 +286,7 @@ package org.igniterealtime.xiff.conference
 			}
 
 			iq.addExtension( adminExt );
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -472,7 +478,7 @@ package org.igniterealtime.xiff.conference
 			}
 
 			iq.addExtension( owner );
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -508,8 +514,12 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function isThisRoom( sender:UnescapedJID ):Boolean
 		{
-			// Checks to see that sender is this room
-			return roomJID && sender.bareJID.toLowerCase() == roomJID.bareJID.toLowerCase();
+			var value:Boolean = false;
+			if (_roomJID != null)
+			{
+				value = sender.bareJID.toLowerCase() == roomJID.bareJID.toLowerCase();
+			}
+			return value;
 		}
 
 		/**
@@ -521,8 +531,12 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function isThisUser( sender:UnescapedJID ):Boolean
 		{
-			// Case insensitive check that the sender is the same as the user
-			return sender.toString().toLowerCase() == userJID.toString().toLowerCase();
+			var value:Boolean = false;
+			if (userJID != null) 
+			{
+				value = sender.toString().toLowerCase() == userJID.toString().toLowerCase();
+			}
+			return value;
 		}
 
 		/**
@@ -617,32 +631,38 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( iq.type == IQ.ERROR_TYPE )
 			{
-				var e:RoomEvent = new RoomEvent( RoomEvent.ADMIN_ERROR );
-				e.errorCondition = iq.errorCondition;
-				e.errorMessage = iq.errorMessage;
-				e.errorType = iq.errorType;
-				e.errorCode = iq.errorCode;
-				dispatchEvent( e );
+				var event:RoomEvent = new RoomEvent( RoomEvent.ADMIN_ERROR );
+				event.errorCondition = iq.errorCondition;
+				event.errorMessage = iq.errorMessage;
+				event.errorType = iq.errorType;
+				event.errorCode = iq.errorCode;
+				dispatchEvent( event );
 			}
 		}
 
+		/**
+		 * 
+		 * @param	iq
+		 */
 		private function finish_requestAffiliates( iq:IQ ):void
 		{
 			finish_admin( iq );
 			if ( iq.type == IQ.RESULT_TYPE )
 			{
-
 				var owner:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
 				var items:Array = owner.getAllItems();
 				// trace("Affiliates: " + items);
-				var e:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
-				e.data = items;
-				dispatchEvent( e );
-
-
+				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
+				event.data = items;
+				dispatchEvent( event );
 			}
 		}
 
+		/**
+		 * 
+		 * @param	inName
+		 * @return
+		 */
 		private function getOccupantNamed( inName:String ):RoomOccupant
 		{
 			for each ( var occ:RoomOccupant in this )
@@ -655,6 +675,10 @@ package org.igniterealtime.xiff.conference
 			return null;
 		}
 
+		/**
+		 * 
+		 * @param	eventObj
+		 */
 		private function handleEvent( eventObj:Object ):void
 		{
 			switch ( eventObj.type )
@@ -665,16 +689,16 @@ package org.igniterealtime.xiff.conference
 					// Check to see that the message is from this room
 					if ( isThisRoom( msg.from.unescaped ))
 					{
-						var e:RoomEvent;
+						var roomEvent:RoomEvent;
 						if ( msg.type == Message.GROUPCHAT_TYPE )
 						{
 							// Check for a subject change
 							if ( msg.subject != null )
 							{
 								_subject = msg.subject;
-								e = new RoomEvent( RoomEvent.SUBJECT_CHANGE );
-								e.subject = msg.subject;
-								dispatchEvent( e );
+								roomEvent = new RoomEvent( RoomEvent.SUBJECT_CHANGE );
+								roomEvent.subject = msg.subject;
+								dispatchEvent( roomEvent );
 							}
 							else
 							{
@@ -683,9 +707,9 @@ package org.igniterealtime.xiff.conference
 								var userexts:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
 								if ( !userexts || userexts.length == 0 || !( userexts[ 0 ].hasStatusCode( 100 )))
 								{
-									e = new RoomEvent( RoomEvent.GROUP_MESSAGE );
-									e.data = msg;
-									dispatchEvent( e );
+									roomEvent = new RoomEvent( RoomEvent.GROUP_MESSAGE );
+									roomEvent.data = msg;
+									dispatchEvent( roomEvent );
 								}
 							}
 						}
@@ -694,32 +718,34 @@ package org.igniterealtime.xiff.conference
 							var form:Array = msg.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 							if ( form )
 							{
-								e = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
-								e.data = form;
-								dispatchEvent( e );
+								roomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
+								roomEvent.data = form;
+								dispatchEvent( roomEvent );
 							}
 
 						}
 					}
 					else if ( isThisUser( msg.to.unescaped ) && msg.type == Message.CHAT_TYPE )
-					{ // It could be a private message via the conference
-						e = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
-						e.data = msg;
-						dispatchEvent( e );
+					{
+						// It could be a private message via the conference
+						roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
+						roomEvent.data = msg;
+						dispatchEvent( roomEvent );
 					}
 					else
-					{ // Could be an decline to a previous invite
+					{
+						// Could be an decline to a previous invite
 						var mucExtensions:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
 						if ( mucExtensions != null && mucExtensions.length > 0 )
 						{
 							var muc:MUCUserExtension = mucExtensions[ 0 ];
 							if ( muc && muc.type == MUCUserExtension.DECLINE_TYPE )
 							{
-								e = new RoomEvent( RoomEvent.DECLINED );
-								e.from = muc.reason;
-								e.reason = muc.reason;
-								e.data = msg;
-								dispatchEvent( e );
+								roomEvent = new RoomEvent( RoomEvent.DECLINED );
+								roomEvent.from = muc.reason;
+								roomEvent.reason = muc.reason;
+								roomEvent.data = msg;
+								dispatchEvent( roomEvent );
 							}
 						}
 					}
@@ -734,37 +760,37 @@ package org.igniterealtime.xiff.conference
 							switch ( presence.errorCode )
 							{
 								case 401:
-									e = new RoomEvent( RoomEvent.PASSWORD_ERROR );
+									roomEvent = new RoomEvent( RoomEvent.PASSWORD_ERROR );
 									break;
 
 								case 403:
-									e = new RoomEvent( RoomEvent.BANNED_ERROR );
+									roomEvent = new RoomEvent( RoomEvent.BANNED_ERROR );
 									break;
 
 								case 404:
-									e = new RoomEvent( RoomEvent.LOCKED_ERROR );
+									roomEvent = new RoomEvent( RoomEvent.LOCKED_ERROR );
 									break;
 
 								case 407:
-									e = new RoomEvent( RoomEvent.REGISTRATION_REQ_ERROR );
+									roomEvent = new RoomEvent( RoomEvent.REGISTRATION_REQ_ERROR );
 									break;
 
 								case 409:
-									e = new RoomEvent( RoomEvent.NICK_CONFLICT );
-									e.nickname = nickname;
+									roomEvent = new RoomEvent( RoomEvent.NICK_CONFLICT );
+									roomEvent.nickname = nickname;
 									break;
 
 								case 503:
-									e = new RoomEvent( RoomEvent.MAX_USERS_ERROR );
+									roomEvent = new RoomEvent( RoomEvent.MAX_USERS_ERROR );
 									break;
 
 								default:
-									e = new RoomEvent( "MUC Error of type: " + presence.errorCode );
+									roomEvent = new RoomEvent( "MUC Error of type: " + presence.errorCode );
 									break;
 							}
-							e.errorCode = presence.errorCode;
-							e.errorMessage = presence.errorMessage;
-							dispatchEvent( e );
+							roomEvent.errorCode = presence.errorCode;
+							roomEvent.errorMessage = presence.errorMessage;
+							dispatchEvent( roomEvent );
 						}
 						else if ( isThisRoom( presence.from.unescaped ))
 						{
@@ -782,23 +808,23 @@ package org.igniterealtime.xiff.conference
 								{
 									case 100:
 									case 172:
-										anonymous = false;
+										_anonymous = false;
 										break;
 									case 174:
-										anonymous = true;
+										_anonymous = true;
 										break;
 									case 201:
 										unlockRoom( myIsReserved );
 										break;
 									case 307:
-										e = new RoomEvent( RoomEvent.USER_KICKED );
-										e.nickname = presence.from.resource;
-										dispatchEvent( e );
+										roomEvent = new RoomEvent( RoomEvent.USER_KICKED );
+										roomEvent.nickname = presence.from.resource;
+										dispatchEvent( roomEvent );
 										break;
 									case 301:
-										e = new RoomEvent( RoomEvent.USER_BANNED );
-										e.nickname = presence.from.resource;
-										dispatchEvent( e );
+										roomEvent = new RoomEvent( RoomEvent.USER_BANNED );
+										roomEvent.nickname = presence.from.resource;
+										dispatchEvent( roomEvent );
 										break;
 								}
 							}
@@ -811,10 +837,14 @@ package org.igniterealtime.xiff.conference
 								//trace("Room: becoming inactive: " + presence.getNode());
 								setActive( false );
 								if ( user.type == MUCUserExtension.DESTROY_TYPE )
-									e = new RoomEvent( RoomEvent.ROOM_DESTROYED );
+								{
+									roomEvent = new RoomEvent( RoomEvent.ROOM_DESTROYED );
+								}
 								else
-									e = new RoomEvent( RoomEvent.ROOM_LEAVE );
-								dispatchEvent( e );
+								{
+									roomEvent = new RoomEvent( RoomEvent.ROOM_LEAVE );
+								}
+								dispatchEvent( roomEvent );
 								_connection.removeEventListener( PresenceEvent.PRESENCE,
 																  handleEvent );
 							}
@@ -827,12 +857,16 @@ package org.igniterealtime.xiff.conference
 					// The server disconnected, so we are no longer active
 					setActive( false );
 					removeAll();
-					e = new RoomEvent( RoomEvent.ROOM_LEAVE );
-					dispatchEvent( e );
+					roomEvent = new RoomEvent( RoomEvent.ROOM_LEAVE );
+					dispatchEvent( roomEvent );
 					break;
 			}
 		}
 
+		/**
+		 *
+		 * @param	state
+		 */
 		private function setActive( state:Boolean ):void
 		{
 			_active = state;
@@ -871,17 +905,19 @@ package org.igniterealtime.xiff.conference
 			}
 		}
 
+		/**
+		 * If we receive a presence about ourselves, it means
+		 * a) we've joined the room; tell everyone, then proceed as usual
+		 * b) we're being told we left, which we handle in the caller
+		 * @param	aPresence
+		 */
 		private function updateRoomRoster( aPresence:Presence ):void
 		{
 			var userNickname:String = aPresence.from.unescaped.resource;
 			var userExts:Array = aPresence.getAllExtensionsByNS( MUCUserExtension.NS );
 			var item:MUCItem = userExts[ 0 ].getAllItems()[ 0 ];
-			var e:RoomEvent;
+			var roomEvent:RoomEvent;
 
-			/*if we receive a presence about ourselves, it means
-			 *a) we've joined the room; tell everyone, then proceed as usual
-			 *b) we're being told we left, which we handle in the caller
-			 */
 			if ( isThisUser( aPresence.from.unescaped ))
 			{
 				_affiliation = item.affiliation;
@@ -892,8 +928,8 @@ package org.igniterealtime.xiff.conference
 				if ( !isActive && aPresence.type != Presence.UNAVAILABLE_TYPE )
 				{
 					setActive( true );
-					e = new RoomEvent( RoomEvent.ROOM_JOIN );
-					dispatchEvent( e );
+					roomEvent = new RoomEvent( RoomEvent.ROOM_JOIN );
+					dispatchEvent( roomEvent );
 				}
 			}
 
@@ -911,14 +947,16 @@ package org.igniterealtime.xiff.conference
 					{
 						// If the user left as a result of a kick or ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED/USER_BANNED
 						if ( status.code == 307 || status.code == 301 )
+						{
 							return;
+						}
 					}
 
 					// Notify listeners that a user has left the room
-					e = new RoomEvent( RoomEvent.USER_DEPARTURE );
-					e.nickname = userNickname;
-					e.data = aPresence;
-					dispatchEvent( e );
+					roomEvent = new RoomEvent( RoomEvent.USER_DEPARTURE );
+					roomEvent.nickname = userNickname;
+					roomEvent.data = aPresence;
+					dispatchEvent( roomEvent );
 				}
 				else
 				{
@@ -934,10 +972,10 @@ package org.igniterealtime.xiff.conference
 										   item.role, item.jid ? item.jid.unescaped :
 										   null, this ));
 
-				e = new RoomEvent( RoomEvent.USER_JOIN );
-				e.nickname = userNickname;
-				e.data = aPresence;
-				dispatchEvent( e );
+				roomEvent = new RoomEvent( RoomEvent.USER_JOIN );
+				roomEvent.nickname = userNickname;
+				roomEvent.data = aPresence;
+				dispatchEvent( roomEvent );
 			}
 		}
 		
@@ -966,7 +1004,7 @@ package org.igniterealtime.xiff.conference
 			owner.addItem( affiliation );
 
 			iq.addExtension( owner );
-			connection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -1088,19 +1126,11 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Whether the room shows full JIDs or not; (Read-only)
+		 * Whether the room shows full JIDs or not.
 		 */
 		public function get anonymous():Boolean
 		{
 			return _anonymous;
-		}
-
-		/**
-		 * Don't call this; it would be private, but ActionScript apparently doesn't like mixed-visibility properties
-		 */
-		public function set anonymous( value:Boolean ):void
-		{
-			_anonymous = value;
 		}
 
 		/**
@@ -1110,18 +1140,13 @@ package org.igniterealtime.xiff.conference
 		{
 			return _nickname == null ? _connection.username : _nickname;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set nickname( value:String ):void
 		{
 			if ( isActive )
 			{
 				pendingNickname = value;
-				// var tempPresence:Presence = new Presence( userJID );
-				var tempPresence:Presence = new Presence( new EscapedJID( userJID +
-																		  "/" + value ));
+				var tempPresence:Presence = new Presence( 
+					new EscapedJID( userJID + "/" + value ));
 				_connection.send( tempPresence );
 			}
 			else
@@ -1137,10 +1162,6 @@ package org.igniterealtime.xiff.conference
 		{
 			return _password;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set password( value:String ):void
 		{
 			_password = value;
@@ -1150,10 +1171,7 @@ package org.igniterealtime.xiff.conference
 		 * Gets the user's affiliation for this room.
 		 * Possible affiliations are "owner", "admin", "member", and "outcast".
 		 * It is also possible to have no defined affiliation.
-		 *
-		 * @return The user's affiliation
 		 */
-		[Bindable( event=affiliationSet )]
 		public function get affiliation():String
 		{
 			return _affiliation;
@@ -1162,10 +1180,7 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Gets the user's role in the conference room.
 		 * Possible roles are "visitor", "participant", "moderator" or no defined role.
-		 *
-		 * @return The user's role
 		 */
-		[Bindable( event=roleSet )]
 		public function get role():String
 		{
 			return _role;
@@ -1174,16 +1189,14 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * The unescaped JID of the room. <code>room&at;conference.server</code>
 		 * Set this after initiating a new Room.
-		 * @return The room's JID.
 		 */
 		public function get roomJID():UnescapedJID
 		{
-			return myJID;
+			return _roomJID;
 		}
-
-		public function set roomJID( value:UnescapedJID ):void
+		public function set roomJID( jid:UnescapedJID ):void
 		{
-			myJID = value;
+			_roomJID = jid;
 		}
 
 		/**
@@ -1191,18 +1204,16 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get roomName():String
 		{
-			return myJID.node;
+			return _roomJID.node;
 		}
-
 		public function set roomName( value:String ):void
 		{
 			roomJID = new UnescapedJID( value + "@" + conferenceServer );
 		}
 
 		/**
-		 * The subject. (Read-only)
+		 * The subject.
 		 */
-		[Bindable( event=subjectChange )]
 		public function get subject():String
 		{
 			return _subject;
@@ -1210,12 +1221,14 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Get the JID of the conference room user.
-		 *
-		 * @return your JID in the room
 		 */
 		public function get userJID():UnescapedJID
 		{
-			return new UnescapedJID( roomJID.bareJID + "/" + nickname );
+			if (_roomJID != null)
+			{
+				return new UnescapedJID( _roomJID.bareJID + "/" + nickname );
+			}
+			return null;			
 		}
 
 		/**
@@ -1224,12 +1237,8 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get conferenceServer():String
 		{
-			return myJID.domain;
+			return _roomJID.domain;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set conferenceServer( value:String ):void
 		{
 			roomJID = new UnescapedJID( roomName + "@" + value );
@@ -1238,32 +1247,21 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Determines whether the connection to the room is active - that is, the user
 		 * is connected and has joined the room.
-		 *
-		 * @return True if the connection is active; false otherwise.
 		 */
-		[Bindable( event=activeStateUpdated )]
 		public function get isActive():Boolean
 		{
 			return _active;
 		}
 
 		/**
-		 * Gets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
+		 * A reference to the XMPPConnection being used for incoming/outgoing XMPP data.
 		 *
-		 * @return	The XMPPConnection used
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
 		public function get connection():XMPPConnection
 		{
 			return _connection;
 		}
-
-		/**
-		 * Sets a reference to the XMPPConnection being used for incoming/outgoing XMPP data.
-		 *
-		 * @param	connection The XMPPConnection instance to use.
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection
-		 */
 		public function set connection( value:XMPPConnection ):void
 		{
 			if ( _connection != null )

@@ -4,8 +4,9 @@
 package org.igniterealtime.xiff.im
 {
 	import mx.collections.ArrayCollection;
-	import mx.collections.Sort;
-	import mx.collections.SortField;
+	
+	import flash.events.EventDispatcher;
+	import flash.utils.Dictionary;
 	
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
@@ -83,14 +84,6 @@ package org.igniterealtime.xiff.im
 	 * this class uses an internal data provider to keep track of roster data locally and
 	 * provides a "read-only" form of the Data Provider API for external use. Non-read operations
 	 * are performed using alternative, roster-specific methods.
-	 *
-	 * You can also use your own, external data provider if you choose, by using the
-	 * <code>setExternalDataProvider()</code> method. This is most useful for applications
-	 * where the data provider might need to be a class other than an array with the Data Provider
-	 * API decorations, like in the case of a Macromedia Central LCDataProvider. Overall,
-	 * however, its probably a rare occurence.
-	 *
-	 * @param	externalDataProvider (Optional) A reference to an instance of a data provider
 	 */
 	public class Roster extends ArrayCollection
 	{
@@ -99,11 +92,15 @@ package org.igniterealtime.xiff.im
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:UnescapedJID;
 		
-		//FIXME: maps should not be arrays
-		private var _presenceMap:Array = [];
+		/**
+		 * Store presences of the people in users roster.
+		 */
+		private var _presenceMap:Dictionary;
 		
-		
-		public var groups:ArrayCollection = new ArrayCollection();
+		/**
+		 * Store groups as RosterGroup.
+		 */
+		private var _groups:Dictionary;
 		
 		private static const staticConstructorDependencies:Array = [
 			ExtensionClassRegistry,
@@ -116,16 +113,15 @@ package org.igniterealtime.xiff.im
 		 *
 		 * @param	aConnection A reference to an XMPPConnection class instance
 		 */
-		public function Roster( aConnection:XMPPConnection = null)
+		public function Roster( aConnection:XMPPConnection = null )
 		{
+			_presenceMap = new Dictionary();
+			_groups = new Dictionary();
 			
 			if (aConnection != null)
 			{
 				connection = aConnection;
 			}
-			var groupSort:Sort = new Sort();
-			groupSort.fields = [new SortField("label", true)];
-			groups.sort = groupSort;
 		}
 		
 		/**
@@ -154,10 +150,12 @@ package org.igniterealtime.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean=true ):void
+		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean = true ):void
 		{
-			if( displayName == null )
+			if ( displayName == null )
+			{
 				displayName = id.toString();
+			}
 				
 			var callbackObj:Roster = null;
 			var callbackMethod:String = null;
@@ -190,9 +188,10 @@ package org.igniterealtime.xiff.im
 		 * to his/her/its presence.
 		 *
 		 * @param	id The JID of the user or service that you wish to subscribe to
+		 * @param	isResponse
 		 * @see	#subscriptionDenial
 		 */
-		public function requestSubscription( id:UnescapedJID, isResponse:Boolean=false):void
+		public function requestSubscription( id:UnescapedJID, isResponse:Boolean = false):void
 		{
 			// Roster length is 0 if it a response to a user request. we must handle this event.
 			var tempPresence:Presence;
@@ -217,13 +216,13 @@ package org.igniterealtime.xiff.im
 		 *
 		 * @param	rosterItem The value object which is to be removed
 		 */
-		public function removeContact( rosterItem:RosterItemVO):void
+		public function removeContact( rosterItem:RosterItemVO ):void
 		{
-			if(contains(rosterItem))
+			if (contains(rosterItem))
 			{
 				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-				ext.addItem(new EscapedJID(rosterItem.jid.bareJID), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
+				ext.addItem( new EscapedJID(rosterItem.jid.bareJID), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				tempIQ.addExtension( ext );
 				_connection.send( tempIQ );
 				
@@ -237,7 +236,6 @@ package org.igniterealtime.xiff.im
 		 * provider is populated appropriately. If the Roster-XMPPConnection class dependency has been
 		 * set up before logging in, then this method will be called automatically because the Roster
 		 * listens for "login" events from the XMPPConnection.
-		 *
 		 */
 		public function fetchRoster():void
 		{
@@ -261,7 +259,8 @@ package org.igniterealtime.xiff.im
 			_connection.send( tempPresence );
 			
 			// Request a return subscription
-			if( requestAfterGrant ) {
+			if ( requestAfterGrant )
+			{
 				requestSubscription( tojid, true );
 			}
 		}
@@ -322,10 +321,12 @@ package org.igniterealtime.xiff.im
 		public function getContainingGroups(item:RosterItemVO):Array
 		{
 			var result:Array = [];
-			for each(var group:RosterGroup in groups)
+			for each(var group:RosterGroup in _groups)
 			{
-				if(group.contains(item))
+				if (group.contains(item))
+				{
 					result.push(group);
+				}
 			}
 			return result;
 		}
@@ -384,7 +385,9 @@ package org.igniterealtime.xiff.im
 					{
 						//var classInfo:XML = flash.utils.describeType(item);
 						if (!item is XMLStanza)
+						{
 							continue;
+						}
 						
 						var askType:String = item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
 						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE,
@@ -449,32 +452,33 @@ package org.igniterealtime.xiff.im
 					try
 					{
 						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
-						for each(var item:* in ext.getAllItems())
+						var items:Array = ext.getAllItems();
+						for each(var item:* in items)
 						{
 							var jid:UnescapedJID = new UnescapedJID(item.jid);
 							var rosterItemVO:RosterItemVO = RosterItemVO.get(jid, true);
-							var ev: RosterEvent;
+							var rosterEvent:RosterEvent;
 							
 							if (contains(rosterItemVO))
 							{
 								switch (item.subscription.toLowerCase())
 								{
 									case RosterExtension.SUBSCRIBE_TYPE_NONE:
-										ev = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
-										ev.jid = jid;
-										dispatchEvent( ev );
+										rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
+										rosterEvent.jid = jid;
+										dispatchEvent( rosterEvent );
 										break;
 									
 									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
-										ev = new RosterEvent(RosterEvent.USER_REMOVED);
+										rosterEvent = new RosterEvent(RosterEvent.USER_REMOVED);
 										for each(var group:RosterGroup in getContainingGroups(rosterItemVO))
 										{
 											group.removeItem(rosterItemVO);
 										}
 										//should be impossible for getItemIndex to return -1, since we just looked it up
-										ev.data = removeItemAt(getItemIndex(rosterItemVO));
-										ev.jid = jid;
-										dispatchEvent(ev);
+										rosterEvent.data = removeItemAt(getItemIndex(rosterItemVO));;
+										rosterEvent.jid = jid;
+										dispatchEvent( rosterEvent );
 										break;
 														
 									default:
@@ -484,7 +488,7 @@ package org.igniterealtime.xiff.im
 							}
 							else
 							{
-								var groups:Array = item.groupNames;
+								var groupNames:Array = item.groupNames;
 								var askType:String = item.askType != null ?
 									item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
 
@@ -493,14 +497,14 @@ package org.igniterealtime.xiff.im
 								{
 									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
 									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline",
-										groups, item.subscription.toLowerCase(), askType );
+										groupNames, item.subscription.toLowerCase(), askType );
 								}
 								else if ( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ||
 									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) &&
 										item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
 								{
 									// A contact was added to the roster, and its authorization is still pending.
-									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groups,
+									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groupNames,
 										item.subscription.toLowerCase(), askType );
 								}
 							}
@@ -572,16 +576,22 @@ package org.igniterealtime.xiff.im
 			}
 		}
 		
-		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String="none" ):Boolean
+		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String = "none" ):Boolean
 		{
-			if(!jid)
+			if (!jid)
+			{
 				return false;
+			}
 			
 			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
-			if(!contains(rosterItem))
+			if (!contains( rosterItem ))
+			{
 				addItem( rosterItem );
-			if(displayName)
+			}
+			if (displayName)
+			{
 				rosterItem.displayName = displayName;
+			}
 			rosterItem.subscribeType = type;
 			rosterItem.askType = askType;
 			rosterItem.status = status;
@@ -596,10 +606,9 @@ package org.igniterealtime.xiff.im
 			return true;
 		}
 		
-		private function setContactGroups(contact:RosterItemVO, groupNames:Array):void
+		private function setContactGroups( contact:RosterItemVO, groupNames:Array ):void
 		{
-			groups.disableAutoUpdate();
-			if(!groupNames || groupNames.length == 0)
+			if (!groupNames || groupNames.length == 0)
 			{
 				groupNames = ["General"];
 			}
@@ -607,16 +616,19 @@ package org.igniterealtime.xiff.im
 			{
 				//if there's no group by this name already, we need to make one
 				if(!getGroup(name))
-					groups.addItem(new RosterGroup(name));
+					_groups[name] = new RosterGroup(name);
 			}
-			for each(var group:RosterGroup in groups)
+			for each(var group:RosterGroup in _groups)
 			{
-				if(groupNames.indexOf(group.label) >= 0)
+				if (groupNames.indexOf(group.label) >= 0)
+				{
 					group.addItem(contact);
+				}
 				else
+				{
 					group.removeItem(contact);
+				}
 			}
-			groups.enableAutoUpdate();
 		}
 		
 		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
@@ -625,8 +637,10 @@ package org.igniterealtime.xiff.im
 			
 			setContactGroups(item, newGroupNames);
 
-			if(name)
+			if (name)
+			{
 				item.displayName = name;
+			}
 			
 			var event:RosterEvent = new RosterEvent(RosterEvent.USER_SUBSCRIPTION_UPDATED);
 			event.jid = item.jid;
@@ -641,16 +655,21 @@ package org.igniterealtime.xiff.im
 				item.status = presence.status;
 				item.show = presence.show;
 				item.priority = presence.priority;
-				if(!presence.type)
+				if (!presence.type)
+				{
 					item.online = true;
-				else if(presence.type == Presence.UNAVAILABLE_TYPE)
+				}
+				else if (presence.type == Presence.UNAVAILABLE_TYPE)
+				{
 					item.online = false;
+				}
 				
 				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
 				event.jid = item.jid;
 				event.data = item;
-				_presenceMap[item.jid.toString()] = presence;
 				dispatchEvent(event);
+				
+				_presenceMap[item.jid.toString()] = presence;
 			}
 			catch (e:Error)
 			{
@@ -658,19 +677,24 @@ package org.igniterealtime.xiff.im
 			}
 		}
 		
-		public function getPresence(jid:UnescapedJID):String
+		/**
+		 * Get the Presence of the given user if any.
+		 * @param	jid
+		 * @return
+		 */
+		public function getPresence(jid:UnescapedJID):Presence
 		{
-			return _presenceMap[jid.toString()];
+			return _presenceMap[jid.toString()] as Presence;
 		}
 		
+		/**
+		 * Get a group by given name
+		 * @param	name
+		 * @return
+		 */
 		public function getGroup(name:String):RosterGroup
 		{
-			for each(var group:RosterGroup in groups)
-			{
-				if(group.label == name)
-					return group;
-			}
-			return null;
+			return _groups[name] as RosterGroup;
 		}
 		
 		/**
