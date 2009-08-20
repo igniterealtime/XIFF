@@ -71,14 +71,23 @@ package org.igniterealtime.xiff.core
 		 */
 		private var _wait:uint = 20;
 
-		private var boshPollingInterval:uint = 10000;
+		/**
+		 * Polling interval, in seconds
+		 */
+		private var boshPollingInterval:uint = 10;
 
+		/**
+		 * Inactivity time, in seconds
+		 */
 		private var inactivity:uint;
 
 		private var isDisconnecting:Boolean = false;
 
 		private var lastPollTime:Date = null;
 
+		/**
+		 * Maximum pausing time, in seconds
+		 */
 		private var maxPause:uint;
 
 		private var pauseEnabled:Boolean = false;
@@ -133,7 +142,6 @@ package org.igniterealtime.xiff.core
 			result.attributes = attrs;
 			sendRequests( result );
 
-
 			return true;
 		}
 
@@ -157,8 +165,7 @@ package org.igniterealtime.xiff.core
 		{
 			trace( "Pausing session for {0} seconds", seconds );
 
-			var pauseDuration:uint = seconds * 1000;
-			if ( !pauseEnabled || pauseDuration > maxPause || pauseDuration <= boshPollingInterval )
+			if ( !pauseEnabled || seconds > maxPause || seconds <= boshPollingInterval )
 				return false;
 
 			pollingEnabled = false;
@@ -167,7 +174,7 @@ package org.igniterealtime.xiff.core
 			data.attributes[ "pause" ] = seconds;
 			sendRequests( data );
 
-			var pauseTimer:Timer = new Timer( pauseDuration - 2000, 1 );
+			var pauseTimer:Timer = new Timer( (seconds * 1000) - 2000, 1 );
 			pauseTimer.addEventListener( TimerEvent.TIMER, handlePauseTimeout );
 			pauseTimer.start();
 
@@ -189,15 +196,15 @@ package org.igniterealtime.xiff.core
 
 			if ( attributes.polling )
 			{
-				boshPollingInterval = attributes.polling * 1000;
+				boshPollingInterval = attributes.polling;
 			}
 			if ( attributes.inactivity )
 			{
-				inactivity = attributes.inactivity * 1000;
+				inactivity = attributes.inactivity;
 			}
 			if ( attributes.maxpause )
 			{
-				maxPause = attributes.maxpause * 1000;
+				maxPause = attributes.maxpause;
 				pauseEnabled = true;
 			}
 			if ( attributes.requests )
@@ -288,14 +295,11 @@ package org.igniterealtime.xiff.core
 			var loader:URLLoader = event.target as URLLoader;
 			
 			requestCount--;
-			var rawXML:String = loader.data as String;
+			var byteData:ByteArray = loader.data as ByteArray;
 
 			var xmlData:XMLDocument = new XMLDocument();
 			xmlData.ignoreWhite = ignoreWhiteSpace;
-			xmlData.parseXML( rawXML );
-
-			var byteData:ByteArray = new ByteArray();
-			byteData.writeUTFBytes(xmlData.toString());
+			xmlData.parseXML( byteData.readUTFBytes(byteData.length) );
 			
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
@@ -483,22 +487,22 @@ package org.igniterealtime.xiff.core
 					data = createRequest( requests );
 				}
 			}
+
+			var byteData:ByteArray = new ByteArray();
+			byteData.writeUTFBytes(data.toString());
 			
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
 			req.requestHeaders = headers[ req.method ];
-			req.data = data;
+			req.data = byteData;
 			
 			var loader:URLLoader = new URLLoader();
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.addEventListener(Event.COMPLETE, onRequestComplete);
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.load(req);
-
-			var byteData:ByteArray = new ByteArray();
-			byteData.writeUTFBytes(data.toString());
 			
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
 			event.data = byteData;
@@ -531,7 +535,9 @@ package org.igniterealtime.xiff.core
 		private function get nextRID():uint
 		{
 			if ( !rid )
+			{
 				rid = Math.floor( Math.random() * 1000000 + 10 );
+			}
 			return ++rid;
 		}
 
@@ -554,9 +560,9 @@ package org.igniterealtime.xiff.core
 		{
 			return _secure;
 		}
-		public function set secure( flag:Boolean ):void
+		public function set secure( value:Boolean ):void
 		{
-			_secure = flag;
+			_secure = value;
 			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
 

@@ -39,9 +39,9 @@ package org.igniterealtime.xiff.data.forms
 		//private static var isStaticConstructed:Boolean = enable();
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 	
-		private var myItems:Array;
-		private var myFields:Array;
-	    private var myReportedFields:Array;
+		private var _items:Array = [];
+		private var _fields:Array = [];
+	    private var myReportedFields:Array = [];
 	
 	    private var myInstructionsNode:XMLNode;
 	    private var myTitleNode:XMLNode;
@@ -53,9 +53,6 @@ package org.igniterealtime.xiff.data.forms
 		public function FormExtension( parent:XMLNode=null )
 		{
 			super(parent);
-			myItems = [];
-			myFields = [];
-			myReportedFields = [];
 		}
 	
 		public function getNS():String
@@ -73,6 +70,7 @@ package org.igniterealtime.xiff.data.forms
 	        ExtensionClassRegistry.register(FormExtension);
 	        return true;
 	    }
+		
 		/**
 		 * Called when this extension is being put back on the network.
 		 * Perform any further serialization for Extensions and items
@@ -81,12 +79,16 @@ package org.igniterealtime.xiff.data.forms
 		{
 			var node:XMLNode = getNode();
 	
-			for each (var field:FormField in myFields) {
+			for each (var field:FormField in _fields)
+			{
 				if (!field.serialize(node))
+				{
 					return false;
+				}
 			}
 	
-			if (parent != node.parentNode) {
+			if (parent != node.parentNode)
+			{
 				parent.appendChild(node.cloneNode(true));
 			}
 	
@@ -100,12 +102,19 @@ package org.igniterealtime.xiff.data.forms
 			removeAllItems();
 			removeAllFields();
 	
-			for each( var c:XMLNode in node.childNodes ) {
+			for each( var c:XMLNode in node.childNodes )
+			{
 				var field:FormField;
 				switch( c.nodeName )
 				{
-	                case "instructions": myInstructionsNode = c; break;
-	                case "title": myTitleNode = c; break;
+	                case "instructions": 
+						myInstructionsNode = c; 
+						break;
+						
+	                case "title":
+						myTitleNode = c;
+						break;
+						
 	                case "reported":
 	                	for each(var reportedFieldXML:XMLNode in c.childNodes)
 	                	{
@@ -123,13 +132,13 @@ package org.igniterealtime.xiff.data.forms
 	                        field.deserialize(itemFieldXML);
 	                        itemFields.push(field);
 	                    }
-	                    myItems.push(itemFields);
+	                    _items.push(itemFields);
 						break;
 	
 	                case "field":
 	                    field = new FormField();
 	                    field.deserialize(c);
-	                    myFields.push(field);
+	                    _fields.push(field);
 	                    break;
 				}
 			}
@@ -146,7 +155,7 @@ package org.igniterealtime.xiff.data.forms
 	    public function getFormType():String
 	    {
 	        // Most likely at the start of the array
-	        for each(var field:FormField in myFields)
+	        for each(var field:FormField in _fields)
 			{
 	        	if(field.name == "FORM_TYPE")
 	        		return field.value;
@@ -161,7 +170,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 	    public function getAllItems():Array
 	    {
-	        return myItems;
+	        return _items;
 	    }
 	
 	    /**
@@ -171,10 +180,12 @@ package org.igniterealtime.xiff.data.forms
 	     */
 	    public function getFormField(value:String):FormField
 	    {
-	    	 for each (var field:FormField in myFields)
+	    	 for each (var field:FormField in _fields)
 	    	 {
 			 	if (field.name == value)
+				{
 			 		return field;
+				}
 			 }
 			 return null;
 	    }
@@ -186,7 +197,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 	    public function getAllFields():Array
 	    {
-	        return myFields;
+	        return _fields;
 	    }
 	
 	    /**
@@ -204,7 +215,7 @@ package org.igniterealtime.xiff.data.forms
 	            var field:FormField = new FormField();
 	            field.name = f;
 	            field.setAllValues(fieldmap[f]);
-	            myFields.push(field);
+	            _fields.push(field);
 	        }
 	    }
 	
@@ -214,23 +225,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllItems():void
 		{
-			for each(var item:FormField in myItems)
-			{
-	            for each(var i:* in item) 
-				{
-	                i.getNode().removeNode();
-	                i.setNode(null);
-	            }
-			}
-		 	myItems = [];
-		}
-		/**
-		 * Use this method to remove all fields.
-		 *
-		 */
-		public function removeAllFields():void
-		{
-			for each(var item:FormField in myFields) 
+			for each(var item:FormField in _items)
 			{
 	            for each(var i:* in item)
 				{
@@ -238,7 +233,23 @@ package org.igniterealtime.xiff.data.forms
 	                i.setNode(null);
 	            }
 			}
-		 	myFields = [];
+		 	_items = [];
+		}
+		/**
+		 * Use this method to remove all fields.
+		 *
+		 */
+		public function removeAllFields():void
+		{
+			for each(var item:FormField in _fields)
+			{
+	            for each(var i:* in item)
+				{
+	                i.getNode().removeNode();
+	                i.setNode(null);
+	            }
+			}
+		 	_fields = [];
 		}
 	
 	    /**
@@ -254,8 +265,6 @@ package org.igniterealtime.xiff.data.forms
 	
 	    	return null;
 	    }
-	
-	
 	    public function set instructions(value:String) :void
 	    {
 	        myInstructionsNode = replaceTextNode(getNode(), myInstructionsNode, "instructions", value);
@@ -274,8 +283,6 @@ package org.igniterealtime.xiff.data.forms
 	
 	    	return null;
 	    }
-	
-	
 	    public function set title(value:String) :void
 	    {
 	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", value);

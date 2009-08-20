@@ -37,7 +37,7 @@ package org.igniterealtime.xiff.data.im{
 		
 	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
-		private var myItems:Array = [];
+		private var _items:Array = [];
 		
 		public function RosterExtension( parent:XMLNode=null )
 		{
@@ -86,8 +86,8 @@ package org.igniterealtime.xiff.data.im{
 			var node:XMLNode = getNode();
 			
 			// Serialize each roster item
-			for( var i:String in myItems ) {
-				if( !myItems[i].serialize( node ) ){
+			for( var i:String in _items ) {
+				if( !_items[i].serialize( node ) ){
 					return false;
 				}
 			}
@@ -118,7 +118,7 @@ package org.igniterealtime.xiff.data.im{
 						if( !item.deserialize( children[i] ) ) {
 							return false;
 						}
-						myItems.push( item );
+						_items.push( item );
 						break;
 				}
 			}
@@ -133,7 +133,7 @@ package org.igniterealtime.xiff.data.im{
 		 */
 		public function getAllItems():Array
 		{
-			return myItems;
+			return _items;
 		}
 		
 		/**
@@ -143,9 +143,9 @@ package org.igniterealtime.xiff.data.im{
 		 */
 		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
-			for( var i:String in myItems ) {
-				if( myItems[i].jid == jid.toString() ) {
-					return myItems[i];
+			for( var i:String in _items ) {
+				if( _items[i].jid == jid.toString() ) {
+					return _items[i];
 				}
 			}
 			
@@ -181,11 +181,11 @@ package org.igniterealtime.xiff.data.im{
 		 */
 		public function removeAllItems():void
 		{
-			for( var i:String in myItems ) {
-				myItems[i].setNode( null );
+			for( var i:String in _items ) {
+				_items[i].setNode( null );
 			}
 			
-			myItems = [];
+			_items = [];
 		}
 	}
 }

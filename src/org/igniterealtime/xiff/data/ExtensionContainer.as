@@ -14,11 +14,11 @@ package org.igniterealtime.xiff.data
 	 */
 	public class ExtensionContainer implements IExtendable
 	{
-		public var _exts:Object;
+		public var _exts:Object = {};
 		
 		public function ExtensionContainer()
 		{
-			_exts = {};
+			
 		}
 	
 		public function addExtension( ext:IExtension ):IExtension
@@ -34,9 +34,9 @@ package org.igniterealtime.xiff.data
 		public function removeExtension( ext:IExtension ):Boolean
 		{
 			var extensions:Object = _exts[ext.getNS()];
-			for (var i:String in extensions) 
+			for (var i:String in extensions)
 			{
-				if (extensions[i] === ext) 
+				if (extensions[i] === ext)
 				{
 					extensions[i].remove();
 					extensions.splice(Number(i), 1);
@@ -45,6 +45,7 @@ package org.igniterealtime.xiff.data
 			}
 			return false;
 		}
+		
 		public function removeAllExtensions( ns:String ):void
 		{
 			for (var i:String in _exts[ns])
@@ -68,7 +69,7 @@ package org.igniterealtime.xiff.data
 		public function getAllExtensions():Array
 		{
 			var exts:Array = [];
-			for (var ns:String in _exts) 
+			for (var ns:String in _exts)
 			{
 				exts = exts.concat(_exts[ns]);
 			}

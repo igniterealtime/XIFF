@@ -764,8 +764,7 @@ package org.igniterealtime.xiff.core
 		{
 			// TODO: Build a proper extension which takes care XML building.
 			var ask:XML = <compress xmlns="http://jabber.org/protocol/compress"><method>zlib</method></compress>;
-			sendXML(ask); // XML
-
+			sendXML(ask); // XML			
 		}
 
 		/**
@@ -799,7 +798,8 @@ package org.igniterealtime.xiff.core
 		{
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
-			if( !iq.deserialize( node ) ) {
+			if ( !iq.deserialize( node ) ) 
+			{
 				throw new SerializationException();
 			}
 
@@ -809,7 +809,8 @@ package org.igniterealtime.xiff.core
 			{
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
-			else {
+			else
+			{
 
 				// Start the callback for this IQ if one exists
 				if ( pendingIQs[iq.id] !== undefined )
@@ -827,7 +828,8 @@ package org.igniterealtime.xiff.core
 					pendingIQs[iq.id] = null;
 					delete pendingIQs[iq.id];
 				}
-				else {
+				else
+				{
 					var exts:Array = iq.getAllExtensions();
 					for (var ns:String in exts)
 					{
@@ -884,20 +886,20 @@ package org.igniterealtime.xiff.core
 				presenceQueueTimer.addEventListener(TimerEvent.TIMER_COMPLETE, flushPresenceQueue);
 			}
 
-			var pres:Presence = new Presence();
+			var presence:Presence = new Presence();
 
 			// Populate
-			if ( !pres.deserialize( node ) )
+			if ( !presence.deserialize( node ) )
 			{
 				throw new SerializationException();
 			}
 
-			presenceQueue.push(pres);
+			presenceQueue.push( presence );
 
 			presenceQueueTimer.reset();
 			presenceQueueTimer.start();
 
-			return pres;
+			return presence;
 		}
 
 		protected function flushPresenceQueue(event:TimerEvent):void
@@ -1155,8 +1157,10 @@ package org.igniterealtime.xiff.core
 			var bindIQ:IQ = new IQ(null, IQ.SET_TYPE);
 
 			var bindExt:BindExtension = new BindExtension();
-			if(resource)
+			if (resource)
+			{
 				bindExt.resource = resource;
+			}
 
 			bindIQ.addExtension(bindExt);
 
@@ -1177,7 +1181,7 @@ package org.igniterealtime.xiff.core
 
 			_resource = jid.resource;
 			_username = jid.node;
-			domain = jid.domain;
+			_domain = jid.domain;
 
 			establishSession();
 		}
@@ -1253,9 +1257,9 @@ package org.igniterealtime.xiff.core
 		{
 			return _username;
 		}
-		public function set username( theUsername:String ):void
+		public function set username( value:String ):void
 		{
-			_username = theUsername;
+			_username = value;
 		}
 
 		/**
@@ -1265,9 +1269,9 @@ package org.igniterealtime.xiff.core
 		{
 			return _password;
 		}
-		public function set password( thePassword:String ):void
+		public function set password( value:String ):void
 		{
-			_password = thePassword;
+			_password = value;
 		}
 
 		/**

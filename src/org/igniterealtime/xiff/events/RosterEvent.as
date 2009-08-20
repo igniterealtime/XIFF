@@ -61,9 +61,9 @@ package org.igniterealtime.xiff.events
 			return _data;
 		}
 
-		public function set data( d:* ):void
+		public function set data( value:* ):void
 		{
-			_data = d;
+			_data = value;
 		}
 
 		public function get jid():UnescapedJID
@@ -71,9 +71,9 @@ package org.igniterealtime.xiff.events
 			return _jid;
 		}
 
-		public function set jid( s:UnescapedJID ):void
+		public function set jid( value:UnescapedJID ):void
 		{
-			_jid = s;
+			_jid = value;
 		}
 
 		override public function toString():String

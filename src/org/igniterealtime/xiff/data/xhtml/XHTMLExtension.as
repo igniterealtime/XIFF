@@ -93,18 +93,19 @@ package org.igniterealtime.xiff.data.xhtml
 		public function get body():String
 		{
 			var html:Array = [];
-			for each(var child:XMLNode in getNode().childNodes) {
+			for each(var child:XMLNode in getNode().childNodes)
+			{
 				html.unshift(child.toString());
 			}
 			return html.join();
 		}
-
-		public function set body(theBody:String):void
+		public function set body(value:String):void
 		{
-			for each(var child:XMLNode in getNode().childNodes) {
+			for each(var child:XMLNode in getNode().childNodes)
+			{
 				child.removeNode();
 			}
-			getNode().appendChild(new XMLDocument(theBody));
+			getNode().appendChild(new XMLDocument(value));
 		}
 	}
 }

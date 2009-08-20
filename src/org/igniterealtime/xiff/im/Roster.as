@@ -94,7 +94,7 @@ package org.igniterealtime.xiff.im
 	 */
 	public class Roster extends ArrayCollection
 	{
-		private var myConnection:XMPPConnection;
+		private var _connection:XMPPConnection;
 		
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:UnescapedJID;
@@ -177,7 +177,7 @@ package org.igniterealtime.xiff.im
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			ext.addItem( id.escaped, null, displayName, groupName ? [groupName] : null );
 			tempIQ.addExtension( ext );
-			myConnection.send( tempIQ );
+			_connection.send( tempIQ );
 	
 			
 			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
@@ -199,14 +199,14 @@ package org.igniterealtime.xiff.im
 			if (isResponse)
 			{
 				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
-				myConnection.send( tempPresence );
+				_connection.send( tempPresence );
 				return;
 			}
 			// Only request for items in the roster
 			if (contains(RosterItemVO.get(id, false)))
 			{
 				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
-				myConnection.send( tempPresence );
+				_connection.send( tempPresence );
 			}
 		}
 		
@@ -225,7 +225,7 @@ package org.igniterealtime.xiff.im
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 				ext.addItem(new EscapedJID(rosterItem.jid.bareJID), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				tempIQ.addExtension( ext );
-				myConnection.send( tempIQ );
+				_connection.send( tempIQ );
 				
 				//the roster item is not actually removed from the roster
 				//until confirmation comes back from the XMPP server
@@ -243,7 +243,7 @@ package org.igniterealtime.xiff.im
 		{
 			var tempIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("roster_"), "fetchRoster_result", this );
 			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
-			myConnection.send( tempIQ );
+			_connection.send( tempIQ );
 		}
 		
 		/**
@@ -258,7 +258,7 @@ package org.igniterealtime.xiff.im
 		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
 		{
 			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.SUBSCRIBED_TYPE );
-			myConnection.send( tempPresence );
+			_connection.send( tempPresence );
 			
 			// Request a return subscription
 			if( requestAfterGrant ) {
@@ -277,7 +277,7 @@ package org.igniterealtime.xiff.im
 		public function denySubscription( tojid:UnescapedJID ):void
 		{
 			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.UNSUBSCRIBED_TYPE );
-			myConnection.send( tempPresence );
+			_connection.send( tempPresence );
 		}
 		
 		/**
@@ -295,7 +295,7 @@ package org.igniterealtime.xiff.im
 			
 			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName, groupNames );
 			tempIQ.addExtension( ext );
-			myConnection.send( tempIQ );
+			_connection.send( tempIQ );
 		}
 		
 		/**
@@ -364,7 +364,7 @@ package org.igniterealtime.xiff.im
 		{
 			//var tempPresence:Presence = new Presence( null, null, Presence.AVAILABLE_TYPE, show, status, priority );
 			var tempPresence:Presence = new Presence( null, null, null, show, status, priority );
-			myConnection.send( tempPresence );
+			_connection.send( tempPresence );
 		}
 		
 		/**
@@ -679,14 +679,14 @@ package org.igniterealtime.xiff.im
 		 */
 		public function get connection():XMPPConnection
 		{
-			return myConnection;
+			return _connection;
 		}
-		public function set connection( aConnection:XMPPConnection ):void
+		public function set connection( value:XMPPConnection ):void
 		{
-			myConnection = aConnection;
-			myConnection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
-			myConnection.addEventListener(LoginEvent.LOGIN, handleEvent);
-			myConnection.addEventListener( RosterExtension.NS, handleEvent );
+			_connection = value;
+			_connection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
+			_connection.addEventListener(LoginEvent.LOGIN, handleEvent);
+			_connection.addEventListener( RosterExtension.NS, handleEvent );
 		}
 		
 		public override function set filterFunction(f:Function):void

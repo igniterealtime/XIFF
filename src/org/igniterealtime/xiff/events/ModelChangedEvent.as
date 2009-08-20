@@ -37,9 +37,9 @@ package org.igniterealtime.xiff.events
 			return _fieldName;
 		}
 
-		public function set fieldName( s:String ):void
+		public function set fieldName( value:String ):void
 		{
-			_fieldName = s;
+			_fieldName = value;
 		}
 
 		public function get firstItem():String
@@ -47,9 +47,9 @@ package org.igniterealtime.xiff.events
 			return _firstItem;
 		}
 
-		public function set firstItem( s:String ):void
+		public function set firstItem( value:String ):void
 		{
-			_firstItem = s;
+			_firstItem = value;
 		}
 
 		public function get lastItem():String
@@ -57,9 +57,9 @@ package org.igniterealtime.xiff.events
 			return _lastItem;
 		}
 
-		public function set lastItem( s:String ):void
+		public function set lastItem( value:String ):void
 		{
-			_lastItem = s;
+			_lastItem = value;
 		}
 
 		public function get removedIDs():String
@@ -67,9 +67,9 @@ package org.igniterealtime.xiff.events
 			return _removedIDs;
 		}
 
-		public function set removedIDs( s:String ):void
+		public function set removedIDs( value:String ):void
 		{
-			_removedIDs = s;
+			_removedIDs = value;
 		}
 
 		override public function toString():String

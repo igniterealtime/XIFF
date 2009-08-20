@@ -22,7 +22,7 @@ package org.igniterealtime.xiff.data.muc{
 		public static const NS:String = "http://jabber.org/protocol/muc#admin";
 		public static const ELEMENT:String = "query";
 	
-		private var myItems:Array;
+		private var _items:Array;
 	
 		public function MUCAdminExtension( parent:XMLNode=null )
 		{

@@ -19,7 +19,7 @@ package org.igniterealtime.xiff.data.disco
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/disco#items";
 	
-		private var myItems:Array;
+		private var _items:Array;
 		
 		public function ItemDiscoExtension(xmlNode:XMLNode=null)
 		{
@@ -62,7 +62,7 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get items():Array
 		{
-			return myItems;
+			return _items;
 		}
 	
 		override public function deserialize(node:XMLNode):Boolean
@@ -70,11 +70,11 @@ package org.igniterealtime.xiff.data.disco
 			if (!super.deserialize(node))
 				return false;
 				
-			myItems = [];
+			_items = [];
 			
 			for each(var item:XMLNode in getNode().childNodes)
 			{
-				myItems.push(item.attributes);
+				_items.push(item.attributes);
 			}
 			return true;
 		}

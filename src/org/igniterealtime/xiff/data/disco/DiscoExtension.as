@@ -20,7 +20,7 @@ package org.igniterealtime.xiff.data.disco
 		public static const NS:String = "http://jabber.org/protocol/disco";
 		public static const ELEMENT:String = "query";
 		
-		public var myService:EscapedJID;
+		public var _service:EscapedJID;
 	
 		/**
 		 * The name of the resource of the service queried if the resource
@@ -37,10 +37,6 @@ package org.igniterealtime.xiff.data.disco
 		{
 			return getNode().parentNode.attributes.node;
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set serviceNode(value:String):void
 		{
 			getNode().parentNode.attributes.node = value;
@@ -70,8 +66,8 @@ package org.igniterealtime.xiff.data.disco
 			if (parent.attributes.type == "result")
 			{
 				parent.attributes.from = value.toString();
-			} 
-			else 
+			}
+			else
 			{
 				parent.attributes.to = value.toString();
 			}

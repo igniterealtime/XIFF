@@ -74,9 +74,9 @@ package org.igniterealtime.xiff.events
 		{
 			return _errorCode;
 		}
-		public function set errorCode( n:Number ):void
+		public function set errorCode( value:Number ):void
 		{
-			_errorCode = n;
+			_errorCode = value;
 		}
 
 		/**
@@ -86,9 +86,9 @@ package org.igniterealtime.xiff.events
 		{
 			return _errorCondition;
 		}
-		public function set errorCondition( s:String ):void
+		public function set errorCondition( value:String ):void
 		{
-			_errorCondition = s;
+			_errorCondition = value;
 		}
 
 		/**
@@ -98,9 +98,9 @@ package org.igniterealtime.xiff.events
 		{
 			return _errorExt;
 		}
-		public function set errorExt( ext:Extension ):void
+		public function set errorExt( value:Extension ):void
 		{
-			_errorExt = ext;
+			_errorExt = value;
 		}
 
 		/**
@@ -110,9 +110,9 @@ package org.igniterealtime.xiff.events
 		{
 			return _errorMessage;
 		}
-		public function set errorMessage( s:String ):void
+		public function set errorMessage( value:String ):void
 		{
-			_errorMessage = s;
+			_errorMessage = value;
 		}
 
 		/**
@@ -122,9 +122,9 @@ package org.igniterealtime.xiff.events
 		{
 			return _errorType;
 		}
-		public function set errorType( s:String ):void
+		public function set errorType( value:String ):void
 		{
-			_errorType = s;
+			_errorType = value;
 		}
 
 		override public function toString():String

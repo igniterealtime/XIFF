@@ -3,22 +3,20 @@
  */
 package org.igniterealtime.xiff.data.im
 {
-	import mx.core.IPropertyChangeNotifier;
-	
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	
-	public interface Contact extends IPropertyChangeNotifier
+	public interface Contact
 	{
 		function get jid():UnescapedJID;
-		function set jid(newJID:UnescapedJID):void;
+		function set jid(value:UnescapedJID):void;
 		
 		function get displayName():String;
-		function set displayName(name:String):void;
+		function set displayName(value:String):void;
 		
 		function get show():String;
-		function set show(newShow:String):void;
+		function set show(value:String):void;
 		
 		function get online():Boolean;
-		function set online(newOnline:Boolean):void;
+		function set online(value:Boolean):void;
 	}
 }

@@ -160,13 +160,12 @@ package org.igniterealtime.xiff.data
 		{
 			return new EscapedJID(getNode().attributes.to);
 		}
-		
-		public function set to( recipient:EscapedJID ):void
+		public function set to( value:EscapedJID ):void
 		{
 			delete getNode().attributes.to;
-			if (exists(recipient))
+			if (exists(value))
 			{
-				getNode().attributes.to = recipient.toString();
+				getNode().attributes.to = value.toString();
 			}
 		}
 		
@@ -183,11 +182,11 @@ package org.igniterealtime.xiff.data
 			return jid ? new EscapedJID(jid) : null;
 		}
 		
-		public function set from( sender:EscapedJID ):void
+		public function set from( value:EscapedJID ):void
 		{
 			// .@from = sender.toString();
 			delete getNode().attributes.from;
-			if (exists(sender)) { getNode().attributes.from = sender.toString(); }
+			if (exists(value)) { getNode().attributes.from = value.toString(); }
 		}
 		
 		/**
@@ -229,10 +228,10 @@ package org.igniterealtime.xiff.data
 			return getNode().attributes.type;
 		}
 		
-		public function set type( theType:String ):void
+		public function set type( value:String ):void
 		{
 			delete getNode().attributes.type;
-			if (exists(theType)) { getNode().attributes.type = theType; }
+			if (exists(value)) { getNode().attributes.type = value; }
 		}
 		
 		/**
@@ -246,10 +245,10 @@ package org.igniterealtime.xiff.data
 			return getNode().attributes.id;
 		}
 		
-		public function set id( theID:String ):void
+		public function set id( value:String ):void
 		{
 			delete getNode().attributes.id;
-			if (exists(theID)) { getNode().attributes.id = theID; }
+			if (exists(value)) { getNode().attributes.id = value; }
 		}
 		
 		/**
@@ -270,18 +269,20 @@ package org.igniterealtime.xiff.data
 			return null;
 		}
 		
-		public function set errorMessage( theMsg:String ):void
+		public function set errorMessage( value:String ):void
 		{
 			myErrorNode = ensureNode( myErrorNode, "error" );
 			
-			theMsg = exists( theMsg ) ? theMsg : "";
+			value = exists( value ) ? value : "";
 			
-			if( exists( errorCondition ) ) {
-				myErrorConditionNode = replaceTextNode( myErrorNode, myErrorConditionNode, errorCondition, theMsg );
+			if ( exists( errorCondition ) )
+			{
+				myErrorConditionNode = replaceTextNode( myErrorNode, myErrorConditionNode, errorCondition, value );
 			}
-			else {
+			else
+			{
 				var attributes:Object = myErrorNode.attributes;
-				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", theMsg );
+				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", value );
 				myErrorNode.attributes = attributes;
 			}
 		}
@@ -300,7 +301,7 @@ package org.igniterealtime.xiff.data
 			return null;
 		}
 		
-		public function set errorCondition( aCondition:String ):void
+		public function set errorCondition( value:String ):void
 		{
 			myErrorNode = ensureNode( myErrorNode, "error" );
 			
@@ -308,11 +309,13 @@ package org.igniterealtime.xiff.data
 			var attributes:Object = myErrorNode.attributes;
 			var msg:String = errorMessage;
 			
-			if( exists( aCondition ) ) {
+			if ( exists( value ) )
+			{
 				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", "" );
-				myErrorConditionNode = addTextNode( myErrorNode, aCondition, msg );
+				myErrorConditionNode = addTextNode( myErrorNode, value, msg );
 			}
-			else {
+			else
+			{
 				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", msg );
 			}
 			
@@ -329,12 +332,15 @@ package org.igniterealtime.xiff.data
 			return myErrorNode.attributes.type;
 		}
 		
-		public function set errorType( aType:String ):void
+		public function set errorType( value:String ):void
 		{
 			myErrorNode = ensureNode( myErrorNode, "error" );
 			
 			delete myErrorNode.attributes.type;
-			if( exists( aType ) ) { myErrorNode.attributes.type = aType; }
+			if ( exists( value ) )
+			{
+				myErrorNode.attributes.type = value;
+			}
 		}
 		
 		/**
@@ -349,12 +355,15 @@ package org.igniterealtime.xiff.data
 			return Number( myErrorNode.attributes.code );
 		}
 		
-		public function set errorCode( aCode:Number ):void
+		public function set errorCode( value:Number ):void
 		{
 			myErrorNode = ensureNode( myErrorNode, "error" );
 			
 			delete myErrorNode.attributes.code;
-			if( exists( aCode ) ) { myErrorNode.attributes.code = aCode; }
+			if ( exists( value ) )
+			{
+				myErrorNode.attributes.code = value;
+			}
 		}
 	}
 }

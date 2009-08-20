@@ -33,9 +33,9 @@ package org.igniterealtime.xiff.events
 			return _data;
 		}
 
-		public function set data( r:RegisterExtension ):void
+		public function set data( value:RegisterExtension ):void
 		{
-			_data = r;
+			_data = value;
 		}
 
 		public function get fields():Array
@@ -43,9 +43,9 @@ package org.igniterealtime.xiff.events
 			return _fields;
 		}
 
-		public function set fields( a:Array ):void
+		public function set fields( value:Array ):void
 		{
-			_fields = a;
+			_fields = value;
 		}
 
 		override public function toString():String

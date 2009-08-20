@@ -63,9 +63,9 @@ package org.igniterealtime.xiff.bookmark
 			return _groupChatNode.attributes.autojoin == "true";
 		}
 
-		public function set autoJoin( state:Boolean ):void
+		public function set autoJoin( value:Boolean ):void
 		{
-			_groupChatNode.attributes.autojoin = state.toString();
+			_groupChatNode.attributes.autojoin = value.toString();
 		}
 
 		public function deserialize( node:XMLNode ):Boolean

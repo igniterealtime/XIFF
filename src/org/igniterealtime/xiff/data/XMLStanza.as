@@ -42,7 +42,9 @@ package org.igniterealtime.xiff.data
 		public static function exists( value:* ):Boolean
 		{
 			if ( value != null && value !== undefined )
+			{
 				return true;
+			}
 			
 			return false;
 		}
@@ -104,9 +106,11 @@ package org.igniterealtime.xiff.data
 				original.removeNode();
 			}
 	
-			if (exists(value)) {
+			if (exists(value))
+			{
 				newNode = XMLStanza.XMLFactory.createElement(elementName);
-				if (value.length > 0) {
+				if (value.length > 0) 
+				{
 					newNode.appendChild(XMLStanza.XMLFactory.createTextNode(value));
 				}
 				parent.appendChild(newNode);

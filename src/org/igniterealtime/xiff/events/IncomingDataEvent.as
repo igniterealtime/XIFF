@@ -30,9 +30,9 @@ package org.igniterealtime.xiff.events
 			return _data;
 		}
 
-		public function set data( x:ByteArray ):void
+		public function set data( value:ByteArray ):void
 		{
-			_data = x;
+			_data = value;
 		}
 
 		override public function toString():String

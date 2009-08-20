@@ -32,9 +32,9 @@ package org.igniterealtime.xiff.events
 			return _data;
 		}
 
-		public function set data( x:IExtension ):void
+		public function set data( value:IExtension ):void
 		{
-			_data = x;
+			_data = value;
 		}
 
 		public function get iq():IQ
@@ -42,9 +42,9 @@ package org.igniterealtime.xiff.events
 			return _iq;
 		}
 
-		public function set iq( i:IQ ):void
+		public function set iq( value:IQ ):void
 		{
-			_iq = i;
+			_iq = value;
 		}
 
 		override public function toString():String

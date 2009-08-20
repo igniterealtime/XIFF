@@ -96,9 +96,9 @@ package org.igniterealtime.xiff.events
 		 * @see org.igniterealtime.xiff.data.Message
 		 * @see org.igniterealtime.xiff.data.Presence
 		 */
-		public function set data( s:* ):void
+		public function set data( value:* ):void
 		{
-			_data = s;
+			_data = value;
 		}
 
 		public function get errorCode():Number
@@ -106,9 +106,9 @@ package org.igniterealtime.xiff.events
 			return _errorCode;
 		}
 
-		public function set errorCode( s:Number ):void
+		public function set errorCode( value:Number ):void
 		{
-			_errorCode = s;
+			_errorCode = value;
 		}
 
 		public function get errorCondition():String
@@ -116,9 +116,9 @@ package org.igniterealtime.xiff.events
 			return _errorCondition;
 		}
 
-		public function set errorCondition( s:String ):void
+		public function set errorCondition( value:String ):void
 		{
-			_errorCondition = s;
+			_errorCondition = value;
 		}
 
 		public function get errorMessage():String
@@ -126,9 +126,9 @@ package org.igniterealtime.xiff.events
 			return _errorMessage;
 		}
 
-		public function set errorMessage( s:String ):void
+		public function set errorMessage( value:String ):void
 		{
-			_errorMessage = s;
+			_errorMessage = value;
 		}
 
 		public function get errorType():String
@@ -136,9 +136,9 @@ package org.igniterealtime.xiff.events
 			return _errorType;
 		}
 
-		public function set errorType( s:String ):void
+		public function set errorType( value:String ):void
 		{
-			_errorType = s;
+			_errorType = value;
 		}
 
 		public function get from():String
@@ -146,9 +146,9 @@ package org.igniterealtime.xiff.events
 			return _from;
 		}
 
-		public function set from( s:String ):void
+		public function set from( value:String ):void
 		{
-			_from = s;
+			_from = value;
 		}
 
 		public function get nickname():String
@@ -156,9 +156,9 @@ package org.igniterealtime.xiff.events
 			return _nickname;
 		}
 
-		public function set nickname( s:String ):void
+		public function set nickname( value:String ):void
 		{
-			_nickname = s;
+			_nickname = value;
 		}
 
 		public function get reason():String
@@ -166,9 +166,9 @@ package org.igniterealtime.xiff.events
 			return _reason;
 		}
 
-		public function set reason( s:String ):void
+		public function set reason( value:String ):void
 		{
-			_reason = s;
+			_reason = value;
 		}
 
 		public function get subject():String
@@ -176,9 +176,9 @@ package org.igniterealtime.xiff.events
 			return _subject;
 		}
 
-		public function set subject( s:String ):void
+		public function set subject( value:String ):void
 		{
-			_subject = s;
+			_subject = value;
 		}
 
 		override public function toString():String

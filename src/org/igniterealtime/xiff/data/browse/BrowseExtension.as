@@ -19,13 +19,12 @@ package org.igniterealtime.xiff.data.browse
 	 */
 	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:browse";
 		public static const ELEMENT:String = "query";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
-		private var myItems:Array;
+		private var _items:Array = [];
 	
 		public function BrowseExtension(parent:XMLNode = null)
 		{
@@ -33,8 +32,6 @@ package org.igniterealtime.xiff.data.browse
 	
 			getNode().attributes.xmlns = getNS();
 			getNode().nodeName = getElementName();
-	
-			myItems = [];
 		}
 	
 		/**
@@ -75,19 +72,8 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function addItem(item:BrowseItem):BrowseItem
 		{
-			myItems.push(item);
+			_items.push(item);
 			return item;
-		}
-	
-		/**
-		 * An array of BrowseItems containing information about the browsed resource
-		 *
-		 * @return	array of BrowseItems
-		 * @see	org.igniterealtime.xiff.data.browse.BrowseItem
-		 */
-		public function get items():Array
-		{
-			return myItems;
 		}
 	
 		/**
@@ -98,11 +84,13 @@ package org.igniterealtime.xiff.data.browse
 		override public function serialize(parentNode:XMLNode):Boolean
 		{
 			var node:XMLNode = getNode();
-			for each (var item:BrowseItem in myItems) {
+			for each (var item:BrowseItem in _items)
+			{
 				item.serialize(node);
 			}
 	
-			if (!exists(node.parentNode)) {
+			if (!exists(node.parentNode))
+			{
 				parentNode.appendChild(node.cloneNode(true));
 			}
 	
@@ -120,18 +108,31 @@ package org.igniterealtime.xiff.data.browse
 	
 			this['deserialized'] = true;
 	
-			myItems = [];
+			_items = [];
 	
-			for each (var child:XMLNode in node.childNodes) {
-				switch(child.nodeName) {
+			for each (var child:XMLNode in node.childNodes)
+			{
+				switch(child.nodeName)
+				{
 					case "item":
 						var item:BrowseItem = new BrowseItem(getNode());
 						item.deserialize(child);
-						myItems.push(item);
+						_items.push(item);
 						break;
 				}
 			}
 			return true;
+		}
+	
+		/**
+		 * An array of BrowseItems containing information about the browsed resource
+		 *
+		 * @return	array of BrowseItems
+		 * @see	org.igniterealtime.xiff.data.browse.BrowseItem
+		 */
+		public function get items():Array
+		{
+			return _items;
 		}
 	}
 }

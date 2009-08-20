@@ -20,141 +20,11 @@ package org.igniterealtime.xiff.data.browse
 			super();
 			getNode().nodeName = "item";
 	
-			if (exists(parent)) {
+			if (exists(parent))
+			{
 				parent.appendChild(getNode());
 			}
 	
-		}
-	
-		/**
-		 * The full JabberID of the entity described
-		 */
-		public function get jid():String 
-		{ 
-			return getNode().attributes.jid;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function set jid(value:String):void
-		{
-			getNode().attributes.jid = value;
-		}
-	
-		/**
-		 * One of the categories from the list above, or a 
-		 * non-standard category prefixed with the string "x-". 
-		 *
-		 * @see	http://xmpp.org/extensions/xep-0011.html#sect-id2594870
-		 */
-		public function get category():String 
-		{ 
-			return getNode().attributes.category;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function set category(value:String):void
-		{
-			getNode().attributes.category = value;
-		}
-	
-		/**
-		 * A friendly name that may be used in a user interface
-		 */
-		public function get name():String 
-		{ 
-			return getNode().attributes.name;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function set name(value:String):void
-		{
-			getNode().attributes.name = value;
-		}
-	
-		/**
-		 * One of the official types from the specified category, 
-		 * or a non-standard type prefixed with the string "x-". 
-
-		 * @see	http://xmpp.org/extensions/xep-0011.html#sect-id2594870
-		 */
-		public function get type():String 
-		{ 
-			return getNode().attributes.type;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function set type(value:String):void
-		{
-			getNode().attributes.type = value;
-		}
-	
-		/**
-		 * A string containing the version of the node, equivalent 
-		 * to the response provided to a query in the 'jabber:iq:version' 
-		 * namespace. This is useful for servers, especially for lists of 
-		 * services (see the 'service/serverlist' category/type above). 
-		 */
-		public function get version():String 
-		{ 
-			return getNode().attributes.version;
-		}
-	
-		/**
-		 * @private
-		 */
-		public function set version(value:String):void
-		{
-			getNode().attributes.version = value;
-		}
-	
-		/**
-		 * Add new features that are supported if you are responding to a 
-		 * browse request
-		 */
-		public function addNamespace(value:String):XMLNode
-		{
-			return addTextNode(getNode(), "ns", value);
-		}
-	 
-	 	/**
-		 * On top of the browsing framework, a simple form of "feature
-		 * advertisement" can be built. This enables any entity to advertise 
-		 * whichfeatures it supports, based on the namespaces associated with 
-		 * those features. The <ns/> element is allowed as a subelement of the 
-		 * item. This element contains a single namespace that the entity 
-		 * supports, and multiple <ns/> elements can be included in any item. 
-		 * For a connectedclient this might be <ns>jabber:iq:oob</ns>, or for a 
-		 * service<ns>jabber:iq:search</ns>. This list of namespaces should be 
-		 * used to present available options for a user or to automatically 
-		 * locate functionality for an application.
-		 *
-		 * <p>The children of a browse result may proactively contain a few 
-		 * <ns/> elements (such as the result of the service request to the home 
-		 * server), which advertises the features that the particular service 
-		 * supports. Thislist may not be complete (it is only for first-pass 
-		 * filtering by simpler clients), and the JID should be browsed if a 
-		 * complete list is required.</p>
-		 */
-		public function get namespaces():Array
-		{
-			var res:Array = [];
-	
-			for each (var child:XMLNode in getNode().childNodes) 
-			{
-				if (child.nodeName == "ns") 
-				{
-					res.push(child.firstChild.nodeValue);
-				}
-			}
-			return res;
 		}
 	
 		public function serialize(parentNode:XMLNode):Boolean
@@ -172,6 +42,117 @@ package org.igniterealtime.xiff.data.browse
 		{
 			setNode(node);
 			return true;
+		}
+	
+		/**
+		 * Add new features that are supported if you are responding to a
+		 * browse request
+		 */
+		public function addNamespace(value:String):XMLNode
+		{
+			return addTextNode(getNode(), "ns", value);
+		}
+	
+		/**
+		 * The full JabberID of the entity described
+		 */
+		public function get jid():String
+		{
+			return getNode().attributes.jid;
+		}
+		public function set jid(value:String):void
+		{
+			getNode().attributes.jid = value;
+		}
+	
+		/**
+		 * One of the categories from the list above, or a
+		 * non-standard category prefixed with the string "x-".
+		 *
+		 * @see	http://xmpp.org/extensions/xep-0011.html#sect-id2594870
+		 */
+		public function get category():String
+		{
+			return getNode().attributes.category;
+		}
+		public function set category(value:String):void
+		{
+			getNode().attributes.category = value;
+		}
+	
+		/**
+		 * A friendly name that may be used in a user interface
+		 */
+		public function get name():String
+		{
+			return getNode().attributes.name;
+		}
+		public function set name(value:String):void
+		{
+			getNode().attributes.name = value;
+		}
+	
+		/**
+		 * One of the official types from the specified category,
+		 * or a non-standard type prefixed with the string "x-".
+
+		 * @see	http://xmpp.org/extensions/xep-0011.html#sect-id2594870
+		 */
+		public function get type():String
+		{
+			return getNode().attributes.type;
+		}
+		public function set type(value:String):void
+		{
+			getNode().attributes.type = value;
+		}
+	
+		/**
+		 * A string containing the version of the node, equivalent
+		 * to the response provided to a query in the 'jabber:iq:version'
+		 * namespace. This is useful for servers, especially for lists of
+		 * services (see the 'service/serverlist' category/type above).
+		 */
+		public function get version():String
+		{
+			return getNode().attributes.version;
+		}
+		public function set version(value:String):void
+		{
+			getNode().attributes.version = value;
+		}
+	
+	 	/**
+		 * On top of the browsing framework, a simple form of "feature
+		 * advertisement" can be built. This enables any entity to advertise
+		 * whichfeatures it supports, based on the namespaces associated with
+		 * those features. The <ns/> element is allowed as a subelement of the
+		 * item. This element contains a single namespace that the entity
+		 * supports, and multiple <ns/> elements can be included in any item.
+		 * For a connectedclient this might be <ns>jabber:iq:oob</ns>, or for a
+		 * service<ns>jabber:iq:search</ns>. This list of namespaces should be
+		 * used to present available options for a user or to automatically
+		 * locate functionality for an application.
+		 *
+		 * <p>The children of a browse result may proactively contain a few
+		 * <ns/> elements (such as the result of the service request to the home
+		 * server), which advertises the features that the particular service
+		 * supports. Thislist may not be complete (it is only for first-pass
+		 * filtering by simpler clients), and the JID should be browsed if a
+		 * complete list is required.</p>
+		 */
+		public function get namespaces():Array
+		{
+			var res:Array = [];
+	
+			for each (var child:XMLNode in getNode().childNodes)
+			{
+				if (child.nodeName == "ns")
+				{
+					res.push(child.firstChild.nodeValue);
+				}
+			}
+			return res;
 		}
 	}
 }

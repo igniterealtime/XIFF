@@ -27,7 +27,10 @@ package org.igniterealtime.xiff.data.forms
 	    private var myValueNodes:Array;
 	    private var myOptionNodes:Array;
 		
-		public function FormField() { super(); }
+		public function FormField() 
+		{ 
+			super(); 
+		}
 		
 		/**
 		 * Serializes the FormField data to XML for sending.
@@ -39,7 +42,8 @@ package org.igniterealtime.xiff.data.forms
 		{
 			getNode().nodeName = FormField.ELEMENT;
 	
-			if( parent != getNode().parentNode ) {
+			if ( parent != getNode().parentNode ) 
+			{
 				parent.appendChild( getNode().cloneNode( true ) );
 			}
 	
@@ -60,10 +64,12 @@ package org.igniterealtime.xiff.data.forms
 	        myOptionNodes = [];
 	
 			var children:Array = node.childNodes;
-			for( var i:String in children ) {
+			for ( var i:String in children ) 
+			{
 	            var c:XMLNode = children[i];
 	
-				switch( children[i].nodeName ) {
+				switch( children[i].nodeName )
+				{
 	                case "desc": myDescNode = c; break;
 	                case "required": myRequiredNode = c; break;
 	                case "value": myValueNodes.push(c); break;
@@ -83,7 +89,9 @@ package org.igniterealtime.xiff.data.forms
 	     *
 	     */
 	    public function get name():String 
-		{ return getNode().attributes["var"]; }
+		{ 
+			return getNode().attributes["var"];
+		}
 	    public function set name(value:String) :void
 	    { 
 	        getNode().attributes["var"] = value; 
@@ -109,7 +117,9 @@ package org.igniterealtime.xiff.data.forms
 	     * @see	http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
 	     */
 	    public function get type():String 
-		{ return getNode().attributes.type; }
+		{
+			return getNode().attributes.type; 
+		}
 	    public function set type(value:String) :void
 	    { 
 	        getNode().attributes.type = value; 
@@ -121,7 +131,9 @@ package org.igniterealtime.xiff.data.forms
 	     *
 	     */
 	    public function get label():String 
-		{ return getNode().attributes.label; }
+		{ 
+			return getNode().attributes.label;
+		}
 	    public function set label(value:String) :void
 	    { 
 	        getNode().attributes.label = value; 

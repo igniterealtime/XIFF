@@ -150,9 +150,9 @@ package org.igniterealtime.xiff.data.im{
 			return new EscapedJID(getNode().attributes.jid);
 		}
 		
-		public function set jid( newJID:EscapedJID ):void
+		public function set jid( value:EscapedJID ):void
 		{
-			getNode().attributes.jid = newJID.toString();
+			getNode().attributes.jid = value.toString();
 		}
 		
 		/**
@@ -164,9 +164,9 @@ package org.igniterealtime.xiff.data.im{
 			return getNode().attributes.name;
 		}
 		
-		public function set name( newName:String ):void
+		public function set name( value:String ):void
 		{
-			getNode().attributes.name = newName;
+			getNode().attributes.name = value;
 		}
 		
 		/**
@@ -186,9 +186,9 @@ package org.igniterealtime.xiff.data.im{
 			return getNode().attributes.subscription;
 		}
 		
-		public function set subscription( newSubscription:String ):void
+		public function set subscription( value:String ):void
 		{
-			getNode().attributes.subscription = newSubscription;
+			getNode().attributes.subscription = value;
 		}
 		
 		/**
@@ -206,9 +206,9 @@ package org.igniterealtime.xiff.data.im{
 		 	return getNode().attributes.ask;
 		 }
 		
-		 public function set askType( newAskType:String ):void
+		 public function set askType( value:String ):void
 		 {
-		 	getNode().attributes.ask = newAskType;
+		 	getNode().attributes.ask = value;
 		 }
 		
 		 /**
@@ -216,10 +216,12 @@ package org.igniterealtime.xiff.data.im{
 		 */
 		 public function get pending():Boolean
 		 {
-		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || subscription == RosterExtension.SUBSCRIBE_TYPE_FROM)) {
+		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || subscription == RosterExtension.SUBSCRIBE_TYPE_FROM))
+			{
 		 		return true;
 		 	}
-		 	else {
+		 	else
+			{
 		 		return false;
 		 	}
 		 }

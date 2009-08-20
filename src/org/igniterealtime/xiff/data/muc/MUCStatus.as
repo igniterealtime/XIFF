@@ -26,9 +26,9 @@ package org.igniterealtime.xiff.data.muc
 			return node.attributes.code;
 		}
 		
-		public function set code(newCode:Number):void
+		public function set code(value:Number):void
 		{
-			node.attributes.code = newCode.toString();
+			node.attributes.code = value.toString();
 		}
 		
 		/**

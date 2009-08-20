@@ -9,6 +9,9 @@ package org.igniterealtime.xiff.conference
 	import org.igniterealtime.xiff.data.im.Contact;
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
 
+	/**
+	 * A person in a room
+	 */
 	public class RoomOccupant extends EventDispatcher implements Contact
 	{
 		private var _affiliation:String;
@@ -25,6 +28,15 @@ package org.igniterealtime.xiff.conference
 
 		private var _uid:String;
 
+		/**
+		 *
+		 * @param	nickname
+		 * @param	show
+		 * @param	affiliation
+		 * @param	role
+		 * @param	jid
+		 * @param	room
+		 */
 		public function RoomOccupant( nickname:String, show:String, affiliation:String,
 										role:String, jid:UnescapedJID, room:Room )
 		{
@@ -33,105 +45,117 @@ package org.igniterealtime.xiff.conference
 			this.affiliation = affiliation;
 			this.role = role;
 			this.jid = jid;
-			this.room = room;
+			_room = room;
 		}
 
-		
+		/**
+		 *
+		 */
 		public function get affiliation():String
 		{
 			return _affiliation;
 		}
-
-		public function set affiliation( newAffil:String ):void
+		public function set affiliation( value:String ):void
 		{
-			_affiliation = newAffil;
+			_affiliation = value;
 		}
 
-		
+		/**
+		 * TODO: rename as nickname
+		 */
 		public function get displayName():String
 		{
 			return _nickname;
 		}
-
-		public function set displayName( name:String ):void
+		public function set displayName( value:String ):void
 		{
-			_nickname = name;
+			_nickname = value;
 		}
 
-		
+		/**
+		 *
+		 */
 		public function get jid():UnescapedJID
 		{
 			return _jid;
 		}
-
-		public function set jid( newJID:UnescapedJID ):void
+		public function set jid( value:UnescapedJID ):void
 		{
-			_jid = newJID;
+			_jid = value;
 		}
 
-		
+		/**
+		 *
+		 */
 		public function get online():Boolean
 		{
 			return true;
 		}
-
-		public function set online( newOnline:Boolean ):void
+		public function set online( value:Boolean ):void
 		{
 			//RoomOccupants can't exist unless they're online
 		}
 
 		
+		/**
+		 *
+		 */
 		public function get role():String
 		{
 			return _role;
 		}
-
-		public function set role( newRole:String ):void
+		public function set role( value:String ):void
 		{
-			_role = newRole;
+			_role = value;
 		}
 
-		
+		/**
+		 *
+		 */
 		public function get room():Room
 		{
 			return _room;
 		}
-
-		public function set room( newRoom:Room ):void
+		public function set room( value:Room ):void
 		{
-			_room = newRoom;
+			_room = value;
 		}
 
 		/**
-		 * If there isn't a roster item associated with this room occupant 
+		 * If there isn't a roster item associated with this room occupant
 		 * (for example, if the room is anonymous), this will return null
 		 */
 		public function get rosterItem():RosterItemVO
 		{
-			if ( !jid )
+			if ( !_jid )
+			{
 				return null;
-			return RosterItemVO.get( jid, true );
+			}
+			return RosterItemVO.get( _jid, true );
 		}
 
-		
+		/**
+		 *
+		 */
 		public function get show():String
 		{
 			return _show;
 		}
-
-		public function set show( newShow:String ):void
+		public function set show( value:String ):void
 		{
-			_show = newShow;
+			_show = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get uid():String
 		{
 			return _uid;
 		}
-
-		public function set uid( i:String ):void
+		public function set uid( value:String ):void
 		{
-			_uid = i;
+			_uid = value;
 		}
 	}
 }

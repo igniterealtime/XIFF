@@ -98,10 +98,9 @@ package org.igniterealtime.xiff.data
 		{
 			return myCallbackFunc;
 		}
-
-		public function set callback( aFunc:Function ):void
+		public function set callback( value:Function ):void
 		{
-			myCallbackFunc = aFunc;
+			myCallbackFunc = value;
 		}
 
 		/**
@@ -116,10 +115,9 @@ package org.igniterealtime.xiff.data
 		{
 			return myCallback;
 		}
-
-		public function set callbackName( aName:String ):void
+		public function set callbackName( value:String ):void
 		{
-			myCallback = aName;
+			myCallback = value;
 		}
 
 		/**
@@ -134,10 +132,9 @@ package org.igniterealtime.xiff.data
 		{
 			return myCallbackScope;
 		}
-
-		public function set callbackScope( scope:Object ):void
+		public function set callbackScope( value:Object ):void
 		{
-			myCallbackScope = scope;
+			myCallbackScope = value;
 		}
 	}
 }

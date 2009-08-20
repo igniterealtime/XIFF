@@ -19,6 +19,7 @@ package org.igniterealtime.xiff.data.bind
 	{
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
 		public static const ELEMENT_NAME:String = "bind";
+		
 		private var _jid:EscapedJID;
 		private var _resource:String;
 		
@@ -39,7 +40,8 @@ package org.igniterealtime.xiff.data.bind
 		
 		public function serialize(parent:XMLNode):Boolean
 		{
-			if (!exists(getNode().parentNode)) {
+			if (!exists(getNode().parentNode))
+			{
 				var child:XMLNode = getNode().cloneNode(true);
 				var resourceNode:XMLNode = new XMLNode(1, "resource");
 				resourceNode.appendChild(XMLStanza.XMLFactory.createTextNode(resource ? resource : "xiff"));
@@ -66,7 +68,8 @@ package org.igniterealtime.xiff.data.bind
 		{
 			setNode(node);
 			var children:Array = node.childNodes;
-			for( var i:String in children ) {
+			for ( var i:String in children )
+			{
 				switch( children[i].nodeName )
 				{
 					case "jid":
@@ -79,9 +82,9 @@ package org.igniterealtime.xiff.data.bind
 			return true;
 		}
 		
-		public function set resource(newResource:String):void
+		public function set resource(value:String):void
 		{
-			_resource = newResource;
+			_resource = value;
 		}
 		
 		public function get resource():String

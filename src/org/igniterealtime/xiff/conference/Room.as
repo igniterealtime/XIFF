@@ -207,21 +207,21 @@ package org.igniterealtime.xiff.conference
 
 		private var _anonymous:Boolean = true;
 
-		private var myAffiliation:String;
+		private var _affiliation:String;
 
-		private var myConnection:XMPPConnection;
+		private var _connection:XMPPConnection;
 
 		private var myIsReserved:Boolean;
 
 		private var myJID:UnescapedJID
 
-		private var myNickname:String;
+		private var _nickname:String;
 
-		private var myPassword:String;
+		private var _password:String;
 
-		private var myRole:String;
+		private var _role:String;
 
-		private var mySubject:String;
+		private var _subject:String;
 
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
@@ -304,7 +304,7 @@ package org.igniterealtime.xiff.conference
 
 			owner.addExtension( form );
 			iq.addExtension( owner );
-			myConnection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -320,7 +320,7 @@ package org.igniterealtime.xiff.conference
 				var tempMessage:Message = new Message( roomJID.escaped, null, null,
 													   null, Message.GROUPCHAT_TYPE,
 													   newSubject );
-				myConnection.send( tempMessage );
+				_connection.send( tempMessage );
 			}
 		}
 
@@ -354,7 +354,7 @@ package org.igniterealtime.xiff.conference
 			owner.addExtension( form );
 
 			iq.addExtension( owner );
-			myConnection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -379,7 +379,7 @@ package org.igniterealtime.xiff.conference
 			muc.decline( jid.escaped, undefined, reason );
 
 			msg.addExtension( muc );
-			myConnection.send( msg );
+			_connection.send( msg );
 		}
 
 		/**
@@ -399,7 +399,7 @@ package org.igniterealtime.xiff.conference
 			owner.destroy( reason, alternateJID.escaped );
 
 			iq.addExtension( owner );
-			myConnection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -496,7 +496,7 @@ package org.igniterealtime.xiff.conference
 			muc.invite( jid.escaped, undefined, reason );
 
 			msg.addExtension( muc );
-			myConnection.send( msg );
+			_connection.send( msg );
 		}
 
 		/**
@@ -541,7 +541,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
 		{
-			if ( !myConnection.isActive() || isActive )
+			if ( !_connection.isActive() || isActive )
 			{
 				return false;
 			}
@@ -565,7 +565,7 @@ package org.igniterealtime.xiff.conference
 			}
 
 			joinPresence.addExtension( muc );
-			myConnection.send( joinPresence );
+			_connection.send( joinPresence );
 			return true;
 		}
 
@@ -585,7 +585,7 @@ package org.igniterealtime.xiff.conference
 				//ext.addItem(null, MUC.NO_ROLE, null, null, null, reason);
 				ext.addItem( null, MUC.NO_ROLE, occupantNick, null, null, reason );
 				tempIQ.addExtension( ext );
-				myConnection.send( tempIQ );
+				_connection.send( tempIQ );
 			}
 		}
 
@@ -599,12 +599,12 @@ package org.igniterealtime.xiff.conference
 			{
 				var leavePresence:Presence = new Presence( userJID.escaped, null,
 														   Presence.UNAVAILABLE_TYPE );
-				myConnection.send( leavePresence );
+				_connection.send( leavePresence );
 
 				// Clear out the roster items
 				removeAll();
-				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
-				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
+				_connection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
+				_connection.removeEventListener( DisconnectionEvent.DISCONNECT,
 												  handleEvent );
 			}
 		}
@@ -671,7 +671,7 @@ package org.igniterealtime.xiff.conference
 							// Check for a subject change
 							if ( msg.subject != null )
 							{
-								mySubject = msg.subject;
+								_subject = msg.subject;
 								e = new RoomEvent( RoomEvent.SUBJECT_CHANGE );
 								e.subject = msg.subject;
 								dispatchEvent( e );
@@ -771,7 +771,7 @@ package org.igniterealtime.xiff.conference
 							// If the presence has our pending nickname, nickname change went through
 							if ( presence.from.resource == pendingNickname )
 							{
-								myNickname = pendingNickname;
+								_nickname = pendingNickname;
 								pendingNickname = null;
 							}
 
@@ -815,7 +815,7 @@ package org.igniterealtime.xiff.conference
 								else
 									e = new RoomEvent( RoomEvent.ROOM_LEAVE );
 								dispatchEvent( e );
-								myConnection.removeEventListener( PresenceEvent.PRESENCE,
+								_connection.removeEventListener( PresenceEvent.PRESENCE,
 																  handleEvent );
 							}
 						}
@@ -867,7 +867,7 @@ package org.igniterealtime.xiff.conference
 
 				owner.addExtension( form );
 				iq.addExtension( owner );
-				myConnection.send( iq );
+				_connection.send( iq );
 			}
 		}
 
@@ -884,9 +884,9 @@ package org.igniterealtime.xiff.conference
 			 */
 			if ( isThisUser( aPresence.from.unescaped ))
 			{
-				myAffiliation = item.affiliation;
+				_affiliation = item.affiliation;
 				dispatchEvent( new Event( "affiliationSet" )); //update bindings
-				myRole = item.role;
+				_role = item.role;
 				dispatchEvent( new Event( "roleSet" )); //update bindings
 
 				if ( !isActive && aPresence.type != Presence.UNAVAILABLE_TYPE )
@@ -990,7 +990,7 @@ package org.igniterealtime.xiff.conference
 			iq.callbackName = "finish_requestConfiguration";
 			iq.addExtension( owner );
 
-			myConnection.send( iq );
+			_connection.send( iq );
 		}
 
 		/**
@@ -1022,7 +1022,7 @@ package org.igniterealtime.xiff.conference
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, body,
 													   htmlBody, Message.GROUPCHAT_TYPE );
-				myConnection.send( tempMessage );
+				_connection.send( tempMessage );
 			}
 		}
 
@@ -1036,7 +1036,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				myConnection.send( msg );
+				_connection.send( msg );
 			}
 		}
 
@@ -1055,7 +1055,7 @@ package org.igniterealtime.xiff.conference
 				var tempMessage:Message = new Message( new EscapedJID( roomJID +
 																	   "/" + recipientNickname ),
 													   null, body, htmlBody, Message.CHAT_TYPE );
-				myConnection.send( tempMessage );
+				_connection.send( tempMessage );
 			}
 		}
 
@@ -1075,7 +1075,7 @@ package org.igniterealtime.xiff.conference
 				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
 				ext.addItem( null, voice ? MUC.PARTICIPANT_ROLE : MUC.VISITOR_ROLE );
 				tempIQ.addExtension( ext );
-				myConnection.send( tempIQ );
+				_connection.send( tempIQ );
 			}
 		}
 
@@ -1098,9 +1098,9 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Don't call this; it would be private, but ActionScript apparently doesn't like mixed-visibility properties
 		 */
-		public function set anonymous( newState:Boolean ):void
+		public function set anonymous( value:Boolean ):void
 		{
-			_anonymous = newState;
+			_anonymous = value;
 		}
 
 		/**
@@ -1108,25 +1108,25 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get nickname():String
 		{
-			return myNickname == null ? myConnection.username : myNickname;
+			return _nickname == null ? _connection.username : _nickname;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set nickname( theNickname:String ):void
+		public function set nickname( value:String ):void
 		{
 			if ( isActive )
 			{
-				pendingNickname = theNickname;
+				pendingNickname = value;
 				// var tempPresence:Presence = new Presence( userJID );
 				var tempPresence:Presence = new Presence( new EscapedJID( userJID +
-																		  "/" + pendingNickname ));
-				myConnection.send( tempPresence );
+																		  "/" + value ));
+				_connection.send( tempPresence );
 			}
 			else
 			{
-				myNickname = theNickname;
+				_nickname = value;
 			}
 		}
 
@@ -1135,15 +1135,15 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get password():String
 		{
-			return myPassword;
+			return _password;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set password( aPassword:String ):void
+		public function set password( value:String ):void
 		{
-			myPassword = aPassword;
+			_password = value;
 		}
 
 		/**
@@ -1156,7 +1156,7 @@ package org.igniterealtime.xiff.conference
 		[Bindable( event=affiliationSet )]
 		public function get affiliation():String
 		{
-			return myAffiliation;
+			return _affiliation;
 		}
 
 		/**
@@ -1168,7 +1168,7 @@ package org.igniterealtime.xiff.conference
 		[Bindable( event=roleSet )]
 		public function get role():String
 		{
-			return myRole;
+			return _role;
 		}
 
 		/**
@@ -1181,9 +1181,9 @@ package org.igniterealtime.xiff.conference
 			return myJID;
 		}
 
-		public function set roomJID( jid:UnescapedJID ):void
+		public function set roomJID( value:UnescapedJID ):void
 		{
-			myJID = jid;
+			myJID = value;
 		}
 
 		/**
@@ -1194,9 +1194,9 @@ package org.igniterealtime.xiff.conference
 			return myJID.node;
 		}
 
-		public function set roomName( aName:String ):void
+		public function set roomName( value:String ):void
 		{
-			roomJID = new UnescapedJID( aName + "@" + conferenceServer );
+			roomJID = new UnescapedJID( value + "@" + conferenceServer );
 		}
 
 		/**
@@ -1205,7 +1205,7 @@ package org.igniterealtime.xiff.conference
 		[Bindable( event=subjectChange )]
 		public function get subject():String
 		{
-			return mySubject;
+			return _subject;
 		}
 
 		/**
@@ -1230,9 +1230,9 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * @private
 		 */
-		public function set conferenceServer( aServer:String ):void
+		public function set conferenceServer( value:String ):void
 		{
-			roomJID = new UnescapedJID( roomName + "@" + aServer );
+			roomJID = new UnescapedJID( roomName + "@" + value );
 		}
 
 		/**
@@ -1255,7 +1255,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get connection():XMPPConnection
 		{
-			return myConnection;
+			return _connection;
 		}
 
 		/**
@@ -1264,26 +1264,26 @@ package org.igniterealtime.xiff.conference
 		 * @param	connection The XMPPConnection instance to use.
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
-		public function set connection( connection:XMPPConnection ):void
+		public function set connection( value:XMPPConnection ):void
 		{
-			if ( myConnection != null )
+			if ( _connection != null )
 			{
-				myConnection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
-				myConnection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
-				myConnection.removeEventListener( DisconnectionEvent.DISCONNECT,
+				_connection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
+				_connection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
+				_connection.removeEventListener( DisconnectionEvent.DISCONNECT,
 												  handleEvent );
 			}
 
-			myConnection = connection;
+			_connection = value;
 
-			myConnection.addEventListener( MessageEvent.MESSAGE, handleEvent, false,
+			_connection.addEventListener( MessageEvent.MESSAGE, handleEvent, false,
 										   0, true );
-			myConnection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false,
+			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false,
 										   0, true );
-			myConnection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent,
+			_connection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent,
 										   false, 0, true );
 
-			//			String baserepo = "http://"+myConnection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+myConnection.server,"")+"/"+roomName+"/";
+			//			String baserepo = "http://"+_connection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+_connection.server,"")+"/"+roomName+"/";
 			//			_fileRepo = new RoomFileRepository(baserepo);
 		}
 	}

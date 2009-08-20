@@ -41,9 +41,9 @@ package org.igniterealtime.xiff.events
 			return _data;
 		}
 
-		public function set data( d:Message ):void
+		public function set data( value:Message ):void
 		{
-			_data = d;
+			_data = value;
 		}
 
 		public function get from():UnescapedJID
@@ -51,9 +51,9 @@ package org.igniterealtime.xiff.events
 			return _from;
 		}
 
-		public function set from( s:UnescapedJID ):void
+		public function set from( value:UnescapedJID ):void
 		{
-			_from = s;
+			_from = value;
 		}
 
 		public function get reason():String
@@ -61,9 +61,9 @@ package org.igniterealtime.xiff.events
 			return _reason;
 		}
 
-		public function set reason( s:String ):void
+		public function set reason( value:String ):void
 		{
-			_reason = s;
+			_reason = value;
 		}
 
 		public function get room():Room
@@ -71,9 +71,9 @@ package org.igniterealtime.xiff.events
 			return _room;
 		}
 
-		public function set room( d:Room ):void
+		public function set room( value:Room ):void
 		{
-			_room = d;
+			_room = value;
 		}
 
 		override public function toString():String

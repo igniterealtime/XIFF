@@ -4,7 +4,7 @@
 package org.igniterealtime.xiff.data
 {
 
-	 
+	
 	import org.igniterealtime.xiff.data.IExtension;
 	import flash.xml.XMLDocument;
 	
@@ -13,7 +13,7 @@ package org.igniterealtime.xiff.data
 	 */
 	public class ExtensionClassRegistry
 	{
-		private static var myClasses:Array = [];
+		private static var _classes:Array = [];
 		
 		public static function register( extensionClass:Class ):Boolean
 		{
@@ -22,8 +22,9 @@ package org.igniterealtime.xiff.data
 			var extensionInstance:IExtension = new extensionClass();
 			
 			//if (extensionInstance instanceof IExtension) {
-			if (extensionInstance is IExtension) {
-				myClasses[extensionInstance.getNS()] = extensionClass;
+			if (extensionInstance is IExtension)
+			{
+				_classes[extensionInstance.getNS()] = extensionClass;
 				return true;
 			}
 			return false;
@@ -31,7 +32,7 @@ package org.igniterealtime.xiff.data
 		
 		public static function lookup( ns:String ):Class
 		{
-			return myClasses[ns];
+			return _classes[ ns ];
 		}
 	}
 }

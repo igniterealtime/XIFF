@@ -28,9 +28,9 @@ package org.igniterealtime.xiff.events
 			return _server;
 		}
 
-		public function set server( s:String ):void
+		public function set server( value:String ):void
 		{
-			_server = s;
+			_server = value;
 		}
 
 		override public function toString():String
