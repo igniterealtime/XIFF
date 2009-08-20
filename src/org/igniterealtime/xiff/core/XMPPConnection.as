@@ -126,33 +126,33 @@ package org.igniterealtime.xiff.core
 		 * Server to connect, could be different of the login domain.
 		 * @exampleText talk.google.com
 		 */
-		protected var myServer:String;
+		protected var _server:String;
 
 		/**
 		 * Domain of the user. Might differ from the one used in the connection.
 		 * @exampleText gmail.com
 		 */
-		protected var myDomain:String;
+		protected var _domain:String;
 
 		/**
 		 * @private
 		 */
-		protected var myUsername:String;
+		protected var _username:String;
+
+		/**
+		 * @private
+		 */
+		protected var _password:String;
 
 		/**
 		 * @default xiff
 		 */
-		protected var myResource:String = "xiff";
-
-		/**
-		 * @private
-		 */
-		protected var myPassword:String;
+		protected var _resource:String = "xiff";
 
 		/**
 		 * @default 5222
 		 */
-		protected var myPort:uint = 5222;
+		protected var _port:uint = 5222;
 
 		/**
 		 * True if both sides of the connected parties have accepted the zlib compression.
@@ -167,7 +167,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @default true
 		 */
-		protected var ignoreWhitespace:Boolean = true;
+		private var _ignoreWhitespace:Boolean = true;
 
 		/**
 		 * @private
@@ -983,10 +983,10 @@ package org.igniterealtime.xiff.core
 			}
 
 			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = ignoreWhitespace;
+			xmlData.ignoreWhite = _ignoreWhitespace;
 
 			//var xml:XML;
-			//XML.ignoreWhite = ignoreWhitespace;
+			//XML.ignoreWhiteSpace = _ignoreWhitespace;
 
 			//error handling to catch incomplete xml strings that have
 			//been truncated by the socket
@@ -1175,8 +1175,8 @@ package org.igniterealtime.xiff.core
 
 			var jid:UnescapedJID = bind.jid.unescaped;
 
-			myResource = jid.resource;
-			myUsername = jid.node;
+			_resource = jid.resource;
+			_username = jid.node;
 			domain = jid.domain;
 
 			establishSession();
@@ -1218,15 +1218,15 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get server():String
 		{
-			if (!myServer)
+			if (!_server)
 			{
-				return myDomain;
+				return _domain;
 			}
-			return myServer;
+			return _server;
 		}
-		public function set server( theServer:String ):void
+		public function set server( value:String ):void
 		{
-			myServer = theServer;
+			_server = value;
 		}
 
 		/**
@@ -1234,13 +1234,15 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get domain():String
 		{
-			if (!myDomain)
-				return myServer;
-			return myDomain;
+			if (!_domain)
+			{
+				return _server;
+			}
+			return _domain;
 		}
-		public function set domain( theDomain:String ):void
+		public function set domain( value:String ):void
 		{
-			myDomain = theDomain;
+			_domain = value;
 		}
 
 		/**
@@ -1249,11 +1251,11 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get username():String
 		{
-			return myUsername;
+			return _username;
 		}
 		public function set username( theUsername:String ):void
 		{
-			myUsername = theUsername;
+			_username = theUsername;
 		}
 
 		/**
@@ -1261,11 +1263,11 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get password():String
 		{
-			return myPassword;
+			return _password;
 		}
 		public function set password( thePassword:String ):void
 		{
-			myPassword = thePassword;
+			_password = thePassword;
 		}
 
 		/**
@@ -1275,13 +1277,13 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get resource():String
 		{
-			return myResource;
+			return _resource;
 		}
-		public function set resource( theResource:String ):void
+		public function set resource( value:String ):void
 		{
-			if( theResource.length > 0 )
+			if ( value.length > 0 )
 			{
-				myResource = theResource;
+				_resource = value;
 			}
 		}
 
@@ -1295,7 +1297,10 @@ package org.igniterealtime.xiff.core
 		public function set useAnonymousLogin(value:Boolean):void
 		{
 			// set only if not connected
-			if(!isActive()) _useAnonymousLogin = value;
+			if (!isActive())
+			{
+				_useAnonymousLogin = value;
+			}
 		}
 
 		/**
@@ -1303,24 +1308,24 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get port():uint
 		{
-			return myPort;
+			return _port;
 		}
-		public function set port( portNum:uint ):void
+		public function set port( value:uint ):void
 		{
-			myPort = portNum;
+			_port = value;
 		}
 
 		/**
 		 * Determines whether whitespace will be ignored on incoming XML data.
 		 * Behaves the same as <code>XML.ignoreWhitespace</code>
 		 */
-		public function get ignoreWhite():Boolean
+		public function get ignoreWhiteSpace():Boolean
 		{
-			return ignoreWhitespace;
+			return _ignoreWhitespace;
 		}
-		public function set ignoreWhite( value:Boolean ):void
+		public function set ignoreWhiteSpace( value:Boolean ):void
 		{
-			ignoreWhitespace = value;
+			_ignoreWhitespace = value;
 			XML.ignoreWhitespace = value;
 		}
 
@@ -1348,7 +1353,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get jid():UnescapedJID
 		{
-			return new UnescapedJID(myUsername + "@" + myDomain + "/" + myResource);
+			return new UnescapedJID(_username + "@" + _domain + "/" + _resource);
 		}
 
 		/**
@@ -1358,9 +1363,9 @@ package org.igniterealtime.xiff.core
 		{
 			return _active;
 		}
-		protected function set active(flag:Boolean):void
+		protected function set active(value:Boolean):void
 		{
-			if (flag)
+			if (value)
 			{
 				_openConnections.push(this);
 			}
@@ -1368,7 +1373,7 @@ package org.igniterealtime.xiff.core
 			{
 				_openConnections.splice(_openConnections.indexOf(this), 1);
 			}
-			_active = flag;
+			_active = value;
 		}
 		
 		/**

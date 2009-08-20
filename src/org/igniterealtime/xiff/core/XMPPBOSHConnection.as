@@ -61,8 +61,6 @@ package org.igniterealtime.xiff.core
 
 		private var _maxConcurrentRequests:uint = 2;
 
-		private var _port:uint;
-
 		private var _secure:Boolean;
 
 		/**
@@ -85,8 +83,6 @@ package org.igniterealtime.xiff.core
 
 		private var pauseEnabled:Boolean = false;
 
-		private var pauseTimer:Timer;
-
 		private var pollingEnabled:Boolean = false;
 
 		private var requestCount:int = 0;
@@ -108,13 +104,14 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 *
-		 * @param	secure
+		 * @param	secure	Determines which port is used
 		 */
 		public function XMPPBOSHConnection( secure:Boolean = false ):void
 		{
 			super();
 			this.secure = secure;
 			responseTimer = new Timer( 0.0, 1 );
+			responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
 		}
 
 		override public function connect( streamType:uint = 0 ):Boolean
@@ -135,6 +132,7 @@ package org.igniterealtime.xiff.core
 			var result:XMLNode = new XMLNode( 1, "body" );
 			result.attributes = attrs;
 			sendRequests( result );
+
 
 			return true;
 		}
@@ -169,7 +167,7 @@ package org.igniterealtime.xiff.core
 			data.attributes[ "pause" ] = seconds;
 			sendRequests( data );
 
-			pauseTimer = new Timer( pauseDuration - 2000, 1 );
+			var pauseTimer:Timer = new Timer( pauseDuration - 2000, 1 );
 			pauseTimer.addEventListener( TimerEvent.TIMER, handlePauseTimeout );
 			pauseTimer.start();
 
@@ -215,7 +213,6 @@ package org.igniterealtime.xiff.core
 			active = true;
 
 			addEventListener( LoginEvent.LOGIN, handleLogin );
-			responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
 		}
 
 		//do nothing, we use polling instead
@@ -234,9 +231,10 @@ package org.igniterealtime.xiff.core
 			streamRestarted = true;
 		}
 
-		override protected function sendXML( body:* ):void
+		override protected function sendXML( someData:* ):void
 		{
-			sendQueuedRequests( body );
+			// XMLNode
+			sendQueuedRequests( someData );
 		}
 
 		/**
@@ -293,7 +291,7 @@ package org.igniterealtime.xiff.core
 			var rawXML:String = loader.data as String;
 
 			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = this.ignoreWhite;
+			xmlData.ignoreWhite = ignoreWhiteSpace;
 			xmlData.parseXML( rawXML );
 
 			var byteData:ByteArray = new ByteArray();
@@ -366,8 +364,8 @@ package org.igniterealtime.xiff.core
 			}
 
 			/*
-			 * this should be safe since sendRequests checks to be sure it's not 
-			 * over the concurrent requests limit, and we just ensured that the queue 
+			 * this should be safe since sendRequests checks to be sure it's not
+			 * over the concurrent requests limit, and we just ensured that the queue
 			 * is empty by calling sendQueuedRequests()
 			 */
 			sendRequests( null, true );
@@ -439,7 +437,7 @@ package org.igniterealtime.xiff.core
 		 * @param	body
 		 * @return
 		 */
-		private function sendQueuedRequests( body:* = null ):Boolean
+		private function sendQueuedRequests( body:XMLNode = null ):Boolean
 		{
 			if ( body )
 			{
@@ -476,12 +474,13 @@ package org.igniterealtime.xiff.core
 				}
 				else
 				{
-					var temp:Array = [];
-					for ( var i:uint = 0; i < 10 && requestQueue.length > 0; ++i )
+					var requests:Array = [];
+					var len:uint = Math.min( 10, requestQueue.length ); // ten or less
+					for ( var i:uint = 0; i < len; ++i )
 					{
-						temp.push( requestQueue.shift() );
+						requests.push( requestQueue.shift() );
 					}
-					data = createRequest( temp );
+					data = createRequest( requests );
 				}
 			}
 			
@@ -557,7 +556,6 @@ package org.igniterealtime.xiff.core
 		}
 		public function set secure( flag:Boolean ):void
 		{
-			trace( "set secure: {0}", flag );
 			_secure = flag;
 			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
@@ -593,16 +591,6 @@ package org.igniterealtime.xiff.core
 		public function set maxConcurrentRequests( value:uint ):void
 		{
 			_maxConcurrentRequests = value;
-		}
-
-		override public function get port():uint
-		{
-			return _port;
-		}
-		override public function set port( portnum:uint ):void
-		{
-			trace( "set port: {0}", portnum );
-			_port = portnum;
 		}
 	}
 }
