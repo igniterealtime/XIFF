@@ -32,7 +32,8 @@ package org.igniterealtime.xiff.data.vcard
 	/**
 	 * @see http://xmpp.org/extensions/xep-0054.html
 	 */
-	public class VCardExtension extends Extension implements IExtension, ISerializable {
+	public class VCardExtension extends Extension implements IExtension, ISerializable
+	{
 		
 		public function getNS():String
 		{

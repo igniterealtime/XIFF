@@ -27,7 +27,6 @@ package org.igniterealtime.xiff.vcard
 	import flash.events.*;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
-	import flash.xml.XMLNode;
 
 	import mx.utils.Base64Decoder;
 	//import com.hurlant.util.Base64;
@@ -56,7 +55,7 @@ package org.igniterealtime.xiff.vcard
 	[Event(name="vcardError", type="org.igniterealtime.xiff.events.VCardEvent")]
 	
 	/**
-	 * @see http://en.wikipedia.org/wiki/VCard
+	 * @see http://tools.ietf.org/html/rfc2426
 	 */
 	public class VCard extends EventDispatcher
 	{
@@ -211,6 +210,11 @@ package org.igniterealtime.xiff.vcard
 		public var url:String;
 
 		/**
+		 * Version of the VCard. Usually 2.0 or 3.0.
+		 */
+		public var version:Number;
+		
+		/**
 		 *
 		 * @default
 		 */
@@ -263,6 +267,17 @@ package org.igniterealtime.xiff.vcard
 		 * @default
 		 */
 		public var workVoiceNumber:String;
+		
+		
+		
+		public var otherName:String;
+		public var namePrefix:String;
+		public var nameSuffix:String;
+		public var birthDay:Date;
+		public var gender:String;
+		public var maritalStatus:String;
+		
+		
 
 		/**
 		 *
@@ -330,7 +345,7 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
+		 * Add the request to the stack of requests
 		 * @param con
 		 * @param vcard
 		 */
@@ -347,7 +362,7 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
+		 * Send a request
 		 * @param event
 		 */
 		private static function sendRequest( event:TimerEvent ):void
@@ -380,11 +395,11 @@ package org.igniterealtime.xiff.vcard
 			if ( resultIQ.type == IQ.ERROR_TYPE )
 			{
 				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ resultIQ.to.unescaped.toString()],
-											   true, true ));
+											   true, true ) );
 			}
 			else
 			{
-				delete cache[ resultIQ.to.unescaped.toString()]; // Force profile refresh on next view
+				delete cache[ resultIQ.to.unescaped.toString() ]; // Force profile refresh on next view
 			}
 		}
 
@@ -403,138 +418,175 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function handleVCard( iq:IQ ):void
 		{
-			var node:XMLNode = iq.getNode();
-			var vCardNode:XMLNode = node.childNodes[ 0 ];
+			namespace ns = "vcard-temp";
+			use namespace ns;
+			
+			var node:XML = XML(iq.getNode());
+			var vCardNode:XML = node.children()[ 0 ];
 			if ( !vCardNode )
 				return;
+			
+			version = Number(vCardNode.@version);
+			
+			var nodes:XMLList = vCardNode.children();
 
-			for each ( var child:XMLNode in vCardNode.childNodes )
+			for each ( var child:XML in nodes )
 			{
-				switch ( child.nodeName )
+				switch ( child.localName() )
 				{
 					case "PHOTO":
-						for each ( var sChild:XMLNode in child.childNodes )
+						for each ( var photo:XML in child.children() )
 						{
-							if ( sChild.nodeName != 'BINVAL' )
-								continue;
-							try
+							var value:String = photo.text();
+							
+							if (photo.localName() == "BINVAL" && value.length > 0 )
 							{
-								//sometimes we get a packet with just <BINVAL/> ... no idea why
-								if ( sChild.childNodes.length == 0 )
-									continue;
-								var value:String = sChild.childNodes[ 0 ].nodeValue;
-								if ( value.length > 0 )
-								{
-									var decoder:Base64Decoder = new Base64Decoder();
-									decoder.decode( value );
-									_imageBytes = decoder.flush();
-									
-									//_imageBytes = Base64.decodeToByteArray( value );
-									dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
-																   this, true, false ));
-								}
-							}
-							catch ( e:Error )
-							{
-								trace( "Error loading vcard image: " + e.message );
+								var decoder:Base64Decoder = new Base64Decoder();
+								decoder.decode( value );
+								_imageBytes = decoder.flush();
+								
+								//_imageBytes = Base64.decodeToByteArray( value );
+								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
+															   this, true, false ) );
 							}
 						}
 						break;
 
 					case "N":
-						// Get Family Name.
-						var xml:XML = new XML( child.toString());
-						firstName = xml.GIVEN;
-						middleName = xml.MIDDLE;
-						lastName = xml.FAMILY;
+						firstName = child.GIVEN;
+						middleName = child.MIDDLE;
+						lastName = child.FAMILY;
+						otherName = child.OTHER;
+						namePrefix = child.PREFIX;
+						nameSuffix = child.SUFFIX;
 						break;
 
 					case "FN":
-						var fullnameNode:XMLNode = child.childNodes[ 0 ];
-						if ( fullnameNode )
-							fullName = fullnameNode.nodeValue;
+						fullName = child.text();
 						break;
 
 					case "NICKNAME":
-						var nicknameNode:XMLNode = child.childNodes[ 0 ];
-						if ( nicknameNode )
-							nickname = nicknameNode.nodeValue;
+						nickname = child.text();
 						break;
 
 					case "EMAIL":
-						for each ( var emailChild:XMLNode in child.childNodes )
+						for each ( var emailChild:XML in child.children() )
 						{
-							if ( emailChild.nodeName == 'USERID' )
+							if ( emailChild.localName() == "USERID" )
 							{
-								if ( emailChild.firstChild != null )
-									email = emailChild.firstChild.nodeValue;
+								email = emailChild.children()[0];
 							}
 						}
 						break;
+						
 					case "ORG":
-						var orgXML:XML = new XML( child.toString());
-						company = orgXML.ORGNAME;
-						department = orgXML.ORGUNIT;
+						company = child.ORGNAME;
+						department = child.ORGUNIT;
 						break;
+						
 					case "TITLE":
-						var titleNode:XMLNode = child.childNodes[ 0 ];
-						if ( titleNode )
-							title = titleNode.nodeValue;
+						title = child.text();
 						break;
+						
 					case "URL":
-						var urlNode:XMLNode = child.childNodes[ 0 ];
-						if ( urlNode )
-							url = urlNode.nodeValue;
+						url = child.text();
 						break;
+						
 					case "ADR":
-						var adrXML:XML = new XML( child.toString());
-						if ( adrXML.WORK == '' )
+						if ( child.WORK.length() == 1 )
 						{
-							workPostalCode = adrXML.PCODE;
-							workStateProvince = adrXML.REGION;
-							workAddress = adrXML.STREET;
-							workCountry = adrXML.CTRY;
-							workCity = adrXML.LOCALITY;
+							workPostalCode = child.PCODE;
+							workStateProvince = child.REGION;
+							workAddress = child.STREET;
+							workCountry = child.CTRY;
+							workCity = child.LOCALITY;
 						}
-						else if ( adrXML.HOME == '' )
+						else if ( child.WORK.length() == 1 )
 						{
-							homePostalCode = adrXML.PCODE;
-							homeStateProvince = adrXML.REGION;
-							homeAddress = adrXML.STREET;
-							homeCountry = adrXML.CTRY;
-							homeCity = adrXML.LOCALITY;
+							homePostalCode = child.PCODE;
+							homeStateProvince = child.REGION;
+							homeAddress = child.STREET;
+							homeCountry = child.CTRY;
+							homeCity = child.LOCALITY;
 						}
 						break;
+						
 					case "TEL":
-						var telXML:XML = new XML( child.toString());
-						if ( telXML.WORK == '' )
+						if ( child.WORK.length() == 1 )
 						{
-							if ( telXML.VOICE == '' )
-								workVoiceNumber = telXML.NUMBER;
-							else if ( telXML.FAX == '' )
-								workFaxNumber = telXML.NUMBER;
-							else if ( telXML.PAGER == '' )
-								workPagerNumber = telXML.NUMBER;
-							else if ( telXML.CELL == '' )
-								workCellNumber = telXML.NUMBER;
+							if ( child.VOICE.length() == 1 )
+								workVoiceNumber = child.NUMBER;
+							else if ( child.FAX.length() == 1 )
+								workFaxNumber = child.NUMBER;
+							else if ( child.PAGER.length() == 1 )
+								workPagerNumber = child.NUMBER;
+							else if ( child.CELL.length() == 1 )
+								workCellNumber = child.NUMBER;
 						}
-						else if ( telXML.HOME == '' )
+						else if ( child.HOME.length() == 1  )
 						{
-							if ( telXML.VOICE == '' )
-								homeVoiceNumber = telXML.NUMBER;
-							else if ( telXML.FAX == '' )
-								homeFaxNumber = telXML.NUMBER;
-							else if ( telXML.PAGER == '' )
-								homePagerNumber = telXML.NUMBER;
-							else if ( telXML.CELL == '' )
-								homeCellNumber = telXML.NUMBER;
+							if ( child.VOICE.length() == 1 )
+								homeVoiceNumber = child.NUMBER;
+							else if ( child.FAX.length() == 1 )
+								homeFaxNumber = child.NUMBER;
+							else if ( child.PAGER.length() == 1 )
+								homePagerNumber = child.NUMBER;
+							else if ( child.CELL.length() == 1  )
+								homeCellNumber = child.NUMBER;
 						}
+						break;
+						
+					case "DESC":
+						break;
+						
+					case "GENDER":
+						gender = child.text();
+						break;
+						
+					case "BDAY":
+						var bday:String = child.children()[ 0 ];
+						if (bday != null && bday.length > 8)
+						{
+							var dateParts:Array = bday.split("-");
+							birthDay = new Date(dateParts[0], int(dateParts[1]) - 1, dateParts[2]);
+						}
+						break;
+						
+					case "JABBERID":
+						var jabberid:String = child.text();
+						if (jabberid != null && jabberid.length > 0)
+						{
+							jid = new UnescapedJID( jabberid );
+						}
+						break;
+						
+					case "ROLE":
+						break;
+						
+					case "HOMECELL":
+						break;
+						
+					case "WORKCELL":
+						break;
+						
+					case "LOCATION":
+						break;
+						
+					case "MARITALSTATUS":
+						maritalStatus = child.text();
+						break;
+						
+					case "AGE":
+						break;
+						
+					default:
+						trace("handleVCard. unhandled case child.name(): " + child.name());
 						break;
 				}
 			}
 
 			loaded = true;
-			dispatchEvent( new VCardEvent( VCardEvent.LOADED, this, true, false ));
+			dispatchEvent( new VCardEvent( VCardEvent.LOADED, this, true, false ) );
 		}
 
 		/**
@@ -547,34 +599,39 @@ package org.igniterealtime.xiff.vcard
 			var iq:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "save_vcard_" ),
 								null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XMLNode = vcardExt.getNode();
+			var vcardExtNode:XML = vcardExt.getNode() as XML;
 
 			if ( firstName || middleName || lastName )
 			{
-				var nameNode:XMLNode = new XMLNode( 1, 'N' );
-
+				var nameNode:XML = <N/>;
 				if ( firstName )
 				{
-					var firstNameNode:XMLNode = new XMLNode( 1, 'GIVEN' );
-					firstNameNode.appendChild( new XMLNode( 3, firstName ));
-
-					nameNode.appendChild( firstNameNode );
+					nameNode.GIVEN = firstName;
 				}
 
 				if ( middleName )
 				{
-					var middleNameNode:XMLNode = new XMLNode( 1, 'MIDDLE' );
-					middleNameNode.appendChild( new XMLNode( 3, middleName ));
-
-					nameNode.appendChild( middleNameNode );
+					nameNode.MIDDLE = middleName;
 				}
 
 				if ( lastName )
 				{
-					var lastNameNode:XMLNode = new XMLNode( 1, 'FAMILY' );
-					lastNameNode.appendChild( new XMLNode( 3, lastName ));
+					nameNode.FAMILY = lastName;
+				}
 
-					nameNode.appendChild( lastNameNode );
+				if ( otherName )
+				{
+					nameNode.OTHER = otherName;
+				}
+
+				if ( namePrefix )
+				{
+					nameNode.PREFIX = namePrefix;
+				}
+
+				if ( nameSuffix )
+				{
+					nameNode.SUFFIX = nameSuffix;
 				}
 
 				vcardExtNode.appendChild( nameNode );
@@ -582,50 +639,35 @@ package org.igniterealtime.xiff.vcard
 
 			if ( fullName )
 			{
-				var fullnameNode:XMLNode = new XMLNode( 1, 'FN' );
-				fullnameNode.appendChild( new XMLNode( 3, fullName ));
-
-				vcardExtNode.appendChild( fullnameNode );
+				vcardExtNode.FN = fullName;
 			}
 
 			if ( nickname )
 			{
-				var nicknameNode:XMLNode = new XMLNode( 1, 'NICKNAME' );
-				nicknameNode.appendChild( new XMLNode( 3, nickname ));
-
-				vcardExtNode.appendChild( nicknameNode );
+				vcardExtNode.NICKNAME = nickname;
 			}
 
 			if ( email )
 			{
-				var emailNode:XMLNode = new XMLNode( 1, 'EMAIL' );
-				emailNode.appendChild( new XMLNode( 3, 'INTERNET' ));
-				emailNode.appendChild( new XMLNode( 3, 'PREF' ));
-				var userIdNode:XMLNode = new XMLNode( 1, 'USERID' );
-				userIdNode.appendChild( new XMLNode( 3, email ));
-				emailNode.appendChild( userIdNode );
-
+				var emailNode:XML = <EMAIL/>;
+				emailNode.appendChild( <INTERNET/> );
+				emailNode.appendChild( <PREF/> );
+				emailNode.USERID = email;
 				vcardExtNode.appendChild( emailNode );
 			}
 
 			if ( company || department )
 			{
-				var organizationNode:XMLNode = new XMLNode( 1, 'ORG' );
+				var organizationNode:XML = <ORG/>;
 
 				if ( company )
 				{
-					var companyNode:XMLNode = new XMLNode( 1, 'ORGNAME' );
-					companyNode.appendChild( new XMLNode( 3, company ));
-
-					organizationNode.appendChild( companyNode );
+					organizationNode.ORGNAME = company;
 				}
 
 				if ( department )
 				{
-					var departmentNode:XMLNode = new XMLNode( 1, 'ORGUNIT' );
-					departmentNode.appendChild( new XMLNode( 3, department ));
-
-					organizationNode.appendChild( departmentNode );
+					organizationNode.ORGUNIT = department;
 				}
 
 				vcardExtNode.appendChild( organizationNode );
@@ -633,63 +675,58 @@ package org.igniterealtime.xiff.vcard
 
 			if ( title )
 			{
-				var titleNode:XMLNode = new XMLNode( 1, 'TITLE' );
-				titleNode.appendChild( new XMLNode( 3, title ));
-
-				vcardExtNode.appendChild( titleNode );
+				vcardExtNode.TITLE = title;
 			}
 
 			if ( url )
 			{
-				var urlNode:XMLNode = new XMLNode( 1, 'URL' );
-				urlNode.appendChild( new XMLNode( 3, url ));
+				vcardExtNode.URL = url;
+			}
 
-				vcardExtNode.appendChild( urlNode );
+			if ( birthDay )
+			{
+				var month:Number = (birthDay.getMonth() + 1);
+				vcardExtNode.BDAY = birthDay.getFullYear() + "-" + (month < 10 ? "0" + month : month) + "-" + birthDay.getDate();
+			}
+			
+			if ( gender )
+			{
+				vcardExtNode.GENDER = gender;
+			}
+			
+			if ( maritalStatus )
+			{
+				vcardExtNode.MARITALSTATUS = maritalStatus;
 			}
 
 			if ( workAddress || workCity || workCountry || workPostalCode || workStateProvince )
 			{
-				var workAddressNode:XMLNode = new XMLNode( 1, 'ADR' );
-				workAddressNode.appendChild( new XMLNode( 1, 'WORK' ));
+				var workAddressNode:XML = <ADR/>;
+				workAddressNode.appendChild( <WORK/> );
 
 				if ( workAddress )
 				{
-					var workStreetNode:XMLNode = new XMLNode( 1, 'STREET' );
-					workStreetNode.appendChild( new XMLNode( 3, workAddress ));
-
-					workAddressNode.appendChild( workStreetNode );
+					workAddressNode.STREET = workAddress;
 				}
 
 				if ( workCity )
 				{
-					var workCityNode:XMLNode = new XMLNode( 1, 'LOCALITY' );
-					workCityNode.appendChild( new XMLNode( 3, workCity ));
-
-					workAddressNode.appendChild( workCityNode );
+					workAddressNode.LOCALITY = workCity;
 				}
 
 				if ( workCountry )
 				{
-					var workCountryNode:XMLNode = new XMLNode( 1, 'CTRY' );
-					workCountryNode.appendChild( new XMLNode( 3, workCountry ));
-
-					workAddressNode.appendChild( workCountryNode );
+					workAddressNode.CTRY = workCountry;
 				}
 
 				if ( workPostalCode )
 				{
-					var workPostalCodeNode:XMLNode = new XMLNode( 1, 'PCODE' );
-					workPostalCodeNode.appendChild( new XMLNode( 3, workPostalCode ));
-
-					workAddressNode.appendChild( workPostalCodeNode );
+					workAddressNode.PCODE = workPostalCode;
 				}
 
 				if ( workStateProvince )
 				{
-					var workStateProvinceNode:XMLNode = new XMLNode( 1, 'REGION' );
-					workStateProvinceNode.appendChild( new XMLNode( 3, workStateProvince ));
-
-					workAddressNode.appendChild( workStateProvinceNode );
+					workAddressNode.REGION = workStateProvince;
 				}
 
 				vcardExtNode.appendChild( workAddressNode );
@@ -697,146 +734,104 @@ package org.igniterealtime.xiff.vcard
 
 			if ( homeAddress || homeCity || homeCountry || homePostalCode || homeStateProvince )
 			{
-				var homeAddressNode:XMLNode = new XMLNode( 1, 'ADR' );
-				homeAddressNode.appendChild( new XMLNode( 1, 'HOME' ));
+				var homeAddressNode:XML = <ADR/>;
+				homeAddressNode.appendChild( <HOME/> );
 
 				if ( homeAddress )
 				{
-					var homeStreetNode:XMLNode = new XMLNode( 1, 'STREET' );
-					homeStreetNode.appendChild( new XMLNode( 3, homeAddress ));
-
-					homeAddressNode.appendChild( homeStreetNode );
+					homeAddressNode.STREET = homeAddress;
 				}
 
 				if ( homeCity )
 				{
-					var homeCityNode:XMLNode = new XMLNode( 1, 'LOCALITY' );
-					homeCityNode.appendChild( new XMLNode( 3, homeCity ));
-
-					homeAddressNode.appendChild( homeCityNode );
+					homeAddressNode.LOCALITY = homeCity;
 				}
 
 				if ( homeCountry )
 				{
-					var homeCountryNode:XMLNode = new XMLNode( 1, 'CTRY' );
-					homeCountryNode.appendChild( new XMLNode( 3, homeCountry ));
-
-					homeAddressNode.appendChild( homeCountryNode );
+					homeAddressNode.CTRY = homeCountry;
 				}
 
 				if ( homePostalCode )
 				{
-					var homePostalCodeNode:XMLNode = new XMLNode( 1, 'PCODE' );
-					homePostalCodeNode.appendChild( new XMLNode( 3, homePostalCode ));
-
-					homeAddressNode.appendChild( homePostalCodeNode );
+					homeAddressNode.PCODE = homePostalCode;
 				}
 
 				if ( homeStateProvince )
 				{
-					var homeStateProvinceNode:XMLNode = new XMLNode( 1, 'REGION' );
-					homeStateProvinceNode.appendChild( new XMLNode( 3, homeStateProvince ));
-
-					homeAddressNode.appendChild( homeStateProvinceNode );
+					homeAddressNode.REGION = homeStateProvince;
 				}
 
 				vcardExtNode.appendChild( homeAddressNode );
 			}
+			
+
+			var phoneNode:XML = <TEL/>;
+			phoneNode.setChildren( <WORK/> );
 
 			if ( workCellNumber )
 			{
-				var workCellNode:XMLNode = new XMLNode( 1, 'TEL' );
-				workCellNode.appendChild( new XMLNode( 1, 'WORK' ));
-				workCellNode.appendChild( new XMLNode( 1, 'CELL' ));
-				var workCellNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				workCellNumberNode.appendChild( new XMLNode( 3, workCellNumber ));
-				workCellNode.appendChild( workCellNumberNode );
-
+				var workCellNode:XML = phoneNode.copy();
+				workCellNode.appendChild( <CELL/> );
+				workCellNode.NUMBER = workCellNumber;
 				vcardExtNode.appendChild( workCellNode );
 			}
 
 			if ( workFaxNumber )
 			{
-				var workFaxNode:XMLNode = new XMLNode( 1, 'TEL' );
-				workFaxNode.appendChild( new XMLNode( 1, 'WORK' ));
-				workFaxNode.appendChild( new XMLNode( 1, 'FAX' ));
-				var workFaxNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				workFaxNumberNode.appendChild( new XMLNode( 3, workFaxNumber ));
-				workFaxNode.appendChild( workFaxNumberNode );
-
+				var workFaxNode:XML = phoneNode.copy();
+				workFaxNode.appendChild( <FAX/> );
+				workFaxNode.NUMBER = workFaxNumber;
 				vcardExtNode.appendChild( workFaxNode );
 			}
 
 			if ( workPagerNumber )
 			{
-				var workPagerNode:XMLNode = new XMLNode( 1, 'TEL' );
-				workPagerNode.appendChild( new XMLNode( 1, 'WORK' ));
-				workPagerNode.appendChild( new XMLNode( 1, 'PAGER' ));
-				var workPagerNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				workPagerNumberNode.appendChild( new XMLNode( 3, workPagerNumber ));
-				workPagerNode.appendChild( workPagerNumberNode );
-
+				var workPagerNode:XML = phoneNode.copy();
+				workPagerNode.appendChild( <PAGER/> );
+				workPagerNode.NUMBER = workPagerNumber;
 				vcardExtNode.appendChild( workPagerNode );
 			}
 
 			if ( workVoiceNumber )
 			{
-				var workVoiceNode:XMLNode = new XMLNode( 1, 'TEL' );
-				workVoiceNode.appendChild( new XMLNode( 1, 'WORK' ));
-				workVoiceNode.appendChild( new XMLNode( 1, 'VOICE' ));
-				var workVoiceNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				workVoiceNumberNode.appendChild( new XMLNode( 3, workVoiceNumber ));
-				workVoiceNode.appendChild( workVoiceNumberNode );
-
+				var workVoiceNode:XML = phoneNode.copy();
+				workVoiceNode.appendChild( <VOICE/> );
+				workVoiceNode.NUMBER = workVoiceNumber;
 				vcardExtNode.appendChild( workVoiceNode );
-
 			}
 
+			phoneNode.setChildren( <HOME/> );
+			
 			if ( homeCellNumber )
 			{
-				var homeCellNode:XMLNode = new XMLNode( 1, 'TEL' );
-				homeCellNode.appendChild( new XMLNode( 1, 'HOME' ));
-				homeCellNode.appendChild( new XMLNode( 1, 'CELL' ));
-				var homeCellNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				homeCellNumberNode.appendChild( new XMLNode( 3, homeCellNumber ));
-				homeCellNode.appendChild( homeCellNumberNode );
-
+				var homeCellNode:XML = phoneNode.copy();
+				homeCellNode.appendChild( <CELL/> );
+				homeCellNode.NUMBER = homeCellNumber;
 				vcardExtNode.appendChild( homeCellNode );
 			}
 
 			if ( homeFaxNumber )
 			{
-				var homeFaxNode:XMLNode = new XMLNode( 1, 'TEL' );
-				homeFaxNode.appendChild( new XMLNode( 1, 'HOME' ));
-				homeFaxNode.appendChild( new XMLNode( 1, 'FAX' ));
-				var homeFaxNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				homeFaxNumberNode.appendChild( new XMLNode( 3, homeFaxNumber ));
-				homeFaxNode.appendChild( homeFaxNumberNode );
-
+				var homeFaxNode:XML = phoneNode.copy();
+				homeFaxNode.appendChild( <FAX/> );
+				homeFaxNode.NUMBER = homeFaxNumber;
 				vcardExtNode.appendChild( homeFaxNode );
 			}
 
 			if ( homePagerNumber )
 			{
-				var homePagerNode:XMLNode = new XMLNode( 1, 'TEL' );
-				homePagerNode.appendChild( new XMLNode( 1, 'HOME' ));
-				homePagerNode.appendChild( new XMLNode( 1, 'PAGER' ));
-				var homePagerNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				homePagerNumberNode.appendChild( new XMLNode( 3, homePagerNumber ));
-				homePagerNode.appendChild( homePagerNumberNode );
-
+				var homePagerNode:XML = phoneNode.copy();
+				homePagerNode.appendChild( <PAGER/> );
+				homePagerNode.NUMBER = homePagerNumber;
 				vcardExtNode.appendChild( homePagerNode );
 			}
 
 			if ( homeVoiceNumber )
 			{
-				var homeVoiceNode:XMLNode = new XMLNode( 1, 'TEL' );
-				homeVoiceNode.appendChild( new XMLNode( 1, 'HOME' ));
-				homeVoiceNode.appendChild( new XMLNode( 1, 'VOICE' ));
-				var homeVoiceNumberNode:XMLNode = new XMLNode( 1, 'NUMBER' );
-				homeVoiceNumberNode.appendChild( new XMLNode( 3, homeVoiceNumber ));
-				homeVoiceNode.appendChild( homeVoiceNumberNode );
-
+				var homeVoiceNode:XML = phoneNode.copy();
+				homeVoiceNode.appendChild( <VOICE/> );
+				homeVoiceNode.NUMBER = homeVoiceNumber;
 				vcardExtNode.appendChild( homeVoiceNode );
 			}
 
