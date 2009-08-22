@@ -105,17 +105,16 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
-		public function get data():*
-		{
-			return _data;
-		}
-
 		/**
 		 * Data type can be <code>Message</code>, <code>Array</code>, or <code>Presence</code>
 		 * depending of the context.
 		 * @see org.igniterealtime.xiff.data.Message
 		 * @see org.igniterealtime.xiff.data.Presence
 		 */
+		public function get data():*
+		{
+			return _data;
+		}
 		public function set data( value:* ):void
 		{
 			_data = value;

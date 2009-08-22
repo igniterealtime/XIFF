@@ -29,7 +29,6 @@ package org.igniterealtime.xiff.events
 
 	public class PresenceEvent extends Event
 	{
-
 		public static const PRESENCE:String = "presence";
 
 		private var _data:Array;
@@ -46,11 +45,13 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
+		/**
+		 * Array of Presences.
+		 */
 		public function get data():Array
 		{
 			return _data;
 		}
-
 		public function set data( value:Array ):void
 		{
 			_data = value;

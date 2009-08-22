@@ -80,7 +80,6 @@ package org.igniterealtime.xiff.events
 		{
 			return _data;
 		}
-
 		public function set data( value:* ):void
 		{
 			_data = value;

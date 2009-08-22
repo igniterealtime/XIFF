@@ -47,11 +47,13 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
+		/**
+		 * Extension related to this event
+		 */
 		public function get data():IExtension
 		{
 			return _data;
 		}
-
 		public function set data( value:IExtension ):void
 		{
 			_data = value;

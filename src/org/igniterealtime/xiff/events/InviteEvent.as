@@ -56,11 +56,13 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
+		/**
+		 * Message that is possibly included in the invitation.
+		 */
 		public function get data():Message
 		{
 			return _data;
 		}
-
 		public function set data( value:Message ):void
 		{
 			_data = value;
@@ -70,27 +72,30 @@ package org.igniterealtime.xiff.events
 		{
 			return _from;
 		}
-
 		public function set from( value:UnescapedJID ):void
 		{
 			_from = value;
 		}
 
+		/**
+		 * A possible reason given by the inviting party
+		 */
 		public function get reason():String
 		{
 			return _reason;
 		}
-
 		public function set reason( value:String ):void
 		{
 			_reason = value;
 		}
 
+		/**
+		 * The room in which the invitation is targeted.
+		 */
 		public function get room():Room
 		{
 			return _room;
 		}
-
 		public function set room( value:Room ):void
 		{
 			_room = value;

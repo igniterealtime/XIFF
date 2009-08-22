@@ -44,9 +44,7 @@ package org.igniterealtime.xiff.events
 		 * @default
 		 */
 		public static const GROUPCHAT_BOOKMARK_REMOVED:String = "groupchatBookmarkRemoved";
-
-		//add url types here when needed
-
+		
 		/**
 		 *
 		 * @default

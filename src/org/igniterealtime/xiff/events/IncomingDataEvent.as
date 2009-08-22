@@ -45,11 +45,13 @@ package org.igniterealtime.xiff.events
 			return event;
 		}
 
+		/**
+		 * The uncompressed data received
+		 */
 		public function get data():ByteArray
 		{
 			return _data;
 		}
-
 		public function set data( value:ByteArray ):void
 		{
 			_data = value;
