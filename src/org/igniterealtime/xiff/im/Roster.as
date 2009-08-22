@@ -23,16 +23,15 @@
  */
 package org.igniterealtime.xiff.im
 {
-	import mx.collections.ArrayCollection;
-	
 	import flash.events.EventDispatcher;
-	import flash.utils.Dictionary;
-	
+
+	import mx.collections.ArrayCollection;
+
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.im.*;
 	import org.igniterealtime.xiff.events.*;
-	
+
 	/**
 	 * Broadcast whenever someone revokes your presence subscription. This is not
 	 * an event that is fired when you revoke a subscription, but rather when one of your
@@ -107,43 +106,39 @@ package org.igniterealtime.xiff.im
 	 */
 	public class Roster extends ArrayCollection
 	{
+
+		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
+
+		private static const staticConstructorDependencies:Array = [ ExtensionClassRegistry,
+																	 RosterExtension ]
+
 		private var _connection:XMPPConnection;
-		
-		//FIXME: does not support multiple pending requests
-		private var pendingSubscriptionRequestJID:UnescapedJID;
-		
-		/**
-		 * Store presences of the people in users roster.
-		 */
-		private var _presenceMap:Dictionary;
-		
+
 		/**
 		 * Store groups as RosterGroup.
 		 */
-		private var _groups:Dictionary;
-		
-		private static const staticConstructorDependencies:Array = [
-			ExtensionClassRegistry,
-			RosterExtension
-		]
-		
-		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
-		
+		private var _groups:Object = {};
+
+		/**
+		 * Store presences of the people in users roster.
+		 */
+		private var _presenceMap:Object = {};
+
+		//FIXME: does not support multiple pending requests
+		private var pendingSubscriptionRequestJID:UnescapedJID;
+
 		/**
 		 *
 		 * @param	aConnection A reference to an XMPPConnection class instance
 		 */
 		public function Roster( aConnection:XMPPConnection = null )
 		{
-			_presenceMap = new Dictionary();
-			_groups = new Dictionary();
-			
-			if (aConnection != null)
+			if ( aConnection != null )
 			{
 				connection = aConnection;
 			}
 		}
-		
+
 		/**
 		 *
 		 * @return
@@ -153,7 +148,7 @@ package org.igniterealtime.xiff.im
 			ExtensionClassRegistry.register( RosterExtension );
 			return true;
 		}
-		
+
 		/**
 		 * Adds a contact to the roster. Remember: All roster data is managed on the server-side,
 		 * so this contact is added to the server-side roster first, and upon successful addition,
@@ -176,12 +171,12 @@ package org.igniterealtime.xiff.im
 			{
 				displayName = id.toString();
 			}
-				
+
 			var callbackObj:Roster = null;
 			var callbackMethod:String = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			var askType:String = RosterExtension.ASK_TYPE_NONE;
-			
+
 			if ( requestSubscription == true )
 			{
 				callbackObj = this;
@@ -190,101 +185,31 @@ package org.igniterealtime.xiff.im
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
-				
-			var tempIQ:IQ = new IQ (null, IQ.SET_TYPE, XMPPStanza.generateID("add_user_"), callbackMethod, callbackObj );
+
+			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "add_user_" ),
+									callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-			ext.addItem( id.escaped, null, displayName, groupName ? [groupName] : null );
+			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
+						 null );
 			tempIQ.addExtension( ext );
 			_connection.send( tempIQ );
-	
-			
+
+
 			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
-				[groupName], subscription, askType );
+						   [ groupName ], subscription, askType );
 		}
-		
+
 		/**
-		 * Requests subscription authorization with a user or service. In the XMPP-world, you cannot receive
-		 * notifications on changes to a contact's presence until that contact has authorized you to subscribe
-		 * to his/her/its presence.
 		 *
-		 * @param	id The JID of the user or service that you wish to subscribe to
-		 * @param	isResponse
-		 * @see	#subscriptionDenial
+		 * @param	resultIQ
 		 */
-		public function requestSubscription( id:UnescapedJID, isResponse:Boolean = false):void
+		public function addContact_result( resultIQ:IQ ):void
 		{
-			// Roster length is 0 if it a response to a user request. we must handle this event.
-			var tempPresence:Presence;
-			if (isResponse)
-			{
-				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
-				_connection.send( tempPresence );
-				return;
-			}
-			// Only request for items in the roster
-			if (contains(RosterItemVO.get(id, false)))
-			{
-				tempPresence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
-				_connection.send( tempPresence );
-			}
+			// Contact was added, request subscription
+			requestSubscription( pendingSubscriptionRequestJID );
+			pendingSubscriptionRequestJID = null;
 		}
-		
-		/**
-		 * Removes a contact from the roster and revokes all presence subscriptions for that contact.
-		 * This method will only attempt action if the contact you are trying to remove is currently on the
-		 * roster in the first place.
-		 *
-		 * @param	rosterItem The value object which is to be removed
-		 */
-		public function removeContact( rosterItem:RosterItemVO ):void
-		{
-			if (contains(rosterItem))
-			{
-				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("remove_user_"), "unsubscribe_result", this );
-				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-				ext.addItem( new EscapedJID(rosterItem.jid.bareJID), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
-				tempIQ.addExtension( ext );
-				_connection.send( tempIQ );
-				
-				//the roster item is not actually removed from the roster
-				//until confirmation comes back from the XMPP server
-			}
-		}
-		
-		/**
-		 * Fetches the roster data from the server. Once the data has been fetched, the Roster's data
-		 * provider is populated appropriately. If the Roster-XMPPConnection class dependency has been
-		 * set up before logging in, then this method will be called automatically because the Roster
-		 * listens for "login" events from the XMPPConnection.
-		 */
-		public function fetchRoster():void
-		{
-			var tempIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID("roster_"), "fetchRoster_result", this );
-			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
-			_connection.send( tempIQ );
-		}
-		
-		/**
-		 * Grants a user or service authorization for subscribing to your presence. Once authorization
-		 * is granted, the user can see whether you are offline, online, away, etc. Subscriptions can
-		 * be revoked at any time using the <code>denySubscription()</code> method.
-		 *
-		 * @param	tojid The JID of the user or service to grant subscription to
-		 * @param	requestAfterGrant Whether or not a reciprocal subscription request should be sent
-		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
-		 */
-		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
-		{
-			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.SUBSCRIBED_TYPE );
-			_connection.send( tempPresence );
-			
-			// Request a return subscription
-			if ( requestAfterGrant )
-			{
-				requestSubscription( tojid, true );
-			}
-		}
-		
+
 		/**
 		 * Revokes an existing presence subscription or denies a subscription request. If a user
 		 * has sent you a subscription request you can use this method to deny that request. Otherwise,
@@ -298,70 +223,172 @@ package org.igniterealtime.xiff.im
 			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.UNSUBSCRIBED_TYPE );
 			_connection.send( tempPresence );
 		}
-		
+
 		/**
-		 * Updates the information for an existing contact. You can use this method to change the
-		 * display name or associated group for a contact in your roster.
-		 *
-		 * @param	rosterItem The value object of the contact to update
-		 * @param	newName The new display name for this contact
-		 * @param	newGroups The new groups to associate the contact with
+		 * Fetches the roster data from the server. Once the data has been fetched, the Roster's data
+		 * provider is populated appropriately. If the Roster-XMPPConnection class dependency has been
+		 * set up before logging in, then this method will be called automatically because the Roster
+		 * listens for "login" events from the XMPPConnection.
 		 */
-		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
+		public function fetchRoster():void
 		{
-			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID("update_contact_") );
-			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
-			
-			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName, groupNames );
-			tempIQ.addExtension( ext );
+			var tempIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID( "roster_" ),
+									"fetchRoster_result", this );
+			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
 			_connection.send( tempIQ );
 		}
-		
+
 		/**
-		 * Updates the display name for an existing contact.
 		 *
-		 * @param	rosterItem The value object of the contact to update
-		 * @param	newName The new display name for this contact
+		 * @param	resultIQ
 		 */
-		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
+		public function fetchRoster_result( resultIQ:IQ ):void
 		{
-			var groupNames:Array = [];
-			for each(var group:RosterGroup in getContainingGroups(rosterItem))
+			// Clear out the old roster
+			removeAll();
+			try
 			{
-				groupNames.push(group.label);
+				disableAutoUpdate();
+				for each ( var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ) )
+				{
+					for each ( var item:*in ext.getAllItems() )
+					{
+						//var classInfo:XML = flash.utils.describeType(item);
+						if ( !item is XMLStanza )
+						{
+							continue;
+						}
+
+						var askType:String = item.askType != null ? item.askType.toLowerCase() :
+							RosterExtension.ASK_TYPE_NONE;
+						addRosterItem( new UnescapedJID( item.jid ), item.name, RosterExtension.SHOW_UNAVAILABLE,
+									   "Offline", item.groupNames, item.subscription.toLowerCase(),
+									   askType );
+					}
+				}
+				enableAutoUpdate();
+
+				// Fire Roster Loaded Event
+				var rosterEvent:RosterEvent = new RosterEvent( RosterEvent.ROSTER_LOADED,
+															   false, false );
+				dispatchEvent( rosterEvent );
 			}
-			updateContact( rosterItem, newName, groupNames);
+			catch ( e:Error )
+			{
+				trace( e.getStackTrace() );
+			}
 		}
-		
+
 		/**
 		 *
 		 * @param	item
 		 * @return
 		 */
-		public function getContainingGroups(item:RosterItemVO):Array
+		public function getContainingGroups( item:RosterItemVO ):Array
 		{
 			var result:Array = [];
-			for each(var group:RosterGroup in _groups)
+			for ( var key:String in _groups )
 			{
-				if (group.contains(item))
+				var group:RosterGroup = _groups[ key ] as RosterGroup;
+				if ( group.contains( item ) )
 				{
-					result.push(group);
+					result.push( group );
 				}
 			}
 			return result;
 		}
-		
+
 		/**
-		 * Updates the groups associated with an existing contact.
-		 *
-		 * @param	rosterItem The value object of the contact to update
-		 * @param	newGroups The new groups to associate the contact with
+		 * Get a group by given name
+		 * @param	name
+		 * @return
 		 */
-		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
+		public function getGroup( name:String ):RosterGroup
 		{
-			updateContact( rosterItem, rosterItem.displayName, newGroupNames );
+			return _groups[ name ] as RosterGroup;
 		}
-		
+
+		/**
+		 * Get the Presence of the given user if any.
+		 * @param	jid
+		 * @return
+		 */
+		public function getPresence( jid:UnescapedJID ):Presence
+		{
+			return _presenceMap[ jid.toString() ] as Presence;
+		}
+
+		/**
+		 * Grants a user or service authorization for subscribing to your presence. Once authorization
+		 * is granted, the user can see whether you are offline, online, away, etc. Subscriptions can
+		 * be revoked at any time using the <code>denySubscription()</code> method.
+		 *
+		 * @param	tojid The JID of the user or service to grant subscription to
+		 * @param	requestAfterGrant Whether or not a reciprocal subscription request should be sent
+		 * to the grantee, so that you may, in turn, subscribe to his/her/its presence.
+		 */
+		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
+		{
+			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.SUBSCRIBED_TYPE );
+			_connection.send( tempPresence );
+
+			// Request a return subscription
+			if ( requestAfterGrant )
+			{
+				requestSubscription( tojid, true );
+			}
+		}
+
+		/**
+		 * Removes a contact from the roster and revokes all presence subscriptions for that contact.
+		 * This method will only attempt action if the contact you are trying to remove is currently on the
+		 * roster in the first place.
+		 *
+		 * @param	rosterItem The value object which is to be removed
+		 */
+		public function removeContact( rosterItem:RosterItemVO ):void
+		{
+			if ( contains( rosterItem ) )
+			{
+				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "remove_user_" ),
+										"unsubscribe_result", this );
+				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+				ext.addItem( new EscapedJID( rosterItem.jid.bareJID ), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
+				tempIQ.addExtension( ext );
+				_connection.send( tempIQ );
+
+				//the roster item is not actually removed from the roster
+				//until confirmation comes back from the XMPP server
+			}
+		}
+
+		/**
+		 * Requests subscription authorization with a user or service. In the XMPP-world, you cannot receive
+		 * notifications on changes to a contact's presence until that contact has authorized you to subscribe
+		 * to his/her/its presence.
+		 *
+		 * @param	id The JID of the user or service that you wish to subscribe to
+		 * @param	isResponse
+		 * @see	#subscriptionDenial
+		 */
+		public function requestSubscription( id:UnescapedJID, isResponse:Boolean = false ):void
+		{
+			// Roster length is 0 if it a response to a user request. we must handle this event.
+			var presence:Presence;
+			if ( isResponse )
+			{
+				presence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
+				_connection.send( presence );
+				return;
+			}
+			// Only request for items in the roster
+			if ( contains( RosterItemVO.get( id, false ) ) )
+			{
+				presence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
+				_connection.send( presence );
+			}
+		}
+
 		/**
 		 * Sets your current presence status. Calling this method notifies others who
 		 * are subscribed to your presence of a presence change. You should use this to
@@ -383,60 +410,11 @@ package org.igniterealtime.xiff.im
 		 */
 		public function setPresence( show:String, status:String, priority:Number ):void
 		{
-			//var tempPresence:Presence = new Presence( null, null, Presence.AVAILABLE_TYPE, show, status, priority );
-			var tempPresence:Presence = new Presence( null, null, null, show, status, priority );
-			_connection.send( tempPresence );
+			var presence:Presence = new Presence( null, null, null, show, status,
+													  priority );
+			_connection.send( presence );
 		}
-		
-		/**
-		 *
-		 * @param	resultIQ
-		 */
-		public function fetchRoster_result( resultIQ:IQ ):void
-		{
-			// Clear out the old roster
-			removeAll();
-			try
-			{
-				disableAutoUpdate();
-				for each(var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ))
-				{
-					for each(var item:* in ext.getAllItems())
-					{
-						//var classInfo:XML = flash.utils.describeType(item);
-						if (!item is XMLStanza)
-						{
-							continue;
-						}
-						
-						var askType:String = item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
-						addRosterItem( new UnescapedJID(item.jid), item.name, RosterExtension.SHOW_UNAVAILABLE,
-							"Offline", item.groupNames, item.subscription.toLowerCase(), askType);
-					}
-				}
-				enableAutoUpdate();
-				
-				// Fire Roster Loaded Event
-				var rosterEvent:RosterEvent = new RosterEvent(RosterEvent.ROSTER_LOADED, false, false);
-				dispatchEvent(rosterEvent);
-			}
-			catch (e:Error)
-			{
-				trace(e.getStackTrace());
-			}
-		}
-	
-		/**
-		 *
-		 * @param	resultIQ
-		 */
-		public function addContact_result( resultIQ:IQ ):void
-		{
-			// Contact was added, request subscription
-			requestSubscription( pendingSubscriptionRequestJID );
-			pendingSubscriptionRequestJID = null;
-		}
-		
+
 		/**
 		 *
 		 * @param	resultIQ
@@ -445,170 +423,47 @@ package org.igniterealtime.xiff.im
 		{
 			// Does nothing for now
 		}
-			
+
 		/**
+		 * Updates the groups associated with an existing contact.
 		 *
-		 * @param	eventObj PresenceEvent, LoginEvent or RosterExtension
+		 * @param	rosterItem The value object of the contact to update
+		 * @param	newGroups The new groups to associate the contact with
 		 */
-		private function handleEvent( eventObj:* ):void
+		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
 		{
-
-			switch( eventObj.type )
-			{
-				// Handle any incoming presence items
-				case PresenceEvent.PRESENCE:
-					handlePresences( eventObj.data );
-					break;
-				
-				// Fetch the roster immediately after login
-				case LoginEvent.LOGIN:
-					fetchRoster();
-					// Tell the server we are online and available
-					//setPresence( Presence.SHOW_NORMAL, "Online", 5 );
-					setPresence( null, "Online", 5 );
-					break;
-					
-				case RosterExtension.NS:
-					try
-					{
-						var ext:RosterExtension = (eventObj.iq as IQ).getAllExtensionsByNS( RosterExtension.NS )[0] as RosterExtension;
-						var items:Array = ext.getAllItems();
-						for each(var item:* in items)
-						{
-							var jid:UnescapedJID = new UnescapedJID(item.jid);
-							var rosterItemVO:RosterItemVO = RosterItemVO.get(jid, true);
-							var rosterEvent:RosterEvent;
-							
-							if (contains(rosterItemVO))
-							{
-								switch (item.subscription.toLowerCase())
-								{
-									case RosterExtension.SUBSCRIBE_TYPE_NONE:
-										rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REVOCATION);
-										rosterEvent.jid = jid;
-										dispatchEvent( rosterEvent );
-										break;
-									
-									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
-										rosterEvent = new RosterEvent(RosterEvent.USER_REMOVED);
-										for each(var group:RosterGroup in getContainingGroups(rosterItemVO))
-										{
-											group.removeItem(rosterItemVO);
-										}
-										//should be impossible for getItemIndex to return -1, since we just looked it up
-										rosterEvent.data = removeItemAt(getItemIndex(rosterItemVO));;
-										rosterEvent.jid = jid;
-										dispatchEvent( rosterEvent );
-										break;
-														
-									default:
-										updateRosterItemSubscription(rosterItemVO, item.subscription.toLowerCase(), item.name, item.groupNames);
-										break;
-								}
-							}
-							else
-							{
-								var groupNames:Array = item.groupNames;
-								var askType:String = item.askType != null ?
-									item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
-
-								if ( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&
-									item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE)
-								{
-									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
-									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE, "Offline",
-										groupNames, item.subscription.toLowerCase(), askType );
-								}
-								else if ( (item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ||
-									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM) &&
-										item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
-								{
-									// A contact was added to the roster, and its authorization is still pending.
-									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING, "Pending", groupNames,
-										item.subscription.toLowerCase(), askType );
-								}
-							}
-						}
-					}
-					catch (e:Error)
-					{
-						trace(e.getStackTrace());
-					}
-					break;
-			}
+			updateContact( rosterItem, rosterItem.displayName, newGroupNames );
 		}
-		
+
 		/**
-		 * Dispathing <code>RosterEvent</code> based on the types of the <code>Presence</code>.
-		 * @param	presenceArray	A pile of presences received at one time
+		 * Updates the display name for an existing contact.
+		 *
+		 * @param	rosterItem The value object of the contact to update
+		 * @param	newName The new display name for this contact
 		 */
-		private function handlePresences( presenceArray:Array):void
+		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
 		{
-			for each(var aPresence:Presence in presenceArray)
+			var groupNames:Array = [];
+			for each ( var group:RosterGroup in getContainingGroups( rosterItem ) )
 			{
-				var type:String = aPresence.type ? aPresence.type.toLowerCase() : null;
-				var rosterEvent:RosterEvent = null;
-				
-				switch( type )
-				{
-					case Presence.SUBSCRIBE_TYPE:
-						rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_REQUEST);
-						break;
-						
-					case Presence.UNSUBSCRIBED_TYPE:
-						rosterEvent = new RosterEvent(RosterEvent.SUBSCRIPTION_DENIAL);
-						break;
-					
-					case Presence.UNAVAILABLE_TYPE:
-						rosterEvent = new RosterEvent(RosterEvent.USER_UNAVAILABLE);
-	
-						var unavailableItem:RosterItemVO = RosterItemVO.get(aPresence.from.unescaped, false);
-						if(!unavailableItem) return;
-						updateRosterItemPresence( unavailableItem, aPresence );
-						
-						break;
-					
-					// null means available
-					default:
-						rosterEvent = new RosterEvent(RosterEvent.USER_AVAILABLE);
-						rosterEvent.data = aPresence;
-						
-						// Change the item on the roster
-						var availableItem:RosterItemVO;
-						if(aPresence.from)
-							availableItem = RosterItemVO.get(aPresence.from.unescaped, false);
-						
-						if(!availableItem) return;
-						updateRosterItemPresence( availableItem, aPresence );
-						
-						break;
-				}
-				
-				if (rosterEvent != null)
-				{
-					// from can sometimes not be set
-					if (aPresence.from)
-					{
-						rosterEvent.jid = aPresence.from.unescaped;
-					}
-					dispatchEvent(rosterEvent);
-				}
+				groupNames.push( group.label );
 			}
+			updateContact( rosterItem, newName, groupNames );
 		}
-		
+
 		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String = "none" ):Boolean
 		{
-			if (!jid)
+			if ( !jid )
 			{
 				return false;
 			}
-			
-			var rosterItem:RosterItemVO = RosterItemVO.get(jid, true);
-			if (!contains( rosterItem ))
+
+			var rosterItem:RosterItemVO = RosterItemVO.get( jid, true );
+			if ( !contains( rosterItem ) )
 			{
 				addItem( rosterItem );
 			}
-			if (displayName)
+			if ( displayName )
 			{
 				rosterItem.displayName = displayName;
 			}
@@ -616,58 +471,222 @@ package org.igniterealtime.xiff.im
 			rosterItem.askType = askType;
 			rosterItem.status = status;
 			rosterItem.show = show;
-			setContactGroups(rosterItem, groupNames);
-			
-			var event:RosterEvent = new RosterEvent(RosterEvent.USER_ADDED);
+			setContactGroups( rosterItem, groupNames );
+
+			var event:RosterEvent = new RosterEvent( RosterEvent.USER_ADDED );
 			event.jid = jid;
 			event.data = rosterItem;
-			dispatchEvent(event);
+			dispatchEvent( event );
 
 			return true;
 		}
-		
+
+		/**
+		 *
+		 * @param	eventObj PresenceEvent, LoginEvent or RosterExtension
+		 */
+		private function handleEvent( eventObj:* ):void
+		{
+
+			switch ( eventObj.type )
+			{
+				// Handle any incoming presence items
+				case PresenceEvent.PRESENCE:
+					handlePresences( eventObj.data );
+					break;
+
+				// Fetch the roster immediately after login
+				case LoginEvent.LOGIN:
+					fetchRoster();
+					// Tell the server we are online and available
+					//setPresence( Presence.SHOW_NORMAL, "Online", 5 );
+					setPresence( null, "Online", 5 );
+					break;
+
+				case RosterExtension.NS:
+					try
+					{
+						var ext:RosterExtension = ( eventObj.iq as IQ ).getAllExtensionsByNS( RosterExtension.NS )[ 0 ] as
+							RosterExtension;
+						var items:Array = ext.getAllItems();
+						for each ( var item:*in items )
+						{
+							var jid:UnescapedJID = new UnescapedJID( item.jid );
+							var rosterItemVO:RosterItemVO = RosterItemVO.get( jid,
+																			  true );
+							var rosterEvent:RosterEvent;
+
+							if ( contains( rosterItemVO ) )
+							{
+								switch ( item.subscription.toLowerCase() )
+								{
+									case RosterExtension.SUBSCRIBE_TYPE_NONE:
+										rosterEvent = new RosterEvent( RosterEvent.SUBSCRIPTION_REVOCATION );
+										rosterEvent.jid = jid;
+										dispatchEvent( rosterEvent );
+										break;
+
+									case RosterExtension.SUBSCRIBE_TYPE_REMOVE:
+										rosterEvent = new RosterEvent( RosterEvent.USER_REMOVED );
+										for each ( var group:RosterGroup in getContainingGroups( rosterItemVO ) )
+										{
+											group.removeItem( rosterItemVO );
+										}
+										//should be impossible for getItemIndex to return -1, since we just looked it up
+										rosterEvent.data = removeItemAt( getItemIndex( rosterItemVO ) );;
+										rosterEvent.jid = jid;
+										dispatchEvent( rosterEvent );
+										break;
+
+									default:
+										updateRosterItemSubscription( rosterItemVO,
+																	  item.subscription.toLowerCase(),
+																	  item.name,
+																	  item.groupNames );
+										break;
+								}
+							}
+							else
+							{
+								var groupNames:Array = item.groupNames;
+								var askType:String = item.askType != null ? item.askType.toLowerCase() :
+									RosterExtension.ASK_TYPE_NONE;
+
+								if ( item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_REMOVE &&
+									item.subscription.toLowerCase() != RosterExtension.SUBSCRIBE_TYPE_NONE )
+								{
+									// Add this item to the roster if it's not there and if the subscription type is not equal to 'remove' or 'none'
+									addRosterItem( jid, item.name, RosterExtension.SHOW_UNAVAILABLE,
+												   "Offline", groupNames, item.subscription.toLowerCase(),
+												   askType );
+								}
+								else if ( ( item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_NONE ||
+									item.subscription.toLowerCase() == RosterExtension.SUBSCRIBE_TYPE_FROM ) &&
+									item.askType == RosterExtension.ASK_TYPE_SUBSCRIBE )
+								{
+									// A contact was added to the roster, and its authorization is still pending.
+									addRosterItem( jid, item.name, RosterExtension.SHOW_PENDING,
+												   "Pending", groupNames, item.subscription.toLowerCase(),
+												   askType );
+								}
+							}
+						}
+					}
+					catch ( e:Error )
+					{
+						trace( e.getStackTrace() );
+					}
+					break;
+			}
+		}
+
+		/**
+		 * Dispathing <code>RosterEvent</code> based on the types of the <code>Presence</code>.
+		 * @param	presenceArray	A pile of presences received at one time
+		 */
+		private function handlePresences( presenceArray:Array ):void
+		{
+			for each ( var aPresence:Presence in presenceArray )
+			{
+				var type:String = aPresence.type ? aPresence.type.toLowerCase() :
+					null;
+				var rosterEvent:RosterEvent = null;
+
+				switch ( type )
+				{
+					case Presence.SUBSCRIBE_TYPE:
+						rosterEvent = new RosterEvent( RosterEvent.SUBSCRIPTION_REQUEST );
+						break;
+
+					case Presence.UNSUBSCRIBED_TYPE:
+						rosterEvent = new RosterEvent( RosterEvent.SUBSCRIPTION_DENIAL );
+						break;
+
+					case Presence.UNAVAILABLE_TYPE:
+						rosterEvent = new RosterEvent( RosterEvent.USER_UNAVAILABLE );
+
+						var unavailableItem:RosterItemVO = RosterItemVO.get( aPresence.from.unescaped,
+																			 false );
+						if ( !unavailableItem )
+							return;
+						updateRosterItemPresence( unavailableItem, aPresence );
+
+						break;
+
+					// null means available
+					default:
+						rosterEvent = new RosterEvent( RosterEvent.USER_AVAILABLE );
+						rosterEvent.data = aPresence;
+
+						// Change the item on the roster
+						var availableItem:RosterItemVO;
+						if ( aPresence.from )
+							availableItem = RosterItemVO.get( aPresence.from.unescaped,
+															  false );
+
+						if ( !availableItem )
+							return;
+						updateRosterItemPresence( availableItem, aPresence );
+
+						break;
+				}
+
+				if ( rosterEvent != null )
+				{
+					// from can sometimes not be set
+					if ( aPresence.from )
+					{
+						rosterEvent.jid = aPresence.from.unescaped;
+					}
+					dispatchEvent( rosterEvent );
+				}
+			}
+		}
+
 		private function setContactGroups( contact:RosterItemVO, groupNames:Array ):void
 		{
-			if (!groupNames || groupNames.length == 0)
+			if ( !groupNames || groupNames.length == 0 )
 			{
-				groupNames = ["General"];
+				groupNames = [ "General" ];
 			}
-			for each(var name:String in groupNames)
+			for each ( var name:String in groupNames )
 			{
 				//if there's no group by this name already, we need to make one
-				if(!getGroup(name))
-					_groups[name] = new RosterGroup(name);
+				if ( !getGroup( name ) )
+					_groups[ name ] = new RosterGroup( name );
 			}
-			for each(var group:RosterGroup in _groups)
+			for each ( var group:RosterGroup in _groups )
 			{
-				if (groupNames.indexOf(group.label) >= 0)
+				if ( groupNames.indexOf( group.label ) >= 0 )
 				{
-					group.addItem(contact);
+					group.addItem( contact );
 				}
 				else
 				{
-					group.removeItem(contact);
+					group.removeItem( contact );
 				}
 			}
 		}
-		
-		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
-		{
-			item.subscribeType = type;
-			
-			setContactGroups(item, newGroupNames);
 
-			if (name)
-			{
-				item.displayName = name;
-			}
-			
-			var event:RosterEvent = new RosterEvent(RosterEvent.USER_SUBSCRIPTION_UPDATED);
-			event.jid = item.jid;
-			event.data = item;
-			dispatchEvent(event);
+		/**
+		 * Updates the information for an existing contact. You can use this method to change the
+		 * display name or associated group for a contact in your roster.
+		 *
+		 * @param	rosterItem The value object of the contact to update
+		 * @param	newName The new display name for this contact
+		 * @param	newGroups The new groups to associate the contact with
+		 */
+		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
+		{
+			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "update_contact_" ) );
+			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+
+			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName,
+						 groupNames );
+			tempIQ.addExtension( ext );
+			_connection.send( tempIQ );
 		}
-		
+
 		private function updateRosterItemPresence( item:RosterItemVO, presence:Presence ):void
 		{
 			try
@@ -675,48 +694,45 @@ package org.igniterealtime.xiff.im
 				item.status = presence.status;
 				item.show = presence.show;
 				item.priority = presence.priority;
-				if (!presence.type)
+				if ( !presence.type )
 				{
 					item.online = true;
 				}
-				else if (presence.type == Presence.UNAVAILABLE_TYPE)
+				else if ( presence.type == Presence.UNAVAILABLE_TYPE )
 				{
 					item.online = false;
 				}
-				
-				var event:RosterEvent = new RosterEvent(RosterEvent.USER_PRESENCE_UPDATED);
+
+				var event:RosterEvent = new RosterEvent( RosterEvent.USER_PRESENCE_UPDATED );
 				event.jid = item.jid;
 				event.data = item;
-				dispatchEvent(event);
-				
-				_presenceMap[item.jid.toString()] = presence;
+				dispatchEvent( event );
+
+				_presenceMap[ item.jid.toString() ] = presence;
 			}
-			catch (e:Error)
+			catch ( e:Error )
 			{
-				trace(e.getStackTrace());
+				trace( e.getStackTrace() );
 			}
 		}
-		
-		/**
-		 * Get the Presence of the given user if any.
-		 * @param	jid
-		 * @return
-		 */
-		public function getPresence(jid:UnescapedJID):Presence
+
+		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
 		{
-			return _presenceMap[jid.toString()] as Presence;
+			item.subscribeType = type;
+
+			setContactGroups( item, newGroupNames );
+
+			if ( name )
+			{
+				item.displayName = name;
+			}
+
+			var event:RosterEvent = new RosterEvent( RosterEvent.USER_SUBSCRIPTION_UPDATED );
+			event.jid = item.jid;
+			event.data = item;
+			dispatchEvent( event );
 		}
-		
-		/**
-		 * Get a group by given name
-		 * @param	name
-		 * @return
-		 */
-		public function getGroup(name:String):RosterGroup
-		{
-			return _groups[name] as RosterGroup;
-		}
-		
+
 		/**
 		 * The instance of the XMPPConnection class to use for the roster to use for
 		 * sending and receiving data.
@@ -725,17 +741,18 @@ package org.igniterealtime.xiff.im
 		{
 			return _connection;
 		}
+
 		public function set connection( value:XMPPConnection ):void
 		{
 			_connection = value;
-			_connection.addEventListener(PresenceEvent.PRESENCE, handleEvent);
-			_connection.addEventListener(LoginEvent.LOGIN, handleEvent);
+			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent );
+			_connection.addEventListener( LoginEvent.LOGIN, handleEvent );
 			_connection.addEventListener( RosterExtension.NS, handleEvent );
 		}
-		
+
 		public override function set filterFunction(f:Function):void
 		{
-			throw new Error("Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that.");
+			throw new Error( "Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that." );
 		}
 	}
 }
