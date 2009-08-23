@@ -126,6 +126,7 @@ package org.igniterealtime.xiff.data
 							break;
 							
 						case "x":
+							// http://xmpp.org/extensions/xep-0091.html
 							if (children[i].attributes.xmlns == "jabber:x:delay")
 							{
 								myTimeStampNode = children[i];
@@ -136,6 +137,11 @@ package org.igniterealtime.xiff.data
 								mucUserExtension.deserialize(children[i]);
 								addExtension(mucUserExtension);
 							}
+							break;
+						
+						case "delay":
+							// http://xmpp.org/extensions/xep-0203.html
+							trace("Message used 'delay' as defined in XEP-0203.");
 							break;
 						
 						case ChatState.ACTIVE :
@@ -236,24 +242,29 @@ package org.igniterealtime.xiff.data
 		{
 			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", value);
 		}
+		
 		/**
 		 * Time of the message in case of a delay. Used only for messages 
 		 * which were sent while user was offline.
+		 * <p><code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
 		 * @see http://xmpp.org/extensions/xep-0203.html
+		 * @see http://xmpp.org/extensions/xep-0091.html
 		 */
 		public function get time():Date
 		{
 			if(myTimeStampNode == null) return null;
 			var stamp:String = myTimeStampNode.attributes.stamp;
 			
-			// CCYY-MM-DDThh:mm:ssZ
+			trace("myTimeStampNode: " + myTimeStampNode.toString());
+			// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
+			// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss 
 			var value:Date = new Date();
 			value.setUTCFullYear(stamp.substr(0, 4)); 
-			value.setUTCMonth(parseInt(stamp.substr(5, 2)) - 1);
-			value.setUTCDate(stamp.substr(8, 2));
-			value.setUTCHours(stamp.substr(11, 2)); 
-			value.setUTCMinutes(stamp.substr(14, 2)); 
-			value.setUTCSeconds(stamp.substr(17, 2));
+			value.setUTCMonth(parseInt(stamp.substr(4, 2)) - 1);
+			value.setUTCDate(stamp.substr(6, 2));
+			value.setUTCHours(stamp.substr(9, 2)); 
+			value.setUTCMinutes(stamp.substr(12, 2)); 
+			value.setUTCSeconds(stamp.substr(15, 2));
 			return value;
 		}
 		public function set time( value:Date ): void
