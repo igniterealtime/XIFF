@@ -236,21 +236,25 @@ package org.igniterealtime.xiff.data
 		{
 			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", value);
 		}
-		
+		/**
+		 * Time of the message in case of a delay. Used only for messages 
+		 * which were sent while user was offline.
+		 * @see http://xmpp.org/extensions/xep-0203.html
+		 */
 		public function get time():Date
 		{
 			if(myTimeStampNode == null) return null;
 			var stamp:String = myTimeStampNode.attributes.stamp;
 			
-			// CCYYMMDDThh:mm:ss
-			var t:Date = new Date();
-			t.setUTCFullYear(stamp.slice(0, 4)); 
-			t.setUTCMonth(Number(stamp.slice(4, 6)) - 1);
-			t.setUTCDate(stamp.slice(6, 8));
-			t.setUTCHours(stamp.slice(9, 11)); 
-			t.setUTCMinutes(stamp.slice(12, 14)); 
-			t.setUTCSeconds(stamp.slice(15, 17));
-			return t;
+			// CCYY-MM-DDThh:mm:ssZ
+			var value:Date = new Date();
+			value.setUTCFullYear(stamp.substr(0, 4)); 
+			value.setUTCMonth(parseInt(stamp.substr(5, 2)) - 1);
+			value.setUTCDate(stamp.substr(8, 2));
+			value.setUTCHours(stamp.substr(11, 2)); 
+			value.setUTCMinutes(stamp.substr(14, 2)); 
+			value.setUTCSeconds(stamp.substr(17, 2));
+			return value;
 		}
 		public function set time( value:Date ): void
 		{
