@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,10 +23,7 @@
  */
 package org.igniterealtime.xiff.im
 {
-	import flash.events.EventDispatcher;
-
-	import mx.collections.ArrayCollection;
-
+	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.im.*;
@@ -248,7 +245,6 @@ package org.igniterealtime.xiff.im
 			removeAll();
 			try
 			{
-				disableAutoUpdate();
 				for each ( var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ) )
 				{
 					for each ( var item:*in ext.getAllItems() )
@@ -266,7 +262,6 @@ package org.igniterealtime.xiff.im
 									   askType );
 					}
 				}
-				enableAutoUpdate();
 
 				// Fire Roster Loaded Event
 				var rosterEvent:RosterEvent = new RosterEvent( RosterEvent.ROSTER_LOADED,
@@ -748,11 +743,6 @@ package org.igniterealtime.xiff.im
 			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent );
 			_connection.addEventListener( LoginEvent.LOGIN, handleEvent );
 			_connection.addEventListener( RosterExtension.NS, handleEvent );
-		}
-
-		public override function set filterFunction(f:Function):void
-		{
-			throw new Error( "Setting the filterFunction on Roster is not allowed; Wrap it in a ListCollectionView and filter that." );
 		}
 	}
 }

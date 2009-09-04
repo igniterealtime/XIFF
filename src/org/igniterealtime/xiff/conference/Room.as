@@ -24,9 +24,8 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 
-	import mx.collections.ArrayCollection;
+	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
