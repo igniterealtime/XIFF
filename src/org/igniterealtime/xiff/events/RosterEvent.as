@@ -37,15 +37,15 @@ package org.igniterealtime.xiff.events
 
 		public static const SUBSCRIPTION_REVOCATION:String = "subscriptionRevocation";
 
-		public static const USER_ADDED:String = 'userAdded';
+		public static const USER_ADDED:String = "userAdded";
 
 		public static const USER_AVAILABLE:String = "userAvailable";
 
-		public static const USER_PRESENCE_UPDATED:String = 'userPresenceUpdated';
+		public static const USER_PRESENCE_UPDATED:String = "userPresenceUpdated";
 
-		public static const USER_REMOVED:String = 'userRemoved';
+		public static const USER_REMOVED:String = "userRemoved";
 
-		public static const USER_SUBSCRIPTION_UPDATED:String = 'userSubscriptionUpdated';
+		public static const USER_SUBSCRIPTION_UPDATED:String = "userSubscriptionUpdated";
 
 		public static const USER_UNAVAILABLE:String = "userUnavailable";
 

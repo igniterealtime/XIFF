@@ -25,7 +25,6 @@ package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 	import flash.utils.ByteArray;
-	import flash.xml.XMLDocument;
 
 	public class IncomingDataEvent extends Event
 	{
