@@ -66,11 +66,11 @@ package org.igniterealtime.xiff.core
 		 * @param	inJID The JID as a String.
 		 * @param	validate True if the JID should be validated.
 		 */
-		public function AbstractJID(inJID:String, validate:Boolean=false)
+		public function AbstractJID( inJID:String, validate:Boolean = false )
 		{
-			if(validate)
+			if (validate)
 			{
-				if(!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1 || inJID.length > BYTE_LIMIT_TOTAL)
+				if (!jidNodeValidator.test(inJID) || inJID.indexOf(" ") > -1 || inJID.length > BYTE_LIMIT_TOTAL)
 				{
 					trace("Invalid JID: %s", inJID);
 					throw "Invalid JID";
@@ -79,13 +79,17 @@ package org.igniterealtime.xiff.core
 			var separatorIndex:int = inJID.lastIndexOf("@");
 			var slashIndex:int = inJID.lastIndexOf("/");
 
-			if(slashIndex >= 0)
-			_resource = inJID.substring(slashIndex + 1);
+			if (slashIndex >= 0)
+			{
+				_resource = inJID.substring(slashIndex + 1);
+			}
 
 			_domain = inJID.substring(separatorIndex + 1, slashIndex >= 0 ? slashIndex : inJID.length);
 
-			if(separatorIndex >= 1)
-			_node = inJID.substring(0, separatorIndex);
+			if (separatorIndex >= 1)
+			{
+				_node = inJID.substring(0, separatorIndex);
+			}
 		}
 		
 		/**
@@ -95,7 +99,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @return The escaped string.
 		 */
-		public static function escapedNode(n:String):String
+		public static function escapedNode( n:String ):String
 		{
 			if( n && (
 				n.indexOf("@") >= 0 ||
@@ -130,7 +134,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @return The unescaped string.
 		 */
-		public static function unescapedNode(n:String):String
+		public static function unescapedNode( n:String ):String
 		{
 			if( n && (
 				n.indexOf("\\40") >= 0 ||
@@ -198,8 +202,10 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get resource():String
 		{
-			if(_resource.length > 0)
+			if (_resource.length > 0)
+			{
 				return _resource;
+			}
 			return null;
 		}
 
@@ -208,8 +214,10 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get node():String
 		{
-			if(_node.length > 0)
+			if (_node.length > 0)
+			{
 				return _node;
+			}
 			return null;
 		}
 

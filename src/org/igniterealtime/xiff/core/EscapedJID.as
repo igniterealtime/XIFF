@@ -48,14 +48,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * The escaped JID in unescaped form.
-		 */
-		public function get unescaped():UnescapedJID
-		{
-			return new UnescapedJID( toString());
-		}
-
-		/**
 		 * Determines if two escaped JIDs are equivalent.
 		 *
 		 * @param	testJID The JID with which to test equivalency.
@@ -65,9 +57,21 @@ package org.igniterealtime.xiff.core
 		public function equals( testJID:EscapedJID, shouldTestBareJID:Boolean ):Boolean
 		{
 			if ( shouldTestBareJID )
+			{
 				return testJID.bareJID == bareJID;
+			}
 			else
+			{
 				return testJID.toString() == toString();
+			}
+		}
+
+		/**
+		 * The escaped JID in unescaped form.
+		 */
+		public function get unescaped():UnescapedJID
+		{
+			return new UnescapedJID( toString() );
 		}
 	}
 }
