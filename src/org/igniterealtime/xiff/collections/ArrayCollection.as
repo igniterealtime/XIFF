@@ -1,10 +1,10 @@
 package org.igniterealtime.xiff.collections
 {
 	import flash.events.EventDispatcher;
-
+	
 	import org.igniterealtime.xiff.collections.events.CollectionEvent;
 	import org.igniterealtime.xiff.collections.events.CollectionEventKind;
-
+	
 	/**
 	 * The ArrayCollection class is a wrapper class that exposes an Array as a
 	 * collection that can be accessed and manipulated using collection methods.
@@ -12,19 +12,22 @@ package org.igniterealtime.xiff.collections
 	public class ArrayCollection extends EventDispatcher
 	{
 		protected const OUT_OF_BOUNDS_MESSAGE:String = "The supplied index is out of bounds.";
-
-		protected var _source:Array;
-
+		
+		protected var _source:Array = [];
+		
 		/**
 		 * Constructor.
 		 */
-		public function ArrayCollection( source:Array=null )
+		public function ArrayCollection( source:Array = null )
 		{
 			super();
-
-			this.source = source ? source : [];
+			
+			if (source)
+			{
+				this.source = source;
+			}
 		}
-
+		
 		/**
 		 * The source of data in the ArrayCollection.
 		 */
@@ -32,7 +35,7 @@ package org.igniterealtime.xiff.collections
 		{
 			return _source;
 		}
-
+		
 		/**
 		 * @private
 		 */
@@ -41,7 +44,7 @@ package org.igniterealtime.xiff.collections
 			_source = value ? value : [];
 			internalDispatchEvent( CollectionEventKind.RESET );
 		}
-
+		
 		/**
 		 * The number of items in the ArrayCollection.
 		 */
@@ -49,20 +52,20 @@ package org.igniterealtime.xiff.collections
 		{
 			return _source ? _source.length : 0;
 		}
-
+		
 		/**
 		 * Get the item at the specified index.
 		 */
 		public function getItemAt( index:int ):*
 		{
-			if( index < 0 || index >= length )
+			if ( index < 0 || index >= length )
 			{
 				throw new RangeError( OUT_OF_BOUNDS_MESSAGE );
 			}
-
+			
 			return _source[ index ];
 		}
-
+		
 		/**
 		 * Places the item at the specified index.
 		 * If an item was already at that index the new item will replace it
@@ -70,16 +73,16 @@ package org.igniterealtime.xiff.collections
 		 */
 		public function setItemAt( item:*, index:int ):*
 		{
-			if( index < 0 || index >= length )
+			if ( index < 0 || index >= length )
 			{
 				throw new RangeError( OUT_OF_BOUNDS_MESSAGE );
 			}
-
+			
 			var replaced:* = _source.splice( index, 1, item )[ 0 ];
 			internalDispatchEvent( CollectionEventKind.REPLACE, item, index );
 			return replaced;
 		}
-
+		
 		/**
 		 * Add the specified item to the end of the list.
 		 * Equivalent to addItemAt( item, length );
@@ -88,38 +91,38 @@ package org.igniterealtime.xiff.collections
 		{
 			addItemAt( item, length );
 		}
-
+		
 		/**
 		 * Add the specified item at the specified index.
 		 * Any item that was after this index is moved out by one.
 		 */
 		public function addItemAt( item:*, index:int ):void
 		{
-			if( index < 0 || index > length )
+			if ( index < 0 || index > length )
 			{
 				throw new RangeError( OUT_OF_BOUNDS_MESSAGE );
 			}
-
+			
 			_source.splice( index, 0, item );
-
+			
 			internalDispatchEvent( CollectionEventKind.ADD, item, index );
 		}
-
+		
 		/**
 		 * Get the index of the item if it is in the ArrayCollection such that getItemAt( index ) == item.
 		 */
 		public function getItemIndex( item:* ):int
 		{
 			var n:int = _source.length;
-
-			for( var i:int = 0; i < n; i++ )
+			
+			for ( var i:int = 0; i < n; i++ )
 			{
-				if( _source[ i ] === item ) return i;
+				if ( _source[ i ] === item ) return i;
 			}
-
+			
 			return -1;
 		}
-
+		
 		/**
 		 * Remove the specified item from this list, should it exist.
 		 */
@@ -127,41 +130,43 @@ package org.igniterealtime.xiff.collections
 		{
 			var index:int = getItemIndex( item );
 			var result:Boolean = index >= 0;
-
-			if( result )
+			
+			if ( result )
+			{
 				removeItemAt( index );
-
+			}
+			
 			return result;
 		}
-
+		
 		/**
 		 * Removes the item at the specified index and returns it.
 		 * Any items that were after this index are now one index earlier.
 		 */
 		public function removeItemAt( index:int ):*
 		{
-			if( index < 0 || index >= length )
+			if ( index < 0 || index >= length )
 			{
 				throw new RangeError( OUT_OF_BOUNDS_MESSAGE );
 			}
-
+			
 			var removed:* = _source.splice( index, 1 )[ 0 ];
 			internalDispatchEvent( CollectionEventKind.REMOVE, removed, index );
 			return removed;
 		}
-
+		
 		/**
 		 * Remove all items from the ArrayCollection.
 		 */
 		public function removeAll():void
 		{
-			if( length > 0 )
+			if ( length > 0 )
 			{
 				clearSource();
 				internalDispatchEvent( CollectionEventKind.RESET );
 			}
 		}
-
+		
 		/**
 		 * Remove all items from the ArrayCollection without dispatching a RESET event.
 		 */
@@ -169,7 +174,7 @@ package org.igniterealtime.xiff.collections
 		{
 			_source.splice( 0, length );
 		}
-
+		
 		/**
 		 * Returns whether the ArrayCollection contains the specified item.
 		 */
@@ -177,7 +182,7 @@ package org.igniterealtime.xiff.collections
 		{
 			return getItemIndex( item ) != -1;
 		}
-
+		
 		/**
 		 * Notifies the view that an item has been updated.
 		 */
@@ -185,7 +190,7 @@ package org.igniterealtime.xiff.collections
 		{
 			internalDispatchEvent( CollectionEventKind.UPDATE, item );
 		}
-
+		
 		/**
 		 * Return an Array that is populated in the same order as the ArrayCollection.
 		 */
@@ -193,18 +198,22 @@ package org.igniterealtime.xiff.collections
 		{
 			return _source.concat();
 		}
-
+		
 		/**
 		 * Pretty prints the contents of the ArrayCollection to a string and returns it.
 		 */
 		override public function toString():String
 		{
-			if( _source )
+			if ( _source )
+			{
 				return _source.toString();
+			}
 			else
+			{
 				return super.toString();
+			}
 		}
-
+		
 		/**
 		 * Dispatches a collection event with the specified information.
 		 */
@@ -216,6 +225,6 @@ package org.igniterealtime.xiff.collections
 			event.location = location;
 			dispatchEvent( event );
 		}
-
+		
 	}
 }
