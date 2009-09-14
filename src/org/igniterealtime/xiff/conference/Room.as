@@ -179,6 +179,13 @@ package org.igniterealtime.xiff.conference
 	 */
 	[Event( name="configureForm",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
+	 * Dispatched when a room configuration form is complete.
+	 * 
+	 * @see #configure
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 */
+	[Event(name="configureFormComplete", type="org.igniterealtime.xiff.events.RoomEvent")]
+	/**
 	 * Dispatched when an invite to this room has been declined by the invitee. The <code>RoomEvent</code>
 	 * <code>data</code> property that has the following attributes:
 	 *
@@ -377,8 +384,11 @@ package org.igniterealtime.xiff.conference
 			}
 			form.type = FormExtension.SUBMIT_TYPE;
 			owner.addExtension( form );
-
+			
+			iq.callbackScope = this;
+			iq.callbackName = "finish_configure";
 			iq.addExtension( owner );
+			
 			_connection.send( iq );
 		}
 
@@ -425,6 +435,23 @@ package org.igniterealtime.xiff.conference
 
 			iq.addExtension( owner );
 			_connection.send( iq );
+		}
+		
+		/**
+		 * @private
+		 *  
+		 * IQ callback when configuration is complete
+		 */
+		public function finish_configure( iq:IQ ):void
+		{
+			if( iq.type == IQ.ERROR_TYPE )
+			{
+				finish_admin( iq );
+				return;
+			}
+			
+        	var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM_COMPLETE );
+        	dispatchEvent( event );
 		}
 
 		/**

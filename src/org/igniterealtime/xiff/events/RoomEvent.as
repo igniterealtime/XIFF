@@ -34,6 +34,8 @@ package org.igniterealtime.xiff.events
 		public static const BANNED_ERROR:String = "bannedError";
 
 		public static const CONFIGURE_ROOM:String = "configureForm";
+		
+		public static const CONFIGURE_ROOM_COMPLETE:String = "configureFormComplete";
 
 		public static const DECLINED:String = "declined";
 
