@@ -151,6 +151,12 @@ package org.igniterealtime.xiff.conference
 	 */
 	[Event( name="userBanned",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
+	 * Dispatched when a user's presence changes.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_PRESENCE_CHANGE
+	 */
+	[Event( name="userPresenceChange",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
 	 * Dispatched when the user's preferred nickname already exists in the room.	The
 	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname
 	 * already existing in the room.
@@ -1014,6 +1020,12 @@ package org.igniterealtime.xiff.conference
 					occupant.affiliation = item.affiliation;
 					occupant.role = item.role;
 					occupant.show = aPresence.show;
+					
+					// Notify listeners that a user's presence has been updated
+					roomEvent = new RoomEvent( RoomEvent.USER_PRESENCE_CHANGE );
+					roomEvent.nickname = userNickname;
+					roomEvent.data = aPresence;
+					dispatchEvent( roomEvent );
 				}
 			}
 			else if ( aPresence.type != Presence.UNAVAILABLE_TYPE )
