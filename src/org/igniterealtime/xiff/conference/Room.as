@@ -768,7 +768,12 @@ package org.igniterealtime.xiff.conference
 								roomEvent.data = form;
 								dispatchEvent( roomEvent );
 							}
-
+						}
+						else if ( msg.type == Message.CHAT_TYPE )
+						{
+							roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
+							roomEvent.data = msg;
+							dispatchEvent( roomEvent );
 						}
 					}
 					else if ( isThisUser( msg.to.unescaped ) && msg.type == Message.CHAT_TYPE )
