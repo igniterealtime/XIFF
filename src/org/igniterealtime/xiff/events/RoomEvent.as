@@ -68,6 +68,8 @@ package org.igniterealtime.xiff.events
 		public static const USER_JOIN:String = "userJoin";
 
 		public static const USER_KICKED:String = "userKicked";
+		
+		public static const USER_PRESENCE_CHANGE:String = "userPresenceChange";
 
 		private var _data:*;
 
