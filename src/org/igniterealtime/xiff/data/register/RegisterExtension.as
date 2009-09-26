@@ -29,9 +29,9 @@ package org.igniterealtime.xiff.data.register
 		
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
-	 * Send an empty IQ.GET_TYPE packet with this extension and the return will either be a conflict,
+	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be a conflict,
 	 * or the fields you will need to fill out.
-	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in 
+	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in 
 	 * getRequiredFieldNames set on this extension.
 	 * Check the result and re-establish the connection with the new account.
 	 *

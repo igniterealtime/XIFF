@@ -31,33 +31,33 @@ package org.igniterealtime.xiff.data.muc
 	 * multi-user conferencing extensions. The constants include the following for
 	 * conference room affiliations:
 	 * <ul>
-	 * <li>ADMIN_AFFILIATION</li>
-	 * <li>MEMBER_AFFILIATION</li>
-	 * <li>NO_AFFILIATION</li>
-	 * <li>OUTCAST_AFFILIATION</li>
-	 * <li>OWNER_AFFILIATION</li>
+	 * <li>AFFILIATION_ADMIN</li>
+	 * <li>AFFILIATION_MEMBER</li>
+	 * <li>AFFILIATION_NONE</li>
+	 * <li>AFFILIATION_OUTCAST</li>
+	 * <li>AFFILIATION_OWNER</li>
 	 * </ul>
 	 *
 	 * And the following constants for room roles:
 	 * <ul>
-	 * <li>MODERATOR_ROLE</li>
-	 * <li>NO_ROLE</li>
-	 * <li>PARTICIPANT_ROLE</li>
-	 * <li>VISITOR_ROLE</li>
+	 * <li>ROLE_MODERATOR</li>
+	 * <li>ROLE_NONE</li>
+	 * <li>ROLE_PARTICIPANT</li>
+	 * <li>ROLE_VISITOR</li>
 	 * </ul>
 	 */
 	public class MUC
 	{
-		public static const ADMIN_AFFILIATION:String = "admin";
-		public static const MEMBER_AFFILIATION:String = "member";
-		public static const NO_AFFILIATION:String = "none";
-		public static const OUTCAST_AFFILIATION:String = "outcast";
-		public static const OWNER_AFFILIATION:String = "owner";
+		public static const AFFILIATION_ADMIN:String = "admin";
+		public static const AFFILIATION_MEMBER:String = "member";
+		public static const AFFILIATION_NONE:String = "none";
+		public static const AFFILIATION_OUTCAST:String = "outcast";
+		public static const AFFILIATION_OWNER:String = "owner";
 	
-		public static const MODERATOR_ROLE:String = "moderator";
-		public static const NO_ROLE:String = "none";
-		public static const PARTICIPANT_ROLE:String = "participant";
-		public static const VISITOR_ROLE:String = "visitor";
+		public static const ROLE_MODERATOR:String = "moderator";
+		public static const ROLE_NONE:String = "none";
+		public static const ROLE_PARTICIPANT:String = "participant";
+		public static const ROLE_VISITOR:String = "visitor";
 	
 		private static var staticDependencies:Array = [
 			ExtensionClassRegistry, 

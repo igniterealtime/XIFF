@@ -217,20 +217,20 @@ package org.igniterealtime.xiff.data
 		 * <b>IQ</b>
 		 * <ul>
 		 * <li>IQ.TYPE_ERROR</li>
-		 * <li>IQ.GET_TYPE</li>
-		 * <li>IQ.RESULT_TYPE</li>
-		 * <li>IQ.SET_TYPE</li>
+		 * <li>IQ.TYPE_GET</li>
+		 * <li>IQ.TYPE_RESULT</li>
+		 * <li>IQ.TYPE_SET</li>
 		 * </ul>
 		 *
 		 * <b>Presence</b>
 		 * <ul>
 		 * <li>Presence.TYPE_ERROR</li>
-		 * <li>Presence.PROBE_TYPE</li>
-		 * <li>Presence.SUBSCRIBE_TYPE</li>
-		 * <li>Presence.SUBSCRIBED_TYPE</li>
-		 * <li>Presence.UNAVAILABLE_TYPE</li>
-		 * <li>Presence.UNSUBSCRIBE_TYPE</li>
-		 * <li>Presence.UNSUBSCRIBED_TYPE</li>
+		 * <li>Presence.TYPE_PROBE</li>
+		 * <li>Presence.TYPE_SUBSCRIBE</li>
+		 * <li>Presence.TYPE_SUBSCRIBED</li>
+		 * <li>Presence.TYPE_UNAVAILABLE</li>
+		 * <li>Presence.TYPE_UNSUBSCRIBE</li>
+		 * <li>Presence.TYPE_UNSUBSCRIBED</li>
 		 * </ul>
 		 *
 		 * <b>Message</b>

@@ -74,7 +74,7 @@ package org.igniterealtime.xiff.core
 
 		public function getNodeInfo( service:EscapedJID, node:String, callback:String, scope:Object ):void
 		{
-			var iq:IQ = new IQ( service, IQ.GET_TYPE );
+			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.getNode());
 			ext.service = service;
 			ext.serviceNode = node;
@@ -86,7 +86,7 @@ package org.igniterealtime.xiff.core
 
 		public function getNodeItems( service:EscapedJID, node:String, callback:String, scope:Object ):void
 		{
-			var iq:IQ = new IQ( service, IQ.GET_TYPE );
+			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.getNode());
 			ext.service = service;
 			ext.serviceNode = node;
@@ -107,7 +107,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function getServiceInfo( server:EscapedJID, callback:String, scope:Object ):void
 		{
-			var iq:IQ = new IQ( server, IQ.GET_TYPE );
+			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new InfoDiscoExtension( iq.getNode() ) );
@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function getServiceItems( server:EscapedJID, callback:String, scope:Object ):void
 		{
-			var iq:IQ = new IQ( server, IQ.GET_TYPE );
+			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new ItemDiscoExtension( iq.getNode()));
@@ -142,7 +142,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function browseItem( id:EscapedJID, callback:String, scope:Object ):void
 		{
-			var iq:IQ = new IQ( id, IQ.GET_TYPE );
+			var iq:IQ = new IQ( id, IQ.TYPE_GET );
 			iq.callbackName = callback;
 			iq.callbackScope = scope;
 			iq.addExtension( new BrowseExtension( iq.getNode()));

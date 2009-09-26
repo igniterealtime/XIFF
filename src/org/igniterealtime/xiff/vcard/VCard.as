@@ -374,7 +374,7 @@ package org.igniterealtime.xiff.vcard
 			var vcard:VCard = req.card;
 			var user:RosterItemVO = vcard.contact;
 
-			var iq:IQ = new IQ( user.jid.escaped, IQ.GET_TYPE );
+			var iq:IQ = new IQ( user.jid.escaped, IQ.TYPE_GET );
 			vcard.jid = user.jid;
 
 			iq.callbackName = "handleVCard";
@@ -596,7 +596,7 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function saveVCard( con:XMPPConnection, user:RosterItemVO ):void
 		{
-			var iq:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "save_vcard_" ),
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "save_vcard_" ),
 								null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardExtNode:XML = vcardExt.getNode() as XML;

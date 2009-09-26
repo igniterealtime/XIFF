@@ -42,13 +42,31 @@ package org.igniterealtime.xiff.data
 
 		private var myQueryFields:Array;
 
+		/**
+		 * The stanza reports an error that has occurred
+		 * regarding processing or delivery of a previously-sent get or
+		 * set request.
+		 * @see http://tools.ietf.org/html/draft-ietf-xmpp-3920bis-00#section-9.3
+		 */
 		public static const TYPE_ERROR:String = "error";
 
-		public static const GET_TYPE:String = "get";
+		/**
+		 * The stanza requests information, inquires about what
+		 * data is needed in order to complete further operations, etc.
+		 */
+		public static const TYPE_GET:String = "get";
 
-		public static const RESULT_TYPE:String = "result";
+		/**
+		 * The stanza is a response to a successful get or set request.
+		 */
+		public static const TYPE_RESULT:String = "result";
 
-		public static const SET_TYPE:String = "set";
+		/**
+		 * The stanza provides data that is needed for an
+		 * operation to be completed, sets new values, replaces existing
+		 * values, etc.
+		 */
+		public static const TYPE_SET:String = "set";
 
 		/**
 		 * A class for abstraction and encapsulation of IQ (info-query) data.

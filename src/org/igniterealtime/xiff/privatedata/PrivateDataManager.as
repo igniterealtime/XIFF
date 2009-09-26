@@ -57,7 +57,7 @@ package org.igniterealtime.xiff.privatedata
 		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void 
 		{
 			var packetFilter:IPacketFilter = new CallbackPacketFilter(callback);
-			var privateDataGet:IQ = new IQ(null, IQ.GET_TYPE, null, "accept", packetFilter);
+			var privateDataGet:IQ = new IQ(null, IQ.TYPE_GET, null, "accept", packetFilter);
 			privateDataGet.addExtension(new PrivateDataExtension(elementName, elementNamespace));
 			
 			_connection.send(privateDataGet);
@@ -65,7 +65,7 @@ package org.igniterealtime.xiff.privatedata
 		
 		public function setPrivateData(elementName:String, elementNamespace:String, payload:IPrivatePayload):void 
 		{
-			var privateDataSet:IQ = new IQ(null, IQ.SET_TYPE);
+			var privateDataSet:IQ = new IQ(null, IQ.TYPE_SET);
 			privateDataSet.addExtension(new PrivateDataExtension(elementName, elementNamespace, payload));
 			
 			_connection.send(privateDataSet);

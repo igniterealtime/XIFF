@@ -24,7 +24,6 @@
 package org.igniterealtime.xiff.data
 {
 
-	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
@@ -34,19 +33,64 @@ package org.igniterealtime.xiff.data
 	 */
 	public class Presence extends XMPPStanza implements ISerializable
 	{
-		// Static constants for specific type strings
+		/**
+		 * An error has occurred regarding processing of a
+		 * previously-sent presence stanza; if the presence stanza is of type
+		 * "error", it MUST include an error child element.
+		 */
 		public static const TYPE_ERROR:String = "error";
-		public static const PROBE_TYPE:String = "probe";
-		public static const SUBSCRIBE_TYPE:String = "subscribe";
-		public static const SUBSCRIBED_TYPE:String = "subscribed";
-		public static const UNAVAILABLE_TYPE:String = "unavailable";
-		public static const UNSUBSCRIBE_TYPE:String = "unsubscribe";
-		public static const UNSUBSCRIBED_TYPE:String = "unsubscribed";
-		
-		// Static constants for show values
+
+		/**
+		 * A request for an entity's current presence; SHOULD be
+		 * generated only by a server on behalf of a user.
+		 */
+		public static const TYPE_PROBE:String = "probe";
+
+		/**
+		 * The sender wishes to subscribe to the recipient's
+		 * presence.
+		 */
+		public static const TYPE_SUBSCRIBE:String = "subscribe";
+
+		/**
+		 * The sender has allowed the recipient to receive their presence.
+		 */
+		public static const TYPE_SUBSCRIBED:String = "subscribed";
+
+		/**
+		 * Signals that the entity is no longer available for communication.
+		 */
+		public static const TYPE_UNAVAILABLE:String = "unavailable";
+
+		/**
+		 *  The sender is unsubscribing from the receiver's presence.
+		 */
+		public static const TYPE_UNSUBSCRIBE:String = "unsubscribe";
+
+		/**
+		 * The subscription request has been denied or a
+		 * previously-granted subscription has been cancelled.
+		 */
+		public static const TYPE_UNSUBSCRIBED:String = "unsubscribed";
+
+		/**
+		 * The entity or resource is temporarily away.
+		 */
 		public static const SHOW_AWAY:String = "away";
+
+		/**
+		 * The entity or resource is actively interested in chatting.
+		 */
 		public static const SHOW_CHAT:String = "chat";
+
+		/**
+		 * The entity or resource is busy (dnd = "Do Not Disturb").
+		 */
 		public static const SHOW_DND:String = "dnd";
+
+		/**
+		 * The entity or resource is away for an extended period (xa = "eXtended Away").
+		 */
 		public static const SHOW_XA:String = "xa";
 	
 		// Private node references for property lookups

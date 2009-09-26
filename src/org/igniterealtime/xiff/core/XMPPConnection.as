@@ -407,7 +407,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function sendKeepAlive():void
 		{
-			var ping:IQ = new IQ(new EscapedJID(server), IQ.GET_TYPE);
+			var ping:IQ = new IQ(new EscapedJID(server), IQ.TYPE_GET);
 			ping.addExtension(new PingExtension());
 			send(ping);
 		}
@@ -442,7 +442,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function getRegistrationFields():void
 		{
-			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.GET_TYPE,
+			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_GET,
 									 XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 
@@ -460,7 +460,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
-			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE,
+			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
 									 XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 
@@ -485,7 +485,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function changePassword( newPassword:String ):void
 		{
-			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.SET_TYPE,
+			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
 										XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 
@@ -542,7 +542,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function changePassword_result( resultIQ:IQ ):void
 		{
-			if ( resultIQ.type == IQ.RESULT_TYPE )
+			if ( resultIQ.type == IQ.TYPE_RESULT )
 			{
 				var event:ChangePasswordSuccessEvent = new ChangePasswordSuccessEvent();
 				dispatchEvent(event);
@@ -582,7 +582,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function sendRegistrationFields_result( resultIQ:IQ ):void
 		{
-			if ( resultIQ.type == IQ.RESULT_TYPE )
+			if ( resultIQ.type == IQ.TYPE_RESULT )
 			{
 				var event:RegistrationSuccessEvent = new RegistrationSuccessEvent();
 				dispatchEvent( event );
@@ -1174,7 +1174,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function bindConnection():void
 		{
-			var bindIQ:IQ = new IQ(null, IQ.SET_TYPE);
+			var bindIQ:IQ = new IQ(null, IQ.TYPE_SET);
 
 			var bindExt:BindExtension = new BindExtension();
 			if (resource)
@@ -1211,7 +1211,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function establishSession():void
 		{
-			var sessionIQ:IQ = new IQ(null, IQ.SET_TYPE);
+			var sessionIQ:IQ = new IQ(null, IQ.TYPE_SET);
 
 			sessionIQ.addExtension(new SessionExtension());
 

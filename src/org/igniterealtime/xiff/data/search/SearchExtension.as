@@ -33,9 +33,9 @@ package org.igniterealtime.xiff.data.search{
 		
 	/**
 	 * Implements jabber:iq:search namespace.  Use this to perform user searches.
-	 * Send an empty IQ.GET_TYPE packet with this extension and the return will either be 
+	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be 
 	 * a conflict, or the fields you will need to fill out.  
-	 * Send a IQ.SET_TYPE packet to the server and with the fields that are listed in 
+	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in 
 	 * getRequiredFieldNames set on this extension.  
 	 * Check the result and re-establish the connection with the new account.
 	 * @see http://xmpp.org/extensions/xep-0055.html

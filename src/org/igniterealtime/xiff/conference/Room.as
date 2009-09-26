@@ -209,23 +209,15 @@ package org.igniterealtime.xiff.conference
 	 */
 	public class Room extends ArrayCollection
 	{
-		public static const ADMIN_AFFILIATION:String = MUC.ADMIN_AFFILIATION;
-
-		public static const MEMBER_AFFILIATION:String = MUC.MEMBER_AFFILIATION;
-
-		public static const MODERATOR_ROLE:String = MUC.MODERATOR_ROLE;
-
-		public static const NO_AFFILIATION:String = MUC.NO_AFFILIATION;
-
-		public static const NO_ROLE:String = MUC.NO_ROLE;
-
-		public static const OUTCAST_AFFILIATION:String = MUC.OUTCAST_AFFILIATION;
-
-		public static const OWNER_AFFILIATION:String = MUC.OWNER_AFFILIATION;
-
-		public static const PARTICIPANT_ROLE:String = MUC.PARTICIPANT_ROLE;
-
-		public static const VISITOR_ROLE:String = MUC.VISITOR_ROLE;
+		public static const AFFILIATION_ADMIN:String = MUC.AFFILIATION_ADMIN;
+		public static const AFFILIATION_MEMBER:String = MUC.AFFILIATION_MEMBER;
+		public static const AFFILIATION_NONE:String = MUC.AFFILIATION_NONE;
+		public static const AFFILIATION_OUTCAST:String = MUC.AFFILIATION_OUTCAST;
+		public static const AFFILIATION_OWNER:String = MUC.AFFILIATION_OWNER;
+		public static const ROLE_MODERATOR:String = MUC.ROLE_MODERATOR;
+		public static const ROLE_NONE:String = MUC.ROLE_NONE;
+		public static const ROLE_PARTICIPANT:String = MUC.ROLE_PARTICIPANT;
+		public static const ROLE_VISITOR:String = MUC.ROLE_VISITOR;
 
 		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 
@@ -281,7 +273,7 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Allow a previously banned JIDs to enter this room.	This is the same as:
-		 * <code>Room.grant(NO_AFFILIATION, jid)</code>
+		 * <code>Room.grant(AFFILIATION_NONE, jid)</code>
 		 *
 		 * <p>If the process could not be completed, the room will dispatch the event
 		 * <code>RoomEvent.ADMIN_ERROR</code></p>
@@ -292,7 +284,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function allow( jids:Array ):void
 		{
-			grant( Room.NO_AFFILIATION, jids );
+			grant( Room.AFFILIATION_NONE, jids );
 		}
 
 		/**
@@ -305,7 +297,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function ban( jids:Array ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var adminExt:MUCAdminExtension = new MUCAdminExtension();
 
 			iq.callbackScope = this;
@@ -313,7 +305,7 @@ package org.igniterealtime.xiff.conference
 
 			for each ( var banJID:UnescapedJID in jids )
 			{
-				adminExt.addItem( Room.OUTCAST_AFFILIATION, null, null, banJID.escaped,
+				adminExt.addItem( Room.AFFILIATION_OUTCAST, null, null, banJID.escaped,
 								  null, null );
 			}
 
@@ -334,7 +326,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function cancelConfiguration():void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension = new FormExtension();
 
@@ -374,7 +366,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function configure( fieldmap:Object ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension;
 
@@ -433,7 +425,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function destroy( reason:String, alternateJID:UnescapedJID = null, callback:Function = null ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
 			iq.callback = callback;
@@ -509,16 +501,16 @@ package org.igniterealtime.xiff.conference
 		 * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.
 		 *
 		 * @param	affiliation Use one of the
-		 * following affiliations: <code>Room.MEMBER_AFFILIATION</code>,
-		 * <code>Room.ADMIN_AFFILIATION</code>,
-		 * <code>Room.OWNER_AFFILIATION</code>
+		 * following affiliations: <code>Room.AFFILIATION_MEMBER</code>,
+		 * <code>Room.AFFILIATION_ADMIN</code>,
+		 * <code>Room.AFFILIATION_OWNER</code>
 		 * @param	jids An array of UnescapedJIDs to grant these permissions to
 		 * @see	#revoke
 		 * @see	#allow
 		 */
 		public function grant( affiliation:String, jids:Array ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
 			iq.callbackScope = this;
@@ -646,10 +638,10 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE, XMPPStanza.generateID( "kick_occupant_" ));
+				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ));
 				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
-				//ext.addItem(null, MUC.NO_ROLE, null, null, null, reason);
-				ext.addItem( null, MUC.NO_ROLE, occupantNick, null, null, reason );
+				//ext.addItem(null, MUC.ROLE_NONE, null, null, null, reason);
+				ext.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
 				tempIQ.addExtension( ext );
 				_connection.send( tempIQ );
 			}
@@ -664,7 +656,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var leavePresence:Presence = new Presence( userJID.escaped, null,
-														   Presence.UNAVAILABLE_TYPE );
+														   Presence.TYPE_UNAVAILABLE );
 				_connection.send( leavePresence );
 
 				// Clear out the roster items
@@ -699,7 +691,7 @@ package org.igniterealtime.xiff.conference
 		private function finish_requestAffiliates( iq:IQ ):void
 		{
 			finish_admin( iq );
-			if ( iq.type == IQ.RESULT_TYPE )
+			if ( iq.type == IQ.TYPE_RESULT )
 			{
 				var owner:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
 				var items:Array = owner.getAllItems();
@@ -888,7 +880,7 @@ package org.igniterealtime.xiff.conference
 
 							updateRoomRoster( presence );
 
-							if ( presence.type == Presence.UNAVAILABLE_TYPE && isActive &&
+							if ( presence.type == Presence.TYPE_UNAVAILABLE && isActive &&
 								isThisUser( presence.from.unescaped ))
 							{
 								//trace("Room: becoming inactive: " + presence.getNode());
@@ -950,7 +942,7 @@ package org.igniterealtime.xiff.conference
 				// messages, or provide 2 events "beginConfiguration" and "endConfiguration"
 				// so the application can decide to block configuration messages
 
-				var iq:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE );
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 				var owner:MUCOwnerExtension = new MUCOwnerExtension();
 				var form:FormExtension = new FormExtension();
 
@@ -982,7 +974,7 @@ package org.igniterealtime.xiff.conference
 				_role = item.role;
 				dispatchEvent( new Event( "roleSet" )); //update bindings
 
-				if ( !isActive && aPresence.type != Presence.UNAVAILABLE_TYPE )
+				if ( !isActive && aPresence.type != Presence.TYPE_UNAVAILABLE )
 				{
 					setActive( true );
 					roomEvent = new RoomEvent( RoomEvent.ROOM_JOIN );
@@ -995,7 +987,7 @@ package org.igniterealtime.xiff.conference
 			//if we already know about this occupant, we're either being told about them leaving, or about a presence update
 			if ( occupant )
 			{
-				if ( aPresence.type == Presence.UNAVAILABLE_TYPE )
+				if ( aPresence.type == Presence.TYPE_UNAVAILABLE )
 				{
 					removeItemAt( getItemIndex( occupant ));
 
@@ -1028,7 +1020,7 @@ package org.igniterealtime.xiff.conference
 					dispatchEvent( roomEvent );
 				}
 			}
-			else if ( aPresence.type != Presence.UNAVAILABLE_TYPE )
+			else if ( aPresence.type != Presence.TYPE_UNAVAILABLE )
 			{
 				// We didn't know about this occupant yet, so we add them, then let everyone know that we did.
 				addItem( new RoomOccupant( userNickname, aPresence.show, item.affiliation,
@@ -1047,18 +1039,18 @@ package org.igniterealtime.xiff.conference
 		 * This will either dispatch the event <code>RoomEvent.AFFILIATIONS</code> or
 		 * <code>RoomEvent.ADMIN_ERROR</code> depending on the result of the request.
 		 *
-		 * @param	affiliation Use one of the following affiliations: <code>Room.NO_AFFILIATION</code>,
-		 * <code>Room.OUTCAST_AFFILIATION</code>,
-		 * <code>Room.MEMBER_AFFILIATION</code>,
-		 * <code>Room.ADMIN_AFFILIATION</code>,
-		 * <code>Room.OWNER_AFFILIATION</code>
+		 * @param	affiliation Use one of the following affiliations: <code>Room.AFFILIATION_NONE</code>,
+		 * <code>Room.AFFILIATION_OUTCAST</code>,
+		 * <code>Room.AFFILIATION_MEMBER</code>,
+		 * <code>Room.AFFILIATION_ADMIN</code>,
+		 * <code>Room.AFFILIATION_OWNER</code>
 		 * @see	#revoke
 		 * @see	#grant
 		 * @see	#affiliations
 		 */
 		public function requestAffiliations( affiliation:String ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
 			iq.callbackScope = this;
@@ -1084,7 +1076,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function requestConfiguration():void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.GET_TYPE );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
 			iq.callbackScope = this;
@@ -1096,7 +1088,7 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Revokes all affiliations from the JIDs. This is the same as:
-		 * <code>grant( Room.NO_AFFILIATION, jids )</code>
+		 * <code>grant( Room.AFFILIATION_NONE, jids )</code>
 		 *
 		 * <p>If the process could not be completed, the room will dispatch the event
 		 * <code>RoomEvent.ADMIN_ERROR</code>. Note: if the JID is banned from this room,
@@ -1108,7 +1100,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function revoke( jids:Array ):void
 		{
-			grant( Room.NO_AFFILIATION, jids );
+			grant( Room.AFFILIATION_NONE, jids );
 		}
 
 		/**
@@ -1172,9 +1164,9 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.SET_TYPE, XMPPStanza.generateID( "voice_" ));
+				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ));
 				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
-				ext.addItem( null, voice ? MUC.PARTICIPANT_ROLE : MUC.VISITOR_ROLE );
+				ext.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR );
 				tempIQ.addExtension( ext );
 				_connection.send( tempIQ );
 			}

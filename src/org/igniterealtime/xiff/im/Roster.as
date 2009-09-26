@@ -183,7 +183,7 @@ package org.igniterealtime.xiff.im
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
 
-			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "add_user_" ),
+			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "add_user_" ),
 									callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
@@ -217,7 +217,7 @@ package org.igniterealtime.xiff.im
 		 */
 		public function denySubscription( tojid:UnescapedJID ):void
 		{
-			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.UNSUBSCRIBED_TYPE );
+			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_UNSUBSCRIBED );
 			_connection.send( tempPresence );
 		}
 
@@ -229,7 +229,7 @@ package org.igniterealtime.xiff.im
 		 */
 		public function fetchRoster():void
 		{
-			var tempIQ:IQ = new IQ( null, IQ.GET_TYPE, XMPPStanza.generateID( "roster_" ),
+			var tempIQ:IQ = new IQ( null, IQ.TYPE_GET, XMPPStanza.generateID( "roster_" ),
 									"fetchRoster_result", this );
 			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
 			_connection.send( tempIQ );
@@ -324,7 +324,7 @@ package org.igniterealtime.xiff.im
 		 */
 		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
 		{
-			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.SUBSCRIBED_TYPE );
+			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_SUBSCRIBED );
 			_connection.send( tempPresence );
 
 			// Request a return subscription
@@ -345,7 +345,7 @@ package org.igniterealtime.xiff.im
 		{
 			if ( contains( rosterItem ) )
 			{
-				var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "remove_user_" ),
+				var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "remove_user_" ),
 										"unsubscribe_result", this );
 				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 				ext.addItem( new EscapedJID( rosterItem.jid.bareJID ), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
@@ -372,14 +372,14 @@ package org.igniterealtime.xiff.im
 			var presence:Presence;
 			if ( isResponse )
 			{
-				presence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
+				presence = new Presence( id.escaped, null, Presence.TYPE_SUBSCRIBE );
 				_connection.send( presence );
 				return;
 			}
 			// Only request for items in the roster
 			if ( contains( RosterItemVO.get( id, false ) ) )
 			{
-				presence = new Presence( id.escaped, null, Presence.SUBSCRIBE_TYPE );
+				presence = new Presence( id.escaped, null, Presence.TYPE_SUBSCRIBE );
 				_connection.send( presence );
 			}
 		}
@@ -589,15 +589,15 @@ package org.igniterealtime.xiff.im
 
 				switch ( type )
 				{
-					case Presence.SUBSCRIBE_TYPE:
+					case Presence.TYPE_SUBSCRIBE:
 						rosterEvent = new RosterEvent( RosterEvent.SUBSCRIPTION_REQUEST );
 						break;
 
-					case Presence.UNSUBSCRIBED_TYPE:
+					case Presence.TYPE_UNSUBSCRIBED:
 						rosterEvent = new RosterEvent( RosterEvent.SUBSCRIPTION_DENIAL );
 						break;
 
-					case Presence.UNAVAILABLE_TYPE:
+					case Presence.TYPE_UNAVAILABLE:
 						rosterEvent = new RosterEvent( RosterEvent.USER_UNAVAILABLE );
 
 						var unavailableItem:RosterItemVO = RosterItemVO.get( aPresence.from.unescaped,
@@ -673,7 +673,7 @@ package org.igniterealtime.xiff.im
 		 */
 		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
 		{
-			var tempIQ:IQ = new IQ( null, IQ.SET_TYPE, XMPPStanza.generateID( "update_contact_" ) );
+			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "update_contact_" ) );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 
 			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName,
@@ -693,7 +693,7 @@ package org.igniterealtime.xiff.im
 				{
 					item.online = true;
 				}
-				else if ( presence.type == Presence.UNAVAILABLE_TYPE )
+				else if ( presence.type == Presence.TYPE_UNAVAILABLE )
 				{
 					item.online = false;
 				}

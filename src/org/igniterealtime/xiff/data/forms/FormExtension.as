@@ -49,7 +49,7 @@ package org.igniterealtime.xiff.data.forms
 	    public static const FIELD_TYPE_TEXT_SINGLE:String = "text-single";
 	
 	    public static const REQUEST_TYPE:String = "form";
-	    public static const RESULT_TYPE:String = "result";
+	    public static const TYPE_RESULT:String = "result";
 	    public static const SUBMIT_TYPE:String = "submit";
 	    public static const CANCEL_TYPE:String = "cancel";
 	
@@ -323,7 +323,7 @@ package org.igniterealtime.xiff.data.forms
 	     * The type of form.  May be one of the following:
 	     *
 	     * <code>FormExtension.REQUEST_TYPE</code>
-	     * <code>FormExtension.RESULT_TYPE</code>
+	     * <code>FormExtension.TYPE_RESULT</code>
 	     * <code>FormExtension.SUBMIT_TYPE</code>
 	     * <code>FormExtension.CANCEL_TYPE</code>
 	     *
