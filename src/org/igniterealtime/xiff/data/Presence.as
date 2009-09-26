@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data
 	public class Presence extends XMPPStanza implements ISerializable
 	{
 		// Static constants for specific type strings
-		public static const ERROR_TYPE:String = "error";
+		public static const TYPE_ERROR:String = "error";
 		public static const PROBE_TYPE:String = "probe";
 		public static const SUBSCRIBE_TYPE:String = "subscribe";
 		public static const SUBSCRIBED_TYPE:String = "subscribed";

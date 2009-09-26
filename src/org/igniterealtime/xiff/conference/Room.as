@@ -356,7 +356,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, null,
-													   null, Message.GROUPCHAT_TYPE,
+													   null, Message.TYPE_GROUPCHAT,
 													   newSubject );
 				_connection.send( tempMessage );
 			}
@@ -450,7 +450,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function finish_configure( iq:IQ ):void
 		{
-			if( iq.type == IQ.ERROR_TYPE )
+			if( iq.type == IQ.TYPE_ERROR )
 			{
 				finish_admin( iq );
 				return;
@@ -467,7 +467,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function finish_requestConfiguration( iq:IQ ):void
 		{
-			if ( iq.type == IQ.ERROR_TYPE )
+			if ( iq.type == IQ.TYPE_ERROR )
 			{
 				finish_admin( iq );
 				return;
@@ -496,7 +496,7 @@ package org.igniterealtime.xiff.conference
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
 			var tempMessage:Message = new Message( roomJID.escaped, null, body, htmlBody,
-												   Message.GROUPCHAT_TYPE );
+												   Message.TYPE_GROUPCHAT );
 			return tempMessage;
 		}
 
@@ -681,7 +681,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function finish_admin( iq:IQ ):void
 		{
-			if ( iq.type == IQ.ERROR_TYPE )
+			if ( iq.type == IQ.TYPE_ERROR )
 			{
 				var event:RoomEvent = new RoomEvent( RoomEvent.ADMIN_ERROR );
 				event.errorCondition = iq.errorCondition;
@@ -742,7 +742,7 @@ package org.igniterealtime.xiff.conference
 					if ( isThisRoom( msg.from.unescaped ))
 					{
 						var roomEvent:RoomEvent;
-						if ( msg.type == Message.GROUPCHAT_TYPE )
+						if ( msg.type == Message.TYPE_GROUPCHAT )
 						{
 							// Check for a subject change
 							if ( msg.subject != null )
@@ -765,7 +765,7 @@ package org.igniterealtime.xiff.conference
 								}
 							}
 						}
-						else if ( msg.type == Message.NORMAL_TYPE )
+						else if ( msg.type == Message.TYPE_NORMAL )
 						{
 							var form:Array = msg.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 							if ( form )
@@ -775,14 +775,14 @@ package org.igniterealtime.xiff.conference
 								dispatchEvent( roomEvent );
 							}
 						}
-						else if ( msg.type == Message.CHAT_TYPE )
+						else if ( msg.type == Message.TYPE_CHAT )
 						{
 							roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
 							roomEvent.data = msg;
 							dispatchEvent( roomEvent );
 						}
 					}
-					else if ( isThisUser( msg.to.unescaped ) && msg.type == Message.CHAT_TYPE )
+					else if ( isThisUser( msg.to.unescaped ) && msg.type == Message.TYPE_CHAT )
 					{
 						// It could be a private message via the conference
 						roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
@@ -812,7 +812,7 @@ package org.igniterealtime.xiff.conference
 					//trace("ROOM presence: " + presence.from + " : " + nickname);
 					for each ( var presence:Presence in eventObj.data )
 					{
-						if ( presence.type == Presence.ERROR_TYPE )
+						if ( presence.type == Presence.TYPE_ERROR )
 						{
 							switch ( presence.errorCode )
 							{
@@ -1122,7 +1122,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var tempMessage:Message = new Message( roomJID.escaped, null, body,
-													   htmlBody, Message.GROUPCHAT_TYPE );
+													   htmlBody, Message.TYPE_GROUPCHAT );
 				_connection.send( tempMessage );
 			}
 		}
@@ -1155,7 +1155,7 @@ package org.igniterealtime.xiff.conference
 			{
 				var tempMessage:Message = new Message( new EscapedJID( roomJID +
 																	   "/" + recipientNickname ),
-													   null, body, htmlBody, Message.CHAT_TYPE );
+													   null, body, htmlBody, Message.TYPE_CHAT );
 				_connection.send( tempMessage );
 			}
 		}

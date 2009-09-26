@@ -370,7 +370,7 @@ package org.igniterealtime.xiff.core
 		 * @example	The following example sends a basic chat message to the user with the
 		 * JID "sideshowbob@springfieldpenitentiary.gov".<br />
 		 * <code>var msg:Message = new Message( "sideshowbob@springfieldpenitentiary.gov", null, "Hi Bob.",
-		 * "<b>Hi Bob.</b>", Message.CHAT_TYPE );
+		 * "<b>Hi Bob.</b>", Message.TYPE_CHAT );
 		 * myXMPPConnection.send( msg );</code>
 		 */
 		public function send( o:XMPPStanza ):void
@@ -825,7 +825,7 @@ package org.igniterealtime.xiff.core
 
 			// If it's an error, handle it
 
-			if ( iq.type == IQ.ERROR_TYPE)
+			if ( iq.type == IQ.TYPE_ERROR)
 			{
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
@@ -880,7 +880,7 @@ package org.igniterealtime.xiff.core
 				throw new SerializationException();
 			}
 			// ADDED in error handling for messages
-			if ( message.type == Message.ERROR_TYPE )
+			if ( message.type == Message.TYPE_ERROR )
 			{
 				var exts:Array = message.getAllExtensions();
 				dispatchError( message.errorCondition, message.errorMessage,

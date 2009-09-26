@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data
 
 		private var myQueryFields:Array;
 
-		public static const ERROR_TYPE:String = "error";
+		public static const TYPE_ERROR:String = "error";
 
 		public static const GET_TYPE:String = "get";
 

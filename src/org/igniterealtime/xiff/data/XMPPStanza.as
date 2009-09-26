@@ -216,7 +216,7 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <b>IQ</b>
 		 * <ul>
-		 * <li>IQ.ERROR_TYPE</li>
+		 * <li>IQ.TYPE_ERROR</li>
 		 * <li>IQ.GET_TYPE</li>
 		 * <li>IQ.RESULT_TYPE</li>
 		 * <li>IQ.SET_TYPE</li>
@@ -224,7 +224,7 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <b>Presence</b>
 		 * <ul>
-		 * <li>Presence.ERROR_TYPE</li>
+		 * <li>Presence.TYPE_ERROR</li>
 		 * <li>Presence.PROBE_TYPE</li>
 		 * <li>Presence.SUBSCRIBE_TYPE</li>
 		 * <li>Presence.SUBSCRIBED_TYPE</li>
@@ -235,11 +235,11 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <b>Message</b>
 		 * <ul>
-		 * <li>Message.CHAT_TYPE</li>
-		 * <li>Message.ERROR_TYPE</li>
-		 * <li>Message.GROUPCHAT_TYPE</li>
-		 * <li>Message.HEADLINE_TYPE</li>
-		 * <li>Message.NORMAL_TYPE</li>
+		 * <li>Message.TYPE_CHAT</li>
+		 * <li>Message.TYPE_ERROR</li>
+		 * <li>Message.TYPE_GROUPCHAT</li>
+		 * <li>Message.TYPE_HEADLINE</li>
+		 * <li>Message.TYPE_NORMAL</li>
 		 * </ul>
 		 *
 		 */

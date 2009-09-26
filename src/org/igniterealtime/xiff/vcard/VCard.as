@@ -392,7 +392,7 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function _vCardSent( resultIQ:IQ ):void
 		{
-			if ( resultIQ.type == IQ.ERROR_TYPE )
+			if ( resultIQ.type == IQ.TYPE_ERROR )
 			{
 				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ resultIQ.to.unescaped.toString()],
 											   true, true ) );
