@@ -1145,7 +1145,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleAuthentication(responseBody:XMLNode):void
 		{
-			var status:Object = auth.handleResponse(0, responseBody);
+			var status:Object = auth.handleResponse(0, XML(responseBody.toString()));
 			if (status.authComplete)
 			{
 				if (status.authSuccess)

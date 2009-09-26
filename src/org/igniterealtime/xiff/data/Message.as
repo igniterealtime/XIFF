@@ -43,6 +43,61 @@ package org.igniterealtime.xiff.data
 		public static const GROUPCHAT_TYPE:String = "groupchat";
 		public static const HEADLINE_TYPE:String = "headline";
 		public static const NORMAL_TYPE:String = "normal";
+		
+		
+		/**
+		 * User is actively participating in the chat session.
+		 */
+		public static const STATE_ACTIVE:String = "active";
+
+		/**
+		 * User is composing a message.
+		 */
+		public static const STATE_COMPOSING:String = "composing";
+
+		/**
+		 * User had been composing but now has stopped.
+		 * Suggested delay after last activity some 30 seconds.
+		 */
+		public static const STATE_PAUSED:String = "paused";
+
+		/**
+		 * User has not been actively participating in the chat session.
+		 * Suggested delay after last activity some 2 minutes.
+		 */
+		public static const STATE_INACTIVE:String = "inactive";
+
+		/**
+		 * User has effectively ended their participation in the chat session.
+		 * Suggested delay after last activity some 10 minutes.
+		 */
+		public static const STATE_GONE:String = "gone";
+		
+		/**
+		 * The name space used in the Chat state node.
+		 * @see http://xmpp.org/extensions/xep-0085.html
+		 */
+		public static const NS_STATE:String = "http://jabber.org/protocol/chatstates";
+		
+		/**
+		 * Included by a sending entity that wishes to know if
+		 * the message has been received.
+		 */
+		public static const RECEIPT_REQUEST:String = "request";
+		
+		/**
+		 * Included by a receiving entity that wishes to inform the
+		 * sending entity that the message has been received.
+		 * The <received/> element SHOULD be the only child of
+		 * the <message/> stanza and MUST mirror the 'id' of the sent message.
+		 */
+		public static const RECEIPT_RECEIVED:String = "received";
+		
+		/**
+		 * The name space used in the message delivery node.
+		 * @see http://xmpp.org/extensions/xep-0184.html
+		 */
+		public static const NS_RECEIPT:String = "urn:xmpp:receipts";
 	
 		// Private references to nodes within our XML
 		private var myBodyNode:XMLNode;

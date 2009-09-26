@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@
 package org.igniterealtime.xiff.auth
 {
 	import flash.utils.ByteArray;
-	import flash.xml.XMLNode;
 
 	import mx.utils.Base64Encoder;
 	//import com.hurlant.util.Base64;
@@ -40,9 +39,9 @@ package org.igniterealtime.xiff.auth
 	 */
 	public class Plain extends SASLAuth
 	{
-		private const MECHANISM:String = "PLAIN";
+		public static const MECHANISM:String = "PLAIN";
 
-		private const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
+		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * Creates a new Plain authentication object.
@@ -66,9 +65,9 @@ package org.igniterealtime.xiff.auth
 			b64coder.encodeUTFBytes( authContent );
 			authContent = b64coder.flush();
 
-			req = new XMLNode( 1, "auth" );
-			req.appendChild( new XMLNode( 3, authContent ));
-			req.attributes = { mechanism: MECHANISM, xmlns: NS };
+			req.setNamespace( Plain.NS );
+			req.@mechanism = Plain.MECHANISM;
+			req.setChildren( authContent );
 
 			stage = 0;
 		}
@@ -81,10 +80,14 @@ package org.igniterealtime.xiff.auth
 		 *
 		 * @return An object specifying the current state of the authentication.
 		 */
-		override public function handleResponse( stage:int, response:XMLNode ):Object
+		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.nodeName == "success";
-			return { authComplete: true, authSuccess: success, authStage: stage++ };
+			var success:Boolean = response.localName() == "success";
+			return {
+				authComplete: true,
+				authSuccess: success,
+				authStage: stage++
+			};
 		}
 	}
 }

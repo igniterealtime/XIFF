@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,6 @@
  */
 package org.igniterealtime.xiff.auth
 {
-	import flash.xml.XMLNode;
 
 	import org.igniterealtime.xiff.core.XMPPConnection;
 
@@ -34,9 +33,9 @@ package org.igniterealtime.xiff.auth
 	 */
 	public class Anonymous extends SASLAuth
 	{
-		private const MECHANISM:String = "ANONYMOUS";
+		public static const MECHANISM:String = "ANONYMOUS";
 
-		private const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
+		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * Creates a new Anonymous authentication object.
@@ -45,8 +44,8 @@ package org.igniterealtime.xiff.auth
 		 */
 		public function Anonymous( connection:XMPPConnection )
 		{
-			req = new XMLNode( 1, "auth" );
-			req.attributes = { mechanism: MECHANISM, xmlns: NS };
+			req.setNamespace( Anonymous.NS );
+			req.@mechanism = Anonymous.MECHANISM;
 
 			stage = 0;
 		}
@@ -59,10 +58,14 @@ package org.igniterealtime.xiff.auth
 		 *
 		 * @return An object specifying the current state of the authentication.
 		 */
-		override public function handleResponse( stage:int, response:XMLNode ):Object
+		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.nodeName == "success";
-			return { authComplete: true, authSuccess: success, authStage: stage++ };
+			var success:Boolean = response.localName() == "success";
+			return {
+				authComplete: true,
+				authSuccess: success,
+				authStage: stage++
+			};
 		}
 	}
 }
