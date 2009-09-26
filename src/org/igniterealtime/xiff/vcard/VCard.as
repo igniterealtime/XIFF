@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,6 +29,7 @@ package org.igniterealtime.xiff.vcard
 	import flash.utils.Timer;
 
 	import mx.utils.Base64Decoder;
+
 	//import com.hurlant.util.Base64;
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
@@ -87,6 +88,12 @@ package org.igniterealtime.xiff.vcard
 		 *
 		 * @default
 		 */
+		public var birthDay:Date;
+
+		/**
+		 *
+		 * @default
+		 */
 		public var company:String;
 
 		/**
@@ -112,6 +119,12 @@ package org.igniterealtime.xiff.vcard
 		 * @default
 		 */
 		public var fullName:String;
+
+		/**
+		 *
+		 * @default
+		 */
+		public var gender:String;
 
 		/**
 		 *
@@ -189,13 +202,37 @@ package org.igniterealtime.xiff.vcard
 		 *
 		 * @default
 		 */
+		public var maritalStatus:String;
+
+		/**
+		 *
+		 * @default
+		 */
 		public var middleName:String;
 
 		/**
 		 *
 		 * @default
 		 */
+		public var namePrefix:String;
+
+		/**
+		 *
+		 * @default
+		 */
+		public var nameSuffix:String;
+
+		/**
+		 *
+		 * @default
+		 */
 		public var nickname:String;
+
+		/**
+		 *
+		 * @default
+		 */
+		public var otherName:String;
 
 		/**
 		 *
@@ -213,7 +250,7 @@ package org.igniterealtime.xiff.vcard
 		 * Version of the VCard. Usually 2.0 or 3.0.
 		 */
 		public var version:Number;
-		
+
 		/**
 		 *
 		 * @default
@@ -267,17 +304,6 @@ package org.igniterealtime.xiff.vcard
 		 * @default
 		 */
 		public var workVoiceNumber:String;
-		
-		
-		
-		public var otherName:String;
-		public var namePrefix:String;
-		public var nameSuffix:String;
-		public var birthDay:Date;
-		public var gender:String;
-		public var maritalStatus:String;
-		
-		
 
 		/**
 		 *
@@ -302,9 +328,9 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function VCard()
 		{
-			
+
 		}
-		
+
 		/**
 		 * Seems to be the way a vcard is requested and then later referred to:
 		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
@@ -326,7 +352,7 @@ package org.igniterealtime.xiff.vcard
 						{
 							pushRequest( con, vcard );
 						}
-					});
+					} );
 			}
 
 			var jidString:String = user.jid.toString();
@@ -356,7 +382,7 @@ package org.igniterealtime.xiff.vcard
 				requestTimer = new Timer( 1, 1 );
 				requestTimer.addEventListener( TimerEvent.TIMER_COMPLETE, sendRequest );
 			}
-			requestQueue.push({ connection: con, card: vcard });
+			requestQueue.push( { connection: con, card: vcard } );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -379,7 +405,7 @@ package org.igniterealtime.xiff.vcard
 
 			iq.callbackName = "handleVCard";
 			iq.callbackScope = vcard;
-			iq.addExtension( new VCardExtension());
+			iq.addExtension( new VCardExtension() );
 
 			con.send( iq );
 			requestTimer.reset();
@@ -394,7 +420,7 @@ package org.igniterealtime.xiff.vcard
 		{
 			if ( resultIQ.type == IQ.TYPE_ERROR )
 			{
-				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ resultIQ.to.unescaped.toString()],
+				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ resultIQ.to.unescaped.toString() ],
 											   true, true ) );
 			}
 			else
@@ -423,11 +449,13 @@ package org.igniterealtime.xiff.vcard
 			
 			var node:XML = XML(iq.getNode());
 			var vCardNode:XML = node.children()[ 0 ];
+
+			//var vCardNode:XML = iq.node.children()[ 0 ];
 			if ( !vCardNode )
 				return;
-			
-			version = Number(vCardNode.@version);
-			
+
+			version = Number( vCardNode.@version );
+
 			var nodes:XMLList = vCardNode.children();
 
 			for each ( var child:XML in nodes )
@@ -438,13 +466,13 @@ package org.igniterealtime.xiff.vcard
 						for each ( var photo:XML in child.children() )
 						{
 							var value:String = photo.text();
-							
+
 							if (photo.localName() == "BINVAL" && value.length > 0 )
 							{
 								var decoder:Base64Decoder = new Base64Decoder();
 								decoder.decode( value );
 								_imageBytes = decoder.flush();
-								
+
 								//_imageBytes = Base64.decodeToByteArray( value );
 								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
 															   this, true, false ) );
@@ -474,24 +502,24 @@ package org.igniterealtime.xiff.vcard
 						{
 							if ( emailChild.localName() == "USERID" )
 							{
-								email = emailChild.children()[0];
+								email = emailChild.children()[ 0 ];
 							}
 						}
 						break;
-						
+
 					case "ORG":
 						company = child.ORGNAME;
 						department = child.ORGUNIT;
 						break;
-						
+
 					case "TITLE":
 						title = child.text();
 						break;
-						
+
 					case "URL":
 						url = child.text();
 						break;
-						
+
 					case "ADR":
 						if ( child.WORK.length() == 1 )
 						{
@@ -510,7 +538,7 @@ package org.igniterealtime.xiff.vcard
 							homeCity = child.LOCALITY;
 						}
 						break;
-						
+
 					case "TEL":
 						if ( child.WORK.length() == 1 )
 						{
@@ -523,7 +551,7 @@ package org.igniterealtime.xiff.vcard
 							else if ( child.CELL.length() == 1 )
 								workCellNumber = child.NUMBER;
 						}
-						else if ( child.HOME.length() == 1  )
+						else if ( child.HOME.length() == 1 )
 						{
 							if ( child.VOICE.length() == 1 )
 								homeVoiceNumber = child.NUMBER;
@@ -531,56 +559,57 @@ package org.igniterealtime.xiff.vcard
 								homeFaxNumber = child.NUMBER;
 							else if ( child.PAGER.length() == 1 )
 								homePagerNumber = child.NUMBER;
-							else if ( child.CELL.length() == 1  )
+							else if ( child.CELL.length() == 1 )
 								homeCellNumber = child.NUMBER;
 						}
 						break;
-						
+
 					case "DESC":
 						break;
-						
+
 					case "GENDER":
 						gender = child.text();
 						break;
-						
+
 					case "BDAY":
 						var bday:String = child.children()[ 0 ];
-						if (bday != null && bday.length > 8)
+						if ( bday != null && bday.length > 8 )
 						{
-							var dateParts:Array = bday.split("-");
-							birthDay = new Date(dateParts[0], int(dateParts[1]) - 1, dateParts[2]);
+							var dateParts:Array = bday.split( "-" );
+							birthDay = new Date( dateParts[ 0 ], int( dateParts[ 1 ] ) -
+												 1, dateParts[ 2 ] );
 						}
 						break;
-						
+
 					case "JABBERID":
 						var jabberid:String = child.text();
-						if (jabberid != null && jabberid.length > 0)
+						if ( jabberid != null && jabberid.length > 0 )
 						{
 							jid = new UnescapedJID( jabberid );
 						}
 						break;
-						
+
 					case "ROLE":
 						break;
-						
+
 					case "HOMECELL":
 						break;
-						
+
 					case "WORKCELL":
 						break;
-						
+
 					case "LOCATION":
 						break;
-						
+
 					case "MARITALSTATUS":
 						maritalStatus = child.text();
 						break;
-						
+
 					case "AGE":
 						break;
-						
+
 					default:
-						trace("handleVCard. unhandled case child.name(): " + child.name());
+						trace( "handleVCard. unhandled case child.name(): " + child.name() );
 						break;
 				}
 			}
@@ -600,6 +629,7 @@ package org.igniterealtime.xiff.vcard
 								null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardExtNode:XML = vcardExt.getNode() as XML;
+			//var vcardExtNode:XML = vcardExt.node;
 
 			if ( firstName || middleName || lastName )
 			{
@@ -685,15 +715,17 @@ package org.igniterealtime.xiff.vcard
 
 			if ( birthDay )
 			{
-				var month:Number = (birthDay.getMonth() + 1);
-				vcardExtNode.BDAY = birthDay.getFullYear() + "-" + (month < 10 ? "0" + month : month) + "-" + birthDay.getDate();
+				var month:uint = ( birthDay.getMonth() + 1 );
+				vcardExtNode.BDAY = birthDay.getFullYear() + "-"
+					+ ( month < 10 ? "0" + month : month ) + "-"
+					+ birthDay.getDate();
 			}
-			
+
 			if ( gender )
 			{
 				vcardExtNode.GENDER = gender;
 			}
-			
+
 			if ( maritalStatus )
 			{
 				vcardExtNode.MARITALSTATUS = maritalStatus;
