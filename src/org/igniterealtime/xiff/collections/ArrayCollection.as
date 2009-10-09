@@ -1,6 +1,10 @@
 package org.igniterealtime.xiff.collections
 {
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
+	import flash.utils.Proxy;
+	import flash.utils.flash_proxy;
 	
 	import org.igniterealtime.xiff.collections.events.CollectionEvent;
 	import org.igniterealtime.xiff.collections.events.CollectionEventKind;
@@ -9,9 +13,11 @@ package org.igniterealtime.xiff.collections
 	 * The ArrayCollection class is a wrapper class that exposes an Array as a
 	 * collection that can be accessed and manipulated using collection methods.
 	 */
-	public class ArrayCollection extends EventDispatcher
+	public class ArrayCollection extends Proxy implements IEventDispatcher
 	{
 		protected const OUT_OF_BOUNDS_MESSAGE:String = "The supplied index is out of bounds.";
+		
+		protected var eventDispatcher:EventDispatcher;
 		
 		protected var _source:Array = [];
 		
@@ -21,6 +27,8 @@ package org.igniterealtime.xiff.collections
 		public function ArrayCollection( source:Array = null )
 		{
 			super();
+			
+			eventDispatcher = new EventDispatcher( this );
 			
 			if (source)
 			{
@@ -202,15 +210,15 @@ package org.igniterealtime.xiff.collections
 		/**
 		 * Pretty prints the contents of the ArrayCollection to a string and returns it.
 		 */
-		override public function toString():String
+		public function toString():String
 		{
-			if ( _source )
+			if( _source )
 			{
 				return _source.toString();
 			}
 			else
 			{
-				return super.toString();
+				return "";
 			}
 		}
 		
@@ -224,6 +232,192 @@ package org.igniterealtime.xiff.collections
 			event.items.push( item );
 			event.location = location;
 			dispatchEvent( event );
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		// Proxy methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 *  @private
+		 *  Attempts to call getItemAt(), converting the property name into an int.
+		 */
+		override flash_proxy function getProperty( name:* ):*
+		{
+			if( name is QName )
+				name = name.localName;
+			
+			var index:int = -1;
+			
+			try
+			{
+				// If caller passed in a number such as 5.5, it will be floored.
+				var n:Number = parseInt( String( name ) );
+				
+				if( !isNaN( n ) )
+					index = int( n );
+			}
+			catch( e:Error ) // localName was not a number
+			{
+			}
+			
+			if( index == -1 )
+			{
+				var message:String = "Unknown Property: " + name + ".";
+				throw new Error( message );
+			}
+			else
+			{
+				return getItemAt( index );
+			}
+		}
+		
+		/**
+		 *  @private
+		 *  Attempts to call setItemAt(), converting the property name into an int.
+		 */
+		override flash_proxy function setProperty( name:*, value:* ):void
+		{
+			if( name is QName )
+				name = name.localName;
+			
+			var index:int = -1;
+			
+			try
+			{
+				// If caller passed in a number such as 5.5, it will be floored.
+				var n:Number = parseInt( String( name ) );
+				
+				if( !isNaN( n ) )
+					index = int( n );
+			}
+			catch( e:Error ) // localName was not a number
+			{
+			}
+			
+			if( index == -1 )
+			{
+				var message:String = "Unknown Property: " + name + ".";
+				throw new Error( message );
+			}
+			else
+			{
+				setItemAt( value, index );
+			}
+		}
+		
+		/**
+		 *  @private
+		 *  This is an internal function.
+		 *  The VM will call this method for code like <code>"foo" in bar</code>
+		 *
+		 *  @param name The property name that should be tested for existence.
+		 */
+		override flash_proxy function hasProperty( name:* ):Boolean
+		{
+			if( name is QName )
+				name = name.localName;
+			
+			var index:int = -1;
+			
+			try
+			{
+				// If caller passed in a number such as 5.5, it will be floored.
+				var n:Number = parseInt( String( name ) );
+				
+				if( !isNaN( n ) )
+					index = int( n );
+			}
+			catch( e:Error ) // localName was not a number
+			{
+			}
+			
+			if( index == -1 )
+				return false;
+			
+			return index >= 0 && index < length;
+		}
+		
+		/**
+		 *  @private
+		 */
+		override flash_proxy function nextNameIndex( index:int ):int
+		{
+			return index < length ? index + 1 : 0;
+		}
+		
+		/**
+		 *  @private
+		 */
+		override flash_proxy function nextName( index:int ):String
+		{
+			return( index - 1 ).toString();
+		}
+		
+		/**
+		 *  @private
+		 */
+		override flash_proxy function nextValue( index:int ):*
+		{
+			return getItemAt( index - 1 );
+		}
+		
+		/**
+		 *  @private
+		 *  Any methods that can't be found on this class shouldn't be called,
+		 *  so return null
+		 */
+		override flash_proxy function callProperty( name:*, ... rest ):*
+		{
+			return null;
+		}
+		
+		//--------------------------------------------------------------------------
+		//
+		// EventDispatcher methods
+		//
+		//--------------------------------------------------------------------------
+		
+		/**
+		 * Registers an event listener object with an EventDispatcher object so that the listener receives notification of an event.
+		 */
+		public function addEventListener( type:String, listener:Function, useCapture:Boolean=false, priority:int=0, useWeakReference:Boolean=false ):void
+		{
+			eventDispatcher.addEventListener( type, listener, useCapture, priority, useWeakReference );
+		}
+		
+		/**
+		 * Removes a listener from the EventDispatcher object.
+		 */
+		public function removeEventListener( type:String, listener:Function, useCapture:Boolean=false ):void
+		{
+			eventDispatcher.removeEventListener( type, listener, useCapture );
+		}
+		
+		/**
+		 * Dispatches an event into the event flow.
+		 */
+		public function dispatchEvent( event:Event ):Boolean
+		{
+			return eventDispatcher.dispatchEvent( event );
+		}
+		
+		/**
+		 * Checks whether the EventDispatcher object has any listeners registered for a specific type of event.
+		 */
+		public function hasEventListener( type:String ):Boolean
+		{
+			return eventDispatcher.hasEventListener( type );
+		}
+		
+		/**
+		 * Checks whether an event listener is registered with this EventDispatcher object or any of its ancestors for the specified event type.
+		 */
+		public function willTrigger( type:String ):Boolean
+		{
+			return eventDispatcher.willTrigger( type );
 		}
 		
 	}
