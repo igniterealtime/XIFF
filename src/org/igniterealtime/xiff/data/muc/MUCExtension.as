@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.data.muc
 	/**
 	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
 	 *
-	 * This extension is typically used to test for the presence of MUC enabled conferencing 
+	 * This extension is typically used to test for the presence of MUC enabled conferencing
 	 * service, or a MUC related error condition.
 	 *
 	 * @param	parent (Optional) The containing XMLNode for this extension
@@ -95,7 +95,7 @@ package org.igniterealtime.xiff.data.muc
 			return true;
 		}
 		
-		public function addChildNode(childNode:XMLNode):void 
+		public function addChildNode(childNode:XMLNode):void
 		{
 			getNode().appendChild(childNode);
 		}
@@ -127,11 +127,11 @@ package org.igniterealtime.xiff.data.muc
 	
 		public function set history(value:Boolean):void
 		{
-			if (value) 
+			if (value)
 			{
 				myHistoryNode = ensureNode(myHistoryNode, "history");
-			} 
-			else 
+			}
+			else
 			{
 				myHistoryNode.removeNode();
 				myHistoryNode = null;
@@ -142,14 +142,13 @@ package org.igniterealtime.xiff.data.muc
 		/**
 		 * Size based condition to evaluate by the server for the maximum
 		 * characters to return during history retrieval
-		 * TODO: Propably should be uint
 		 */
-		public function get maxchars():Number
+		public function get maxchars():int
 		{
-			return Number(myHistoryNode.attributes.maxchars);
+			return parseInt(myHistoryNode.attributes.maxchars);
 		}
 	
-		public function set maxchars(value:Number):void
+		public function set maxchars(value:int):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxchars = value.toString();
@@ -158,12 +157,12 @@ package org.igniterealtime.xiff.data.muc
 		/**
 		 * Protocol based condition for the number of stanzas to return during history retrieval
 		 */
-		public function get maxstanzas():Number
+		public function get maxstanzas():int
 		{
-			return Number(myHistoryNode.attributes.maxstanzas);
+			return parseInt(myHistoryNode.attributes.maxstanzas);
 		}
 	
-		public function set maxstanzas(value:Number):void
+		public function set maxstanzas(value:int):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxstanzas = value.toString();
@@ -184,7 +183,7 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
-		 * Time base condition to retrieve all messages from a given time formatted in the format described in 
+		 * Time base condition to retrieve all messages from a given time formatted in the format described in
 		 * <a href="http://xmpp.org/extensions/xep-0082.html">XEP-0082</a>.
 		 *
 		 */

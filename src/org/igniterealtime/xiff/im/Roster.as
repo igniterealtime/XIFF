@@ -400,13 +400,12 @@ package org.igniterealtime.xiff.im
 		 * @param	show The show type for your presence. This represents what others should see - whether
 		 * you are offline, online, away, etc.
 		 * @param	status The status message associated with the show value
-		 * @param	priority (Optional) A priority number for the presence
+		 * @param	priority (Optional) A priority integer for the presence
 		 * @see	org.igniterealtime.xiff.data.Presence
 		 */
-		public function setPresence( show:String, status:String, priority:Number ):void
+		public function setPresence( show:String, status:String, priority:int ):void
 		{
-			var presence:Presence = new Presence( null, null, null, show, status,
-													  priority );
+			var presence:Presence = new Presence( null, null, null, show, status, priority );
 			_connection.send( presence );
 		}
 
