@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -784,7 +784,7 @@ package org.igniterealtime.xiff.core
 		{
 			// TODO: Build a proper extension which takes care XML building.
 			var ask:XML = <compress xmlns="http://jabber.org/protocol/compress"><method>zlib</method></compress>;
-			sendXML(ask); // XML			
+			sendXML(ask); // XML
 		}
 
 		/**
@@ -818,7 +818,7 @@ package org.igniterealtime.xiff.core
 		{
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
-			if ( !iq.deserialize( node ) ) 
+			if ( !iq.deserialize( node ) )
 			{
 				throw new SerializationException();
 			}
@@ -1106,6 +1106,8 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function sendXML( someData:* ):void
 		{
+			someData = someData is XML ? XML( someData ).toXMLString() : someData;
+			
 			var bytedata:ByteArray = new ByteArray();
 			bytedata.writeUTFBytes(someData);
 			
@@ -1155,6 +1157,7 @@ package org.igniterealtime.xiff.core
 				}
 				else
 				{
+					// ? dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 					dispatchError("Authentication Error", "", "", 401);
 					disconnect();
 				}
