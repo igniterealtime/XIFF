@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.muc{
 	
 		private var _items:Array;
 	
-		public function MUCAdminExtension( parent:XMLNode=null )
+		public function MUCAdminExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

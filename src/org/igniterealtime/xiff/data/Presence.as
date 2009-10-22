@@ -136,7 +136,8 @@ package org.igniterealtime.xiff.data
 		{
 			var isDeserialized:Boolean = super.deserialize( xmlNode );
 			
-			if (isDeserialized) {
+			if (isDeserialized) 
+			{
 				var children:Array = xmlNode.childNodes;
 				for( var i:String in children )
 				{

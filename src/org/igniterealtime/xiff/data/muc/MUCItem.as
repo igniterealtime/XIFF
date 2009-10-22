@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.muc
 		private var myActorNode:XMLNode;
 		private var myReasonNode:XMLNode;
 	
-		public function MUCItem(parent:XMLNode=null)
+		public function MUCItem(parent:XMLNode = null)
 		{
 			super();
 	

@@ -70,7 +70,7 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * @param	parent (Optional) The containing XMLNode for this extension
 		 */
-		public function FormExtension( parent:XMLNode=null )
+		public function FormExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

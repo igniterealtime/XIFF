@@ -26,7 +26,7 @@ package org.igniterealtime.xiff.data
 	import flash.xml.XMLNode;
 
 	public class AbstractExtension extends Extension implements ISerializable {
-		public function AbstractExtension(parent:XMLNode=null) {
+		public function AbstractExtension(parent:XMLNode = null) {
 			super(parent);
 		}
 		

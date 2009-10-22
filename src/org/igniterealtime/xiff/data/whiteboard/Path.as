@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 	    private var _lastLocation:Object;
 		
-		public function Path( parent:XMLNode=null )
+		public function Path( parent:XMLNode = null )
 		{
 			//super( parent );
 			_stroke = new Stroke();

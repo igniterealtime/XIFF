@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.data.register
 		 *
 		 * @param	parent (Optional) The parent node used to build the XML tree.
 		 */
-		public function RegisterExtension( parent:XMLNode=null )
+		public function RegisterExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

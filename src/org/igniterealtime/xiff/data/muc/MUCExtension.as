@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.data.muc
 		private var myHistoryNode:XMLNode;
 		private var myPasswordNode:XMLNode;
 	
-		public function MUCExtension( parent:XMLNode=null )
+		public function MUCExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

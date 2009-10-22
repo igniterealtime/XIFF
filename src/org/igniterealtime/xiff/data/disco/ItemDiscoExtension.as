@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.disco
 	
 		private var _items:Array;
 		
-		public function ItemDiscoExtension(xmlNode:XMLNode=null)
+		public function ItemDiscoExtension(xmlNode:XMLNode = null)
 		{
 			super(xmlNode);
 		}

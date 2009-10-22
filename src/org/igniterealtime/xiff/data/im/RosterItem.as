@@ -45,7 +45,7 @@ package org.igniterealtime.xiff.data.im{
 		
 		private var myGroupNodes:Array;
 		
-		public function RosterItem( parent:XMLNode=null )
+		public function RosterItem( parent:XMLNode = null )
 		{
 			super();
 			

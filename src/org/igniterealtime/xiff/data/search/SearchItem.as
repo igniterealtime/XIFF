@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.data.search{
 	
 		private var _fields:Object = {};
 	
-		public function SearchItem(parent:XMLNode=null)
+		public function SearchItem(parent:XMLNode = null)
 		{
 			super();
 			

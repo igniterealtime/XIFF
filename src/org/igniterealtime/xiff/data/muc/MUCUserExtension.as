@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.data.muc
 		 *
 		 * @param	parent (Optional) The containing XMLNode for this extension
 		 */
-		public function MUCUserExtension( parent:XMLNode=null )
+		public function MUCUserExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

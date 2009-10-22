@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.muc
 	{
 		private var _items:Array = [];
 	
-		public function MUCBaseExtension( parent:XMLNode=null )
+		public function MUCBaseExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

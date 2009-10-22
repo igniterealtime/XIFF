@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.data.im{
 	
 		private var _items:Array = [];
 		
-		public function RosterExtension( parent:XMLNode=null )
+		public function RosterExtension( parent:XMLNode = null )
 		{
 			super( parent );
 		}

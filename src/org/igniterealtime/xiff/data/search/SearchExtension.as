@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.data.search{
 		 * 
 		 * @param	parent (Optional) The parent node used to build the XML tree.
 		 */
-		public function SearchExtension( parent:XMLNode=null )
+		public function SearchExtension( parent:XMLNode = null )
 		{
 			super(parent);
 		}

@@ -39,14 +39,15 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @param	parent The parent node that this extension should be appended to
 		 */
-		public function Extension(parent:XMLNode=null)
+		public function Extension(parent:XMLNode = null)
 		{
 			super();
 	
 			getNode().nodeName = IExtension(this).getElementName();
 			getNode().attributes.xmlns = IExtension(this).getNS();
 	
-			if (exists(parent)) {
+			if (exists(parent)) 
+			{
 				parent.appendChild(getNode());
 			}
 		}
