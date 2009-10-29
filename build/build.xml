@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="XIFF" basedir="../" default="release">
+	
+	<!-- Define variables/paths used in this build script -->
+	<property file="build/build.properties" />
+	
+	<!-- Define Flex Ant Tasks -->
+	<taskdef resource="flexTasks.tasks" classpath="${flex.ant.tasks}" />
+	
+	<!-- Have you edited the properties file to make sure the paths are right on your system? -->
+	<target name="properties">
+		<echo message="Have you edited the properties file to make sure the paths are right on your system?" />
+	</target>
+	
+	<!-- Create a SWC file -->
+	<target name="release" depends="properties">
+		<compc output="${bin.dir}/${output.name}.swc">
+			<source-path path-element="${src.dir}" />
+			<namespace uri="${manifest.ns}" manifest="${manifest}" />
+			<in uri="${manifest.ns}"/>
+		</compc>
+	</target>
+	
+	<!-- Clean and re-generate the documentation -->
+	<target name="docs" depends="clean-docs,compile-docs" />
+	
+	<!-- Clean the documentation -->
+	<target name="clean-docs">
+		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+	
+	<!-- Generate the documentation -->
+	<target name="compile-docs">
+		<exec executable="${flex.bin}/${asdoc}">
+			<arg line="-source-path ${src.dir}" />
+			<arg line="-namespace ${manifest.ns} ${manifest}" />
+			<arg line="-doc-namespaces ${manifest.ns}" />
+			<arg line="-output ${docs.dir}" />
+			<arg line="-templates-path ${flex.asdoc.templates}" />
+		</exec>
+	</target>
+	
+</project>
