@@ -268,9 +268,9 @@ package org.igniterealtime.xiff.im
 															   false, false );
 				dispatchEvent( rosterEvent );
 			}
-			catch ( e:Error )
+			catch ( error:Error )
 			{
-				trace( e.getStackTrace() );
+				trace( error.getStackTrace() );
 			}
 		}
 
@@ -445,6 +445,17 @@ package org.igniterealtime.xiff.im
 			updateContact( rosterItem, newName, groupNames );
 		}
 
+		/**
+		 *
+		 * @param	jid
+		 * @param	displayName
+		 * @param	show
+		 * @param	status
+		 * @param	groupNames
+		 * @param	type
+		 * @param	askType
+		 * @return
+		 */
 		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String = "none" ):Boolean
 		{
 			if ( !jid )
@@ -566,9 +577,9 @@ package org.igniterealtime.xiff.im
 							}
 						}
 					}
-					catch ( e:Error )
+					catch ( error:Error )
 					{
-						trace( e.getStackTrace() );
+						trace( error.getStackTrace() );
 					}
 					break;
 			}
@@ -582,8 +593,7 @@ package org.igniterealtime.xiff.im
 		{
 			for each ( var aPresence:Presence in presenceArray )
 			{
-				var type:String = aPresence.type ? aPresence.type.toLowerCase() :
-					null;
+				var type:String = aPresence.type ? aPresence.type.toLowerCase() : null;
 				var rosterEvent:RosterEvent = null;
 
 				switch ( type )
@@ -599,10 +609,9 @@ package org.igniterealtime.xiff.im
 					case Presence.TYPE_UNAVAILABLE:
 						rosterEvent = new RosterEvent( RosterEvent.USER_UNAVAILABLE );
 
-						var unavailableItem:RosterItemVO = RosterItemVO.get( aPresence.from.unescaped,
-																			 false );
+						var unavailableItem:RosterItemVO = RosterItemVO.get( aPresence.from.unescaped, false );
 						if ( !unavailableItem )
-							return;
+							break;
 						updateRosterItemPresence( unavailableItem, aPresence );
 
 						break;
@@ -615,11 +624,10 @@ package org.igniterealtime.xiff.im
 						// Change the item on the roster
 						var availableItem:RosterItemVO;
 						if ( aPresence.from )
-							availableItem = RosterItemVO.get( aPresence.from.unescaped,
-															  false );
+							availableItem = RosterItemVO.get( aPresence.from.unescaped, false );
 
 						if ( !availableItem )
-							return;
+							break;
 						updateRosterItemPresence( availableItem, aPresence );
 
 						break;
@@ -637,6 +645,11 @@ package org.igniterealtime.xiff.im
 			}
 		}
 
+		/**
+		 *
+		 * @param	contact
+		 * @param	groupNames
+		 */
 		private function setContactGroups( contact:RosterItemVO, groupNames:Array ):void
 		{
 			if ( !groupNames || groupNames.length == 0 )
@@ -681,6 +694,11 @@ package org.igniterealtime.xiff.im
 			_connection.send( tempIQ );
 		}
 
+		/**
+		 *
+		 * @param	item
+		 * @param	presence
+		 */
 		private function updateRosterItemPresence( item:RosterItemVO, presence:Presence ):void
 		{
 			try
@@ -704,12 +722,19 @@ package org.igniterealtime.xiff.im
 
 				_presenceMap[ item.jid.toString() ] = presence;
 			}
-			catch ( e:Error )
+			catch ( error:Error )
 			{
-				trace( e.getStackTrace() );
+				trace( error.getStackTrace() );
 			}
 		}
 
+		/**
+		 *
+		 * @param	item
+		 * @param	type
+		 * @param	name
+		 * @param	newGroupNames
+		 */
 		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
 		{
 			item.subscribeType = type;

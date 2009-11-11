@@ -259,7 +259,7 @@ package org.igniterealtime.xiff.collections
 				if( !isNaN( n ) )
 					index = int( n );
 			}
-			catch( e:Error ) // localName was not a number
+			catch( error:Error ) // localName was not a number
 			{
 			}
 			
@@ -293,7 +293,7 @@ package org.igniterealtime.xiff.collections
 				if( !isNaN( n ) )
 					index = int( n );
 			}
-			catch( e:Error ) // localName was not a number
+			catch( error:Error ) // localName was not a number
 			{
 			}
 			
@@ -330,7 +330,7 @@ package org.igniterealtime.xiff.collections
 				if( !isNaN( n ) )
 					index = int( n );
 			}
-			catch( e:Error ) // localName was not a number
+			catch( error:Error ) // localName was not a number
 			{
 			}
 			

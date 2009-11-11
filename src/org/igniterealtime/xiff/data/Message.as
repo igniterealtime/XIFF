@@ -299,7 +299,7 @@ package org.igniterealtime.xiff.data
 				var ext:XHTMLExtension = getAllExtensionsByNS(XHTMLExtension.NS)[0];
 				return ext.body;
 			}
-			catch (e:Error)
+			catch (error:Error)
 			{
 				trace("Error : null trapped. Resuming.");
 			}
