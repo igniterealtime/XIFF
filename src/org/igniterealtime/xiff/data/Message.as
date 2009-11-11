@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
 	public class Message extends XMPPStanza implements ISerializable
-	{		
+	{
 		/**
 		 * The message is sent in the context of a one-to-one chat
 		 * session. Typically a receiving client will present message of
@@ -248,11 +248,11 @@ package org.igniterealtime.xiff.data
 							trace("Message used 'delay' as defined in XEP-0203.");
 							break;
 						
-						case ChatState.ACTIVE :
-						case ChatState.COMPOSING :
-						case ChatState.GONE :
-						case ChatState.INACTIVE :
-						case ChatState.PAUSED :
+						case Message.STATE_ACTIVE :
+						case Message.STATE_COMPOSING :
+						case Message.STATE_GONE :
+						case Message.STATE_INACTIVE :
+						case Message.STATE_PAUSED :
 							myStateNode = children[i];
 							break;
 					}
@@ -310,7 +310,7 @@ package org.igniterealtime.xiff.data
 			// Removes any existing HTML body text first
 	        removeAllExtensions(XHTMLExtension.NS);
 	
-	        if (exists(value) && value.length > 0) 
+	        if (exists(value) && value.length > 0)
 			{
 	            var ext:XHTMLExtension = new XHTMLExtension(getNode());
 	            ext.body = value;
@@ -348,7 +348,7 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
-		 * Time of the message in case of a delay. Used only for messages 
+		 * Time of the message in case of a delay. Used only for messages
 		 * which were sent while user was offline.
 		 * <p><code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
 		 * @see http://xmpp.org/extensions/xep-0203.html
@@ -361,13 +361,13 @@ package org.igniterealtime.xiff.data
 			
 			trace("myTimeStampNode: " + myTimeStampNode.toString());
 			// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
-			// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss 
+			// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
 			var value:Date = new Date();
-			value.setUTCFullYear(stamp.substr(0, 4)); 
+			value.setUTCFullYear(stamp.substr(0, 4));
 			value.setUTCMonth(parseInt(stamp.substr(4, 2)) - 1);
 			value.setUTCDate(stamp.substr(6, 2));
-			value.setUTCHours(stamp.substr(9, 2)); 
-			value.setUTCMinutes(stamp.substr(12, 2)); 
+			value.setUTCHours(stamp.substr(9, 2));
+			value.setUTCMinutes(stamp.substr(12, 2));
 			value.setUTCSeconds(stamp.substr(15, 2));
 			return value;
 		}
@@ -379,11 +379,11 @@ package org.igniterealtime.xiff.data
 		/**
 		 * The chat state if any. Possible values, if not null, are:
 		 * <ul>
-		 * <li>ChatState.ACTIVE</li>
-		 * <li>ChatState.COMPOSING</li>
-		 * <li>ChatState.PAUSED</li>
-		 * <li>ChatState.INACTIVE</li>
-		 * <li>ChatState.GONE</li>
+		 * <li>Message.STATE_ACTIVE</li>
+		 * <li>Message.STATE_COMPOSING</li>
+		 * <li>Message.STATE_PAUSED</li>
+		 * <li>Message.STATE_INACTIVE</li>
+		 * <li>Message.STATE_GONE</li>
 		 * </ul>
 		 * @see	org.igniterealtime.xiff.data.chat.ChatState
 		 */
@@ -397,11 +397,11 @@ package org.igniterealtime.xiff.data
 		}
 		public function set state( value:String ):void
 		{
-			if (value != ChatState.ACTIVE
-				&& value != ChatState.COMPOSING
-				&& value != ChatState.PAUSED
-				&& value != ChatState.INACTIVE
-				&& value != ChatState.GONE
+			if (value != Message.STATE_ACTIVE
+				&& value != Message.STATE_COMPOSING
+				&& value != Message.STATE_PAUSED
+				&& value != Message.STATE_INACTIVE
+				&& value != Message.STATE_GONE
 				&& value != null
 				&& value != "")
 			{
@@ -417,11 +417,11 @@ package org.igniterealtime.xiff.data
 				myStateNode.removeNode();
 				myStateNode = null;
 			}
-			else if (myStateNode && (value != null || value != ""))
+			else if (myStateNode && (value != null && value != ""))
 			{
 				myStateNode.nodeName = value;
 			}
-			else if (!myStateNode && (value != null || value != ""))
+			else if (!myStateNode && (value != null && value != ""))
 			{
 				myStateNode = XMLStanza.XMLFactory.createElement(value);
 				myStateNode.attributes = { xmlns: ChatStateExtension.NS };
