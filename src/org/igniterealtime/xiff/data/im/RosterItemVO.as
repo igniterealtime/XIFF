@@ -62,12 +62,13 @@ package org.igniterealtime.xiff.data.im
 		}
 
 		/**
-		 * Returns an Roster item value object if it exists or the "create" parameter is set to <code>true</code>.
+		 * Returns an Roster item value object if it exists, 
+		 * use the "create" parameter to create one if it does not.
 		 * @param	jid
 		 * @param	create
 		 * @return
 		 */
-		public static function get( jid:UnescapedJID, create:Boolean ):RosterItemVO
+		public static function get( jid:UnescapedJID, create:Boolean = false ):RosterItemVO
 		{
 			var bareJID:String = jid.bareJID;
 			var item:RosterItemVO = allContacts[ bareJID ];

@@ -27,7 +27,6 @@ package org.igniterealtime.xiff.data
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.chat.*;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
 	
@@ -385,7 +384,6 @@ package org.igniterealtime.xiff.data
 		 * <li>Message.STATE_INACTIVE</li>
 		 * <li>Message.STATE_GONE</li>
 		 * </ul>
-		 * @see	org.igniterealtime.xiff.data.chat.ChatState
 		 */
 		public function get state():String
 		{
@@ -408,7 +406,7 @@ package org.igniterealtime.xiff.data
 				throw new Error("Invalid state value: " + value + " for ChatState");
 			}
 			
-			// XML.name().uri == ChatStateExtension.NS
+			// XML.name().uri == Message.NS_STATE
 			// XML.setName(value);
 			
 			if (myStateNode && (value == null || value == ""))
@@ -424,7 +422,7 @@ package org.igniterealtime.xiff.data
 			else if (!myStateNode && (value != null && value != ""))
 			{
 				myStateNode = XMLStanza.XMLFactory.createElement(value);
-				myStateNode.attributes = { xmlns: ChatStateExtension.NS };
+				myStateNode.attributes = { xmlns: Message.NS_STATE };
 				getNode().appendChild(myStateNode);
 			}
 		}

@@ -123,6 +123,11 @@ package org.igniterealtime.xiff.im
 
 		//FIXME: does not support multiple pending requests
 		private var pendingSubscriptionRequestJID:UnescapedJID;
+		
+		/**
+		 * TODO: List of <code>UnescapedJID</code> which are pending for subscription.
+		 */
+		private var pendingSubscriptionRequests:Array = [];
 
 		/**
 		 *
@@ -179,6 +184,7 @@ package org.igniterealtime.xiff.im
 				callbackObj = this;
 				callbackMethod = "addContact_result";
 				pendingSubscriptionRequestJID = id;
+				pendingSubscriptionRequests.push(id);
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
@@ -203,6 +209,7 @@ package org.igniterealtime.xiff.im
 		public function addContact_result( resultIQ:IQ ):void
 		{
 			// Contact was added, request subscription
+			// TODO: Should check the JID of the result
 			requestSubscription( pendingSubscriptionRequestJID );
 			pendingSubscriptionRequestJID = null;
 		}
