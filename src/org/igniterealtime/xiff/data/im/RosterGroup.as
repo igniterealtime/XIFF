@@ -52,7 +52,7 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function addItem(item:RosterItemVO):void
 		{
-			if (_items.contains(item))
+			if (!_items.contains(item))
 			{
 				_items.addItem(item);
 			}
