@@ -28,8 +28,6 @@
 	<component class="org.igniterealtime.xiff.data.bind.BindExtension" />
 	<component class="org.igniterealtime.xiff.data.browse.BrowseExtension" />
 	<component class="org.igniterealtime.xiff.data.browse.BrowseItem" />
-	<component class="org.igniterealtime.xiff.data.chat.ChatState" />
-	<component class="org.igniterealtime.xiff.data.chat.ChatStateExtension" />
 	<component class="org.igniterealtime.xiff.data.disco.DiscoExtension" />
 	<component class="org.igniterealtime.xiff.data.disco.InfoDiscoExtension" />
 	<component class="org.igniterealtime.xiff.data.disco.ItemDiscoExtension" />

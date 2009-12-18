@@ -41,8 +41,6 @@
 <classEntry path="org.igniterealtime.xiff.data.bind.BindExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.browse.BrowseExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.browse.BrowseItem"/>
-<classEntry path="org.igniterealtime.xiff.data.chat.ChatState"/>
-<classEntry path="org.igniterealtime.xiff.data.chat.ChatStateExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.disco.DiscoExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.disco.InfoDiscoExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.disco.ItemDiscoExtension"/>
