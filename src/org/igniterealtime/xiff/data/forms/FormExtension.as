@@ -48,10 +48,10 @@ package org.igniterealtime.xiff.data.forms
 	    public static const FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
 	    public static const FIELD_TYPE_TEXT_SINGLE:String = "text-single";
 	
-	    public static const REQUEST_TYPE:String = "form";
+	    public static const TYPE_REQUEST:String = "form";
 	    public static const TYPE_RESULT:String = "result";
-	    public static const SUBMIT_TYPE:String = "submit";
-	    public static const CANCEL_TYPE:String = "cancel";
+	    public static const TYPE_SUBMIT:String = "submit";
+	    public static const TYPE_CANCEL:String = "cancel";
 	
 	    public static const NS:String = "jabber:x:data";
 	    public static const ELEMENT:String = "x";
@@ -225,7 +225,6 @@ package org.igniterealtime.xiff.data.forms
 	     * and values of value arrays
 	     *
 	     * @param	fieldmap Object in format obj[key:String].value:Array
-	     * availability Flash Player 7
 	     */
 	    public function setFields(fieldmap:Object):void
 	    {
@@ -322,10 +321,10 @@ package org.igniterealtime.xiff.data.forms
 	    /**
 	     * The type of form.  May be one of the following:
 	     *
-	     * <code>FormExtension.REQUEST_TYPE</code>
+	     * <code>FormExtension.TYPE_REQUEST</code>
 	     * <code>FormExtension.TYPE_RESULT</code>
-	     * <code>FormExtension.SUBMIT_TYPE</code>
-	     * <code>FormExtension.CANCEL_TYPE</code>
+	     * <code>FormExtension.TYPE_SUBMIT</code>
+	     * <code>FormExtension.TYPE_CANCEL</code>
 	     *
 	     */
 	

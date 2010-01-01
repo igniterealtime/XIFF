@@ -161,7 +161,7 @@ package org.igniterealtime.xiff.data.forms
 	
 	    /**
 	     * The chosen value for this field.  In forms with a type 
-	     * <code>FormExtension.REQUEST_TYPE</code> this is typically the default
+	     * <code>FormExtension.TYPE_REQUEST</code> this is typically the default
 	     * value of the field.
 	     *
 	     * Applies to the following field types:
@@ -202,7 +202,7 @@ package org.igniterealtime.xiff.data.forms
 	
 	    /**
 	     * The values for this multiple field.  In forms with a type 
-	     * <code>FormExtension.REQUEST_TYPE</code> these are typically the existing
+	     * <code>FormExtension.TYPE_REQUEST</code> these are typically the existing
 	     * values of the field.
 	     *
 	     * Applies to the following field types:

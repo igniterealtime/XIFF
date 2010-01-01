@@ -85,7 +85,7 @@ package org.igniterealtime.xiff.conference
 							return;
 						}
 						var muc:MUCUserExtension = exts[ 0 ];
-						if ( muc.type == MUCUserExtension.INVITE_TYPE )
+						if ( muc.type == MUCUserExtension.TYPE_INVITE )
 						{
 							var room:Room = new Room( _connection );
 							room.roomJID = msg.from.unescaped;

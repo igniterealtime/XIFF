@@ -330,7 +330,7 @@ package org.igniterealtime.xiff.conference
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension = new FormExtension();
 
-			form.type = FormExtension.CANCEL_TYPE;
+			form.type = FormExtension.TYPE_CANCEL;
 
 			owner.addExtension( form );
 			iq.addExtension( owner );
@@ -380,7 +380,7 @@ package org.igniterealtime.xiff.conference
 				fieldmap[ "FORM_TYPE" ] = [ MUCOwnerExtension.NS ];
 				form.setFields( fieldmap );
 			}
-			form.type = FormExtension.SUBMIT_TYPE;
+			form.type = FormExtension.TYPE_SUBMIT;
 			owner.addExtension( form );
 			
 			iq.callbackScope = this;
@@ -468,7 +468,7 @@ package org.igniterealtime.xiff.conference
 			var owner:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
 			var form:FormExtension = owner.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 
-			if ( form.type == FormExtension.REQUEST_TYPE )
+			if ( form.type == FormExtension.TYPE_REQUEST )
 			{
 				var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
 				event.data = form;
@@ -788,7 +788,7 @@ package org.igniterealtime.xiff.conference
 						if ( mucExtensions != null && mucExtensions.length > 0 )
 						{
 							var muc:MUCUserExtension = mucExtensions[ 0 ];
-							if ( muc && muc.type == MUCUserExtension.DECLINE_TYPE )
+							if ( muc && muc.type == MUCUserExtension.TYPE_DECLINE )
 							{
 								roomEvent = new RoomEvent( RoomEvent.DECLINED );
 								roomEvent.from = muc.reason;
@@ -885,7 +885,7 @@ package org.igniterealtime.xiff.conference
 							{
 								//trace("Room: becoming inactive: " + presence.getNode());
 								setActive( false );
-								if ( user.type == MUCUserExtension.DESTROY_TYPE )
+								if ( user.type == MUCUserExtension.TYPE_DESTROY )
 								{
 									roomEvent = new RoomEvent( RoomEvent.ROOM_DESTROYED );
 								}
@@ -946,7 +946,7 @@ package org.igniterealtime.xiff.conference
 				var owner:MUCOwnerExtension = new MUCOwnerExtension();
 				var form:FormExtension = new FormExtension();
 
-				form.type = FormExtension.SUBMIT_TYPE;
+				form.type = FormExtension.TYPE_SUBMIT;
 
 				owner.addExtension( form );
 				iq.addExtension( owner );

@@ -87,7 +87,6 @@ package org.igniterealtime.xiff.data.muc
 	     *
 	     * @param	reason A string describing the reason for room destruction
 	     * @param	alternateJID A string containing a JID that room members can use instead of this room
-	     * availability Flash Player 7
 	     */
 	    public function destroy(reason:String, alternateJID:EscapedJID):void
 	    {

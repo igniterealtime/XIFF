@@ -41,10 +41,10 @@ package org.igniterealtime.xiff.data.muc
 		public static const NS:String = "http://jabber.org/protocol/muc#user";
 		public static const ELEMENT:String = "x";
 	
-		public static const DECLINE_TYPE:String = "decline";
-		public static const DESTROY_TYPE:String = "destroy";
-		public static const INVITE_TYPE:String = "invite";
-		public static const OTHER_TYPE:String = "other";
+		public static const TYPE_DECLINE:String = "decline";
+		public static const TYPE_DESTROY:String = "destroy";
+		public static const TYPE_INVITE:String = "invite";
+		public static const TYPE_OTHER:String = "other";
 	
 		private var _actionNode:XMLNode;
 		private var _passwordNode:XMLNode;
@@ -77,15 +77,15 @@ package org.igniterealtime.xiff.data.muc
 			{
 				switch( child.nodeName )
 				{
-					case DECLINE_TYPE:
+					case TYPE_DECLINE:
 						_actionNode = child;
 						break;
 						
-					case DESTROY_TYPE:
+					case TYPE_DESTROY:
 						_actionNode = child;
 						break;
 						
-					case INVITE_TYPE:
+					case TYPE_INVITE:
 						_actionNode = child;
 						break;
 						
@@ -106,7 +106,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function invite(to:EscapedJID, from:EscapedJID, reason:String):void
 		{
-			updateActionNode(INVITE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
+			updateActionNode(TYPE_INVITE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
 	
 		/**
@@ -114,7 +114,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function destroy(room:EscapedJID, reason:String):void
 		{
-			updateActionNode(DESTROY_TYPE, {jid: room.toString()}, reason);
+			updateActionNode(TYPE_DESTROY, {jid: room.toString()}, reason);
 		}
 	
 		/**
@@ -122,7 +122,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function decline(to:EscapedJID, from:EscapedJID, reason:String):void
 		{
-			updateActionNode(DECLINE_TYPE, {to:to.toString(), from:from ? from.toString() : null}, reason);
+			updateActionNode(TYPE_DECLINE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
 		
 		public function hasStatusCode(code:Number):Boolean
@@ -162,7 +162,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			if (_actionNode == null)
 				return null;
-			return _actionNode.nodeName == null ? OTHER_TYPE : _actionNode.nodeName;
+			return _actionNode.nodeName == null ? TYPE_OTHER : _actionNode.nodeName;
 		}
 	
 		/**

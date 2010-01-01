@@ -266,7 +266,8 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get body():String
 		{
-			if (!exists(myBodyNode)){
+			if (!exists(myBodyNode))
+			{
 				return null;
 			}
 			var value: String = '';
