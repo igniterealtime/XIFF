@@ -261,8 +261,18 @@ package org.igniterealtime.xiff.core
 
 		override protected function sendXML( someData:* ):void
 		{
+			var thisData:XMLNode;
+			if (someData is XML) 
+			{
+				var x : XML = someData as XML;
+				thisData = new XMLDocument( x.toXMLString() );
+			} 
+			else 
+			{
+				thisData = someData as XMLNode;
+			}
 			// XMLNode
-			sendQueuedRequests( someData );
+			sendQueuedRequests( thisData );
 		}
 
 		/**
