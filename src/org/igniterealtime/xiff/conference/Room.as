@@ -707,7 +707,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	inName
 		 * @return
 		 */
-		private function getOccupantNamed( inName:String ):RoomOccupant
+		public function getOccupantNamed( inName:String ):RoomOccupant
 		{
 			for each ( var occ:RoomOccupant in this )
 			{
@@ -752,6 +752,7 @@ package org.igniterealtime.xiff.conference
 								if ( !userexts || userexts.length == 0 || !( userexts[ 0 ].hasStatusCode( 100 )))
 								{
 									roomEvent = new RoomEvent( RoomEvent.GROUP_MESSAGE );
+									roomEvent.nickname = msg.from.resource;
 									roomEvent.data = msg;
 									dispatchEvent( roomEvent );
 								}
