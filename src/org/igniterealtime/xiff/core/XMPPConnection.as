@@ -380,9 +380,9 @@ package org.igniterealtime.xiff.core
 				if ( o is IQ )
 				{
 					var iq:IQ = o as IQ;
-					if ((iq.callbackName != null && iq.callbackScope != null) || iq.callback != null)
+					if ((iq.callbackName != null && iq.callbackScope != null) || iq.callback != null || iq.errorCallback != null)
 					{
-						addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
+						addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback, iq.errorCallback );
 					}
 				}
 				var root:XMLNode = o.getNode().parentNode;
@@ -824,10 +824,23 @@ package org.igniterealtime.xiff.core
 			}
 
 			// If it's an error, handle it
-
+			var callbackInfo:*;
 			if ( iq.type == IQ.TYPE_ERROR)
 			{
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
+
+				// Start the callback for this IQ if one exists
+				if ( pendingIQs[iq.id] !== undefined )
+				{
+					var callbackInfo:* = pendingIQs[iq.id];
+
+					if (callbackInfo.errorFunc != null)
+					{
+						callbackInfo.errorFunc( iq );
+					}
+					pendingIQs[iq.id] = null;
+					delete pendingIQs[iq.id];
+				}
 			}
 			else
 			{
@@ -835,7 +848,7 @@ package org.igniterealtime.xiff.core
 				// Start the callback for this IQ if one exists
 				if ( pendingIQs[iq.id] !== undefined )
 				{
-					var callbackInfo:* = pendingIQs[iq.id];
+					callbackInfo = pendingIQs[iq.id];
 
 					if (callbackInfo.methodScope && callbackInfo.methodName)
 					{
@@ -1189,6 +1202,7 @@ package org.igniterealtime.xiff.core
 
 			bindIQ.callback = handleBindResponse;
 			bindIQ.callbackScope = this;
+			bindIQ.errorCallback = handleBindError;
 
 			send(bindIQ);
 		}
@@ -1208,6 +1222,15 @@ package org.igniterealtime.xiff.core
 
 			establishSession();
 		}
+		
+		/**
+		 * Error handler callback
+		 * @param	packet
+		 */
+		protected function handleBindError(packet:IQ):void
+		{
+			
+		}
 
 		/**
 		 * @private
@@ -1220,6 +1243,7 @@ package org.igniterealtime.xiff.core
 
 			sessionIQ.callback = handleSessionResponse;
 			sessionIQ.callbackScope = this;
+			sessionIQ.errorCallback = handleSessionError;
 
 			send(sessionIQ);
 		}
@@ -1231,13 +1255,22 @@ package org.igniterealtime.xiff.core
 		{
 			dispatchEvent(new LoginEvent());
 		}
+		
+		/**
+		 * 
+		 * @param	packet
+		 */
+		private function handleSessionError(packet:IQ):void
+		{
+			
+		}
 
 		/**
 		 * @private
 		 */
-		protected function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function ):void
+		protected function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function, errorCallbackFunc:Function ):void
 		{
-			pendingIQs[id] = {methodName:callbackName, methodScope:callbackScope, func:callbackFunc};
+			pendingIQs[id] = { methodName:callbackName, methodScope:callbackScope, func:callbackFunc, errorFunc:errorCallbackFunc };
 		}
 
 		/**
