@@ -832,7 +832,7 @@ package org.igniterealtime.xiff.core
 				// Start the callback for this IQ if one exists
 				if ( pendingIQs[iq.id] !== undefined )
 				{
-					var callbackInfo:* = pendingIQs[iq.id];
+					callbackInfo = pendingIQs[iq.id];
 
 					if (callbackInfo.errorFunc != null)
 					{
