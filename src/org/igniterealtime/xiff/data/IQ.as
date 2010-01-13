@@ -37,6 +37,8 @@ package org.igniterealtime.xiff.data
 		private var myCallbackScope:Object;
 
 		private var myCallbackFunc:Function;
+		
+		private var myErrorCallbackFunc:Function;
 
 		private var myQueryName:String;
 
@@ -78,7 +80,7 @@ package org.igniterealtime.xiff.data
 		 * @param	iqCallback The function to be called when the server responds to the IQ
 		 * @param	iqCallbackScope The object instance containing the callback method
 		 */
-		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:String = null, iqCallbackScope:Object = null, iqCallbackFunc:Function = null )
+		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:String = null, iqCallbackScope:Object = null, iqCallbackFunc:Function = null, iqErrorCallback:Function = null )
 		{
 			var id:String = exists( iqID ) ? iqID : generateID( "iq_" );
 
@@ -87,6 +89,7 @@ package org.igniterealtime.xiff.data
 			callbackName = iqCallback;
 			callbackScope = iqCallbackScope;
 			callback = iqCallbackFunc;
+			errorCallback = iqErrorCallback;
 		}
 
 		/**
@@ -157,7 +160,19 @@ package org.igniterealtime.xiff.data
 		{
 			myCallback = value;
 		}
-
+		
+		/**
+		 * 
+		 */
+		public function get errorCallback():Function
+		{
+			return myErrorCallbackFunc;
+		}
+		public function set errorCallback( value:Function ):void
+		{
+			myErrorCallbackFunc = value;
+		}
+ 
 		/**
 		 * The scope of the callback function to call when a response to the IQ
 		 * is received. This isn't a required property, but is useful if you
