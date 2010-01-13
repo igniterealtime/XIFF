@@ -28,9 +28,8 @@ package org.igniterealtime.xiff.vcard
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 
-	import mx.utils.Base64Decoder;
-
-	//import com.hurlant.util.Base64;
+	//import mx.utils.Base64Decoder;
+	import com.hurlant.util.Base64;
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
@@ -469,11 +468,13 @@ package org.igniterealtime.xiff.vcard
 
 							if (photo.localName() == "BINVAL" && value.length > 0 )
 							{
+								/*
 								var decoder:Base64Decoder = new Base64Decoder();
 								decoder.decode( value );
 								_imageBytes = decoder.flush();
+								*/
 
-								//_imageBytes = Base64.decodeToByteArray( value );
+								_imageBytes = Base64.decodeToByteArray( value );
 								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
 															   this, true, false ) );
 							}

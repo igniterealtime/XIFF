@@ -31,7 +31,6 @@ package org.igniterealtime.xiff.auth
 	 */
 	public class SASLAuth
 	{
-
 		/**
 		 * The XML of the authentication request.
 		 */

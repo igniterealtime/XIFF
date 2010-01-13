@@ -73,7 +73,9 @@ package org.igniterealtime.xiff.data.im
 			var bareJID:String = jid.bareJID;
 			var item:RosterItemVO = allContacts[ bareJID ];
 			if ( !item && create )
+			{
 				allContacts[ bareJID ] = item = new RosterItemVO( new UnescapedJID( bareJID ));
+			}
 			return item;
 		}
 

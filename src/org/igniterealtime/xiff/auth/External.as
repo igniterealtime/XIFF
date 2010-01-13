@@ -24,8 +24,8 @@
 package org.igniterealtime.xiff.auth
 {
 
-	import mx.utils.Base64Encoder;
-	//import com.hurlant.util.Base64;
+	//import mx.utils.Base64Encoder;
+	import com.hurlant.util.Base64;
 	
 	import org.igniterealtime.xiff.core.XMPPConnection;
 	
@@ -49,12 +49,14 @@ package org.igniterealtime.xiff.auth
 		{
 			var authContent:String = connection.jid.node;
 
-			//authContent = Base64.encode(authContent);
-
+			authContent = Base64.encode(authContent);
+			
+			/*
 			var b64coder:Base64Encoder = new Base64Encoder();
 			b64coder.insertNewLines = false;
 			b64coder.encode( authContent );
 			authContent = b64coder.flush();
+			*/
 
 			req.setNamespace( External.NS );
 			req.@mechanism = External.MECHANISM;
