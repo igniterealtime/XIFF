@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -186,7 +186,7 @@ package org.igniterealtime.xiff.conference
 	[Event( name="configureForm",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a room configuration form is complete.
-	 * 
+	 *
 	 * @see #configure
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent
 	 */
@@ -427,9 +427,14 @@ package org.igniterealtime.xiff.conference
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var jid:EscapedJID;
+			if (alternateJID != null)
+			{
+				jid = alternateJID.escaped;
+			}
 
 			iq.callback = callback;
-			owner.destroy( reason, alternateJID.escaped );
+			owner.destroy( reason, jid );
 
 			iq.addExtension( owner );
 			_connection.send( iq );
@@ -437,7 +442,7 @@ package org.igniterealtime.xiff.conference
 		
 		/**
 		 * @private
-		 *  
+		 *
 		 * IQ callback when configuration is complete
 		 */
 		public function finish_configure( iq:IQ ):void
@@ -576,7 +581,7 @@ package org.igniterealtime.xiff.conference
 		public function isThisUser( sender:UnescapedJID ):Boolean
 		{
 			var value:Boolean = false;
-			if (userJID != null) 
+			if (userJID != null)
 			{
 				value = sender.toString().toLowerCase() == userJID.toString().toLowerCase();
 			}
@@ -685,7 +690,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * 
+		 *
 		 * @param	iq
 		 */
 		private function finish_requestAffiliates( iq:IQ ):void
@@ -703,7 +708,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * 
+		 *
 		 * @param	inName
 		 * @return
 		 */
@@ -720,7 +725,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * 
+		 *
 		 * @param	eventObj
 		 */
 		private function handleEvent( eventObj:Object ):void
@@ -1201,7 +1206,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				pendingNickname = value;
-				var tempPresence:Presence = new Presence( 
+				var tempPresence:Presence = new Presence(
 					new EscapedJID( userJID + "/" + value ));
 				_connection.send( tempPresence );
 			}
@@ -1284,7 +1289,7 @@ package org.igniterealtime.xiff.conference
 			{
 				return new UnescapedJID( _roomJID.bareJID + "/" + nickname );
 			}
-			return null;			
+			return null;
 		}
 
 		/**
