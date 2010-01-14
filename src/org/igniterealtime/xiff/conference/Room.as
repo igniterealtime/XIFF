@@ -693,7 +693,7 @@ package org.igniterealtime.xiff.conference
 		 *
 		 * @param	iq
 		 */
-		private function finish_requestAffiliates( iq:IQ ):void
+		public function finish_requestAffiliates( iq:IQ ):void
 		{
 			finish_admin( iq );
 			if ( iq.type == IQ.TYPE_RESULT )
