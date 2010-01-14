@@ -466,7 +466,7 @@ package org.igniterealtime.xiff.core
 
 			for ( var i:String in fieldMap )
 			{
-				ext[i] = fieldMap[i];
+				ext.setField(i, fieldMap[i]);
 			}
 			if (key != null)
 			{
@@ -1257,7 +1257,7 @@ package org.igniterealtime.xiff.core
 		}
 		
 		/**
-		 * 
+		 *
 		 * @param	packet
 		 */
 		private function handleSessionError(packet:IQ):void
