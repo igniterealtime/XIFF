@@ -28,15 +28,15 @@ package org.igniterealtime.xiff.core
 	import flash.utils.*;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
-
+	
 	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
 	import org.igniterealtime.xiff.data.bind.BindExtension;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
-	import org.igniterealtime.xiff.data.register.RegisterExtension;
-	import org.igniterealtime.xiff.data.session.SessionExtension;;
 	import org.igniterealtime.xiff.data.ping.PingExtension;
+	import org.igniterealtime.xiff.data.register.RegisterExtension;
+	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.exception.SerializationException;
 
@@ -219,6 +219,11 @@ package org.igniterealtime.xiff.core
 		 * @private
 		 */
 		protected var _compress:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _queuePresences:Boolean = true;
 
 		/**
 		 * @private
@@ -844,7 +849,6 @@ package org.igniterealtime.xiff.core
 			}
 			else
 			{
-
 				// Start the callback for this IQ if one exists
 				if ( pendingIQs[iq.id] !== undefined )
 				{
@@ -927,20 +931,31 @@ package org.igniterealtime.xiff.core
 				throw new SerializationException();
 			}
 
-			presenceQueue.push( presence );
-
-			presenceQueueTimer.reset();
-			presenceQueueTimer.start();
-
+			if(queuePresences) 
+			{
+				presenceQueue.push( presence );
+	
+				presenceQueueTimer.reset();
+				presenceQueueTimer.start();
+			}
+			else 
+			{
+				var presenceEvent:PresenceEvent = new PresenceEvent();
+				presenceEvent.data = [ presence ];
+				dispatchEvent( presenceEvent );
+			}
+			
 			return presence;
 		}
 
 		protected function flushPresenceQueue(event:TimerEvent):void
 		{
-			var presenceEvent:PresenceEvent = new PresenceEvent();
-			presenceEvent.data = presenceQueue;
-			dispatchEvent( presenceEvent );
-			presenceQueue = [];
+			if(presenceQueue.length > 0) {
+				var presenceEvent:PresenceEvent = new PresenceEvent();
+				presenceEvent.data = presenceQueue;
+				dispatchEvent( presenceEvent );
+				presenceQueue = [];
+			}
 		}
 
 		/**
@@ -1401,6 +1416,26 @@ package org.igniterealtime.xiff.core
 		public function set compress(value:Boolean):void
 		{
 			_compress = value;
+		}
+
+		/**
+		 * Should the connection queue presence events for a small interval so that it can send multiple in a batch?
+		 * @default true To maintain original behavior -- has to be explicitly set to false to disable.
+		 */
+		public function get queuePresences():Boolean
+		{
+			return _queuePresences;
+		}
+		public function set queuePresences(value:Boolean):void
+		{
+			if(_queuePresences && !value) 
+			{		// if we are disabling queueing, handle all queued presence 
+				if(presenceQueueTimer)
+					presenceQueueTimer.stop();
+				
+				flushPresenceQueue(null);
+			} 
+			_queuePresences = value;
 		}
 
 		/**
