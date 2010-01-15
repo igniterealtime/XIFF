@@ -222,7 +222,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 	    public function set type(value:String) :void
 	    {
-	        getNode().attributes.type = value;
+	        node.attributes.type = value;
 	    }
 	
 	

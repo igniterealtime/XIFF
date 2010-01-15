@@ -203,7 +203,7 @@ package org.igniterealtime.xiff.data
 			{
 				for each ( var child:XML in xmlNode.children() )
 				{
-					switch ( child.name() )
+					switch ( child.localName() )
 					{
 						// Adding error handler for 404 sent back by server
 						case "error":
@@ -229,7 +229,7 @@ package org.igniterealtime.xiff.data
 						case Message.STATE_GONE :
 						case Message.STATE_INACTIVE :
 						case Message.STATE_PAUSED :
-							myStateNode = children[i];
+							//myStateNode = children[i];
 							break;
 					}
 				}

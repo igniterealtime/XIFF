@@ -300,7 +300,7 @@ package org.igniterealtime.xiff.data.forms
 	    }
 	    public function set title(value:String) :void
 	    {
-	        myTitleNode = replaceTextNode(getNode(), myTitleNode, "Title", value);
+	        myTitleNode = replaceTextNode(node , myTitleNode, "Title", value);
 	    }
 	
 	    /**

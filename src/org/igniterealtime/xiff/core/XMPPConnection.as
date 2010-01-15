@@ -26,8 +26,6 @@ package org.igniterealtime.xiff.core
 	import flash.events.*;
 	import flash.net.*;
 	import flash.utils.*;
-	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
 
 	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.data.*;
@@ -385,15 +383,15 @@ package org.igniterealtime.xiff.core
 						addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback );
 					}
 				}
-				var root:XMLNode = o.getNode().parentNode;
+				var root:XML = o.node.parent();
 				if (root == null)
 				{
-					root = new XMLDocument();
+					root = <temporary/>;
 				}
 
 				if (o.serialize(root))
 				{
-					sendXML( root.firstChild ); // XMLNode
+					sendXML( root[0] );
 				}
 				else
 				{
@@ -444,7 +442,7 @@ package org.igniterealtime.xiff.core
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_GET,
 									 XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
-			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
+			regIQ.addExtension(new RegisterExtension(regIQ.node ));
 
 			send( regIQ );
 		}
@@ -462,7 +460,7 @@ package org.igniterealtime.xiff.core
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
 									 XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
-			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
+			var ext:RegisterExtension = new RegisterExtension(regIQ.node );
 
 			for ( var i:String in fieldMap )
 			{
@@ -487,7 +485,7 @@ package org.igniterealtime.xiff.core
 		{
 			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
 										XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
-			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
+			var ext:RegisterExtension = new RegisterExtension(passwdIQ.node );
 
 			ext.username = jid.escaped.bareJID;
 			ext.password = newPassword;
@@ -598,9 +596,9 @@ package org.igniterealtime.xiff.core
 		 * Calls a appropriate parser base on the nodeName.
 		 * @param	firstNode
 		 */
-		protected function handleNodeType(node:XMLNode):void
+		protected function handleNodeType(node:XML):void
 		{
-			var nodeName:String = node.nodeName.toLowerCase();
+			var nodeName:String = node.localName().toLowerCase();
 
 			switch( nodeName )
 			{
@@ -663,12 +661,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handleStream( node:XMLNode ):void
+		protected function handleStream( node:XML ):void
 		{
-			sessionID = node.attributes.id;
-			domain = node.attributes.from;
+			sessionID = node.@id;
+			domain = node.@from;
 
-			for each(var childNode:XMLNode in node.childNodes)
+			for each(var childNode:XML in node.children())
 			{
 				if (childNode.nodeName == "stream:features")
 				{
@@ -680,11 +678,11 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @see http://xmpp.org/registrar/stream-features.html
 		 */
-		protected function handleStreamFeatures( node:XMLNode ):void
+		protected function handleStreamFeatures( node:XML ):void
 		{
 			if (!loggedIn)
 			{
-				for each(var feature:XMLNode in node.childNodes)
+				for each(var feature:XML in node.children())
 				{
 					if (feature.nodeName == "starttls")
 					{
@@ -728,7 +726,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node The feature containing starttls tag.
 		 */
-		protected function handleStreamTLS( node:XMLNode ):void
+		protected function handleStreamTLS( node:XML ):void
 		{
 			if (node.firstChild && node.firstChild.nodeName == "required")
 			{
@@ -744,11 +742,11 @@ package org.igniterealtime.xiff.core
 		 * @param	mechanisms
 		 * @see #saslMechanisms
 		 */
-		protected function configureAuthMechanisms(mechanisms:XMLNode):void
+		protected function configureAuthMechanisms(mechanisms:XML):void
 		{
 			var authMechanism:SASLAuth;
 			var authClass:Class;
-			for each(var mechanism:XMLNode in mechanisms.childNodes)
+			for each(var mechanism:XML in mechanisms.children())
 			{
 				authClass = saslMechanisms[mechanism.firstChild.nodeValue];
 				if (useAnonymousLogin)
@@ -790,7 +788,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handleStreamError( node:XMLNode ):void
+		protected function handleStreamError( node:XML ):void
 		{
 			dispatchError( "service-unavailable", "Remote Server Error", "cancel", 502 );
 
@@ -814,7 +812,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handleIQ( node:XMLNode ):IQ
+		protected function handleIQ( node:XML ):IQ
 		{
 			var iq:IQ = new IQ();
 			// Populate the IQ with the incoming data
@@ -871,7 +869,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handleMessage( node:XMLNode ):Message
+		protected function handleMessage( node:XML ):Message
 		{
 			var message:Message = new Message();
 			// Populate with data
@@ -898,7 +896,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handlePresence( node:XMLNode ):Presence
+		protected function handlePresence( node:XML ):Presence
 		{
 			if (!presenceQueueTimer)
 			{
@@ -1004,20 +1002,14 @@ package org.igniterealtime.xiff.core
 				}
 			}
 
-			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = _ignoreWhitespace;
+			var xml:XML;
+			XML.ignoreWhitespace = _ignoreWhitespace;
 
-			//var xml:XML;
-			//XML.ignoreWhiteSpace = _ignoreWhitespace;
-
-			//error handling to catch incomplete xml strings that have
-			//been truncated by the socket
 			try
 			{
-				//xml = new XML(rawXML);
+				xml = new XML(rawXML);
 
 				var isComplete: Boolean = true;
-				xmlData.parseXML( rawXML );
 				_incompleteRawXML = '';
 
 
@@ -1035,11 +1027,11 @@ package org.igniterealtime.xiff.core
 				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );
 				
-				var len:uint = xmlData.childNodes.length;
+				var len:uint = xml.children().length();
 				for (var i:int = 0; i < len; ++i)
 				{
 					// Read the data and send it to the appropriate parser
-					var currentNode:XMLNode = xmlData.childNodes[i];
+					var currentNode:XML = xml.children()[i];
 					handleNodeType(currentNode);
 				}
 			}
@@ -1134,7 +1126,7 @@ package org.igniterealtime.xiff.core
 		{
 			if (auth != null)
 			{
-				sendXML(auth.request); // XMLNode
+				sendXML(auth.request);
 			}
 			else
 			{
@@ -1145,9 +1137,9 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function handleAuthentication(responseBody:XMLNode):void
+		protected function handleAuthentication(responseBody:XML):void
 		{
-			var status:Object = auth.handleResponse(0, XML(responseBody.toString()));
+			var status:Object = auth.handleResponse(0, responseBody);
 			if (status.authComplete)
 			{
 				if (status.authSuccess)

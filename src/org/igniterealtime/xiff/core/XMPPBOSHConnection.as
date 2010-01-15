@@ -415,7 +415,7 @@ package org.igniterealtime.xiff.core
 		{
 			// Read the data and send it to the appropriate parser
 			var currentNode:XML = responseQueue.shift();
-			var nodeName:String = currentNode.nodeName.toLowerCase();
+			var nodeName:String = currentNode.localName().toLowerCase();
 
 			switch ( nodeName )
 			{

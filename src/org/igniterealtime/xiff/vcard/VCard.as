@@ -447,7 +447,7 @@ package org.igniterealtime.xiff.vcard
 			namespace ns = "vcard-temp";
 			use namespace ns;
 			
-			var node:XML = XML(iq.getNode());
+			var node:XML = iq.node;
 			var vCardNode:XML = node.children()[ 0 ];
 
 			//var vCardNode:XML = iq.node.children()[ 0 ];
@@ -628,7 +628,7 @@ package org.igniterealtime.xiff.vcard
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "save_vcard_" ),
 								null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = vcardExt.getNode() as XML;
+			var vcardExtNode:XML = vcardExt.node as XML;
 			//var vcardExtNode:XML = vcardExt.node;
 
 			if ( firstName || middleName || lastName )
