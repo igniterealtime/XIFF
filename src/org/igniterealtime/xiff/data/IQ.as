@@ -50,21 +50,7 @@ package org.igniterealtime.xiff.data
 		 * data is needed in order to complete further operations, etc.
 		 */
 		public static const TYPE_GET:String = "get";
-
-		/**
-		 * The stanza reports an error that has occurred
-		 * regarding processing or delivery of a previously-sent get or
-		 * set request.
-		 * @see http://tools.ietf.org/html/draft-ietf-xmpp-3920bis-00#section-9.3
-		 */
-		public static const TYPE_ERROR:String = "error";
-
-		/**
-		 * The stanza requests information, inquires about what
-		 * data is needed in order to complete further operations, etc.
-		 */
-		public static const TYPE_GET:String = "get";
-
+		
 		/**
 		 * The stanza is a response to a successful get or set request.
 		 */
@@ -87,8 +73,8 @@ package org.igniterealtime.xiff.data
 		 * @param	iqCallback The function to be called when the server responds to the IQ
 		 * @param	iqCallbackScope The object instance containing the callback method
 		 */
-		public function IQ( recipient:EscapedJID = null, iqType:String = null, 
-			iqID:String = null, iqCallback:String = null, iqCallbackScope:Object = null, 
+		public function IQ( recipient:EscapedJID = null, iqType:String = null,
+			iqID:String = null, iqCallback:String = null, iqCallbackScope:Object = null,
 			iqCallbackFunc:Function = null )
 		{
 			var id:String = exists( iqID ) ? iqID : generateID( "iq_" );

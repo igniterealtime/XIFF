@@ -179,22 +179,6 @@ package org.igniterealtime.xiff.core
 			_connection.send( iq );
 		}
 
-		/**
-		 * Use the <code>BrowseExtension</code> (jabber:iq:browse namespace) to query a
-		 * resource for supported features and children.
-		 *
-		 * @param	id The full JabberID to query for service items
-		 * @param	callback The name of a callback function to call when results are retrieved
-		 * @param	scope The scope of the callback function
-		 */
-		public function browseItem( id:EscapedJID, callback:String, scope:Object ):void
-		{
-			var iq:IQ = new IQ( id, IQ.TYPE_GET );
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
-			iq.addExtension( new BrowseExtension( iq.getNode()));
-			_connection.send( iq );
-		}
 
 		/**
 		 * The instance of the XMPPConnection class to use for sending and

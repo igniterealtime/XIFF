@@ -144,11 +144,9 @@ package org.igniterealtime.xiff.core
 
 		override public function connect( streamType:uint = 0 ):Boolean
 		{
-			var result:XML =
-				<body/>
-				;
+			var result:XML = <body/>;
 			result.@[ "xml:lang" ] = XMPPStanza.XML_LANG;
-			result.setNamespace( "http://jabber.org/protocol/httpbind";
+			result.setNamespace( "http://jabber.org/protocol/httpbind" );
 			result.@[ "xmlns:xmpp" ] = "urn:xmpp:xbosh";
 			result.@[ "xmpp:version" ] = XMPPStanza.CLIENT_VERSION;
 			result.@hold = hold;
@@ -269,10 +267,8 @@ package org.igniterealtime.xiff.core
 		 */
 		private function createRequest( bodyContent:Array = null ):XML
 		{
-			var req:XML =
-				<body/>
-				;
-			req.setNamespace( "http://jabber.org/protocol/httpbind";
+			var req:XML = <body/>;
+			req.setNamespace( "http://jabber.org/protocol/httpbind" );
 			req.@rid = nextRID;
 			req.@sid = sid;
 

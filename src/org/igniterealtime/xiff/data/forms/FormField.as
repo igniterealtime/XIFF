@@ -221,26 +221,13 @@ package org.igniterealtime.xiff.data.forms
 			return node.@type;
 		}
 	    public function set type(value:String) :void
-	    { 
-	        getNode().attributes.type = value; 
+	    {
+	        getNode().attributes.type = value;
 	    }
 	
-	    /**
-	     * The label of this field used by user interfaces to render a descriptive
-	     * title of this field
-	     *
-	     */
-	    public function get label():String 
-		{ 
-			return getNode().attributes.label;
-		}
-	    public function set label(value:String) :void
-	    { 
-	        getNode().attributes.label = value; 
-	    }
 	
 	    /**
-	     * The chosen value for this field.  In forms with a type 
+	     * The chosen value for this field.  In forms with a type
 	     * <code>FormExtension.TYPE_REQUEST</code> this is typically the default
 	     * value of the field.
 	     *
@@ -258,101 +245,13 @@ package org.igniterealtime.xiff.data.forms
 	     * Suggested values can typically be retrieved in <code>getAllOptions</code>
 	     *
 	     */
-	    public function get value():String 
+	    public function get value():String
+		{
+			return node.@type;
+		}
+		public function set value(value:String):void
 		{
 			node.@type = value;
-		}
-
-	        myValueNodes[0] = replaceTextNode(getNode(), myValueNodes[0], "value", value);
-	    }
-	
-	    /**
-	     * The values for this multiple field.  In forms with a type 
-	     * <code>FormExtension.TYPE_REQUEST</code> these are typically the existing
-	     * values of the field.
-	     *
-	     * Applies to the following field types:
-	     *
-	     * <code>FormExtension.FIELD_TYPE_JID_MULTI</code>
-	     * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-	     * <code>FormExtension.FIELD_TYPE_TEXT_MULTI</code>
-	     *
-	     * @return	Array containing strings representing the values of this field
-	     */
-	    public function getAllValues():Array
-	    {
-	        var res:Array = [];
-	        for each(var valueNode:XMLNode in myValueNodes)
-	        {
-	            res.push(valueNode.firstChild.nodeValue);
-	        }
-	        return res;
-	    }
-	
-	    /**
-	     * Sets all the values of this field from an array of strings
-	     *
-	     * @param	value Array of Strings
-	     */
-	    public function setAllValues(value:Array) :void
-	    {
-	        for each(var v:XMLNode in myValueNodes) {
-	            v.removeNode();
-	        }
-	
-	        myValueNodes = value.map( 
-	        	function(value:String, index:uint, arr:Array):* { 
-	        		return replaceTextNode(getNode(), undefined, "value", value); 
-	        	}
-	        );
-	    }
-	
-	    /**
-	     * If options are provided for possible selections of the value they are listed
-	     * here.
-	     *
-	     * Applies to the following field types:
-	     *
-	     * <code>FormExtension.FIELD_TYPE_JID_MULTI</code>
-	     * <code>FormExtension.FIELD_TYPE_JID_SINGLE</code>
-	     * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-	     * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
-	     *
-	     * @return	Array of objects with the properties <code>label</code> and <code>value</code>
-	     */
-	    public function getAllOptions():Array
-	    {
-	        return myOptionNodes.map(
-	        	function(optionNode:XMLNode, index:uint, arr:Array):Object
-				{
-	        		return {
-	        			label: optionNode.attributes.label,
-	                	value: optionNode.firstChild.firstChild.nodeValue
-	        		}
-	        	}
-	        );
-	    }
-	
-	    /**
-	     * Sets all the options available from an array of objects
-	     *
-	     * @param	Array containing objects with the properties <code>label</code> and
-	     * <code>value</code>
-	     */
-	    public function setAllOptions(value:Array):void
-	    {
-	        for each(var optionNode:XMLNode in myOptionNodes) {
-	        	optionNode.removeNode();
-	        }
-	
-	        myOptionNodes = value.map(
-	        	function(v:Object, index:uint, arr:Array):XMLNode {
-	        		var option:XMLNode = replaceTextNode(getNode(), undefined, "value", v.value);
-	            	option.attributes.label = v.label;
-	            	return option;
-	        	}
-	        );
 	    }
 	}
-
 }

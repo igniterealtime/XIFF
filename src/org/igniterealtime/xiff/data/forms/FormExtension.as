@@ -45,7 +45,6 @@ package org.igniterealtime.xiff.data.forms
 	    public static const FIELD_TYPE_TEXT_MULTI:String = "text-multi";
 	    public static const FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
 	    public static const FIELD_TYPE_TEXT_SINGLE:String = "text-single";
-<<<<<<< .mine
 		
 		public static const TYPE_CANCEL:String = "cancel";
 		public static const TYPE_REQUEST:String = "form";
@@ -56,18 +55,7 @@ package org.igniterealtime.xiff.data.forms
 		public static const NS:String = "jabber:x:data";
 		
 		private var _fields:Array = [];
-
-=======
-	
-	    public static const TYPE_REQUEST:String = "form";
-	    public static const TYPE_RESULT:String = "result";
-	    public static const TYPE_SUBMIT:String = "submit";
-	    public static const TYPE_CANCEL:String = "cancel";
-	
-	    public static const NS:String = "jabber:x:data";
-	    public static const ELEMENT:String = "x";
-	
->>>>>>> .r11468
+		
 		//private static var isStaticConstructed:Boolean = enable();
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 
@@ -83,11 +71,7 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * @param	parent (Optional) The containing XML for this extension
 		 */
-<<<<<<< .mine
 		public function FormExtension( parent:XML = null )
-=======
-		public function FormExtension( parent:XMLNode = null )
->>>>>>> .r11468
 		{
 			super( parent );
 		}
@@ -197,28 +181,10 @@ package org.igniterealtime.xiff.data.forms
 		 * @return String the registered namespace of this form type
 		 * @see	http://xmpp.org/extensions/xep-0068.html
 		 */
-<<<<<<< .mine
 		public function getFormType():String
 		{
 			// Most likely at the start of the array
 			for each ( var field:FormField in _fields )
-=======
-	    public function getAllFields():Array
-	    {
-	        return _fields;
-	    }
-	
-	    /**
-	     * Sets the fields given a fieldmap object containing keys of field names
-	     * and values of value arrays
-	     *
-	     * @param	fieldmap Object in format obj[key:String].value:Array
-	     */
-	    public function setFields(fieldmap:Object):void
-	    {
-	        removeAllFields();
-	        for (var f:String in fieldmap)
->>>>>>> .r11468
 			{
 				if ( field.name == "FORM_TYPE" )
 					return field.value;
@@ -229,17 +195,6 @@ package org.igniterealtime.xiff.data.forms
 		public function getNS():String
 		{
 			return FormExtension.NS;
-		}
-
-		/**
-		 * Array of fields found in individual items due to a search query result
-		 *
-		 * @return	Array of FormField objects containing information about the fields
-		 * in the fields retrieved by getAllItems
-		 */
-		public function getReportedFields():Array
-		{
-			return myReportedFields;
 		}
 
 		/**
@@ -358,21 +313,6 @@ package org.igniterealtime.xiff.data.forms
 	    {
 	        return myReportedFields;
 	    }
-	
-	    /**
-	     * The type of form.  May be one of the following:
-	     *
-	     * <code>FormExtension.TYPE_REQUEST</code>
-	     * <code>FormExtension.TYPE_RESULT</code>
-	     * <code>FormExtension.TYPE_SUBMIT</code>
-	     * <code>FormExtension.TYPE_CANCEL</code>
-	     *
-	     */
-	
-	    public function get type():String
-		{
-			myTitleNode = replaceTextNode( node, myTitleNode, "Title", value );
-		}
 
 		/**
 		 * The type of form.  May be one of the following:
@@ -383,12 +323,10 @@ package org.igniterealtime.xiff.data.forms
 		 * <code>FormExtension.TYPE_CANCEL</code>
 		 *
 		 */
-
 		public function get type():String
 		{
 			return node.@type;
 		}
-
 		public function set type( value:String ):void
 		{
 			// TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"

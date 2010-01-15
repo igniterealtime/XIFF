@@ -21,16 +21,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< .mine
 package org.igniterealtime.xiff.data.im
 {
-=======
-package org.igniterealtime.xiff.data.im
-{
-	
-	import flash.xml.XMLNode;
-	
->>>>>>> .r11468
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -45,7 +37,6 @@ package org.igniterealtime.xiff.data.im
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
-<<<<<<< .mine
 		public static const ELEMENT_NAME:String = "item";
 
 		/**
@@ -53,13 +44,6 @@ package org.igniterealtime.xiff.data.im
 		 * @param	parent The parent XML
 		 */
 		public function RosterItem( parent:XML = null )
-=======
-		public static const ELEMENT:String = "item";
-		
-		private var myGroupNodes:Array;
-		
-		public function RosterItem( parent:XMLNode = null )
->>>>>>> .r11468
 		{
 			super();
 

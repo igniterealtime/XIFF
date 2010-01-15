@@ -38,21 +38,12 @@ package org.igniterealtime.xiff.data.muc
 		public static const ELEMENT_NAME:String = "x";
 
 		public static const NS:String = "http://jabber.org/protocol/muc";
-<<<<<<< .mine
 
 		/**
 		 *
 		 * @param	parent (Optional) The containing XML for this extension
 		 */
 		public function MUCExtension( parent:XML = null )
-=======
-		public static const ELEMENT:String = "x";
-	
-		private var myHistoryNode:XMLNode;
-		private var myPasswordNode:XMLNode;
-	
-		public function MUCExtension( parent:XMLNode = null )
->>>>>>> .r11468
 		{
 			super( parent );
 		}

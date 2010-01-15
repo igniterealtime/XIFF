@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,37 +84,10 @@ package org.igniterealtime.xiff.data.muc
 
 			return true;
 		}
-<<<<<<< .mine
 
 		override public function serialize( parent:XML ):Boolean
 		{
 			return super.serialize( parent );
 		}
-=======
-	
-	    override public function serialize( parent:XMLNode ):Boolean
-	    {
-	        return super.serialize(parent);
-	    }
-	
-	    /**
-	     * Replaces the <code>destroy</code> node with a new node and sets
-	     * the <code>reason</code> element and <code>jid</code> attribute
-	     *
-	     * @param	reason A string describing the reason for room destruction
-	     * @param	alternateJID A string containing a JID that room members can use instead of this room
-	     */
-	    public function destroy(reason:String, alternateJID:EscapedJID):void
-	    {
-	        _destroyNode = ensureNode(_destroyNode, "destroy");
-	        for each(var child:XMLNode in _destroyNode.childNodes)
-			{
-	            child.removeNode();
-	        }
-	
-	        if( exists(reason) ) { replaceTextNode(_destroyNode, undefined, "reason", reason); }
-	        if( exists(alternateJID) ) { _destroyNode.attributes.jid = alternateJID.toString(); }
-	    }
->>>>>>> .r11468
 	}
 }

@@ -39,21 +39,8 @@ package org.igniterealtime.xiff.data.muc
 		
 		public static const ELEMENT_NAME:String = "x";
 		public static const NS:String = "http://jabber.org/protocol/muc#user";
-<<<<<<< .mine
 
 		private var _actionNode:XML;
-
-=======
-		public static const ELEMENT:String = "x";
-	
-		public static const TYPE_DECLINE:String = "decline";
-		public static const TYPE_DESTROY:String = "destroy";
-		public static const TYPE_INVITE:String = "invite";
-		public static const TYPE_OTHER:String = "other";
-	
-		private var _actionNode:XMLNode;
-		private var _passwordNode:XMLNode;
->>>>>>> .r11468
 		private var _statuses:Array = [];
 
 		/**
@@ -85,22 +72,12 @@ package org.igniterealtime.xiff.data.muc
 					case TYPE_DECLINE:
 						_actionNode = child;
 						break;
-<<<<<<< .mine
 
 					case TYPE_DESTROY:
-=======
-						
-					case TYPE_DESTROY:
->>>>>>> .r11468
 						_actionNode = child;
 						break;
-<<<<<<< .mine
-
-					case TYPE_INVITE:
-=======
 						
 					case TYPE_INVITE:
->>>>>>> .r11468
 						_actionNode = child;
 						break;
 
@@ -111,37 +88,18 @@ package org.igniterealtime.xiff.data.muc
 			}
 			return true;
 		}
-
-		/**
-<<<<<<< .mine
-=======
-		 * Use this extension to invite another user
-		 */
-		public function invite(to:EscapedJID, from:EscapedJID, reason:String):void
-		{
-			updateActionNode(TYPE_INVITE, {to:to.toString(), from:from ? from.toString() : null}, reason);
-		}
 	
 		/**
->>>>>>> .r11468
 		 * Use this extension to destroy a room
 		 */
 		public function destroy( room:EscapedJID, reason:String ):void
 		{
-<<<<<<< .mine
 			updateActionNode( TYPE_DESTROY, { jid: room.toString() }, reason );
-=======
-			updateActionNode(TYPE_DESTROY, {jid: room.toString()}, reason);
->>>>>>> .r11468
 		}
 
 		public function getNS():String
 		{
-<<<<<<< .mine
 			return MUCUserExtension.NS;
-=======
-			updateActionNode(TYPE_DECLINE, {to:to.toString(), from:from ? from.toString() : null}, reason);
->>>>>>> .r11468
 		}
 
 		public function getElementName():String
@@ -170,14 +128,8 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function invite( to:EscapedJID, from:EscapedJID, reason:String ):void
 		{
-<<<<<<< .mine
 			updateActionNode( TYPE_INVITE, { to: to.toString(), from: from ? from.toString() :
 									  null }, reason );
-=======
-			if (_actionNode == null)
-				return null;
-			return _actionNode.nodeName == null ? TYPE_OTHER : _actionNode.nodeName;
->>>>>>> .r11468
 		}
 
 		/**
