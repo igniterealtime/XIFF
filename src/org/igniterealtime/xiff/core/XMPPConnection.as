@@ -1079,6 +1079,9 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function socketClosed(event:Event):void
 		{
+			active = false;
+			loggedIn = false;
+			
 			var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( disconnectionEvent );
 		}
