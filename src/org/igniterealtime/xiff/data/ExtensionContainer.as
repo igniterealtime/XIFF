@@ -70,7 +70,7 @@ package org.igniterealtime.xiff.data
 		{
 			for (var i:String in _exts[ns])
 			{
-				_exts[ns][i].ns();
+				removeExtension( _exts[ns][i] );
 			}
 			_exts[ns] = [];
 		}
@@ -82,8 +82,10 @@ package org.igniterealtime.xiff.data
 		
 		public function getExtension( name:String ):Extension
 		{
-			return getAllExtensions().filter(function(obj:IExtension, idx:int, arr:Array):Boolean
-		{ return obj.getElementName() == name; })[0];
+			return getAllExtensions().filter( function(obj:IExtension, idx:int, arr:Array):Boolean
+			{
+				return obj.getElementName() == name;
+			})[0];
 		}
 	
 		public function getAllExtensions():Array
