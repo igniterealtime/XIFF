@@ -604,7 +604,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * The usage of the secure or less secure port.
+		 * HTTP bind requests type. If secure, the requests will be sent
+		 * through HTTPS. If not, through HTTP.
 		 */
 		public function get secure():Boolean
 		{
@@ -613,7 +614,6 @@ package org.igniterealtime.xiff.core
 		public function set secure( value:Boolean ):void
 		{
 			_secure = value;
-			port = _secure ? HTTPS_PORT : HTTP_PORT;
 		}
 
 		/**
