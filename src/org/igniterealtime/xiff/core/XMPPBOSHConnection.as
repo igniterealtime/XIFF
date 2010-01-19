@@ -36,6 +36,25 @@ package org.igniterealtime.xiff.core
 
 	/**
 	 * Bidirectional-streams Over Synchronous HTTP (BOSH)
+	 * <p>Using BOSH do not prevent your application from respecting
+	 * Adobe Flash Player policy file issues. HTTP requests to your
+	 * server must be authorized with a crossdomain.xml file
+	 * in your webserver root.</p>
+	 *
+	 * <p>For eJabberd users : if your crossdomain policy file cannot
+	 * be served by your server, this issue can be solved with an
+	 * Apache proxy redirect so that any automatic Flash/Flex calls
+	 * to an URL like http://xmppserver:5280/crossdomain.xml will be
+	 * redirected as an URL of your choice such as
+	 * http://webserver/crossdomain.xml</p>
+	 *
+	 * <p>Warning: if you are using BOSH through HTTPS, your crossdomain
+	 * policy file must also be served through HTTPS. Your application
+	 * (if online) must also be served through HTTPS else you will
+	 * have a crossdomain policy issue. This issue can be solved by
+	 * using the secure property of the allow-access-from node in the
+	 * crossdomain.xml file. But this is not recommended by Adobe.</p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0124.html
 	 * @see http://xmpp.org/extensions/xep-0206.html
 	 */
@@ -262,12 +281,12 @@ package org.igniterealtime.xiff.core
 		override protected function sendXML( someData:* ):void
 		{
 			var thisData:XMLNode;
-			if (someData is XML) 
+			if (someData is XML)
 			{
 				var x : XML = someData as XML;
 				thisData = new XMLDocument( x.toXMLString() );
-			} 
-			else 
+			}
+			else
 			{
 				thisData = someData as XMLNode;
 			}
