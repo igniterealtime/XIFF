@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,17 +34,18 @@ package org.igniterealtime.xiff.data.im
 	{
 
 		/**
-		 * @see http://tools.ietf.org/html/draft-ietf-xmpp-3921bis-00#section-2.1.1.1
+		 * Inclusion of the 'ask' attribute is OPTIONAL.
+		 * @see http://tools.ietf.org/html/draft-ietf-xmpp-3921bis-03#section-2.1.2.1
 		 */
 		public static const ASK_TYPE_NONE:String = "none";
 
 		/**
-		 * 
+		 * @see http://tools.ietf.org/html/draft-ietf-xmpp-3921bis-03#section-3.1.2
 		 */
 		public static const ASK_TYPE_SUBSCRIBE:String = "subscribe";
 
 		/**
-		 * 
+		 *
 		 */
 		public static const ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
 
@@ -53,12 +54,12 @@ package org.igniterealtime.xiff.data.im
 		public static const NS:String = "jabber:iq:roster";
 
 		/**
-		 * 
+		 *
 		 */
 		public static const SHOW_PENDING:String = "Pending";
 
 		/**
-		 * 
+		 *
 		 */
 		public static const SHOW_UNAVAILABLE:String = "unavailable";
 
@@ -103,7 +104,7 @@ package org.igniterealtime.xiff.data.im
 		private var _items:Array = [];
 
 		/**
-		 * 
+		 *
 		 * @param	parent
 		 */
 		public function RosterExtension( parent:XML = null )
@@ -149,7 +150,9 @@ package org.igniterealtime.xiff.data.im
 				for each ( var group:String in groups )
 				{
 					if ( group )
+					{
 						item.addGroupNamed( group );
+					}
 				}
 			}
 		}

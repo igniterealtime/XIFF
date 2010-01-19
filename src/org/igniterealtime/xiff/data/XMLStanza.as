@@ -125,10 +125,10 @@ package org.igniterealtime.xiff.data
 		{
 			return _node;
 		}
-		public function set node( node:XML ):void
+		public function set node( value:XML ):void
 		{
 			// Transfer ownership from the node's parent to our old parent
-			_node = node;
+			_node = value;
 
 			if ( exists( _node ) && _node.parent() !== undefined )
 			{

@@ -99,7 +99,7 @@ package org.igniterealtime.xiff.data
 				var len:uint = extensions.length;
 				for ( var i:uint = 0; i < len; ++i )
 				{
-					extensions[ i ].ns(); // ?
+					removeExtension( extensions[ i ] );
 				}
 			}
 			_exts[ ns ] = [];
@@ -122,7 +122,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function getExtension( name:String ):Extension
 		{
-			return getAllExtensions().filter( 
+			return getAllExtensions().filter(
 				function( obj:IExtension, idx:int, arr:Array ):Boolean
 				{
 					return obj.getElementName() == name;

@@ -1250,9 +1250,9 @@ package org.igniterealtime.xiff.conference
 		{
 			return _roomJID;
 		}
-		public function set roomJID( jid:UnescapedJID ):void
+		public function set roomJID( value:UnescapedJID ):void
 		{
-			_roomJID = jid;
+			_roomJID = value;
 		}
 
 		/**
