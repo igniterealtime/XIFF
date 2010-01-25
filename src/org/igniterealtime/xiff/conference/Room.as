@@ -24,7 +24,7 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
-
+	
 	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
@@ -600,18 +600,59 @@ package org.igniterealtime.xiff.conference
 		 * either return or cancel the configuration of the room.
 		 *
 		 * @param	createReserved Set to true if you wish to create and configure a reserved room
+		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room. 
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
 		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
+		{
+			var muc:MUCExtension = new MUCExtension();
+
+			if ( password != null )
+			{
+				muc.password = password;
+			}
+
+			return joinWithExplicitMUCExtension(createReserved, muc, joinPresenceExtensions);
+		}
+
+		/**
+		 * Joins a conference room based on the parameters specified by the room
+		 * properties.	This call will create an instant room based on a default
+		 * server configuration if the room doesn't exist.
+		 *
+		 * <p>To create and begin the configuration process of a reserved room, pass
+		 * <code>true</code> to this method to begin the configuration process.	When
+		 * The configuration is complete, the room will be unlocked for others to join.
+		 * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and
+		 * either return or cancel the configuration of the room.
+		 *
+		 * This function adds an additional parameter to allow the caller to completely customize the MUC extension that 
+		 * gets sent to the room.  For example, you can add a history element that specifies how much discussion
+		 * history you want sent when you join the room (http://xmpp.org/extensions/xep-0045.html#enter-managehistory):
+		 * <code>
+		 * var muc:MUCExtension = new MUCExtension();
+		 * muc.history = true;
+		 * muc.maxchars = 0;
+		 * _room.joinWithExplicitMUCExtension(false, mucExt);
+		 * </code>
+		 * 
+		 * @param	createReserved Set to true if you wish to create and configure a reserved room
+		 * @param	mucExtension The customized MUC extension to send with initial presence to the room.
+		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room.
+		 * @return A boolean indicating whether the join attempt was successfully sent.
+		 */
+		public function joinWithExplicitMUCExtension( createReserved:Boolean, mucExtension:MUCExtension, joinPresenceExtensions:Array = null ):Boolean
 		{
 			if ( !_connection.isActive() || isActive )
 			{
 				return false;
 			}
 
-			myIsReserved = createReserved == true ? true : false;
+			myIsReserved = createReserved;
 
 			var joinPresence:Presence = new Presence( userJID.escaped );
+			joinPresence.addExtension( mucExtension );
+			
 			if ( joinPresenceExtensions != null )
 			{
 				for each ( var joinExt:*in joinPresenceExtensions )
@@ -620,14 +661,6 @@ package org.igniterealtime.xiff.conference
 				}
 			}
 
-			var muc:MUCExtension = new MUCExtension();
-
-			if ( password != null )
-			{
-				muc.password = password;
-			}
-
-			joinPresence.addExtension( muc );
 			_connection.send( joinPresence );
 			return true;
 		}
