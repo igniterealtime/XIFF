@@ -394,12 +394,6 @@ package org.igniterealtime.xiff.core
 			}
 
 			resetResponseProcessor();
-
-			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
-			if ( requestCount == 0 && !sendQueuedRequests())
-			{
-				pollServer();
-			}
 		}
 
 		/**
@@ -472,6 +466,12 @@ package org.igniterealtime.xiff.core
 			}
 
 			resetResponseProcessor();
+			
+			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
+			if ( requestCount == 0 && !sendQueuedRequests())
+			{
+				pollServer();
+			}
 		}
 
 		/**
