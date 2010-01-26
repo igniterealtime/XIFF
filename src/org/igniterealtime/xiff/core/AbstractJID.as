@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,8 +53,8 @@ package org.igniterealtime.xiff.core
 		protected var _resource:String = "";
 
 		//if we use the literal regexp notation, flex gets confused and thinks the quote starts a string
-		private static var quoteregex:RegExp = new RegExp('"', "g");
-		private static var quoteregex2:RegExp = new RegExp("'", "g");
+		private static const QUOTE_REGEX:RegExp = new RegExp('"', "g");
+		private static const QUOTE_REGEX2:RegExp = new RegExp("'", "g");
 
 		/**
 		 * Creates a new AbstractJID object. Used via EscapedJID or UnescapedJID.
@@ -121,8 +121,8 @@ package org.igniterealtime.xiff.core
 				n = n.replace(/</g, "\\3c");
 				n = n.replace(/:/g, "\\3a");
 				n = n.replace(/\//g, "\\2f");
-				n = n.replace(quoteregex, "\\22");
-				n = n.replace(quoteregex2, "\\27");
+				n = n.replace(QUOTE_REGEX, "\\22");
+				n = n.replace(QUOTE_REGEX2, "\\27");
 			}
 			return n;
 		}
@@ -155,8 +155,8 @@ package org.igniterealtime.xiff.core
 				n = n.replace(/\3c/g, "<");
 				n = n.replace(/\3a/g, ":");
 				n = n.replace(/\2f/g, "/");
-				n = n.replace(quoteregex, '"');
-				n = n.replace(quoteregex2, "'");
+				n = n.replace(QUOTE_REGEX, '"');
+				n = n.replace(QUOTE_REGEX2, "'");
 				n = n.replace(/\5c/g, "\\");
 			}
 			return n;
