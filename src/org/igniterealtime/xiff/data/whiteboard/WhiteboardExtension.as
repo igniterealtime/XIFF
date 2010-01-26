@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	 */
 	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
 	{
-		public static const ELEMENT:String = "x";
+		public static const ELEMENT_NAME:String = "x";
 		public static const NS:String = "xiff:wb";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
@@ -67,7 +67,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function getElementName():String
 		{
-			return WhiteboardExtension.ELEMENT;
+			return WhiteboardExtension.ELEMENT_NAME;
 		}
 		
 		/**

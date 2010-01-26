@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.xhtml
 	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "http://www.w3.org/1999/xhtml";
-		public static const ELEMENT:String = "html";
+		public static const ELEMENT_NAME:String = "html";
 
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 
@@ -96,7 +96,7 @@ package org.igniterealtime.xiff.data.xhtml
 		 */
 		public function getElementName():String
 		{
-			return XHTMLExtension.ELEMENT;
+			return XHTMLExtension.ELEMENT_NAME;
 		}
 
 	    /**

@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.forms
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
-		public static const ELEMENT:String = "field";
+		public static const ELEMENT_NAME:String = "field";
 	
 	    private var myDescNode:XMLNode;
 	    private var myRequiredNode:XMLNode;
@@ -60,7 +60,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
-			getNode().nodeName = FormField.ELEMENT;
+			getNode().nodeName = FormField.ELEMENT_NAME;
 	
 			if ( parent != getNode().parentNode ) 
 			{

@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.rpc
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:rpc";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
@@ -82,7 +82,7 @@ package org.igniterealtime.xiff.data.rpc
 		 */
 		public function getElementName():String
 		{
-			return RPCExtension.ELEMENT;
+			return RPCExtension.ELEMENT_NAME;
 		}
 	
 	    /**

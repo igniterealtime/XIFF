@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.im
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
-		public static const ELEMENT:String = "item";
+		public static const ELEMENT_NAME:String = "item";
 		
 		private var myGroupNodes:Array;
 		
@@ -49,7 +49,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			super();
 			
-			getNode().nodeName = ELEMENT;
+			getNode().nodeName = ELEMENT_NAME;
 			myGroupNodes = [];
 			
 			if( exists( parent ) ) {

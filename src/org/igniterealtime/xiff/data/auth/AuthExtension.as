@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,23 +22,23 @@
  * limitations under the License.
  */
 package org.igniterealtime.xiff.data.auth
-{	
+{
 	import flash.xml.XMLNode;
 	import flash.utils.ByteArray;
 	import org.igniterealtime.xiff.data.*;
-		
-	import org.igniterealtime.xiff.data.auth.SHA1;
+	
+	import org.igniterealtime.xiff.util.SHA1;
 	//import com.hurlant.crypto.hash.SHA1;
 	
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a> 
+	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a>
 	 * for non SASL authentication.
 	 * @see	http://xmpp.org/extensions/xep-0078.html
 	 */
 	public class AuthExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "jabber:iq:auth";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 		private var myUsernameNode:XMLNode;
 		private var myPasswordNode:XMLNode;
@@ -69,11 +69,11 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function getElementName():String
 		{
-			return AuthExtension.ELEMENT;
+			return AuthExtension.ELEMENT_NAME;
 		}
 	
 	    /**
-	     * Registers this extension with the extension registry.  
+	     * Registers this extension with the extension registry.
 	     */
 	    public static function enable():void
 	    {
@@ -119,7 +119,7 @@ package org.igniterealtime.xiff.data.auth
 		}
 	
 		/**
-		 * Computes the SHA1 digest of the password and session ID for use when 
+		 * Computes the SHA1 digest of the password and session ID for use when
 		 * authenticating with the server.
 		 *
 		 * @param	sessionID The session ID provided by the server
@@ -143,45 +143,45 @@ package org.igniterealtime.xiff.data.auth
 		 *
 		 * @return It is a digest (true); it is not a digest (false)
 		 */
-		public function isDigest():Boolean 
-		{ 
-			return exists(myDigestNode); 
+		public function isDigest():Boolean
+		{
+			return exists(myDigestNode);
 		}
 	
 		/**
 		 * Determines whether this is a plain-text password authentication.
 		 *
-		 * @return It is plain-text password (true); it is not plain-text 
+		 * @return It is plain-text password (true); it is not plain-text
 		 * password (false)
 		 */
-		public function isPassword():Boolean 
-		{ 
-			return exists(myPasswordNode); 
+		public function isPassword():Boolean
+		{
+			return exists(myPasswordNode);
 		}
 	
 		/**
 		 * The username to use for authentication.
 		 */
-		public function get username():String 
+		public function get username():String
 		{
 			if(myUsernameNode && myUsernameNode.firstChild)
 				return myUsernameNode.firstChild.nodeValue;
 			
-			return null; 
+			return null;
 		}
 	
 		/**
 		 * @private
 		 */
-		public function set username(value:String):void 
-		{ 
+		public function set username(value:String):void
+		{
 			myUsernameNode = replaceTextNode(getNode(), myUsernameNode, "username", value);
 		}
 	
 		/**
 		 * The password to use for authentication.
 		 */
-		public function get password():String 
+		public function get password():String
 		{
 			if (myPasswordNode && myPasswordNode.firstChild)
 			{
@@ -208,7 +208,7 @@ package org.igniterealtime.xiff.data.auth
 		/**
 		 * The SHA1 digest to use for authentication.
 		 */
-		public function get digest():String 
+		public function get digest():String
 		{
 			if (myDigestNode && myDigestNode.firstChild)
 			{

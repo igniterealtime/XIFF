@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.muc{
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/muc#admin";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 		private var _items:Array;
 	
@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.data.muc{
 	
 		public function getElementName():String
 		{
-			return MUCAdminExtension.ELEMENT;
+			return MUCAdminExtension.ELEMENT_NAME;
 		}
 	}
 }

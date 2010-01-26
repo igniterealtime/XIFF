@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.browse
 	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable
 	{
 		public static const NS:String = "jabber:iq:browse";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
@@ -71,7 +71,7 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function getElementName():String
 		{
-			return BrowseExtension.ELEMENT;
+			return BrowseExtension.ELEMENT_NAME;
 		}
 	
 	    /**

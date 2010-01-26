@@ -48,7 +48,7 @@ package org.igniterealtime.xiff.data.disco
 		
 		public function getElementName():String
 		{
-			return DiscoExtension.ELEMENT;
+			return DiscoExtension.ELEMENT_NAME;
 		}
 	
 		public function getNS():String

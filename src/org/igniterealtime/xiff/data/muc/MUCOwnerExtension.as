@@ -37,7 +37,7 @@ package org.igniterealtime.xiff.data.muc
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/muc#owner";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 		private var _destroyNode:XMLNode;
 	
@@ -57,7 +57,7 @@ package org.igniterealtime.xiff.data.muc
 	
 		public function getElementName():String
 		{
-			return MUCOwnerExtension.ELEMENT;
+			return MUCOwnerExtension.ELEMENT_NAME;
 		}
 	
 		override public function deserialize( node:XMLNode ):Boolean

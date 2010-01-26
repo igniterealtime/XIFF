@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCItem extends XMLStanza implements ISerializable
 	{
-		public static const ELEMENT:String = "item";
+		public static const ELEMENT_NAME:String = "item";
 	
 		private var myActorNode:XMLNode;
 		private var myReasonNode:XMLNode;
@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			super();
 	
-			getNode().nodeName = ELEMENT;
+			getNode().nodeName = ELEMENT_NAME;
 	
 			if (exists(parent)) {
 				parent.appendChild(getNode());

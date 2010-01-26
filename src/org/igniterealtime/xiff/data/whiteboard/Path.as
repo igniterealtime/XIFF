@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	 */
 	public class Path implements ISerializable
 	{
-		public static const ELEMENT:String = "path";
+		public static const ELEMENT_NAME:String = "path";
 	
 	    private var _segments:Array = [];
 	    private var _stroke:Stroke;
@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function serialize( parent:XMLNode ):Boolean
 		{
-	        var node:XMLNode = XMLStanza.XMLFactory.createElement(Path.ELEMENT);
+	        var node:XMLNode = XMLStanza.XMLFactory.createElement(Path.ELEMENT_NAME);
 			node.attributes['p'] = serializeSegments();
 	        stroke.serialize(node);
 	        fill.serialize(node);

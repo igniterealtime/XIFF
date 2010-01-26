@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.im{
 	public class RosterExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "jabber:iq:roster";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 		
 		public static const SUBSCRIBE_TYPE_NONE:String = "none";
 		public static const SUBSCRIBE_TYPE_TO:String = "to";
@@ -83,7 +83,7 @@ package org.igniterealtime.xiff.data.im{
 		 */
 		public function getElementName():String
 		{
-			return RosterExtension.ELEMENT;
+			return RosterExtension.ELEMENT_NAME;
 		}
 		
 	    /**

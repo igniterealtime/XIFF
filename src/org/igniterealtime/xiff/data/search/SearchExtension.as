@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.search{
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:search";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 		private var _fields:Object = {};
 		private var _instructionsNode:XMLNode;
@@ -68,7 +68,7 @@ package org.igniterealtime.xiff.data.search{
 	
 		public function getElementName():String
 		{
-			return SearchExtension.ELEMENT;
+			return SearchExtension.ELEMENT_NAME;
 		}
 	
 	    /**

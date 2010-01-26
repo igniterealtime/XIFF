@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.data.forms
 	    public static const TYPE_CANCEL:String = "cancel";
 	
 	    public static const NS:String = "jabber:x:data";
-	    public static const ELEMENT:String = "x";
+	    public static const ELEMENT_NAME:String = "x";
 	
 		//private static var isStaticConstructed:Boolean = enable();
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
@@ -82,7 +82,7 @@ package org.igniterealtime.xiff.data.forms
 	
 		public function getElementName():String
 		{
-			return FormExtension.ELEMENT;
+			return FormExtension.ELEMENT_NAME;
 		}
 		
 		public static function enable():Boolean

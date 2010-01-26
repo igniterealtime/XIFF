@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data.register
 	public class RegisterExtension extends Extension implements IExtension, ISerializable
 	{
 		public static const NS:String = "jabber:iq:register";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 		
@@ -66,7 +66,7 @@ package org.igniterealtime.xiff.data.register
 	
 		public function getElementName():String
 		{
-			return RegisterExtension.ELEMENT;
+			return RegisterExtension.ELEMENT_NAME;
 		}
 	
 	    /**

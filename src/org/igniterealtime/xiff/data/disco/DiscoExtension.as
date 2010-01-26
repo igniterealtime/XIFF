@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.data.disco
 	{
 		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/disco";
-		public static const ELEMENT:String = "query";
+		public static const ELEMENT_NAME:String = "query";
 		
 		public var _service:EscapedJID;
 	

@@ -765,7 +765,7 @@ package org.igniterealtime.xiff.core
 				}
 				else
 				{
-					if (authClass)
+					if (authClass != Anonymous)
 					{
 						break;
 					}
@@ -931,14 +931,14 @@ package org.igniterealtime.xiff.core
 				throw new SerializationException();
 			}
 
-			if(queuePresences) 
+			if(queuePresences)
 			{
 				presenceQueue.push( presence );
 	
 				presenceQueueTimer.reset();
 				presenceQueueTimer.start();
 			}
-			else 
+			else
 			{
 				var presenceEvent:PresenceEvent = new PresenceEvent();
 				presenceEvent.data = [ presence ];
@@ -1431,13 +1431,13 @@ package org.igniterealtime.xiff.core
 		}
 		public function set queuePresences(value:Boolean):void
 		{
-			if(_queuePresences && !value) 
-			{		// if we are disabling queueing, handle all queued presence 
+			if(_queuePresences && !value)
+			{		// if we are disabling queueing, handle all queued presence
 				if(presenceQueueTimer)
 					presenceQueueTimer.stop();
 				
 				flushPresenceQueue(null);
-			} 
+			}
 			_queuePresences = value;
 		}
 

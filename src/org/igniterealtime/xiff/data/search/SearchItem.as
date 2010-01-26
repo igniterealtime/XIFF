@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data.search{
 	 */
 	public class SearchItem extends XMLStanza implements ISerializable
 	{
-		public static const ELEMENT:String = "item";
+		public static const ELEMENT_NAME:String = "item";
 	
 		private var _fields:Object = {};
 	
@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.search{
 		{
 			super();
 			
-			getNode().nodeName = ELEMENT;
+			getNode().nodeName = ELEMENT_NAME;
 	
 			if (exists(parent))
 			{
