@@ -34,6 +34,7 @@ package org.igniterealtime.xiff.auth
 	 * This class provides SASL authentication using the DIGEST-MD5 mechanism, a HTTP Digest
 	 * compatible challenge-response scheme based upon MD5. DIGEST-MD5 offers a data security layer.
 	 * @see http://en.wikipedia.org/wiki/Digest_access_authentication
+	 * @see http://tools.ietf.org/html/rfc1321
 	 */
 	public class DigestMD5 extends SASLAuth
 	{

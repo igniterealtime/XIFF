@@ -27,10 +27,11 @@ package org.igniterealtime.xiff.util
 	 * A static class for SHA1 hash creation. Original ActionScript 1.0 version
 	 * by Branden Hall. Original ActionScript 2.0 translation by Ron Haberle.
 	 * @see http://csrc.nist.gov/groups/ST/hash/statement.html
+	 * @see http://tools.ietf.org/html/rfc3174
 	 */
 	public class SHA1
 	{
-		private static var hex_chr:String = "0123456789abcdef";
+		private static const HEX_STR:String = "0123456789abcdef";
 		
 		/**
 		 * Takes a string and returns the hex representation of its SHA1 hash.
@@ -85,7 +86,7 @@ package org.igniterealtime.xiff.util
 			var str:String = "";
 			for (var j:Number = 7; j >= 0; j--)
 			{
-				str += hex_chr.charAt((num >> (j * 4)) & 0x0F);
+				str += HEX_STR.charAt((num >> (j * 4)) & 0x0F);
 			}
 			return str;
 		}
