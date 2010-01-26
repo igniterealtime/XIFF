@@ -25,9 +25,8 @@ package org.igniterealtime.xiff.data.auth
 {
 	import flash.utils.ByteArray;
 	import org.igniterealtime.xiff.data.*;
-		
-	import org.igniterealtime.xiff.data.auth.SHA1;
-	//import com.hurlant.crypto.hash.SHA1;
+	
+	import com.hurlant.crypto.hash.SHA1;
 	
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a>
@@ -93,18 +92,15 @@ package org.igniterealtime.xiff.data.auth
 		 *
 		 * @param	sessionID The session ID provided by the server
 		 * @param	password The user's password
+		 * @see http://csrc.nist.gov/groups/ST/hash/statement.html
 		 */
 		public static function computeDigest( sessionID:String, password:String ):String
 		{
-			/*
 			var bytesIn:ByteArray = new ByteArray();
 			bytesIn.writeUTFBytes( sessionID + password );
 			var sha:SHA1 = new SHA1();
-			var bytesOut:ByteArray =  sha.hash( bytesIn );
+			var bytesOut:ByteArray = sha.hash( bytesIn );
 			return bytesOut.readUTFBytes( bytesOut.length );
-			*/
-			
-			return SHA1.calcSHA1( sessionID + password ).toLowerCase();
 		}
 	
 		/**

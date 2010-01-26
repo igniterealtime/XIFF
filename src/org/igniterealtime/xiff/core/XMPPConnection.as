@@ -136,6 +136,20 @@ package org.igniterealtime.xiff.core
 		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
 		
 		/**
+		 * The types of SASL mechanisms available.
+		 * @see org.igniterealtime.xiff.auth.Anonymous
+		 * @see org.igniterealtime.xiff.auth.DigestMD5
+		 * @see org.igniterealtime.xiff.auth.External
+		 * @see org.igniterealtime.xiff.auth.Plain
+		 */
+		protected static const SASL_MECHANISMS:Object = {
+			"PLAIN": Plain,
+			"ANONYMOUS": Anonymous,
+			//"DIGEST-MD5": DigestMD5,
+			"EXTERNAL": External
+		};
+		
+		/**
 		 * Binary socket used to connect to the XMPP server.
 		 */
 		protected var socket:Socket;
@@ -239,20 +253,6 @@ package org.igniterealtime.xiff.core
 		protected static var _openConnections:Array = [];
 
 		/**
-		 * The types of SASL mechanisms available.
-		 * @see org.igniterealtime.xiff.auth.Anonymous
-		 * @see org.igniterealtime.xiff.auth.DigestMD5
-		 * @see org.igniterealtime.xiff.auth.External
-		 * @see org.igniterealtime.xiff.auth.Plain
-		 */
-		protected static var saslMechanisms:Object = {
-				"PLAIN": Plain,
-				"ANONYMOUS": Anonymous,
-				//"DIGEST-MD5": DigestMD5,
-				"EXTERNAL": External
-			};
-
-		/**
 		 * Save the previously received data if it was incomplete.
 		 */
 		protected var _incompleteRawXML:String = "";
@@ -262,7 +262,15 @@ package org.igniterealtime.xiff.core
 		 * @default STREAM_TYPE_STANDARD
 		 */
 		protected var _streamType:uint = 0;
+		
+		/**
+		 *
+		 */
 		private var presenceQueue:Array = [];
+		
+		/**
+		 *
+		 */
 		private var presenceQueueTimer:Timer;
 
 		/**
@@ -325,7 +333,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public static function registerSASLMechanism(name:String, authClass:Class):void
 		{
-			saslMechanisms[name] = authClass;
+			SASL_MECHANISMS[name] = authClass;
 		}
 
 		/**
@@ -334,7 +342,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public static function disableSASLMechanism(name:String):void
 		{
-			saslMechanisms[name] = null;
+			SASL_MECHANISMS[name] = null;
 		}
 
 		/**
@@ -728,7 +736,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleStreamTLS( node:XML ):void
 		{
-			if (node.firstChild && node.firstChild.nodeName == "required")
+			if (node.required.length() == 1)
 			{
 				// No TLS support yet
 				dispatchError("TLS required", "The server requires TLS, but this feature is not implemented.", "cancel", 501);
@@ -738,9 +746,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Use the authentication which is first in the list (saslMechanisms) if possible.
+		 * Use the authentication which is first in the list (SASL_MECHANISMS) if possible.
 		 * @param	mechanisms
-		 * @see #saslMechanisms
+		 * @see #SASL_MECHANISMS
 		 */
 		protected function configureAuthMechanisms(mechanisms:XML):void
 		{
@@ -748,7 +756,8 @@ package org.igniterealtime.xiff.core
 			var authClass:Class;
 			for each(var mechanism:XML in mechanisms.children())
 			{
-				authClass = saslMechanisms[mechanism.firstChild.nodeValue];
+				trace("configureAuthMechanisms. " + mechanism.children()[0].localName());
+				authClass = SASL_MECHANISMS[ mechanism.children()[0].localName() ];
 				if (useAnonymousLogin)
 				{
 					if (authClass == Anonymous)
@@ -758,7 +767,7 @@ package org.igniterealtime.xiff.core
 				}
 				else
 				{
-					if (authClass)
+					if (authClass != Anonymous)
 					{
 						break;
 					}

@@ -28,6 +28,7 @@ package org.igniterealtime.xiff.data.ping
 	import org.igniterealtime.xiff.data.ISerializable;
 
 	/**
+	 * Ping the server, thus keeping the connection open.
 	 * @see http://xmpp.org/extensions/xep-0199.html
 	 */
 	public class PingExtension implements IExtension, ISerializable
