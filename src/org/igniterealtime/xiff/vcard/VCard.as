@@ -60,188 +60,157 @@ package org.igniterealtime.xiff.vcard
 	public class VCard extends EventDispatcher
 	{
 		/**
-		 *
-		 * @default
+		 * VCard cache indexed by the jid or the user
 		 */
 		private static var cache:Object = {};
 
 		/**
 		 * Flush the vcard cache every 6 hours
-		 * @default
 		 */
 		private static var cacheFlushTimer:Timer = new Timer( 6 * 60 * 60 * 1000, 0 );
 
 		/**
-		 *
-		 * @default
+		 * Queue of the pending requests
 		 */
 		private static var requestQueue:Array = [];
 
 		/**
-		 *
-		 * @default
+		 * Timer to prosess the queue
 		 */
 		private static var requestTimer:Timer;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var birthDay:Date;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var company:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var department:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var email:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var firstName:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var fullName:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var gender:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeAddress:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeCellNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeCity:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeCountry:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeFaxNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homePagerNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homePostalCode:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeStateProvince:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var homeVoiceNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var jid:UnescapedJID;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var lastName:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var loaded:Boolean = false;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var maritalStatus:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var middleName:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var namePrefix:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var nameSuffix:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var nickname:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var otherName:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var title:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var url:String;
 
@@ -252,78 +221,66 @@ package org.igniterealtime.xiff.vcard
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workAddress:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workCellNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workCity:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workCountry:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workFaxNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workPagerNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workPostalCode:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workStateProvince:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		public var workVoiceNumber:String;
 
 		/**
 		 *
-		 * @default
 		 */
 		private var _avatar:DisplayObject;
 
 		/**
 		 *
-		 * @default
 		 */
 		private var _imageBytes:ByteArray;
 
 		/**
 		 *
-		 * @default
 		 */
 		private var contact:RosterItemVO;
 
 		/**
-		 * Don't call directly VCard, use a static method and add a callback.
+		 * Don't call directly VCard, use a static method (getVCard) and add a callback.
 		 */
 		public function VCard()
 		{
@@ -334,54 +291,57 @@ package org.igniterealtime.xiff.vcard
 		 * Seems to be the way a vcard is requested and then later referred to:
 		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
 		 * vCard.addEventListener(VCardEvent.LOADED, onVCard);</code>
-		 * @param con
+		 * @param connection
 		 * @param user
 		 * @return Reference to the VCard which will be filled once the loaded event occurs.
 		 */
-		public static function getVCard( con:XMPPConnection, user:RosterItemVO ):VCard
+		public static function getVCard( connection:XMPPConnection, user:RosterItemVO ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
 				cacheFlushTimer.start();
 				cacheFlushTimer.addEventListener( TimerEvent.TIMER, function( event:TimerEvent ):void
+				{
+					var tempCache:Object = cache;
+					cache = {};
+					for each ( var cachedCard:VCard in tempCache )
 					{
-						var tempCache:Object = cache;
-						cache = {};
-						for each ( var cachedCard:VCard in tempCache )
-						{
-							pushRequest( con, vcard );
-						}
-					} );
+						pushRequest( connection, vcard );
+					}
+				} );
 			}
 
 			var jidString:String = user.jid.toString();
 
 			var cachedCard:VCard = cache[ jidString ];
 			if ( cachedCard )
+			{
 				return cachedCard;
+			}
 
 			var vcard:VCard = new VCard();
 			vcard.contact = user;
+			vcard.jid = user.jid;
 			cache[ jidString ] = vcard;
 
-			pushRequest( con, vcard );
+			pushRequest( connection, vcard );
 
 			return vcard;
 		}
 
 		/**
 		 * Add the request to the stack of requests
-		 * @param con
+		 * @param connection
 		 * @param vcard
 		 */
-		private static function pushRequest( con:XMPPConnection, vcard:VCard ):void
+		private static function pushRequest( connection:XMPPConnection, vcard:VCard ):void
 		{
 			if ( !requestTimer )
 			{
 				requestTimer = new Timer( 1, 1 );
 				requestTimer.addEventListener( TimerEvent.TIMER_COMPLETE, sendRequest );
 			}
-			requestQueue.push( { connection: con, card: vcard } );
+			requestQueue.push( { connection: connection, card: vcard } );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -393,9 +353,11 @@ package org.igniterealtime.xiff.vcard
 		private static function sendRequest( event:TimerEvent ):void
 		{
 			if ( requestQueue.length == 0 )
+			{
 				return;
+			}
 			var req:Object = requestQueue.pop();
-			var con:XMPPConnection = req.connection;
+			var connection:XMPPConnection = req.connection;
 			var vcard:VCard = req.card;
 			var user:RosterItemVO = vcard.contact;
 
@@ -406,7 +368,7 @@ package org.igniterealtime.xiff.vcard
 			iq.callbackScope = vcard;
 			iq.addExtension( new VCardExtension() );
 
-			con.send( iq );
+			connection.send( iq );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -446,12 +408,14 @@ package org.igniterealtime.xiff.vcard
 			namespace ns = "vcard-temp";
 			use namespace ns;
 			
-			var node:XML = XML(iq.getNode());
+			var node:XML = XML( iq.getNode() );
 			var vCardNode:XML = node.children()[ 0 ];
 
 			//var vCardNode:XML = iq.node.children()[ 0 ];
 			if ( !vCardNode )
+			{
 				return;
+			}
 
 			version = Number( vCardNode.@version );
 
@@ -621,10 +585,10 @@ package org.igniterealtime.xiff.vcard
 
 		/**
 		 *
-		 * @param con
+		 * @param connection
 		 * @param user
 		 */
-		public function saveVCard( con:XMPPConnection, user:RosterItemVO ):void
+		public function saveVCard( connection:XMPPConnection, user:RosterItemVO ):void
 		{
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "save_vcard_" ),
 								null, this, _vCardSent );
@@ -869,7 +833,7 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			iq.addExtension( vcardExt );
-			con.send( iq );
+			connection.send( iq );
 		}
 	}
 }
