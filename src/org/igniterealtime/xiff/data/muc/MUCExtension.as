@@ -39,7 +39,6 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/muc";
 		public static const ELEMENT_NAME:String = "x";
 	

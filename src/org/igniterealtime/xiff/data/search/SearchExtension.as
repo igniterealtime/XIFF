@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,16 +33,15 @@ package org.igniterealtime.xiff.data.search{
 		
 	/**
 	 * Implements jabber:iq:search namespace.  Use this to perform user searches.
-	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be 
-	 * a conflict, or the fields you will need to fill out.  
-	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in 
-	 * getRequiredFieldNames set on this extension.  
+	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be
+	 * a conflict, or the fields you will need to fill out.
+	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
+	 * getRequiredFieldNames set on this extension.
 	 * Check the result and re-establish the connection with the new account.
 	 * @see http://xmpp.org/extensions/xep-0055.html
 	 */
 	public class SearchExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:search";
 		public static const ELEMENT_NAME:String = "query";
 	
@@ -53,7 +52,7 @@ package org.igniterealtime.xiff.data.search{
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
 		/**
-		 * 
+		 *
 		 * @param	parent (Optional) The parent node used to build the XML tree.
 		 */
 		public function SearchExtension( parent:XMLNode = null )
@@ -72,7 +71,7 @@ package org.igniterealtime.xiff.data.search{
 		}
 	
 	    /**
-	     * Performs the registration of this extension into the extension registry. 
+	     * Performs the registration of this extension into the extension registry.
 	     */
 	    public static function enable():void
 	    {
@@ -93,10 +92,10 @@ package org.igniterealtime.xiff.data.search{
 			setNode(node);
 	
 			var children:Array = getNode().childNodes;
-			for (var i:String in children) 
+			for (var i:String in children)
 			{
 	
-				switch (children[i].nodeName) 
+				switch (children[i].nodeName)
 				{
 					case "instructions":
 						_instructionsNode = children[i];
@@ -130,7 +129,7 @@ package org.igniterealtime.xiff.data.search{
 		{
 			var fields:Array = [];
 	
-			for (var i:String in _fields) 
+			for (var i:String in _fields)
 			{
 				fields.push(i);
 			}
@@ -143,7 +142,7 @@ package org.igniterealtime.xiff.data.search{
 			return _items;
 		}
 	
-		public function get instructions():String 
+		public function get instructions():String
 		{
 			if (_instructionsNode && _instructionsNode.firstChild)
 			{

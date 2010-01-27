@@ -33,7 +33,6 @@ package org.igniterealtime.xiff.data.rpc
 	 */
 	public class RPCExtension extends Extension implements IExtension, ISerializable
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "jabber:iq:rpc";
 		public static const ELEMENT_NAME:String = "query";
 	

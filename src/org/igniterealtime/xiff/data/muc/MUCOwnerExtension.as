@@ -35,7 +35,6 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCOwnerExtension extends MUCBaseExtension implements IExtension
 	{
-		// Static class variables to be overridden in subclasses;
 		public static const NS:String = "http://jabber.org/protocol/muc#owner";
 		public static const ELEMENT_NAME:String = "query";
 	
