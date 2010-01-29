@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.auth
 		*
 		* @param	connection A reference to the XMPPConnection instance in use.
 		*/
-		public function DigestMD5(connection:XMPPConnection)
+		public function DigestMD5( connection:XMPPConnection )
 		{
 			var authContent:String = Base64.encode(connection.jid.node);
 			

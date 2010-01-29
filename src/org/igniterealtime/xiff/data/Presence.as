@@ -107,7 +107,7 @@ package org.igniterealtime.xiff.data
 		 * @param	statusVal The status; usually used for the "away message."
 		 * @param	priorityVal The priority of this presence; usually on a scale of 1-5.
 		 */
-		public function Presence( recipient:EscapedJID=null, sender:EscapedJID=null, presenceType:String=null, showVal:String=null, statusVal:String=null, priorityVal:int = 0 )
+		public function Presence( recipient:EscapedJID = null, sender:EscapedJID = null, presenceType:String = null, showVal:String = null, statusVal:String = null, priorityVal:int = 0 )
 		{
 			super( recipient, sender, presenceType, null, "presence" );
 			
@@ -136,7 +136,7 @@ package org.igniterealtime.xiff.data
 		{
 			var isDeserialized:Boolean = super.deserialize( xmlNode );
 			
-			if (isDeserialized) 
+			if (isDeserialized)
 			{
 				var children:Array = xmlNode.childNodes;
 				for( var i:String in children )

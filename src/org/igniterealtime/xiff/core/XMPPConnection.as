@@ -751,7 +751,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function configureAuthMechanisms(mechanisms:XMLNode):void
 		{
-			var authMechanism:SASLAuth;
 			var authClass:Class;
 			for each(var mechanism:XMLNode in mechanisms.childNodes)
 			{
@@ -765,7 +764,7 @@ package org.igniterealtime.xiff.core
 				}
 				else
 				{
-					if (authClass != Anonymous)
+					if (authClass != Anonymous && authClass != null)
 					{
 						break;
 					}

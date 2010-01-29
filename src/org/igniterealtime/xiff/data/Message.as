@@ -377,7 +377,7 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
-		 * The chat state if any. Possible values, if not null, are:
+		 * The chat state if any. Possible values, in addition to <code>null</code>, are:
 		 * <ul>
 		 * <li>Message.STATE_ACTIVE</li>
 		 * <li>Message.STATE_COMPOSING</li>
