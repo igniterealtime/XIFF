@@ -23,6 +23,8 @@
  */
 package org.igniterealtime.xiff.im
 {
+	import flash.utils.Dictionary;
+	
 	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
@@ -120,14 +122,11 @@ package org.igniterealtime.xiff.im
 		 * Store presences of the people in users roster.
 		 */
 		private var _presenceMap:Object = {};
-
-		//FIXME: does not support multiple pending requests
-		private var pendingSubscriptionRequestJID:UnescapedJID;
 		
 		/**
-		 * TODO: List of <code>UnescapedJID</code> which are pending for subscription.
+		 * List of <code>UnescapedJID</code> which are pending for subscription.
 		 */
-		private var pendingSubscriptionRequests:Array = [];
+		private var pendingSubscriptionRequests : Dictionary = new Dictionary();
 
 		/**
 		 *
@@ -178,19 +177,18 @@ package org.igniterealtime.xiff.im
 			var callbackMethod:String = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			var askType:String = RosterExtension.ASK_TYPE_NONE;
+			var iqID : String = XMPPStanza.generateID( "add_user_" );
 
 			if ( requestSubscription == true )
 			{
 				callbackObj = this;
 				callbackMethod = "addContact_result";
-				pendingSubscriptionRequestJID = id;
-				pendingSubscriptionRequests.push(id);
+				pendingSubscriptionRequests[ iqID.toString() ] = id;
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
 
-			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "add_user_" ),
-									callbackMethod, callbackObj );
+			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod, callbackObj );
 			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
 			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
 						 null );
@@ -209,9 +207,15 @@ package org.igniterealtime.xiff.im
 		public function addContact_result( resultIQ:IQ ):void
 		{
 			// Contact was added, request subscription
-			// TODO: Should check the JID of the result
-			requestSubscription( pendingSubscriptionRequestJID );
-			pendingSubscriptionRequestJID = null;
+
+			var iqID : String = resultIQ.id.toString();
+
+			if ( pendingSubscriptionRequests.hasOwnProperty( iqID ) )
+			{
+				var subscriptionId : UnescapedJID = pendingSubscriptionRequests[ iqID ] as UnescapedJID;
+				requestSubscription( subscriptionId );
+				delete( pendingSubscriptionRequests[ iqID ] );
+			}
 		}
 
 		/**
