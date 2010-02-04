@@ -216,6 +216,7 @@ package org.igniterealtime.xiff.vcard
 
 		/**
 		 * Version of the VCard. Usually 2.0 or 3.0.
+		 * @see http://xmpp.org/extensions/xep-0054.html#impl
 		 */
 		public var version:Number;
 
@@ -268,6 +269,12 @@ package org.igniterealtime.xiff.vcard
 		 *
 		 */
 		private var _avatar:DisplayObject;
+		
+		/**
+		 *
+		 * @hint for saving avatar
+		 */
+		private var _avatarType:String;
 
 		/**
 		 *
@@ -391,14 +398,26 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 * Get the byte array to be used with a Loader.loadBytes or similar.
-		 * @return Avatar bytes if any
+		 * The byte array to be used with a Loader.loadBytes or similar.
 		 */
 		public function get avatar():ByteArray
 		{
 			return _imageBytes;
 		}
-
+		public function set avatar( value:ByteArray ) : void
+		{
+			_imageBytes = value;
+		}
+		
+		/**
+		 * The image type of the avatar. Used for saving the image.
+		 * If this is blank, the avatar will not be saved.
+		 */
+		public function set avatarType( value:String ) : void
+		{
+			_avatarType = value;
+		}
+		
 		/**
 		 * Deserializes the incoming IQ to fill the values of this vcard.
 		 * @param iq
@@ -572,7 +591,14 @@ package org.igniterealtime.xiff.vcard
 
 					case "AGE":
 						break;
-
+					
+					//there is some ambiguity surrounding how vCard versions are handled
+					//so we need to check it here as well as looking for the attribute
+					//as above.  SEE:  http://xmpp.org/extensions/xep-0054.html#impl
+					case "VERSION":
+						version = Number(child.text());
+						break;
+						
 					default:
 						trace( "handleVCard. unhandled case child.name(): " + child.name() );
 						break;
@@ -830,6 +856,38 @@ package org.igniterealtime.xiff.vcard
 				homeVoiceNode.appendChild( <VOICE/> );
 				homeVoiceNode.NUMBER = homeVoiceNumber;
 				vcardExtNode.appendChild( homeVoiceNode );
+			}
+			
+			if ( avatar != null && _avatarType != null)
+			{
+				var avatarNode:XML = <PHOTO/>
+				var avatarBase64:String;
+
+				try
+				{
+					avatarBase64 = Base64.encodeByteArray(avatar);
+				}
+				catch(err:Error)
+				{
+					throw new Error("VCard:saveVCard Error encoding bytes " + err.getStackTrace());
+				}
+				
+				try
+				{
+					var binaryNode:XML = <BINVAL/>;
+					binaryNode.appendChild(avatarBase64);
+					avatarNode.appendChild(binaryNode);
+				}
+				catch(err:Error)
+				{
+					throw new Error("VCard:saveVCard Error converting bytes to string " + err.message);
+				}
+
+				var typeNode:XML = <TYPE/>;
+				typeNode.appendChild(_avatarType);
+				avatarNode.appendChild(typeNode);
+					
+				vcardExtNode.appendChild( avatarNode );
 			}
 
 			iq.addExtension( vcardExt );
