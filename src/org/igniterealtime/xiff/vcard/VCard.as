@@ -616,10 +616,10 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function saveVCard( connection:XMPPConnection, user:RosterItemVO ):void
 		{
-			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "save_vcard_" ),
-								null, this, _vCardSent );
+			var id:String = XMPPStanza.generateID( "save_vcard_" );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = vcardExt.getNode() as XML;
+			var vcardExtNode:XML = new XML(vcardExt.getNode().toString());
 			//var vcardExtNode:XML = vcardExt.node;
 
 			if ( firstName || middleName || lastName )
