@@ -394,6 +394,12 @@ package org.igniterealtime.xiff.core
 			}
 
 			resetResponseProcessor();
+			// if there are no nodes in the response queue, then the response processor won't run and we won't send a poll to the server.
+			// so, do it manually here.
+			if ( responseQueue.length == 0 )
+			{
+				pollServer();
+			}
 		}
 
 		/**
