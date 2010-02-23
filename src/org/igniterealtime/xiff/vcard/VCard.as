@@ -38,6 +38,7 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
 	import org.igniterealtime.xiff.events.VCardEvent;
+	import org.igniterealtime.xiff.util.DateTimeParser;
 
 	/**
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_LOADED
@@ -449,7 +450,7 @@ package org.igniterealtime.xiff.vcard
 						{
 							var value:String = photo.text();
 
-							if (photo.localName() == "BINVAL" && value.length > 0 )
+							if ( photo.localName() == "BINVAL" && value.length > 0 )
 							{
 								/*
 								var decoder:Base64Decoder = new Base64Decoder();
@@ -457,7 +458,7 @@ package org.igniterealtime.xiff.vcard
 								_imageBytes = decoder.flush();
 								*/
 
-								_imageBytes = Base64.decodeToByteArray( value );
+								_imageBytes = Base64.decodeToByteArrayB( value );
 								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
 															   this, true, false ) );
 							}
@@ -559,9 +560,7 @@ package org.igniterealtime.xiff.vcard
 						var bday:String = child.children()[ 0 ];
 						if ( bday != null && bday.length > 8 )
 						{
-							var dateParts:Array = bday.split( "-" );
-							birthDay = new Date( dateParts[ 0 ], int( dateParts[ 1 ] ) -
-												 1, dateParts[ 2 ] );
+							birthDay = DateTimeParser.string2date( bday );
 						}
 						break;
 
