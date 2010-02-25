@@ -2,6 +2,7 @@
 <flexLibProperties version="1">
 <includeClasses>
 <classEntry path="org.igniterealtime.xiff.auth.Anonymous"/>
+<classEntry path="org.igniterealtime.xiff.auth.DigestMD5"/>
 <classEntry path="org.igniterealtime.xiff.auth.External"/>
 <classEntry path="org.igniterealtime.xiff.auth.Plain"/>
 <classEntry path="org.igniterealtime.xiff.auth.SASLAuth"/>
@@ -23,6 +24,7 @@
 <classEntry path="org.igniterealtime.xiff.core.UnescapedJID"/>
 <classEntry path="org.igniterealtime.xiff.core.XMPPBOSHConnection"/>
 <classEntry path="org.igniterealtime.xiff.core.XMPPConnection"/>
+<classEntry path="org.igniterealtime.xiff.core.XMPPTLSConnection"/>
 <classEntry path="org.igniterealtime.xiff.data.AbstractExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.Extension"/>
 <classEntry path="org.igniterealtime.xiff.data.ExtensionClassRegistry"/>
@@ -37,7 +39,6 @@
 <classEntry path="org.igniterealtime.xiff.data.XMLStanza"/>
 <classEntry path="org.igniterealtime.xiff.data.XMPPStanza"/>
 <classEntry path="org.igniterealtime.xiff.data.auth.AuthExtension"/>
-<classEntry path="org.igniterealtime.xiff.data.auth.SHA1"/>
 <classEntry path="org.igniterealtime.xiff.data.bind.BindExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.browse.BrowseExtension"/>
 <classEntry path="org.igniterealtime.xiff.data.browse.BrowseItem"/>
@@ -107,6 +108,7 @@
 <classEntry path="org.igniterealtime.xiff.privatedata.PrivateDataManager"/>
 <classEntry path="org.igniterealtime.xiff.util.Callback"/>
 <classEntry path="org.igniterealtime.xiff.util.DateTimeParser"/>
+<classEntry path="org.igniterealtime.xiff.util.SHA1"/>
 <classEntry path="org.igniterealtime.xiff.vcard.VCard"/>
 </includeClasses>
 <includeResources/>
