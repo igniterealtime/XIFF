@@ -27,6 +27,8 @@ package org.igniterealtime.xiff.vcard
 	import flash.events.*;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
+	import flash.xml.XMLDocument;
+	import flash.xml.XMLNode;
 
 	//import mx.utils.Base64Decoder;
 	import com.hurlant.util.Base64;
@@ -866,9 +868,9 @@ package org.igniterealtime.xiff.vcard
 				{
 					avatarBase64 = Base64.encodeByteArray(avatar);
 				}
-				catch(err:Error)
+				catch(error:Error)
 				{
-					throw new Error("VCard:saveVCard Error encoding bytes " + err.getStackTrace());
+					throw new Error("VCard:saveVCard Error encoding bytes " + error.getStackTrace());
 				}
 				
 				try
@@ -877,9 +879,9 @@ package org.igniterealtime.xiff.vcard
 					binaryNode.appendChild(avatarBase64);
 					avatarNode.appendChild(binaryNode);
 				}
-				catch(err:Error)
+				catch(error:Error)
 				{
-					throw new Error("VCard:saveVCard Error converting bytes to string " + err.message);
+					throw new Error("VCard:saveVCard Error converting bytes to string " + error.message);
 				}
 
 				var typeNode:XML = <TYPE/>;
@@ -888,6 +890,10 @@ package org.igniterealtime.xiff.vcard
 					
 				vcardExtNode.appendChild( avatarNode );
 			}
+			
+			var xmlDoc:XMLDocument = new XMLDocument(vcardExtNode.toString());
+			vcardExt.setNode(xmlDoc.firstChild);
+			//vcardExt.node = vcardExtNode;
 
 			iq.addExtension( vcardExt );
 			connection.send( iq );
