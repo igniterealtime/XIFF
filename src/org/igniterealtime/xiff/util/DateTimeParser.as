@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.util
 	public class DateTimeParser
 	{
 		/**
-		 * <code>CCYY-MM-DD</code>
+		 * Convert a date object to a string, <code>CCYY-MM-DD</code>
 		 * @param	date
 		 * @return <code>CCYY-MM-DD</code>
 		 */
@@ -45,7 +45,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * <code>CCYY-MM-DD</code>
+		 * Convert a string <code>CCYY-MM-DD</code> to a date object
 		 * @param	stamp
 		 * @return Date object
 		 */
@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * <code>hh:mm:ss[.sss][TZD]</code>
+		 * Convert a date object to a string <code>hh:mm:ss[.sss][TZD]</code>
 		 * @param	time
 		 * @param	ms	Include milliseconds in the resulting string
 		 * @return <code>hh:mm:ss[.sss][TZD]</code>
@@ -78,7 +78,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * <code>hh:mm:ss[.sss][TZD]</code>
+		 * Convert a string <code>hh:mm:ss[.sss][TZD]</code> to a date object
 		 * @param	stamp
 		 * @return Date object
 		 */
@@ -96,7 +96,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
+		 * Convert a date object to a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
 		 * @param	dateTime
 		 * @param	ms	Include milliseconds in the resulting string
 		 * @return <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
@@ -109,7 +109,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
+		 * Convert a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code> to a date object
 		 * @param	stamp
 		 * @return Date object
 		 */

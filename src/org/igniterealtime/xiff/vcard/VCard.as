@@ -37,6 +37,7 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
 	import org.igniterealtime.xiff.events.VCardEvent;
+	import org.igniterealtime.xiff.util.DateTimeParser;
 
 	/**
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_LOADED
@@ -333,11 +334,11 @@ package org.igniterealtime.xiff.vcard
 		 * Seems to be the way a vcard is requested and then later referred to:
 		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
 		 * vCard.addEventListener(VCardEvent.LOADED, onVCard);</code>
-		 * @param con
+		 * @param connection
 		 * @param user
 		 * @return Reference to the VCard which will be filled once the loaded event occurs.
 		 */
-		public static function getVCard( con:XMPPConnection, user:RosterItemVO ):VCard
+		public static function getVCard( connection:XMPPConnection, user:RosterItemVO ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
@@ -348,7 +349,7 @@ package org.igniterealtime.xiff.vcard
 						cache = {};
 						for each ( var cachedCard:VCard in tempCache )
 						{
-							pushRequest( con, vcard );
+							pushRequest( connection, vcard );
 						}
 					} );
 			}
@@ -357,30 +358,32 @@ package org.igniterealtime.xiff.vcard
 
 			var cachedCard:VCard = cache[ jidString ];
 			if ( cachedCard )
+			{
 				return cachedCard;
+			}
 
 			var vcard:VCard = new VCard();
 			vcard.contact = user;
 			cache[ jidString ] = vcard;
 
-			pushRequest( con, vcard );
+			pushRequest( connection, vcard );
 
 			return vcard;
 		}
 
 		/**
 		 * Add the request to the stack of requests
-		 * @param con
+		 * @param connection
 		 * @param vcard
 		 */
-		private static function pushRequest( con:XMPPConnection, vcard:VCard ):void
+		private static function pushRequest( connection:XMPPConnection, vcard:VCard ):void
 		{
 			if ( !requestTimer )
 			{
 				requestTimer = new Timer( 1, 1 );
 				requestTimer.addEventListener( TimerEvent.TIMER_COMPLETE, sendRequest );
 			}
-			requestQueue.push( { connection: con, card: vcard } );
+			requestQueue.push( { connection: connection, card: vcard } );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -392,9 +395,11 @@ package org.igniterealtime.xiff.vcard
 		private static function sendRequest( event:TimerEvent ):void
 		{
 			if ( requestQueue.length == 0 )
+			{
 				return;
+			}
 			var req:Object = requestQueue.pop();
-			var con:XMPPConnection = req.connection;
+			var connection:XMPPConnection = req.connection;
 			var vcard:VCard = req.card;
 			var user:RosterItemVO = vcard.contact;
 
@@ -405,7 +410,7 @@ package org.igniterealtime.xiff.vcard
 			iq.callbackScope = vcard;
 			iq.addExtension( new VCardExtension() );
 
-			con.send( iq );
+			connection.send( iq );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -444,13 +449,12 @@ package org.igniterealtime.xiff.vcard
 		{
 			namespace ns = "vcard-temp";
 			use namespace ns;
-			
-			var node:XML = iq.node;
-			var vCardNode:XML = node.children()[ 0 ];
 
-			//var vCardNode:XML = iq.node.children()[ 0 ];
+			var vCardNode:XML = iq.node.children()[ 0 ];
 			if ( !vCardNode )
+			{
 				return;
+			}
 
 			version = Number( vCardNode.@version );
 
@@ -538,24 +542,40 @@ package org.igniterealtime.xiff.vcard
 						if ( child.WORK.length() == 1 )
 						{
 							if ( child.VOICE.length() == 1 )
+							{
 								workVoiceNumber = child.NUMBER;
+							}
 							else if ( child.FAX.length() == 1 )
+							{
 								workFaxNumber = child.NUMBER;
+							}
 							else if ( child.PAGER.length() == 1 )
+							{
 								workPagerNumber = child.NUMBER;
+							}
 							else if ( child.CELL.length() == 1 )
+							{
 								workCellNumber = child.NUMBER;
+							}
 						}
 						else if ( child.HOME.length() == 1 )
 						{
 							if ( child.VOICE.length() == 1 )
+							{
 								homeVoiceNumber = child.NUMBER;
+							}
 							else if ( child.FAX.length() == 1 )
+							{
 								homeFaxNumber = child.NUMBER;
+							}
 							else if ( child.PAGER.length() == 1 )
+							{
 								homePagerNumber = child.NUMBER;
+							}
 							else if ( child.CELL.length() == 1 )
+							{
 								homeCellNumber = child.NUMBER;
+							}
 						}
 						break;
 
@@ -570,9 +590,7 @@ package org.igniterealtime.xiff.vcard
 						var bday:String = child.children()[ 0 ];
 						if ( bday != null && bday.length > 8 )
 						{
-							var dateParts:Array = bday.split( "-" );
-							birthDay = new Date( dateParts[ 0 ], int( dateParts[ 1 ] ) -
-												 1, dateParts[ 2 ] );
+							birthDay = DateTimeParser.string2date( bday );
 						}
 						break;
 
@@ -591,6 +609,7 @@ package org.igniterealtime.xiff.vcard
 						break;
 
 					case "WORKCELL":
+						workCellNumber = child.text();
 						break;
 
 					case "LOCATION":
@@ -615,16 +634,15 @@ package org.igniterealtime.xiff.vcard
 
 		/**
 		 *
-		 * @param con
+		 * @param connection
 		 * @param user
 		 */
-		public function saveVCard( con:XMPPConnection, user:RosterItemVO ):void
+		public function saveVCard( connection:XMPPConnection, user:RosterItemVO ):void
 		{
-			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "save_vcard_" ),
-								null, this, _vCardSent );
+			var id:String = XMPPStanza.generateID( "save_vcard_" );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, null, this, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = vcardExt.node as XML;
-			//var vcardExtNode:XML = vcardExt.node;
+			var vcardExtNode:XML = vcardExt.node;
 
 			if ( firstName || middleName || lastName )
 			{
@@ -710,10 +728,7 @@ package org.igniterealtime.xiff.vcard
 
 			if ( birthDay )
 			{
-				var month:uint = ( birthDay.getMonth() + 1 );
-				vcardExtNode.BDAY = birthDay.getFullYear() + "-"
-					+ ( month < 10 ? "0" + month : month ) + "-"
-					+ birthDay.getDate();
+				vcardExtNode.BDAY = DateTimeParser.date2string( birthDay );
 			}
 
 			if ( gender )
@@ -861,9 +876,11 @@ package org.igniterealtime.xiff.vcard
 				homeVoiceNode.NUMBER = homeVoiceNumber;
 				vcardExtNode.appendChild( homeVoiceNode );
 			}
+			
+			vcardExt.node = vcardExtNode;
 
 			iq.addExtension( vcardExt );
-			con.send( iq );
+			connection.send( iq );
 		}
 	}
 }
