@@ -707,10 +707,7 @@ package org.igniterealtime.xiff.vcard
 
 			if ( birthDay )
 			{
-				var month:uint = ( birthDay.getMonth() + 1 );
-				vcardExtNode.BDAY = birthDay.getFullYear() + "-"
-					+ ( month < 10 ? "0" + month : month ) + "-"
-					+ birthDay.getDate();
+				vcardExtNode.BDAY = DateTimeParser.date2string( birthDay );
 			}
 
 			if ( gender )
