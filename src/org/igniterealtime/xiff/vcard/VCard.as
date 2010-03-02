@@ -48,6 +48,11 @@ package org.igniterealtime.xiff.vcard
 	[Event(name="vcardAvatarLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
 
 	/**
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_SENT
+	 */
+	[Event(name="vcardAvatarSent", type="org.igniterealtime.xiff.events.VCardEvent")]
+	
+	/**
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.LOADED
 	 */
 	[Event(name="vcardLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
@@ -63,7 +68,7 @@ package org.igniterealtime.xiff.vcard
 	public class VCard extends EventDispatcher
 	{
 		/**
-		 * VCard cache indexed by the jid or the user
+		 * VCard cache indexed by the UnescapedJID.toString() of the user.
 		 */
 		private static var cache:Object = {};
 
@@ -312,12 +317,11 @@ package org.igniterealtime.xiff.vcard
 				cacheFlushTimer.start();
 				cacheFlushTimer.addEventListener( TimerEvent.TIMER, function( event:TimerEvent ):void
 				{
-					var tempCache:Object = cache;
-					cache = {};
-					for each ( var cachedCard:VCard in tempCache )
+					for each ( var card:VCard in cache )
 					{
-						pushRequest( connection, vcard );
+						pushRequest( connection, card );
 					}
+					cache = {};
 				} );
 			}
 
@@ -397,6 +401,8 @@ package org.igniterealtime.xiff.vcard
 			else
 			{
 				delete cache[ resultIQ.to.unescaped.toString() ]; // Force profile refresh on next view
+
+				dispatchEvent( new VCardEvent( VCardEvent.AVATAR_SENT, this, true, false ) );
 			}
 		}
 
