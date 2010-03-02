@@ -188,12 +188,12 @@ package org.igniterealtime.xiff.im
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
 
-			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod, callbackObj );
-			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod, callbackObj );
+			var ext:RosterExtension = new RosterExtension( iq.getNode() );
 			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
 						 null );
-			tempIQ.addExtension( ext );
-			_connection.send( tempIQ );
+			iq.addExtension( ext );
+			_connection.send( iq );
 
 
 			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
@@ -228,8 +228,8 @@ package org.igniterealtime.xiff.im
 		 */
 		public function denySubscription( tojid:UnescapedJID ):void
 		{
-			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_UNSUBSCRIBED );
-			_connection.send( tempPresence );
+			var presence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_UNSUBSCRIBED );
+			_connection.send( presence );
 		}
 
 		/**
@@ -240,10 +240,10 @@ package org.igniterealtime.xiff.im
 		 */
 		public function fetchRoster():void
 		{
-			var tempIQ:IQ = new IQ( null, IQ.TYPE_GET, XMPPStanza.generateID( "roster_" ),
+			var iq:IQ = new IQ( null, IQ.TYPE_GET, XMPPStanza.generateID( "roster_" ),
 									"fetchRoster_result", this );
-			tempIQ.addExtension( new RosterExtension( tempIQ.getNode() ) );
-			_connection.send( tempIQ );
+			iq.addExtension( new RosterExtension( iq.getNode() ) );
+			_connection.send( iq );
 		}
 
 		/**
@@ -335,8 +335,8 @@ package org.igniterealtime.xiff.im
 		 */
 		public function grantSubscription( tojid:UnescapedJID, requestAfterGrant:Boolean = true ):void
 		{
-			var tempPresence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_SUBSCRIBED );
-			_connection.send( tempPresence );
+			var presence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_SUBSCRIBED );
+			_connection.send( presence );
 
 			// Request a return subscription
 			if ( requestAfterGrant )
@@ -356,12 +356,12 @@ package org.igniterealtime.xiff.im
 		{
 			if ( contains( rosterItem ) )
 			{
-				var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "remove_user_" ),
+				var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "remove_user_" ),
 										"unsubscribe_result", this );
-				var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+				var ext:RosterExtension = new RosterExtension( iq.getNode() );
 				ext.addItem( new EscapedJID( rosterItem.jid.bareJID ), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
-				tempIQ.addExtension( ext );
-				_connection.send( tempIQ );
+				iq.addExtension( ext );
+				_connection.send( iq );
 
 				//the roster item is not actually removed from the roster
 				//until confirmation comes back from the XMPP server
@@ -696,13 +696,13 @@ package org.igniterealtime.xiff.im
 		 */
 		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
 		{
-			var tempIQ:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "update_contact_" ) );
-			var ext:RosterExtension = new RosterExtension( tempIQ.getNode() );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "update_contact_" ) );
+			var ext:RosterExtension = new RosterExtension( iq.getNode() );
 
 			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName,
 						 groupNames );
-			tempIQ.addExtension( ext );
-			_connection.send( tempIQ );
+			iq.addExtension( ext );
+			_connection.send( iq );
 		}
 
 		/**

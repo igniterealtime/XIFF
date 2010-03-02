@@ -676,12 +676,12 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ));
-				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ));
+				var ext:MUCAdminExtension = new MUCAdminExtension( iq.getNode());
 				//ext.addItem(null, MUC.ROLE_NONE, null, null, null, reason);
 				ext.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
-				tempIQ.addExtension( ext );
-				_connection.send( tempIQ );
+				iq.addExtension( ext );
+				_connection.send( iq );
 			}
 		}
 
@@ -1155,9 +1155,9 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempMessage:Message = new Message( roomJID.escaped, null, body,
+				var message:Message = new Message( roomJID.escaped, null, body,
 													   htmlBody, Message.TYPE_GROUPCHAT );
-				_connection.send( tempMessage );
+				_connection.send( message );
 			}
 		}
 
@@ -1187,10 +1187,9 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempMessage:Message = new Message( new EscapedJID( roomJID +
-																	   "/" + recipientNickname ),
+				var message:Message = new Message( new EscapedJID( roomJID + "/" + recipientNickname ),
 													   null, body, htmlBody, Message.TYPE_CHAT );
-				_connection.send( tempMessage );
+				_connection.send( message );
 			}
 		}
 
@@ -1206,11 +1205,11 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ) );
-				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode() );
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ) );
+				var ext:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
 				ext.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
-				tempIQ.addExtension( ext );
-				_connection.send( tempIQ );
+				iq.addExtension( ext );
+				_connection.send( iq );
 			}
 		}
 
@@ -1242,9 +1241,8 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				pendingNickname = value;
-				var tempPresence:Presence = new Presence(
-					new EscapedJID( userJID + "/" + value ));
-				_connection.send( tempPresence );
+				var presence:Presence = new Presence( new EscapedJID( userJID + "/" + value ) );
+				_connection.send( presence );
 			}
 			else
 			{

@@ -78,8 +78,8 @@ package org.igniterealtime.xiff.conference
 
 					try
 					{
-						var msg:Message = event.data as Message;
-						var exts:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
+						var message:Message = event.data as Message;
+						var exts:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
 						if ( !exts || exts.length < 0 )
 						{
 							return;
@@ -88,14 +88,14 @@ package org.igniterealtime.xiff.conference
 						if ( muc.type == MUCUserExtension.TYPE_INVITE )
 						{
 							var room:Room = new Room( _connection );
-							room.roomJID = msg.from.unescaped;
+							room.roomJID = message.from.unescaped;
 							room.password = muc.password;
 
 							var inviteEvent:InviteEvent = new InviteEvent();
 							inviteEvent.from = muc.from.unescaped;
 							inviteEvent.reason = muc.reason;
 							inviteEvent.room = room;
-							inviteEvent.data = msg;
+							inviteEvent.data = message;
 							dispatchEvent( inviteEvent );
 						}
 					}
