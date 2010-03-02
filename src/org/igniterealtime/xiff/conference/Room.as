@@ -347,10 +347,10 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempMessage:Message = new Message( roomJID.escaped, null, null,
+				var message:Message = new Message( roomJID.escaped, null, null,
 													   null, Message.TYPE_GROUPCHAT,
 													   newSubject );
-				_connection.send( tempMessage );
+				_connection.send( message );
 			}
 		}
 
@@ -406,13 +406,13 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function decline( jid:UnescapedJID, reason:String ):void
 		{
-			var msg:Message = new Message( roomJID.escaped )
+			var message:Message = new Message( roomJID.escaped )
 			var muc:MUCUserExtension = new MUCUserExtension();
 
 			muc.decline( jid.escaped, undefined, reason );
 
-			msg.addExtension( muc );
-			_connection.send( msg );
+			message.addExtension( muc );
+			_connection.send( message );
 		}
 
 		/**
@@ -492,9 +492,9 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function getMessage( body:String = null, htmlBody:String = null ):Message
 		{
-			var tempMessage:Message = new Message( roomJID.escaped, null, body, htmlBody,
+			var message:Message = new Message( roomJID.escaped, null, body, htmlBody,
 												   Message.TYPE_GROUPCHAT );
-			return tempMessage;
+			return message;
 		}
 
 		/**
@@ -545,13 +545,13 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function invite( jid:UnescapedJID, reason:String ):void
 		{
-			var msg:Message = new Message( roomJID.escaped );
+			var message:Message = new Message( roomJID.escaped );
 			var muc:MUCUserExtension = new MUCUserExtension();
 
 			muc.invite( jid.escaped, undefined, reason );
 
-			msg.addExtension( muc );
-			_connection.send( msg );
+			message.addExtension( muc );
+			_connection.send( message );
 		}
 
 		/**
@@ -600,7 +600,7 @@ package org.igniterealtime.xiff.conference
 		 * either return or cancel the configuration of the room.
 		 *
 		 * @param	createReserved Set to true if you wish to create and configure a reserved room
-		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room. 
+		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room.
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
 		public function join( createReserved:Boolean = false, joinPresenceExtensions:Array = null ):Boolean
@@ -626,7 +626,7 @@ package org.igniterealtime.xiff.conference
 		 * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and
 		 * either return or cancel the configuration of the room.
 		 *
-		 * This function adds an additional parameter to allow the caller to completely customize the MUC extension that 
+		 * This function adds an additional parameter to allow the caller to completely customize the MUC extension that
 		 * gets sent to the room.  For example, you can add a history element that specifies how much discussion
 		 * history you want sent when you join the room (http://xmpp.org/extensions/xep-0045.html#enter-managehistory):
 		 * <code>
@@ -635,7 +635,7 @@ package org.igniterealtime.xiff.conference
 		 * muc.maxchars = 0;
 		 * _room.joinWithExplicitMUCExtension(false, mucExt);
 		 * </code>
-		 * 
+		 *
 		 * @param	createReserved Set to true if you wish to create and configure a reserved room
 		 * @param	mucExtension The customized MUC extension to send with initial presence to the room.
 		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room.
@@ -766,39 +766,39 @@ package org.igniterealtime.xiff.conference
 			switch ( eventObj.type )
 			{
 				case "message":
-					var msg:Message = eventObj.data;
+					var message:Message = eventObj.data;
 
 					// Check to see that the message is from this room
-					if ( isThisRoom( msg.from.unescaped ))
+					if ( isThisRoom( message.from.unescaped ))
 					{
 						var roomEvent:RoomEvent;
-						if ( msg.type == Message.TYPE_GROUPCHAT )
+						if ( message.type == Message.TYPE_GROUPCHAT )
 						{
 							// Check for a subject change
-							if ( msg.subject != null )
+							if ( message.subject != null )
 							{
-								_subject = msg.subject;
+								_subject = message.subject;
 								roomEvent = new RoomEvent( RoomEvent.SUBJECT_CHANGE );
-								roomEvent.subject = msg.subject;
+								roomEvent.subject = message.subject;
 								dispatchEvent( roomEvent );
 							}
 							else
 							{
 								//silently ignore "room is not anonymous" message, identified by status code 100
 								//Clients should display that information in their UI based on the appropriate room property
-								var userexts:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
+								var userexts:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
 								if ( !userexts || userexts.length == 0 || !( userexts[ 0 ].hasStatusCode( 100 )))
 								{
 									roomEvent = new RoomEvent( RoomEvent.GROUP_MESSAGE );
-									roomEvent.nickname = msg.from.resource;
-									roomEvent.data = msg;
+									roomEvent.nickname = message.from.resource;
+									roomEvent.data = message;
 									dispatchEvent( roomEvent );
 								}
 							}
 						}
-						else if ( msg.type == Message.TYPE_NORMAL )
+						else if ( message.type == Message.TYPE_NORMAL )
 						{
-							var form:Array = msg.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
+							var form:Array = message.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 							if ( form )
 							{
 								roomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
@@ -806,24 +806,24 @@ package org.igniterealtime.xiff.conference
 								dispatchEvent( roomEvent );
 							}
 						}
-						else if ( msg.type == Message.TYPE_CHAT )
+						else if ( message.type == Message.TYPE_CHAT )
 						{
 							roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
-							roomEvent.data = msg;
+							roomEvent.data = message;
 							dispatchEvent( roomEvent );
 						}
 					}
-					else if ( isThisUser( msg.to.unescaped ) && msg.type == Message.TYPE_CHAT )
+					else if ( isThisUser( message.to.unescaped ) && message.type == Message.TYPE_CHAT )
 					{
 						// It could be a private message via the conference
 						roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
-						roomEvent.data = msg;
+						roomEvent.data = message;
 						dispatchEvent( roomEvent );
 					}
 					else
 					{
 						// Could be an decline to a previous invite
-						var mucExtensions:Array = msg.getAllExtensionsByNS( MUCUserExtension.NS );
+						var mucExtensions:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
 						if ( mucExtensions != null && mucExtensions.length > 0 )
 						{
 							var muc:MUCUserExtension = mucExtensions[ 0 ];
@@ -832,7 +832,7 @@ package org.igniterealtime.xiff.conference
 								roomEvent = new RoomEvent( RoomEvent.DECLINED );
 								roomEvent.from = muc.reason;
 								roomEvent.reason = muc.reason;
-								roomEvent.data = msg;
+								roomEvent.data = message;
 								dispatchEvent( roomEvent );
 							}
 						}
@@ -898,17 +898,21 @@ package org.igniterealtime.xiff.conference
 									case 172:
 										_anonymous = false;
 										break;
+										
 									case 174:
 										_anonymous = true;
 										break;
+										
 									case 201:
 										unlockRoom( myIsReserved );
 										break;
+										
 									case 307:
 										roomEvent = new RoomEvent( RoomEvent.USER_KICKED );
 										roomEvent.nickname = presence.from.resource;
 										dispatchEvent( roomEvent );
 										break;
+										
 									case 301:
 										roomEvent = new RoomEvent( RoomEvent.USER_BANNED );
 										roomEvent.nickname = presence.from.resource;
@@ -939,7 +943,6 @@ package org.igniterealtime.xiff.conference
 						}
 					}
 					break;
-
 
 				case "disconnection":
 					// The server disconnected, so we are no longer active
@@ -1162,13 +1165,13 @@ package org.igniterealtime.xiff.conference
 		 * Sends a message to the conference room with an extension attached.
 		 * Use this method in conjunction with the <code>getMessage</code> method.
 		 *
-		 * @param	msg The message to send
+		 * @param	message The message to send
 		 */
-		public function sendMessageWithExtension( msg:Message ):void
+		public function sendMessageWithExtension( message:Message ):void
 		{
 			if ( isActive )
 			{
-				_connection.send( msg );
+				_connection.send( message );
 			}
 		}
 
@@ -1203,9 +1206,9 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ));
-				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode());
-				ext.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR );
+				var tempIQ:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ) );
+				var ext:MUCAdminExtension = new MUCAdminExtension( tempIQ.getNode() );
+				ext.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
 				tempIQ.addExtension( ext );
 				_connection.send( tempIQ );
 			}

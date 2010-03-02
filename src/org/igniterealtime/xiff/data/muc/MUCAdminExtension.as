@@ -21,8 +21,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.muc{
-
+package org.igniterealtime.xiff.data.muc
+{
 	
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.ISerializable;
