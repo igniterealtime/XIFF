@@ -363,6 +363,7 @@ package org.igniterealtime.xiff.conference
 		 * form variables and the values being arrays. For single value fields, use a single
 		 * element array.
 		 * @see	#configureForm
+		 * @see http://xmpp.org/extensions/xep-0045.html#registrar-formtype-owner
 		 */
 		public function configure( fieldmap:Object ):void
 		{
@@ -377,7 +378,7 @@ package org.igniterealtime.xiff.conference
 			else
 			{
 				form = new FormExtension();
-				fieldmap[ "FORM_TYPE" ] = [ MUCOwnerExtension.NS ];
+				fieldmap[ "FORM_TYPE" ] = [ "http://jabber.org/protocol/muc#roomconfig" ];
 				form.setFields( fieldmap );
 			}
 			form.type = FormExtension.TYPE_SUBMIT;
