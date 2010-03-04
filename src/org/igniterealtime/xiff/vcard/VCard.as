@@ -325,9 +325,9 @@ package org.igniterealtime.xiff.vcard
 				} );
 			}
 
-			var jidString:String = user.jid.toString();
+			var bareJID:String = user.jid.bareJID();
 
-			var cachedCard:VCard = cache[ jidString ];
+			var cachedCard:VCard = cache[ bareJID ] as VCard;
 			if ( cachedCard )
 			{
 				return cachedCard;
@@ -336,7 +336,7 @@ package org.igniterealtime.xiff.vcard
 			var vcard:VCard = new VCard();
 			vcard.contact = user;
 			vcard.jid = user.jid;
-			cache[ jidString ] = vcard;
+			cache[ bareJID ] = vcard;
 
 			pushRequest( connection, vcard );
 
@@ -393,14 +393,15 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function _vCardSent( resultIQ:IQ ):void
 		{
+			var bareJID:String = resultIQ.to.unescaped.bareJID();
 			if ( resultIQ.type == IQ.TYPE_ERROR )
 			{
-				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ resultIQ.to.unescaped.toString() ],
+				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ bareJID ],
 											   true, true ) );
 			}
 			else
 			{
-				delete cache[ resultIQ.to.unescaped.toString() ]; // Force profile refresh on next view
+				delete cache[ bareJID ]; // Force profile refresh on next view
 
 				dispatchEvent( new VCardEvent( VCardEvent.AVATAR_SENT, this, true, false ) );
 			}

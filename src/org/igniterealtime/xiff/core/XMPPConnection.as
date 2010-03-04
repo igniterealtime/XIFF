@@ -319,7 +319,7 @@ package org.igniterealtime.xiff.core
 			active = false;
 			loggedIn = false;
 
-			chooseStreamTags(streamType);
+			chooseStreamTags( streamType );
 
 			socket.connect( server, port );
 			return true;
@@ -330,18 +330,18 @@ package org.igniterealtime.xiff.core
 		 * @param	name
 		 * @param	authClass
 		 */
-		public static function registerSASLMechanism(name:String, authClass:Class):void
+		public static function registerSASLMechanism( name:String, authClass:Class ):void
 		{
-			saslMechanisms[name] = authClass;
+			saslMechanisms[ name ] = authClass;
 		}
 
 		/**
 		 *
 		 * @param	name
 		 */
-		public static function disableSASLMechanism(name:String):void
+		public static function disableSASLMechanism( name:String ):void
 		{
-			saslMechanisms[name] = null;
+			saslMechanisms[ name ] = null;
 		}
 
 		/**

@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.im
 
 		private var _groups:Array = [];
 
-		private var _jid:UnescapedJID
+		private var _jid:UnescapedJID;
 
 		private var _online:Boolean = false;
 
