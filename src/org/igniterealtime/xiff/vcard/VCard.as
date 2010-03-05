@@ -325,7 +325,7 @@ package org.igniterealtime.xiff.vcard
 				} );
 			}
 
-			var bareJID:String = user.jid.bareJID();
+			var bareJID:String = user.jid.bareJID;
 
 			var cachedCard:VCard = cache[ bareJID ] as VCard;
 			if ( cachedCard )
@@ -393,7 +393,7 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function _vCardSent( resultIQ:IQ ):void
 		{
-			var bareJID:String = resultIQ.to.unescaped.bareJID();
+			var bareJID:String = resultIQ.to.unescaped.bareJID;
 			if ( resultIQ.type == IQ.TYPE_ERROR )
 			{
 				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ bareJID ],
