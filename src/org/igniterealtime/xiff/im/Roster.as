@@ -725,6 +725,7 @@ package org.igniterealtime.xiff.im
 				{
 					item.online = false;
 				}
+				itemUpdated( item );
 
 				var event:RosterEvent = new RosterEvent( RosterEvent.USER_PRESENCE_UPDATED );
 				event.jid = item.jid;
