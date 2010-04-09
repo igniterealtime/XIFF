@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2010 Igniterealtime Community Contributors
  *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Matt Towers (Typidee Inc) <matt@typidee.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -253,7 +254,7 @@ package org.igniterealtime.xiff.data
 						case Message.STATE_INACTIVE :
 						case Message.STATE_PAUSED :
 							myStateNode = children[i];
-							break;
+							continue;
 					}
 				}
 			}
@@ -266,7 +267,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get body():String
 		{
-			if (!exists(myBodyNode))
+			if (!exists(myBodyNode) || !exists(myBodyNode.firstChild))
 			{
 				return null;
 			}
