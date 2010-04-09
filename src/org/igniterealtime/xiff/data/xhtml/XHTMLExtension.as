@@ -43,7 +43,7 @@ package org.igniterealtime.xiff.data.xhtml
 	 */
 	public class XHTMLExtension extends Extension implements IExtension, ISerializable
 	{
-		public static const NS:String = "http://www.w3.org/1999/xhtml";
+		public static const NS:String = "http://jabber.org/protocol/xhtml-im";
 		public static const ELEMENT_NAME:String = "html";
 
 	    private static var staticDepends:Class = ExtensionClassRegistry;
@@ -73,7 +73,7 @@ package org.igniterealtime.xiff.data.xhtml
 		 */
         public function deserialize( node:XMLNode ):Boolean
         {
-			getNode().appendChild(node);
+			getNode().appendChild(node.cloneNode(true));
         	return true;
         }
 
