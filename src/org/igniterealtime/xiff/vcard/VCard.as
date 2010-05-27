@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -378,8 +379,7 @@ package org.igniterealtime.xiff.vcard
 			var iq:IQ = new IQ( user.jid.escaped, IQ.TYPE_GET );
 			vcard.jid = user.jid;
 
-			iq.callbackName = "handleVCard";
-			iq.callbackScope = vcard;
+			iq.callback = vcard.handleVCard;
 			iq.addExtension( new VCardExtension() );
 
 			connection.send( iq );
@@ -625,7 +625,7 @@ package org.igniterealtime.xiff.vcard
 		public function saveVCard( connection:XMPPConnection, user:RosterItemVO ):void
 		{
 			var id:String = XMPPStanza.generateID( "save_vcard_" );
-			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, null, this, _vCardSent );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, _vCardSent );
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardExtNode:XML = new XML(vcardExt.getNode().toString());
 			//var vcardExtNode:XML = vcardExt.node;

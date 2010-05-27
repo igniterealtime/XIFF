@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  * 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +58,7 @@ package org.igniterealtime.xiff.privatedata
 		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void 
 		{
 			var packetFilter:IPacketFilter = new CallbackPacketFilter(callback);
-			var privateDataGet:IQ = new IQ(null, IQ.TYPE_GET, null, "accept", packetFilter);
+			var privateDataGet:IQ = new IQ(null, IQ.TYPE_GET, null, packetFilter.accept );
 			privateDataGet.addExtension(new PrivateDataExtension(elementName, elementNamespace));
 			
 			_connection.send(privateDataGet);

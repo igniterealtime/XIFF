@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  * 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,13 +33,9 @@ package org.igniterealtime.xiff.data
 	 */
 	public class IQ extends XMPPStanza implements ISerializable
 	{
-		private var myCallback:String;
-
-		private var myCallbackScope:Object;
-
-		private var myCallbackFunc:Function;
+		private var myCallback:Function;
 		
-		private var myErrorCallbackFunc:Function;
+		private var myErrorCallback:Function;
 
 		private var myQueryName:String;
 
@@ -75,20 +72,17 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @param	recipient The JID of the IQ recipient
 		 * @param	iqType The type of the IQ - there are static variables declared for each type
-		 * @param	sender The JID of the IQ sender - the server should report an error if this is falsified
 		 * @param	iqID The unique ID of the IQ
 		 * @param	iqCallback The function to be called when the server responds to the IQ
 		 * @param	iqCallbackScope The object instance containing the callback method
 		 */
-		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:String = null, iqCallbackScope:Object = null, iqCallbackFunc:Function = null, iqErrorCallback:Function = null )
+		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:Function = null, iqErrorCallback:Function = null )
 		{
 			var id:String = exists( iqID ) ? iqID : generateID( "iq_" );
 
 			super( recipient, null, iqType, id, "iq" );
 
-			callbackName = iqCallback;
-			callbackScope = iqCallbackScope;
-			callback = iqCallbackFunc;
+			callback = iqCallback;
 			errorCallback = iqErrorCallback;
 		}
 
@@ -114,80 +108,41 @@ package org.igniterealtime.xiff.data
 		}
 
 		/**
-		 * The function that will be called when an IQ result or error
-		 * is received with the same ID as one you send.  The function will
-		 * be called in the scope of the IQ, so if you wish to have this
-		 * called with the scope of your class wrap your function with a
-		 * mx.utils.Delegate class.
-		 *
-		 * <p>If both <code>callbackName/callbackScope</code> and callback are
-		 * set then both functions will be called.</p>
-		 *
-		 * <p>This is an alternative to the <code>callbackName/callbackScope</code>
-		 * method of receiving callbacks.</p>
+		 * The function that will be called when an IQ result
+		 * is received with the same ID as one you send.
 		 *
 		 * <p>Callback functions take one parameter which will be the IQ instance
 		 * received from the server.</p>
 		 *
 		 * <p>This isn't a required property, but is useful if you
 		 * need to respond to server responses to an IQ.</p>
-		 *
-		 * @see	#callbackScope
-		 * @see	#callbackName
 		 */
 		public function get callback():Function
 		{
-			return myCallbackFunc;
-		}
-		public function set callback( value:Function ):void
-		{
-			myCallbackFunc = value;
-		}
-
-		/**
-		 * The name of the callback function to call when a response to the IQ
-		 * is received. This isn't a required property, but is useful if you
-		 * need to respond to server responses to an IQ.
-		 *
-		 * @see	#callbackScope
-		 * @see	#callback
-		 */
-		public function get callbackName():String
-		{
 			return myCallback;
 		}
-		public function set callbackName( value:String ):void
+		public function set callback( value:Function ):void
 		{
 			myCallback = value;
 		}
 		
 		/**
-		 * 
+		 * The function that will be called when an IQ error
+		 * is received with the same ID as one you send.
+		 *
+		 * <p>Callback functions take one parameter which will be the IQ instance
+		 * received from the server.</p>
+		 *
+		 * <p>This isn't a required property, but is useful if you
+		 * need to respond to server responses to an IQ.</p>
 		 */
 		public function get errorCallback():Function
 		{
-			return myErrorCallbackFunc;
+			return myErrorCallback;
 		}
 		public function set errorCallback( value:Function ):void
 		{
-			myErrorCallbackFunc = value;
-		}
- 
-		/**
-		 * The scope of the callback function to call when a response to the IQ
-		 * is received. This isn't a required property, but is useful if you
-		 * need to respond to server responses to an IQ.
-		 *
-		 * @see	#callbackName
-		 * @see	#callback
-		 */
-		public function get callbackScope():Object
-		{
-			return myCallbackScope;
-		}
-		public function set callbackScope( value:Object ):void
-		{
-			myCallbackScope = value;
+			myErrorCallback = value;
 		}
 	}
 }

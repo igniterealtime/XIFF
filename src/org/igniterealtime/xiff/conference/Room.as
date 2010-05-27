@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -300,7 +301,6 @@ package org.igniterealtime.xiff.conference
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var adminExt:MUCAdminExtension = new MUCAdminExtension();
 
-			iq.callbackScope = this;
 			iq.callback = finish_admin;
 
 			for each ( var banJID:UnescapedJID in jids )
@@ -384,8 +384,7 @@ package org.igniterealtime.xiff.conference
 			form.type = FormExtension.TYPE_SUBMIT;
 			owner.addExtension( form );
 			
-			iq.callbackScope = this;
-			iq.callbackName = "finish_configure";
+			iq.callback = finish_configure;
 			iq.addExtension( owner );
 			
 			_connection.send( iq );
@@ -519,7 +518,6 @@ package org.igniterealtime.xiff.conference
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
-			iq.callbackScope = this;
 			iq.callback = finish_admin;
 
 			for each ( var jid:UnescapedJID in jids )
@@ -1096,8 +1094,7 @@ package org.igniterealtime.xiff.conference
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
-			iq.callbackScope = this;
-			iq.callbackName = "finish_requestAffiliates";
+			iq.callback = finish_requestAffiliates;
 
 			owner.addItem( affiliation );
 
@@ -1122,8 +1119,7 @@ package org.igniterealtime.xiff.conference
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
 			var owner:MUCOwnerExtension = new MUCOwnerExtension();
 
-			iq.callbackScope = this;
-			iq.callbackName = "finish_requestConfiguration";
+			iq.callback = finish_requestConfiguration;
 			iq.addExtension( owner );
 
 			_connection.send( iq );

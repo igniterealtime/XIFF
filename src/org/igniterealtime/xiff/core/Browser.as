@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,26 +73,26 @@ package org.igniterealtime.xiff.core
 			return true;
 		}
 
-		public function getNodeInfo( service:EscapedJID, node:String, callback:String, scope:Object ):void
+		public function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.getNode());
 			ext.service = service;
 			ext.serviceNode = node;
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
+			iq.callback = callback;
+			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
 			_connection.send( iq );
 		}
 
-		public function getNodeItems( service:EscapedJID, node:String, callback:String, scope:Object ):void
+		public function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.getNode());
 			ext.service = service;
 			ext.serviceNode = node;
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
+			iq.callback = callback;
+			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
 			_connection.send( iq );
 		}
@@ -102,14 +103,14 @@ package org.igniterealtime.xiff.core
 		 * a reference to an <code>IQ</code> containing the query results.
 		 *
 		 * @param	server The server to query for available service information
-		 * @param	callback The name of a callback function to call when results are retrieved
-		 * @param	scope The scope of the callback function
+		 * @param	callback The callback function to call when results are retrieved
+		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function getServiceInfo( server:EscapedJID, callback:String, scope:Object ):void
+		public function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):void
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
+			iq.callback = callback;
+			iq.errorCallback = errorCallback;
 			iq.addExtension( new InfoDiscoExtension( iq.getNode() ) );
 			_connection.send( iq );
 		}
@@ -120,14 +121,14 @@ package org.igniterealtime.xiff.core
 		 * called and passed a single parameter containing the query results.
 		 *
 		 * @param	server The server to query for service items
-		 * @param	callback The name of a callback function to call when results are retrieved
-		 * @param	scope The scope of the callback function
+		 * @param	callback The callback function to call when results are retrieved
+		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function getServiceItems( server:EscapedJID, callback:String, scope:Object ):void
+		public function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):void
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
+			iq.callback = callback;
+			iq.errorCallback = errorCallback;
 			iq.addExtension( new ItemDiscoExtension( iq.getNode()));
 			_connection.send( iq );
 		}
@@ -137,14 +138,14 @@ package org.igniterealtime.xiff.core
 		 * resource for supported features and children.
 		 *
 		 * @param	id The full JabberID to query for service items
-		 * @param	callback The name of a callback function to call when results are retrieved
-		 * @param	scope The scope of the callback function
+		 * @param	callback The callback function to call when results are retrieved
+		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function browseItem( id:EscapedJID, callback:String, scope:Object ):void
+		public function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):void
 		{
 			var iq:IQ = new IQ( id, IQ.TYPE_GET );
-			iq.callbackName = callback;
-			iq.callbackScope = scope;
+			iq.callback = callback;
+			iq.errorCallback = errorCallback;
 			iq.addExtension( new BrowseExtension( iq.getNode()));
 			_connection.send( iq );
 		}

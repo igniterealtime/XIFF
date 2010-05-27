@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -385,9 +386,9 @@ package org.igniterealtime.xiff.core
 				if ( o is IQ )
 				{
 					var iq:IQ = o as IQ;
-					if ((iq.callbackName != null && iq.callbackScope != null) || iq.callback != null || iq.errorCallback != null)
+					if (iq.callback != null || iq.errorCallback != null)
 					{
-						addIQCallbackToPending( iq.id, iq.callbackName, iq.callbackScope, iq.callback, iq.errorCallback );
+						addIQCallbackToPending( iq.id, iq.callback, iq.errorCallback );
 					}
 				}
 				var root:XMLNode = o.getNode().parentNode;
@@ -448,7 +449,7 @@ package org.igniterealtime.xiff.core
 		public function getRegistrationFields():void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_GET,
-									 XMPPStanza.generateID("reg_info_"), "getRegistrationFields_result", this, null);
+									 XMPPStanza.generateID("reg_info_"), getRegistrationFields_result );
 			regIQ.addExtension(new RegisterExtension(regIQ.getNode()));
 
 			send( regIQ );
@@ -466,7 +467,7 @@ package org.igniterealtime.xiff.core
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
-									 XMPPStanza.generateID("reg_attempt_"), "sendRegistrationFields_result", this, null );
+									 XMPPStanza.generateID("reg_attempt_"), sendRegistrationFields_result );
 			var ext:RegisterExtension = new RegisterExtension(regIQ.getNode());
 
 			for ( var i:String in fieldMap )
@@ -491,7 +492,7 @@ package org.igniterealtime.xiff.core
 		public function changePassword( newPassword:String ):void
 		{
 			var passwdIQ:IQ = new IQ( new EscapedJID(domain), IQ.TYPE_SET,
-										XMPPStanza.generateID("pswd_change_"), "changePassword_result", this, null );
+										XMPPStanza.generateID("pswd_change_"), changePassword_result );
 			var ext:RegisterExtension = new RegisterExtension(passwdIQ.getNode());
 
 			ext.username = jid.escaped.bareJID;
@@ -853,10 +854,6 @@ package org.igniterealtime.xiff.core
 				{
 					callbackInfo = pendingIQs[iq.id];
 
-					if (callbackInfo.methodScope && callbackInfo.methodName)
-					{
-						callbackInfo.methodScope[callbackInfo.methodName].apply( callbackInfo.methodScope, [iq] );
-					}
 					if (callbackInfo.func != null)
 					{
 						callbackInfo.func( iq );
@@ -1218,7 +1215,6 @@ package org.igniterealtime.xiff.core
 			bindIQ.addExtension(bindExt);
 
 			bindIQ.callback = handleBindResponse;
-			bindIQ.callbackScope = this;
 			bindIQ.errorCallback = handleBindError;
 
 			send(bindIQ);
@@ -1259,7 +1255,6 @@ package org.igniterealtime.xiff.core
 			sessionIQ.addExtension(new SessionExtension());
 
 			sessionIQ.callback = handleSessionResponse;
-			sessionIQ.callbackScope = this;
 			sessionIQ.errorCallback = handleSessionError;
 
 			send(sessionIQ);
@@ -1285,9 +1280,9 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected function addIQCallbackToPending( id:String, callbackName:String, callbackScope:Object, callbackFunc:Function, errorCallbackFunc:Function ):void
+		protected function addIQCallbackToPending( id:String, callbackFunc:Function, errorCallbackFunc:Function ):void
 		{
-			pendingIQs[id] = { methodName:callbackName, methodScope:callbackScope, func:callbackFunc, errorFunc:errorCallbackFunc };
+			pendingIQs[id] = { func:callbackFunc, errorFunc:errorCallbackFunc };
 		}
 
 		/**

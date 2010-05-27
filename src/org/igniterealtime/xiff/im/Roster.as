@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -173,22 +174,20 @@ package org.igniterealtime.xiff.im
 				displayName = id.toString();
 			}
 
-			var callbackObj:Roster = null;
-			var callbackMethod:String = null;
+			var callbackMethod:Function = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			var askType:String = RosterExtension.ASK_TYPE_NONE;
 			var iqID : String = XMPPStanza.generateID( "add_user_" );
 
 			if ( requestSubscription == true )
 			{
-				callbackObj = this;
-				callbackMethod = "addContact_result";
+				callbackMethod = addContact_result;
 				pendingSubscriptionRequests[ iqID.toString() ] = id;
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
 			}
 
-			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod, callbackObj );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod );
 			var ext:RosterExtension = new RosterExtension( iq.getNode() );
 			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
 						 null );
@@ -241,7 +240,7 @@ package org.igniterealtime.xiff.im
 		public function fetchRoster():void
 		{
 			var iq:IQ = new IQ( null, IQ.TYPE_GET, XMPPStanza.generateID( "roster_" ),
-									"fetchRoster_result", this );
+									fetchRoster_result );
 			iq.addExtension( new RosterExtension( iq.getNode() ) );
 			_connection.send( iq );
 		}
@@ -357,7 +356,7 @@ package org.igniterealtime.xiff.im
 			if ( contains( rosterItem ) )
 			{
 				var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "remove_user_" ),
-										"unsubscribe_result", this );
+										unsubscribe_result );
 				var ext:RosterExtension = new RosterExtension( iq.getNode() );
 				ext.addItem( new EscapedJID( rosterItem.jid.bareJID ), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				iq.addExtension( ext );
