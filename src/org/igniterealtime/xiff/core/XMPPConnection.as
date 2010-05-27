@@ -355,7 +355,7 @@ package org.igniterealtime.xiff.core
 			if ( isActive() )
 			{
 				sendXML( closingStreamTag ); // String
-				if (socket)
+				if (socket && socket.connected)
 				{
 					socket.close();
 				}
@@ -1144,8 +1144,11 @@ package org.igniterealtime.xiff.core
 				bytedata.compress();
 				bytedata.position = 0; // maybe not needed.
 			}
-			socket.writeBytes( bytedata, 0, bytedata.length );
-			socket.flush();
+			if ( socket && socket.connected )
+			{
+				socket.writeBytes( bytedata, 0, bytedata.length );
+				socket.flush();
+			}
 			
 			_outgoingBytes += bytedata.length;
 
