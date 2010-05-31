@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +24,10 @@
  */
 package org.igniterealtime.xiff.auth
 {
-
-	//import mx.utils.Base64Encoder;
 	import com.hurlant.util.Base64;
-	
+
 	import org.igniterealtime.xiff.core.XMPPConnection;
-	
+
 	/**
 	 * This class provides SASL authentication using the EXTERNAL mechanism.
 	 * This is particularly useful when TLS authentication is required.
@@ -50,7 +49,7 @@ package org.igniterealtime.xiff.auth
 			var authContent:String = connection.jid.node;
 
 			authContent = Base64.encode(authContent);
-			
+
 			/*
 			var b64coder:Base64Encoder = new Base64Encoder();
 			b64coder.insertNewLines = false;

@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,13 +38,31 @@ package org.igniterealtime.xiff.auth
 		protected var req:XML = <auth/>;
 
 		/**
+		 * The XML of the challenge response.
+		 */
+		protected var response:XML = <response/>;
+
+		/**
 		 * The current response stage.
 		 */
 		protected var stage:int;
-		
+
 		public function SASLAuth()
 		{
 			// Don't call directly SASLAuth; use a subclass
+		}
+
+		/**
+		 * Called when a challenge to this authentication is received.
+		 *
+		 * @param	stage The current stage in the authentication process.
+		 * @param	challenge The XML of the actual authentication challenge.
+		 *
+		 * @return The XML response to the challenge.
+		 */
+		public function handleChallenge( stage:int, challenge:XML ):XML
+		{
+			throw new Error( "Don't call this method on SASLAuth; use a subclass" );
 		}
 
 		/**

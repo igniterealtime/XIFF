@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +24,8 @@
  */
 package org.igniterealtime.xiff.auth
 {
-	import flash.utils.ByteArray;
-
-	//import mx.utils.Base64Encoder;
 	import com.hurlant.util.Base64;
-	
+
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
 

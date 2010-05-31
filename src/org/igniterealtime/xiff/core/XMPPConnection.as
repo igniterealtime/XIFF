@@ -256,7 +256,7 @@ package org.igniterealtime.xiff.core
 		protected static var saslMechanisms:Object = {
 				"PLAIN": Plain,
 				"ANONYMOUS": Anonymous,
-				//"DIGEST-MD5": DigestMD5,
+				"DIGEST-MD5": DigestMD5,
 				"EXTERNAL": External
 			};
 
@@ -634,6 +634,10 @@ package org.igniterealtime.xiff.core
 
 				case "presence":
 					handlePresence( node );
+					break;
+
+				case "challenge":
+					handleChallenge( node );
 					break;
 
 				case "success":
@@ -1170,6 +1174,15 @@ package org.igniterealtime.xiff.core
 			{
 				// We did not have a suitable auth method for this connection.
 			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected function handleChallenge(challengeBody:XMLNode):void
+		{
+			var response:XML = auth.handleChallenge(0, XML(challengeBody.toString()));
+			sendXML(response);
 		}
 
 		/**
