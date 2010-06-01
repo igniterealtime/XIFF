@@ -135,7 +135,7 @@ package org.igniterealtime.xiff.auth
 				challengeMap[ keyValue[ 0 ] ] = keyValue[ 1 ];
 			}
 
-			var resp:XML = response;
+			var resp:XML = new XML( response );
 			resp.setNamespace( DigestMD5.NS );
 
 			if( !challengeMap.rspauth )
