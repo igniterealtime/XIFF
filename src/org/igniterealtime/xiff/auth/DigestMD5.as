@@ -28,8 +28,8 @@ package org.igniterealtime.xiff.auth
 	import com.hurlant.util.Base64;
 	import com.hurlant.util.Hex;
 
-	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
 
 	import org.igniterealtime.xiff.core.XMPPConnection;
 
@@ -69,7 +69,7 @@ package org.igniterealtime.xiff.auth
 		/**
 		 * Construct the response as described by DIGEST-MD5 documentation.
 		 */
-		private function formatResponse( map:URLVariables ):String
+		private function formatResponse( map:Dictionary ):String
 		{
 			var md5:MD5 = new MD5();
 
@@ -127,33 +127,44 @@ package org.igniterealtime.xiff.auth
 		override public function handleChallenge( stage:int, challenge:XML ):XML
 		{
 			var decodedChallenge:String = Base64.decode( challenge );
-			decodedChallenge = decodedChallenge.split( "," ).join( "&" ).replace( /\"/g, "");
-			var challengeMap:URLVariables = new URLVariables( decodedChallenge );
-			var responseMap:URLVariables = new URLVariables();
+			var challengeKeyValuePairs:Array = decodedChallenge.replace( /\"/g, "").split( "," );
+			var challengeMap:Dictionary = new Dictionary();
+			for each( var keyValuePair:String in challengeKeyValuePairs )
+			{
+				var keyValue:Array = keyValuePair.split( "=" );
+				challengeMap[ keyValue[ 0 ] ] = keyValue[ 1 ];
+			}
 
-			responseMap.username = connection.username;
-			responseMap.realm = challengeMap.realm ? challengeMap.realm : connection.domain;
-			responseMap.nonce = challengeMap.nonce;
-			responseMap.cnonce = new Date().time;
-			responseMap.nc = "00000001";
-			responseMap.qop = challengeMap.qop;
-			responseMap[ "digest-uri" ] = "xmpp/" + responseMap.realm;
-			responseMap.charset = challengeMap.charset;
-			responseMap.response = formatResponse( responseMap );
-
-			var challengeResponse:String = "username=\"" + responseMap.username + "\"";
-			challengeResponse += ",realm=\"" + responseMap.realm + "\"";
-			challengeResponse += ",nonce=\"" + responseMap.nonce + "\"";
-			challengeResponse += ",cnonce=\"" + responseMap.cnonce + "\"";
-			challengeResponse += ",nc=" + responseMap.nc;
-			challengeResponse += ",qop=" + responseMap.qop;
-			challengeResponse += ",digest-uri=\"" + responseMap[ "digest-uri" ] + "\"";
-			challengeResponse += ",response=" + responseMap.response;
-			challengeResponse += ",charset=" + responseMap.charset;
-			challengeResponse = Base64.encode( challengeResponse );
 			var resp:XML = response;
 			resp.setNamespace( DigestMD5.NS );
-			resp.setChildren( challengeResponse );
+
+			if( !challengeMap.rspauth )
+			{
+				var responseMap:Dictionary = new Dictionary();
+				responseMap.username = connection.username;
+				responseMap.realm = challengeMap.realm ? challengeMap.realm : "";
+				responseMap.nonce = challengeMap.nonce;
+				responseMap.cnonce = new Date().time;
+				responseMap.nc = "00000001";
+				responseMap.qop = challengeMap.qop ? challengeMap.qop : "auth";
+				responseMap[ "digest-uri" ] = "xmpp/" + ( challengeMap.realm ? challengeMap.realm : connection.domain );
+				responseMap.charset = challengeMap.charset;
+				responseMap.response = formatResponse( responseMap );
+
+				var challengeResponse:String = "username=\"" + responseMap.username + "\"";
+				if( challengeMap.realm ) challengeResponse += ",realm=\"" + responseMap.realm + "\"";
+				challengeResponse += ",nonce=\"" + responseMap.nonce + "\"";
+				challengeResponse += ",cnonce=\"" + responseMap.cnonce + "\"";
+				challengeResponse += ",nc=" + responseMap.nc;
+				challengeResponse += ",qop=" + responseMap.qop;
+				challengeResponse += ",digest-uri=\"" + responseMap[ "digest-uri" ] + "\"";
+				challengeResponse += ",response=" + responseMap.response;
+				challengeResponse += ",charset=" + responseMap.charset;
+				challengeResponse = Base64.encode( challengeResponse );
+
+				resp.setChildren( challengeResponse );
+			}
+
 			return resp;
 		}
 
@@ -167,7 +178,7 @@ package org.igniterealtime.xiff.auth
 		*/
 		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.nodeName == "success";
+			var success:Boolean = response.localName() == "success";
 			return {
 				authComplete: true,
 				authSuccess: success,
