@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -294,6 +295,18 @@ package org.igniterealtime.xiff.core
 			sendQueuedRequests( thisData );
 		}
 
+		override protected function handleNodeType( node:XMLNode ):void
+		{
+			super.handleNodeType( node );
+
+			var nodeName:String = node.nodeName.toLowerCase();
+
+			if( nodeName == "stream:features" )
+			{
+				streamRestarted = false; //avoid triggering the old server workaround
+			}
+		}
+
 		/**
 		 *
 		 * @param	bodyContent
@@ -433,46 +446,11 @@ package org.igniterealtime.xiff.core
 		{
 			// Read the data and send it to the appropriate parser
 			var currentNode:XMLNode = responseQueue.shift();
-			var nodeName:String = currentNode.nodeName.toLowerCase();
 
-			switch ( nodeName )
-			{
-				case "stream:features":
-					handleStreamFeatures( currentNode );
-					streamRestarted = false; //avoid triggering the old server workaround
-					break;
-
-				case "stream:error":
-					handleStreamError( currentNode );
-					break;
-
-				case "iq":
-					handleIQ( currentNode );
-					break;
-
-				case "message":
-					handleMessage( currentNode );
-					break;
-
-				case "presence":
-					handlePresence( currentNode );
-					break;
-
-				case "success":
-					handleAuthentication( currentNode );
-					break;
-
-				case "failure":
-					handleAuthentication( currentNode );
-					break;
-				default:
-					dispatchError( "undefined-condition", "Unknown Error", "modify",
-								   500 );
-					break;
-			}
+			handleNodeType( currentNode );
 
 			resetResponseProcessor();
-			
+
 			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
 			if ( requestCount == 0 && !sendQueuedRequests())
 			{
