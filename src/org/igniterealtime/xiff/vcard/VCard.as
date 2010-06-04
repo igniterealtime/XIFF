@@ -24,16 +24,15 @@
  */
 package org.igniterealtime.xiff.vcard
 {
+	import com.hurlant.util.Base64;
+
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
 
-	//import mx.utils.Base64Decoder;
-	import com.hurlant.util.Base64;
-
+	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
 	import org.igniterealtime.xiff.data.IQ;
@@ -52,7 +51,7 @@ package org.igniterealtime.xiff.vcard
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_SENT
 	 */
 	[Event(name="vcardAvatarSent", type="org.igniterealtime.xiff.events.VCardEvent")]
-	
+
 	/**
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.LOADED
 	 */
@@ -62,14 +61,14 @@ package org.igniterealtime.xiff.vcard
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.ERROR
 	 */
 	[Event(name="vcardError", type="org.igniterealtime.xiff.events.VCardEvent")]
-	
+
 	/**
 	 * @see http://tools.ietf.org/html/rfc2426
 	 */
 	public class VCard extends EventDispatcher
 	{
 		/**
-		 * VCard cache indexed by the UnescapedJID.toString() of the user.
+		 * VCard cache indexed by the UnescapedJID.bareJID of the contact or current user.
 		 */
 		private static var cache:Object = {};
 
@@ -278,7 +277,7 @@ package org.igniterealtime.xiff.vcard
 		 *
 		 */
 		private var _avatar:DisplayObject;
-		
+
 		/**
 		 *
 		 * @hint for saving avatar
@@ -300,7 +299,6 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function VCard()
 		{
-
 		}
 
 		/**
@@ -308,10 +306,10 @@ package org.igniterealtime.xiff.vcard
 		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
 		 * vCard.addEventListener(VCardEvent.LOADED, onVCard);</code>
 		 * @param connection
-		 * @param user
+		 * @param contact (if null, will get current user's vCard)
 		 * @return Reference to the VCard which will be filled once the loaded event occurs.
 		 */
-		public static function getVCard( connection:XMPPConnection, user:RosterItemVO ):VCard
+		public static function getVCard( connection:XMPPConnection, contact:RosterItemVO=null ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
@@ -326,7 +324,7 @@ package org.igniterealtime.xiff.vcard
 				} );
 			}
 
-			var bareJID:String = user.jid.bareJID;
+			var bareJID:String = contact ? contact.jid.bareJID : connection.jid.bareJID;
 
 			var cachedCard:VCard = cache[ bareJID ] as VCard;
 			if ( cachedCard )
@@ -335,8 +333,11 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			var vcard:VCard = new VCard();
-			vcard.contact = user;
-			vcard.jid = user.jid;
+			if( contact )
+			{
+				vcard.contact = contact;
+				vcard.jid = contact.jid;
+			}
 			cache[ bareJID ] = vcard;
 
 			pushRequest( connection, vcard );
@@ -374,10 +375,11 @@ package org.igniterealtime.xiff.vcard
 			var req:Object = requestQueue.pop();
 			var connection:XMPPConnection = req.connection;
 			var vcard:VCard = req.card;
-			var user:RosterItemVO = vcard.contact;
+			var contact:RosterItemVO = vcard.contact;
 
-			var iq:IQ = new IQ( user.jid.escaped, IQ.TYPE_GET );
-			vcard.jid = user.jid;
+			var recipient:EscapedJID = contact ? contact.jid.escaped : null;
+			var iq:IQ = new IQ( recipient, IQ.TYPE_GET );
+			vcard.jid = contact ? contact.jid : connection.jid;
 
 			iq.callback = vcard.handleVCard;
 			iq.addExtension( new VCardExtension() );
@@ -418,7 +420,7 @@ package org.igniterealtime.xiff.vcard
 		{
 			_imageBytes = value;
 		}
-		
+
 		/**
 		 * The image type of the avatar. Used for saving the image.
 		 * If this is blank, the avatar will not be saved.
@@ -427,7 +429,7 @@ package org.igniterealtime.xiff.vcard
 		{
 			_avatarType = value;
 		}
-		
+
 		/**
 		 * Deserializes the incoming IQ to fill the values of this vcard.
 		 * @param iq
@@ -436,7 +438,7 @@ package org.igniterealtime.xiff.vcard
 		{
 			namespace ns = "vcard-temp";
 			use namespace ns;
-			
+
 			var node:XML = XML( iq.getNode() );
 			var vCardNode:XML = node.children()[ 0 ];
 
@@ -461,15 +463,8 @@ package org.igniterealtime.xiff.vcard
 
 							if ( photo.localName() == "BINVAL" && value.length > 0 )
 							{
-								/*
-								var decoder:Base64Decoder = new Base64Decoder();
-								decoder.decode( value );
-								_imageBytes = decoder.flush();
-								*/
-
 								_imageBytes = Base64.decodeToByteArrayB( value );
-								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED,
-															   this, true, false ) );
+								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED, this, true, false ) );
 							}
 						}
 						break;
@@ -599,14 +594,14 @@ package org.igniterealtime.xiff.vcard
 
 					case "AGE":
 						break;
-					
+
 					//there is some ambiguity surrounding how vCard versions are handled
 					//so we need to check it here as well as looking for the attribute
 					//as above.  SEE:  http://xmpp.org/extensions/xep-0054.html#impl
 					case "VERSION":
 						version = Number(child.text());
 						break;
-						
+
 					default:
 						trace( "handleVCard. unhandled case child.name(): " + child.name() );
 						break;
@@ -620,9 +615,8 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 *
 		 * @param connection
-		 * @param user
 		 */
-		public function saveVCard( connection:XMPPConnection, user:RosterItemVO ):void
+		public function saveVCard( connection:XMPPConnection ):void
 		{
 			var id:String = XMPPStanza.generateID( "save_vcard_" );
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, _vCardSent );
@@ -792,7 +786,6 @@ package org.igniterealtime.xiff.vcard
 
 				vcardExtNode.appendChild( homeAddressNode );
 			}
-			
 
 			var phoneNode:XML = <TEL/>;
 			phoneNode.setChildren( <WORK/> );
@@ -830,7 +823,7 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			phoneNode.setChildren( <HOME/> );
-			
+
 			if ( homeCellNumber )
 			{
 				var homeCellNode:XML = phoneNode.copy();
@@ -862,7 +855,7 @@ package org.igniterealtime.xiff.vcard
 				homeVoiceNode.NUMBER = homeVoiceNumber;
 				vcardExtNode.appendChild( homeVoiceNode );
 			}
-			
+
 			if ( avatar != null && _avatarType != null)
 			{
 				var avatarNode:XML = <PHOTO/>
@@ -876,7 +869,7 @@ package org.igniterealtime.xiff.vcard
 				{
 					throw new Error("VCard:saveVCard Error encoding bytes " + error.getStackTrace());
 				}
-				
+
 				try
 				{
 					var binaryNode:XML = <BINVAL/>;
@@ -891,10 +884,10 @@ package org.igniterealtime.xiff.vcard
 				var typeNode:XML = <TYPE/>;
 				typeNode.appendChild(_avatarType);
 				avatarNode.appendChild(typeNode);
-					
+
 				vcardExtNode.appendChild( avatarNode );
 			}
-			
+
 			var xmlDoc:XMLDocument = new XMLDocument(vcardExtNode.toString());
 			vcardExt.setNode(xmlDoc.firstChild);
 			//vcardExt.node = vcardExtNode;
