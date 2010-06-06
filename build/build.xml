@@ -3,18 +3,43 @@
 	
 	<!-- Define variables/paths used in this build script -->
 	<property file="build/build.properties" />
+	<property name="nl" value="&#13;&#10;" />
+	<property name="tab" value="&#x0009;" />
 	
 	<!-- Define Flex Ant Tasks -->
 	<taskdef resource="flexTasks.tasks" classpath="${flex.ant.tasks}" />
+	
+	<!-- Define Ant-Contrib Tasks -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.contrib.tasks}" />
 	
 	<!-- Have you edited the properties file to make sure the paths are right on your system? -->
 	<target name="properties">
 		<echo message="Have you edited the properties file to make sure the paths are right on your system?" />
 	</target>
 	
+	<!-- Updating the manifest file. -->
+	<target name="manifest" depends="properties">
+		<echo message="Updating the manifest file." />
+		<echo file="${manifest}">&lt;?xml version="1.0"?&gt;${nl}&lt;componentPackage&gt;</echo>
+		<for param="file">
+			<path>
+				<fileset dir="${src.dir}" includes="**/*as" />
+			</path>
+			<sequential>
+				<propertyregex property="classpath" override="true" input="@{file}" regexp=".*(org/igniterealtime[^\.]*).as" replace="\1" casesensitive="false" />
+				<propertyregex property="class" override="true" input="${classpath}" regexp="/" replace="." global="true" />
+				<echo file="${manifest}" append="true">${nl}${tab}&lt;component class="${class}" /&gt;</echo>
+			</sequential>
+		</for>
+		<echo file="${manifest}" append="true">${nl}&lt;/componentPackage&gt;</echo>
+	</target>
+	
 	<!-- Create a SWC file -->
-	<target name="release" depends="properties">
+	<target name="release" depends="manifest">
 		<compc output="${bin.dir}/${output.name}.swc">
+			<library-path dir="${libs.dir}" append="true">
+				<include name="*.swc" />
+			</library-path>
 			<source-path path-element="${src.dir}" />
 			<namespace uri="${manifest.ns}" manifest="${manifest}" />
 			<in uri="${manifest.ns}"/>
