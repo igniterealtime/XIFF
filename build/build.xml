@@ -26,8 +26,8 @@
 				<fileset dir="${src.dir}" includes="**/*as" />
 			</path>
 			<sequential>
-				<propertyregex property="classpath" override="true" input="@{file}" regexp=".*(org/igniterealtime[^\.]*).as" replace="\1" casesensitive="false" />
-				<propertyregex property="class" override="true" input="${classpath}" regexp="/" replace="." global="true" />
+				<propertyregex property="classpath" override="true" input="@{file}" regexp=".*(org\${file.separator}igniterealtime[^\.]*).as" replace="\1" casesensitive="false" />
+				<propertyregex property="class" override="true" input="${classpath}" regexp="\${file.separator}" replace="." global="true" />
 				<echo file="${manifest}" append="true">${nl}${tab}&lt;component class="${class}" /&gt;</echo>
 			</sequential>
 		</for>
