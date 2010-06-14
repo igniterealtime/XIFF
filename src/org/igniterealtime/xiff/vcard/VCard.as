@@ -26,8 +26,8 @@ package org.igniterealtime.xiff.vcard
 {
 	import com.hurlant.util.Base64;
 
-	import flash.display.*;
-	import flash.events.*;
+	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
@@ -43,24 +43,25 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.util.DateTimeParser;
 
 	/**
-	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_LOADED
-	 */
-	[Event(name="vcardAvatarLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
-
-	/**
-	 * @eventType org.igniterealtime.xiff.events.VCardEvent.AVATAR_SENT
-	 */
-	[Event(name="vcardAvatarSent", type="org.igniterealtime.xiff.events.VCardEvent")]
-
-	/**
+	 * Dispatched when the vCard has loaded.
+	 *
 	 * @eventType org.igniterealtime.xiff.events.VCardEvent.LOADED
 	 */
-	[Event(name="vcardLoaded", type="org.igniterealtime.xiff.events.VCardEvent")]
+	[Event( name="loaded", type="org.igniterealtime.xiff.events.VCardEvent" )]
 
 	/**
-	 * @eventType org.igniterealtime.xiff.events.VCardEvent.ERROR
+	 * Dispatched when the vCard has been saved.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.SAVED
 	 */
-	[Event(name="vcardError", type="org.igniterealtime.xiff.events.VCardEvent")]
+	[Event( name="saved", type="org.igniterealtime.xiff.events.VCardEvent" )]
+
+	/**
+	 * Dispatched when saving the vCard fails.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.VCardEvent.SAVE_ERROR
+	 */
+	[Event( name="saveError", type="org.igniterealtime.xiff.events.VCardEvent" )]
 
 	/**
 	 * @see http://tools.ietf.org/html/rfc2426
@@ -68,14 +69,20 @@ package org.igniterealtime.xiff.vcard
 	public class VCard extends EventDispatcher
 	{
 		/**
+		 * The interval on which to flush the vCard cache.
+		 * The default value is 6 hours.
+		 */
+		public static var cacheFlushInterval:Number = ( 6 * 60 * 60 * 1000 );
+
+		/**
 		 * VCard cache indexed by the UnescapedJID.bareJID of the contact or current user.
 		 */
 		private static var cache:Object = {};
 
 		/**
-		 * Flush the vcard cache every 6 hours
+		 * Flush the vCard cache every 6 hours by default.
 		 */
-		private static var cacheFlushTimer:Timer = new Timer( 6 * 60 * 60 * 1000, 0 );
+		private static var cacheFlushTimer:Timer = new Timer( cacheFlushInterval, 0 );
 
 		/**
 		 * Queue of the pending requests
@@ -83,236 +90,255 @@ package org.igniterealtime.xiff.vcard
 		private static var requestQueue:Array = [];
 
 		/**
-		 * Timer to prosess the queue
+		 * Timer to process the queue.
 		 */
 		private static var requestTimer:Timer;
 
 		/**
-		 *
+		 * Birthday.
 		 */
 		public var birthDay:Date;
 
 		/**
-		 *
+		 * Organizational name.
 		 */
 		public var company:String;
 
 		/**
-		 *
+		 * Organizational unit.
 		 */
 		public var department:String;
 
 		/**
-		 *
+		 * Free-form descriptive text.
+		 */
+		public var description:String;
+
+		/**
+		 * Email address.
 		 */
 		public var email:String;
 
 		/**
-		 *
+		 * Given name.
 		 */
 		public var firstName:String;
 
 		/**
-		 *
+		 * Formatted or display name.
 		 */
-		public var fullName:String;
+		public var formattedName:String;
 
 		/**
-		 *
+		 * Gender.
 		 */
 		public var gender:String;
 
 		/**
-		 *
+		 * Home street address.
 		 */
 		public var homeAddress:String;
 
 		/**
-		 *
+		 * Home cell number.
 		 */
 		public var homeCellNumber:String;
 
 		/**
-		 *
+		 * Home city.
 		 */
 		public var homeCity:String;
 
 		/**
-		 *
+		 * Home country.
 		 */
 		public var homeCountry:String;
 
 		/**
-		 *
+		 * Home fax number.
 		 */
 		public var homeFaxNumber:String;
 
 		/**
-		 *
+		 * Home pager number.
 		 */
 		public var homePagerNumber:String;
 
 		/**
-		 *
+		 * Home postal code.
 		 */
 		public var homePostalCode:String;
 
 		/**
-		 *
+		 * Home state/province.
 		 */
 		public var homeStateProvince:String;
 
 		/**
-		 *
+		 * Home telephone number.
 		 */
 		public var homeVoiceNumber:String;
 
 		/**
-		 *
+		 * Jabber ID.
 		 */
 		public var jid:UnescapedJID;
 
 		/**
-		 *
+		 * Family name.
 		 */
 		public var lastName:String;
 
 		/**
-		 *
-		 */
-		public var loaded:Boolean = false;
-
-		/**
-		 *
+		 * Marital status.
 		 */
 		public var maritalStatus:String;
 
 		/**
-		 *
+		 * Middle name.
 		 */
 		public var middleName:String;
 
 		/**
-		 *
+		 * Name prefix.
 		 */
 		public var namePrefix:String;
 
 		/**
-		 *
+		 * Name suffix.
 		 */
 		public var nameSuffix:String;
 
 		/**
-		 *
+		 * Nickname.
 		 */
 		public var nickname:String;
 
 		/**
-		 *
+		 * Other name.
 		 */
 		public var otherName:String;
 
 		/**
-		 *
+		 * The byte array of the photo.
+		 * To save a photo, either photoBytes or photoURL are required, but not both.
+		 */
+		public var photoBytes:ByteArray;
+
+		/**
+		 * The image type of the photo.
+		 * To save a photo, this property is required.
+		 */
+		public var photoType:String;
+
+		/**
+		 * The url of the photo.
+		 * To save a photo, either photoBytes or photoURL are required, but not both.
+		 */
+		public var photoURL:String;
+
+		/**
+		 * Role.
+		 */
+		public var role:String;
+
+		/**
+		 * Title.
 		 */
 		public var title:String;
 
 		/**
-		 *
+		 * Unique identifier.
+		 */
+		public var uid:String;
+
+		/**
+		 * Directory URL.
 		 */
 		public var url:String;
 
 		/**
-		 * Version of the VCard. Usually 2.0 or 3.0.
+		 * Version of the vCard. Usually 2.0 or 3.0.
 		 * @see http://xmpp.org/extensions/xep-0054.html#impl
 		 */
-		public var version:Number;
+		public var version:String;
 
 		/**
-		 *
+		 * Work street address.
 		 */
 		public var workAddress:String;
 
 		/**
-		 *
+		 * Work cell number.
 		 */
 		public var workCellNumber:String;
 
 		/**
-		 *
+		 * Work city.
 		 */
 		public var workCity:String;
 
 		/**
-		 *
+		 * Work country.
 		 */
 		public var workCountry:String;
 
 		/**
-		 *
+		 * Work fax number.
 		 */
 		public var workFaxNumber:String;
 
 		/**
-		 *
+		 * Work pager number.
 		 */
 		public var workPagerNumber:String;
 
 		/**
-		 *
+		 * Work postal code.
 		 */
 		public var workPostalCode:String;
 
 		/**
-		 *
+		 * Work state/province.
 		 */
 		public var workStateProvince:String;
 
 		/**
-		 *
+		 * Work telephone number.
 		 */
 		public var workVoiceNumber:String;
 
 		/**
-		 *
-		 */
-		private var _avatar:DisplayObject;
-
-		/**
-		 *
-		 * @hint for saving avatar
-		 */
-		private var _avatarType:String;
-
-		/**
-		 *
-		 */
-		private var _imageBytes:ByteArray;
-
-		/**
-		 *
+		 * @private
 		 */
 		private var contact:RosterItemVO;
 
 		/**
-		 * Don't call directly VCard, use a static method (getVCard) and add a callback.
+		 * @private
+		 */
+		private var _loaded:Boolean;
+
+		/**
+		 * Don't call directly, use the static method getVCard() and add a callback.
 		 */
 		public function VCard()
 		{
 		}
 
 		/**
-		 * Seems to be the way a vcard is requested and then later referred to:
-		 * <code>var vCard:VCard = VCard.getVCard(_connection, item);<br />
-		 * vCard.addEventListener(VCardEvent.LOADED, onVCard);</code>
+		 * The way a vCard is requested and then later referred to.
+		 * <code>var vCard:VCard = VCard.getVCard( connection );<br />
+		 * vCard.addEventListener( VCardEvent.LOADED, onVCardLoaded );</code>
 		 * @param connection
 		 * @param contact (if null, will get current user's vCard)
-		 * @return Reference to the VCard which will be filled once the loaded event occurs.
+		 * @return Reference to the vCard which will be filled once the loaded event occurs.
 		 */
 		public static function getVCard( connection:XMPPConnection, contact:RosterItemVO=null ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
+				cacheFlushTimer.reset();
+				cacheFlushTimer.delay = cacheFlushInterval;
 				cacheFlushTimer.start();
 				cacheFlushTimer.addEventListener( TimerEvent.TIMER, function( event:TimerEvent ):void
 				{
@@ -332,32 +358,43 @@ package org.igniterealtime.xiff.vcard
 				return cachedCard;
 			}
 
-			var vcard:VCard = new VCard();
+			var vCard:VCard = new VCard();
 			if( contact )
 			{
-				vcard.contact = contact;
-				vcard.jid = contact.jid;
+				vCard.contact = contact;
+				vCard.jid = contact.jid;
 			}
-			cache[ bareJID ] = vcard;
+			cache[ bareJID ] = vCard;
 
-			pushRequest( connection, vcard );
+			pushRequest( connection, vCard );
 
-			return vcard;
+			return vCard;
+		}
+
+		/**
+		 * Immediately expires the vCard cache.
+		 */
+		public static function expireCache():void
+		{
+			if ( cacheFlushTimer.running )
+			{
+				cacheFlushTimer.stop();
+			}
 		}
 
 		/**
 		 * Add the request to the stack of requests
 		 * @param connection
-		 * @param vcard
+		 * @param vCard
 		 */
-		private static function pushRequest( connection:XMPPConnection, vcard:VCard ):void
+		private static function pushRequest( connection:XMPPConnection, vCard:VCard ):void
 		{
 			if ( !requestTimer )
 			{
 				requestTimer = new Timer( 1, 1 );
 				requestTimer.addEventListener( TimerEvent.TIMER_COMPLETE, sendRequest );
 			}
-			requestQueue.push( { connection: connection, card: vcard } );
+			requestQueue.push( { connection: connection, card: vCard } );
 			requestTimer.reset();
 			requestTimer.start();
 		}
@@ -374,14 +411,14 @@ package org.igniterealtime.xiff.vcard
 			}
 			var req:Object = requestQueue.pop();
 			var connection:XMPPConnection = req.connection;
-			var vcard:VCard = req.card;
-			var contact:RosterItemVO = vcard.contact;
+			var vCard:VCard = req.card;
+			var contact:RosterItemVO = vCard.contact;
 
 			var recipient:EscapedJID = contact ? contact.jid.escaped : null;
 			var iq:IQ = new IQ( recipient, IQ.TYPE_GET );
-			vcard.jid = contact ? contact.jid : connection.jid;
+			vCard.jid = contact ? contact.jid : connection.jid;
 
-			iq.callback = vcard.handleVCard;
+			iq.callback = vCard.handleVCard;
 			iq.addExtension( new VCardExtension() );
 
 			connection.send( iq );
@@ -390,48 +427,7 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
-		 * @param resultIQ
-		 */
-		public function _vCardSent( resultIQ:IQ ):void
-		{
-			var bareJID:String = resultIQ.to.unescaped.bareJID;
-			if ( resultIQ.type == IQ.TYPE_ERROR )
-			{
-				dispatchEvent( new VCardEvent( VCardEvent.ERROR, cache[ bareJID ],
-											   true, true ) );
-			}
-			else
-			{
-				delete cache[ bareJID ]; // Force profile refresh on next view
-
-				dispatchEvent( new VCardEvent( VCardEvent.AVATAR_SENT, this, true, false ) );
-			}
-		}
-
-		/**
-		 * The byte array to be used with a Loader.loadBytes or similar.
-		 */
-		public function get avatar():ByteArray
-		{
-			return _imageBytes;
-		}
-		public function set avatar( value:ByteArray ) : void
-		{
-			_imageBytes = value;
-		}
-
-		/**
-		 * The image type of the avatar. Used for saving the image.
-		 * If this is blank, the avatar will not be saved.
-		 */
-		public function set avatarType( value:String ) : void
-		{
-			_avatarType = value;
-		}
-
-		/**
-		 * Deserializes the incoming IQ to fill the values of this vcard.
+		 * Deserializes the incoming IQ to fill the values of this vCard.
 		 * @param iq
 		 */
 		public function handleVCard( iq:IQ ):void
@@ -442,13 +438,12 @@ package org.igniterealtime.xiff.vcard
 			var node:XML = XML( iq.getNode() );
 			var vCardNode:XML = node.children()[ 0 ];
 
-			//var vCardNode:XML = iq.node.children()[ 0 ];
 			if ( !vCardNode )
 			{
 				return;
 			}
 
-			version = Number( vCardNode.@version );
+			version = vCardNode.@version;
 
 			var nodes:XMLList = vCardNode.children();
 
@@ -461,10 +456,18 @@ package org.igniterealtime.xiff.vcard
 						{
 							var value:String = photo.text();
 
+							if ( photo.localName() == "TYPE" && value.length > 0 )
+							{
+								photoType = value;
+							}
+
 							if ( photo.localName() == "BINVAL" && value.length > 0 )
 							{
-								_imageBytes = Base64.decodeToByteArrayB( value );
-								dispatchEvent( new VCardEvent( VCardEvent.AVATAR_LOADED, this, true, false ) );
+								photoBytes = Base64.decodeToByteArrayB( value );
+							}
+							else if ( photo.localName() == "EXTVAL" && value.length > 0 )
+							{
+								photoURL = value;
 							}
 						}
 						break;
@@ -479,7 +482,7 @@ package org.igniterealtime.xiff.vcard
 						break;
 
 					case "FN":
-						fullName = child.text();
+						formattedName = child.text();
 						break;
 
 					case "NICKNAME":
@@ -518,7 +521,7 @@ package org.igniterealtime.xiff.vcard
 							workCountry = child.CTRY;
 							workCity = child.LOCALITY;
 						}
-						else if ( child.WORK.length() == 1 )
+						else if ( child.HOME.length() == 1 )
 						{
 							homePostalCode = child.PCODE;
 							homeStateProvince = child.REGION;
@@ -554,6 +557,7 @@ package org.igniterealtime.xiff.vcard
 						break;
 
 					case "DESC":
+						description = child.text();
 						break;
 
 					case "GENDER":
@@ -576,7 +580,12 @@ package org.igniterealtime.xiff.vcard
 						}
 						break;
 
+					case "UID":
+						uid = child.text();
+						break;
+
 					case "ROLE":
+						role = child.text();
 						break;
 
 					case "HOMECELL":
@@ -599,7 +608,7 @@ package org.igniterealtime.xiff.vcard
 					//so we need to check it here as well as looking for the attribute
 					//as above.  SEE:  http://xmpp.org/extensions/xep-0054.html#impl
 					case "VERSION":
-						version = Number(child.text());
+						version = child.text();
 						break;
 
 					default:
@@ -608,21 +617,20 @@ package org.igniterealtime.xiff.vcard
 				}
 			}
 
-			loaded = true;
+			_loaded = true;
 			dispatchEvent( new VCardEvent( VCardEvent.LOADED, this, true, false ) );
 		}
 
 		/**
-		 *
+		 * Saves a vCard.
 		 * @param connection
 		 */
 		public function saveVCard( connection:XMPPConnection ):void
 		{
 			var id:String = XMPPStanza.generateID( "save_vcard_" );
-			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, _vCardSent );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, saveVCard_result );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = new XML(vcardExt.getNode().toString());
-			//var vcardExtNode:XML = vcardExt.node;
+			var vcardExtNode:XML = new XML( vcardExt.getNode().toString() );
 
 			if ( firstName || middleName || lastName )
 			{
@@ -660,9 +668,9 @@ package org.igniterealtime.xiff.vcard
 				vcardExtNode.appendChild( nameNode );
 			}
 
-			if ( fullName )
+			if ( formattedName )
 			{
-				vcardExtNode.FN = fullName;
+				vcardExtNode.FN = formattedName;
 			}
 
 			if ( nickname )
@@ -711,14 +719,34 @@ package org.igniterealtime.xiff.vcard
 				vcardExtNode.BDAY = DateTimeParser.date2string( birthDay );
 			}
 
+			if ( description )
+			{
+				vcardExtNode.DESC = description;
+			}
+
 			if ( gender )
 			{
 				vcardExtNode.GENDER = gender;
 			}
 
+			if ( role )
+			{
+				vcardExtNode.ROLE = role;
+			}
+
 			if ( maritalStatus )
 			{
 				vcardExtNode.MARITALSTATUS = maritalStatus;
+			}
+			
+			if ( jid )
+			{
+				vcardExtNode.JABBERID = jid.toString();
+			}
+			
+			if ( uid )
+			{
+				vcardExtNode.UID = uid;
 			}
 
 			if ( workAddress || workCity || workCountry || workPostalCode || workStateProvince )
@@ -856,44 +884,81 @@ package org.igniterealtime.xiff.vcard
 				vcardExtNode.appendChild( homeVoiceNode );
 			}
 
-			if ( avatar != null && _avatarType != null)
+			if ( photoType != null && ( photoBytes != null || photoURL != null ) )
 			{
-				var avatarNode:XML = <PHOTO/>
-				var avatarBase64:String;
-
-				try
+				var photoNode:XML = <PHOTO/>;
+				
+				if ( photoBytes )
 				{
-					avatarBase64 = Base64.encodeByteArray(avatar);
+					var photoBase64:String;
+	
+					try
+					{
+						photoBase64 = Base64.encodeByteArray(photoBytes);
+					}
+					catch(error:Error)
+					{
+						throw new Error( "VCard:saveVCard Error encoding bytes " + error.getStackTrace() );
+					}
+	
+					try
+					{
+						var binaryNode:XML = <BINVAL/>;
+						binaryNode.appendChild( photoBase64 );
+						photoNode.appendChild( binaryNode );
+					}
+					catch(error:Error)
+					{
+						throw new Error( "VCard:saveVCard Error converting bytes to string " + error.message );
+					}
 				}
-				catch(error:Error)
+				else
 				{
-					throw new Error("VCard:saveVCard Error encoding bytes " + error.getStackTrace());
-				}
-
-				try
-				{
-					var binaryNode:XML = <BINVAL/>;
-					binaryNode.appendChild(avatarBase64);
-					avatarNode.appendChild(binaryNode);
-				}
-				catch(error:Error)
-				{
-					throw new Error("VCard:saveVCard Error converting bytes to string " + error.message);
+					var extNode:XML = <EXTVAL/>;
+					extNode.appendChild( photoURL );
+					photoNode.appendChild( extNode );
 				}
 
 				var typeNode:XML = <TYPE/>;
-				typeNode.appendChild(_avatarType);
-				avatarNode.appendChild(typeNode);
+				typeNode.appendChild( photoType );
+				photoNode.appendChild( typeNode );
 
-				vcardExtNode.appendChild( avatarNode );
+				vcardExtNode.appendChild( photoNode );
 			}
 
-			var xmlDoc:XMLDocument = new XMLDocument(vcardExtNode.toString());
-			vcardExt.setNode(xmlDoc.firstChild);
-			//vcardExt.node = vcardExtNode;
+			var xmlDoc:XMLDocument = new XMLDocument( vcardExtNode.toString() );
+			vcardExt.setNode( xmlDoc.firstChild );
 
 			iq.addExtension( vcardExt );
 			connection.send( iq );
+		}
+
+		/**
+		 *
+		 * @param resultIQ
+		 */
+		public function saveVCard_result( resultIQ:IQ ):void
+		{
+			var bareJID:String = resultIQ.to.unescaped.bareJID;
+			if ( resultIQ.type == IQ.TYPE_ERROR )
+			{
+				dispatchEvent( new VCardEvent( VCardEvent.SAVE_ERROR, cache[ bareJID ],
+					true, true ) );
+			}
+			else
+			{
+				delete cache[ bareJID ]; // Force profile refresh on next view
+				
+				dispatchEvent( new VCardEvent( VCardEvent.SAVED, this, true, false ) );
+			}
+		}
+
+		/**
+		 * Indicates whether the vCard has been loaded.
+		 */
+		public function get loaded():Boolean
+		{
+			return _loaded;
 		}
 	}
 }
