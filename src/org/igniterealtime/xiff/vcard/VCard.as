@@ -26,6 +26,7 @@ package org.igniterealtime.xiff.vcard
 {
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
+	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
 
@@ -250,7 +251,17 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
+		private var extensionNames:Array;
+
+		/**
+		 * @private
+		 */
 		private var _loaded:Boolean;
+
+		/**
+		 * @private
+		 */
+		private var _extensions:Dictionary;
 
 		/**
 		 * Don't call directly, use the static method getVCard() and add a callback.
@@ -378,6 +389,9 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			version = vCardNode.@version;
+
+			extensionNames = [];
+			_extensions = new Dictionary();
 
 			var nodes:XMLList = vCardNode.children();
 
@@ -630,7 +644,9 @@ package org.igniterealtime.xiff.vcard
 						break;
 
 					default:
-						trace( "handleVCard. unhandled case child.name(): " + child.name() );
+						trace( "handleVCard. Private extension: " + child.name() );
+						extensionNames.push( child.localName() );
+						extensions[ child.localName() ] = child.text().toString();
 						break;
 				}
 			}
@@ -1160,6 +1176,15 @@ package org.igniterealtime.xiff.vcard
 				vcardExtNode.DESC = description;
 			}
 
+			//X
+			if ( extensionNames.length > 0 )
+			{
+				for each( var xName:String in extensionNames )
+				{
+					vcardExtNode[ xName ] = _extensions[ xName ];
+				}
+			}
+
 			var xmlDoc:XMLDocument = new XMLDocument( vcardExtNode.toString() );
 			vcardExt.setNode( xmlDoc.firstChild );
 
@@ -1193,6 +1218,14 @@ package org.igniterealtime.xiff.vcard
 		public function get loaded():Boolean
 		{
 			return _loaded;
+		}
+
+		/**
+		 * Map of the vCard's private extensions.
+		 */
+		public function get extensions():Dictionary
+		{
+			return _extensions;
 		}
 	}
 }
