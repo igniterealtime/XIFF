@@ -1,20 +1,20 @@
 /*
  * Copyright (C) 2003-2009 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ package org.igniterealtime.xiff.data.im
 		}
 
 		/**
-		 * Returns an Roster item value object if it exists, 
+		 * Returns an Roster item value object if it exists,
 		 * use the "create" parameter to create one if it does not.
 		 * @param	jid
 		 * @param	create
@@ -162,7 +162,7 @@ package org.igniterealtime.xiff.data.im
 				return;
 			var oldOnline:Boolean = online;
 			_online = value;
-			dispatchChangeEvent("online", online, oldOnline);
+			dispatchChangeEvent("online", _online, oldOnline);
 		}
 
 		/**
@@ -185,7 +185,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			var oldPriority:int = priority;
 			_priority = value;
-			dispatchChangeEvent("priority", priority, oldPriority);
+			dispatchChangeEvent("priority", _priority, oldPriority);
 		}
 
 		/**
@@ -199,7 +199,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			var oldShow:String = show;
 			_show = value;
-			dispatchChangeEvent("show", show, oldShow);
+			dispatchChangeEvent("show", _show, oldShow);
 		}
 
 		/**
@@ -215,7 +215,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			var oldStatus:String = status;
 			_status = value;
-			dispatchChangeEvent("status", status, oldStatus);
+			dispatchChangeEvent("status", _status, oldStatus);
 		}
 
 		/**
@@ -229,7 +229,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			var oldSub:String = subscribeType;
 			_subscribeType = value;
-			dispatchChangeEvent("subscribeType", subscribeType, oldSub);
+			dispatchChangeEvent("subscribeType", _subscribeType, oldSub);
 		}
 
 		/**
