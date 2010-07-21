@@ -35,7 +35,6 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.core.XMPPConnection;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.XMPPStanza;
-	import org.igniterealtime.xiff.data.im.RosterItemVO;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
 	import org.igniterealtime.xiff.events.VCardEvent;
 	import org.igniterealtime.xiff.util.DateTimeParser;
@@ -73,9 +72,9 @@ package org.igniterealtime.xiff.vcard
 		public static var cacheFlushInterval:Number = ( 6 * 60 * 60 * 1000 );
 
 		/**
-		 * VCard cache indexed by the UnescapedJID.bareJID of the contact or current user.
+		 * VCard cache indexed by the UnescapedJID.bareJID of the user.
 		 */
-		private static var cache:Object = {};
+		private static var cache:Dictionary = new Dictionary();
 
 		/**
 		 * Flush the vCard cache every 6 hours by default.
@@ -246,11 +245,6 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var contact:RosterItemVO;
-
-		/**
-		 * @private
-		 */
 		private var extensionNames:Array;
 
 		/**
@@ -272,13 +266,13 @@ package org.igniterealtime.xiff.vcard
 
 		/**
 		 * The way a vCard is requested and then later referred to.
-		 * <code>var vCard:VCard = VCard.getVCard( connection );<br />
+		 * <code>var vCard:VCard = VCard.getVCard( connection, jid );<br />
 		 * vCard.addEventListener( VCardEvent.LOADED, onVCardLoaded );</code>
 		 * @param connection
-		 * @param contact (if null, will get current user's vCard)
+		 * @param jid
 		 * @return Reference to the vCard which will be filled once the loaded event occurs.
 		 */
-		public static function getVCard( connection:XMPPConnection, contact:RosterItemVO=null ):VCard
+		public static function getVCard( connection:XMPPConnection, jid:UnescapedJID ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
@@ -291,25 +285,20 @@ package org.igniterealtime.xiff.vcard
 					{
 						pushRequest( connection, card );
 					}
-					cache = {};
+					clearCache();
 				} );
 			}
 
-			var bareJID:String = contact ? contact.jid.bareJID : connection.jid.bareJID;
-
-			var cachedCard:VCard = cache[ bareJID ] as VCard;
+			var cachedCard:VCard = cache[ jid.bareJID ] as VCard;
 			if ( cachedCard )
 			{
 				return cachedCard;
 			}
 
 			var vCard:VCard = new VCard();
-			if( contact )
-			{
-				vCard.contact = contact;
-				vCard.jid = contact.jid;
-			}
-			cache[ bareJID ] = vCard;
+			vCard.jid = jid;
+
+			cache[ jid.bareJID ] = vCard;
 
 			pushRequest( connection, vCard );
 
@@ -325,6 +314,14 @@ package org.igniterealtime.xiff.vcard
 			{
 				cacheFlushTimer.stop();
 			}
+		}
+
+		/**
+		 * Immediately clears the vCard cache.
+		 */
+		public static function clearCache():void
+		{
+			cache = new Dictionary();
 		}
 
 		/**
@@ -357,11 +354,10 @@ package org.igniterealtime.xiff.vcard
 			var req:Object = requestQueue.pop();
 			var connection:XMPPConnection = req.connection;
 			var vCard:VCard = req.card;
-			var contact:RosterItemVO = vCard.contact;
+			var jid:UnescapedJID = vCard.jid;
 
-			var recipient:EscapedJID = contact ? contact.jid.escaped : null;
+			var recipient:EscapedJID = jid.equals( connection.jid, true ) ? null : jid.escaped;
 			var iq:IQ = new IQ( recipient, IQ.TYPE_GET );
-			vCard.jid = contact ? contact.jid : connection.jid;
 
 			iq.callback = vCard.handleVCard;
 			iq.addExtension( new VCardExtension() );
@@ -715,7 +711,7 @@ package org.igniterealtime.xiff.vcard
 			if ( photo && ( ( photo.type && photo.binaryValue ) || photo.externalValue ) )
 			{
 				var photoNode:XML = <PHOTO/>;
-				
+
 				if ( photo.binaryValue )
 				{
 					try
@@ -728,7 +724,7 @@ package org.igniterealtime.xiff.vcard
 					{
 						throw new Error( "VCard:saveVCard Error converting bytes to string " + error.message );
 					}
-					
+
 					var photoTypeNode:XML = <TYPE/>;
 					photoTypeNode.appendChild( photo.type );
 					photoNode.appendChild( photoTypeNode );
@@ -739,7 +735,7 @@ package org.igniterealtime.xiff.vcard
 					photoExtNode.appendChild( photo.externalValue );
 					photoNode.appendChild( photoExtNode );
 				}
-				
+
 				vcardExtNode.appendChild( photoNode );
 			}
 
@@ -754,85 +750,85 @@ package org.igniterealtime.xiff.vcard
 			{
 				var workAddressNode:XML = <ADR/>;
 				workAddressNode.appendChild( <WORK/> );
-				
+
 				if ( workAddress.poBox )
 				{
 					workAddressNode.POBOX = workAddress.poBox;
 				}
-				
+
 				if ( workAddress.extendedAddress )
 				{
 					workAddressNode.EXTADD = workAddress.extendedAddress;
 				}
-				
+
 				if ( workAddress.street )
 				{
 					workAddressNode.STREET = workAddress.street;
 				}
-				
+
 				if ( workAddress.locality )
 				{
 					workAddressNode.LOCALITY = workAddress.locality;
 				}
-				
+
 				if ( workAddress.region )
 				{
 					workAddressNode.REGION = workAddress.region;
 				}
-				
+
 				if ( workAddress.postalCode )
 				{
 					workAddressNode.PCODE = workAddress.postalCode;
 				}
-				
+
 				if ( workAddress.country )
 				{
 					workAddressNode.CTRY = workAddress.country;
 				}
-				
+
 				vcardExtNode.appendChild( workAddressNode );
 			}
-			
+
 			if ( homeAddress )
 			{
 				var homeAddressNode:XML = <ADR/>;
 				homeAddressNode.appendChild( <HOME/> );
-				
+
 				if ( homeAddress.poBox )
 				{
 					homeAddressNode.POBOX = homeAddress.poBox;
 				}
-				
+
 				if ( homeAddress.extendedAddress )
 				{
 					homeAddressNode.EXTADD = homeAddress.extendedAddress;
 				}
-				
+
 				if ( homeAddress.street )
 				{
 					homeAddressNode.STREET = homeAddress.street;
 				}
-				
+
 				if ( homeAddress.locality )
 				{
 					homeAddressNode.LOCALITY = homeAddress.locality;
 				}
-				
+
 				if ( homeAddress.region )
 				{
 					homeAddressNode.REGION = homeAddress.region;
 				}
-				
+
 				if ( homeAddress.postalCode )
 				{
 					homeAddressNode.PCODE = homeAddress.postalCode;
 				}
-				
+
 				if ( homeAddress.country )
 				{
 					homeAddressNode.CTRY = homeAddress.country;
 				}
-				
+
 				vcardExtNode.appendChild( homeAddressNode );
 			}
 
@@ -844,7 +840,7 @@ package org.igniterealtime.xiff.vcard
 				workAddressLabelNode.LINE = workAddressLabel;
 				vcardExtNode.appendChild( workAddressLabelNode );
 			}
-			
+
 			if ( homeAddressLabel )
 			{
 				var homeAddressLabelNode:XML = <LABEL/>;
@@ -858,7 +854,7 @@ package org.igniterealtime.xiff.vcard
 			if ( workTelephone )
 			{
 				phoneNode.setChildren( <WORK/> );
-				
+
 				if ( workTelephone.voice )
 				{
 					var workVoiceNode:XML = phoneNode.copy();
@@ -866,7 +862,7 @@ package org.igniterealtime.xiff.vcard
 					workVoiceNode.NUMBER = workTelephone.voice;
 					vcardExtNode.appendChild( workVoiceNode );
 				}
-				
+
 				if ( workTelephone.fax )
 				{
 					var workFaxNode:XML = phoneNode.copy();
@@ -874,7 +870,7 @@ package org.igniterealtime.xiff.vcard
 					workFaxNode.NUMBER = workTelephone.fax;
 					vcardExtNode.appendChild( workFaxNode );
 				}
-				
+
 				if ( workTelephone.pager )
 				{
 					var workPagerNode:XML = phoneNode.copy();
@@ -882,7 +878,7 @@ package org.igniterealtime.xiff.vcard
 					workPagerNode.NUMBER = workTelephone.pager;
 					vcardExtNode.appendChild( workPagerNode );
 				}
-				
+
 				if ( workTelephone.msg )
 				{
 					var workMsgNode:XML = phoneNode.copy();
@@ -890,7 +886,7 @@ package org.igniterealtime.xiff.vcard
 					workMsgNode.NUMBER = workTelephone.msg;
 					vcardExtNode.appendChild( workMsgNode );
 				}
-				
+
 				if ( workTelephone.cell )
 				{
 					var workCellNode:XML = phoneNode.copy();
@@ -898,7 +894,7 @@ package org.igniterealtime.xiff.vcard
 					workCellNode.NUMBER = workTelephone.cell;
 					vcardExtNode.appendChild( workCellNode );
 				}
-				
+
 				if ( workTelephone.video )
 				{
 					var workVideoNode:XML = phoneNode.copy();
@@ -987,22 +983,22 @@ package org.igniterealtime.xiff.vcard
 			{
 				vcardExtNode.TZ = DateTimeParser.date2string( timezone );
 			}
-			
+
 			//GEO
 			if( geographicalPosition )
 			{
 				var geoNode:XML = <GEO/>;
-				
+
 				if ( geographicalPosition.latitude )
 				{
 					geoNode.LAT = geographicalPosition.latitude;
 				}
-				
+
 				if ( geographicalPosition.longitude )
 				{
 					geoNode.LON = geographicalPosition.longitude;
 				}
-				
+
 				vcardExtNode.appendChild( geoNode );
 			}
 
