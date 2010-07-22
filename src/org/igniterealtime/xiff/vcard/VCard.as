@@ -245,7 +245,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var extensionNames:Array;
+		private var extensionNames:Array = [];
 
 		/**
 		 * @private
@@ -255,7 +255,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _extensions:Dictionary;
+		private var _extensions:Dictionary = new Dictionary();
 
 		/**
 		 * Don't call directly, use the static method getVCard() and add a callback.
@@ -385,9 +385,6 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			version = vCardNode.@version;
-
-			extensionNames = [];
-			_extensions = new Dictionary();
 
 			var nodes:XMLList = vCardNode.children();
 
