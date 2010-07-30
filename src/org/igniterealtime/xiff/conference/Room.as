@@ -905,18 +905,6 @@ package org.igniterealtime.xiff.conference
 									case 201:
 										unlockRoom( myIsReserved );
 										break;
-										
-									case 307:
-										roomEvent = new RoomEvent( RoomEvent.USER_KICKED );
-										roomEvent.nickname = presence.from.resource;
-										dispatchEvent( roomEvent );
-										break;
-										
-									case 301:
-										roomEvent = new RoomEvent( RoomEvent.USER_BANNED );
-										roomEvent.nickname = presence.from.resource;
-										dispatchEvent( roomEvent );
-										break;
 								}
 							}
 
@@ -1035,10 +1023,22 @@ package org.igniterealtime.xiff.conference
 					var user:MUCUserExtension = aPresence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
 					for each ( var status:MUCStatus in user.statuses )
 					{
-						// If the user left as a result of a kick or ban, so no need to dispatch a USER_DEPARTURE event as we already dispatched USER_KICKED/USER_BANNED
-						if ( status.code == 307 || status.code == 301 )
+						switch ( status.code )
 						{
-							return;
+							// If the user left as a result of a ban or kick, we dispatch a USER_BANNED/USER_KICKED event instead of a USER_DEPARTURE event
+							case 301:
+								roomEvent = new RoomEvent( RoomEvent.USER_BANNED );
+								roomEvent.nickname = userNickname;
+								roomEvent.data = aPresence;
+								dispatchEvent( roomEvent );
+								return;
+								
+							case 307:
+								roomEvent = new RoomEvent( RoomEvent.USER_KICKED );
+								roomEvent.nickname = userNickname;
+								roomEvent.data = aPresence;
+								dispatchEvent( roomEvent );
+								return;
 						}
 					}
 
