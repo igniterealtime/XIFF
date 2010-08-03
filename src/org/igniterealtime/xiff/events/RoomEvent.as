@@ -30,6 +30,8 @@ package org.igniterealtime.xiff.events
 	{
 		public static const ADMIN_ERROR:String = "adminError";
 
+		public static const AFFILIATION_CHANGE_COMPLETE:String = "affiliationChangeComplete";
+
 		public static const AFFILIATIONS:String = "affiliations";
 
 		public static const BANNED_ERROR:String = "bannedError";

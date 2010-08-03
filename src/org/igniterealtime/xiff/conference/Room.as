@@ -493,7 +493,7 @@ package org.igniterealtime.xiff.conference
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
 			var adminExt:MUCAdminExtension = new MUCAdminExtension();
 
-			iq.callback = finish_admin;
+			iq.callback = finish_grant;
 
 			for each ( var jid:UnescapedJID in jids )
 			{
@@ -846,6 +846,21 @@ package org.igniterealtime.xiff.conference
 			}
 
 			var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM_COMPLETE );
+			dispatchEvent( event );
+		}
+
+		/**
+		 * IQ callback when grant is complete.
+		 */
+		private function finish_grant( iq:IQ ):void
+		{
+			if( iq.type == IQ.TYPE_ERROR )
+			{
+				finish_admin( iq );
+				return;
+			}
+
+			var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATION_CHANGE_COMPLETE );
 			dispatchEvent( event );
 		}
 
