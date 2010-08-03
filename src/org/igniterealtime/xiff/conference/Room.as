@@ -305,8 +305,7 @@ package org.igniterealtime.xiff.conference
 
 			for each ( var banJID:UnescapedJID in jids )
 			{
-				adminExt.addItem( Room.AFFILIATION_OUTCAST, null, null, banJID.escaped,
-								  null, null );
+				adminExt.addItem( Room.AFFILIATION_OUTCAST, null, null, banJID.escaped, null, null );
 			}
 
 			iq.addExtension( adminExt );
@@ -327,13 +326,13 @@ package org.igniterealtime.xiff.conference
 		public function cancelConfiguration():void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension = new FormExtension();
 
 			form.type = FormExtension.TYPE_CANCEL;
 
-			owner.addExtension( form );
-			iq.addExtension( owner );
+			ownerExt.addExtension( form );
+			iq.addExtension( ownerExt );
 			_connection.send( iq );
 		}
 
@@ -368,7 +367,7 @@ package org.igniterealtime.xiff.conference
 		public function configure( fieldmap:Object ):void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension;
 
 			if ( fieldmap is FormExtension )
@@ -382,10 +381,10 @@ package org.igniterealtime.xiff.conference
 				form.setFields( fieldmap );
 			}
 			form.type = FormExtension.TYPE_SUBMIT;
-			owner.addExtension( form );
+			ownerExt.addExtension( form );
 			
 			iq.callback = finish_configure;
-			iq.addExtension( owner );
+			iq.addExtension( ownerExt );
 			
 			_connection.send( iq );
 		}
@@ -407,11 +406,11 @@ package org.igniterealtime.xiff.conference
 		public function decline( jid:UnescapedJID, reason:String ):void
 		{
 			var message:Message = new Message( roomJID.escaped )
-			var muc:MUCUserExtension = new MUCUserExtension();
+			var userExt:MUCUserExtension = new MUCUserExtension();
 
-			muc.decline( jid.escaped, undefined, reason );
+			userExt.decline( jid.escaped, undefined, reason );
 
-			message.addExtension( muc );
+			message.addExtension( userExt );
 			_connection.send( message );
 		}
 
@@ -426,7 +425,7 @@ package org.igniterealtime.xiff.conference
 		public function destroy( reason:String, alternateJID:UnescapedJID = null, callback:Function = null ):void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 			var jid:EscapedJID;
 			if (alternateJID != null)
 			{
@@ -434,9 +433,9 @@ package org.igniterealtime.xiff.conference
 			}
 
 			iq.callback = callback;
-			owner.destroy( reason, jid );
+			ownerExt.destroy( reason, jid );
 
-			iq.addExtension( owner );
+			iq.addExtension( ownerExt );
 			_connection.send( iq );
 		}
 		
@@ -470,8 +469,8 @@ package org.igniterealtime.xiff.conference
 				return;
 			}
 
-			var owner:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
-			var form:FormExtension = owner.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
+			var ownerExt:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
+			var form:FormExtension = ownerExt.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 
 			if ( form.type == FormExtension.TYPE_REQUEST )
 			{
@@ -516,16 +515,16 @@ package org.igniterealtime.xiff.conference
 		public function grant( affiliation:String, jids:Array ):void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var adminExt:MUCAdminExtension = new MUCAdminExtension();
 
 			iq.callback = finish_admin;
 
 			for each ( var jid:UnescapedJID in jids )
 			{
-				owner.addItem( affiliation, null, null, jid.escaped, null, null );
+				adminExt.addItem( affiliation, null, null, jid.escaped, null, null );
 			}
 
-			iq.addExtension( owner );
+			iq.addExtension( adminExt );
 			_connection.send( iq );
 		}
 
@@ -545,11 +544,11 @@ package org.igniterealtime.xiff.conference
 		public function invite( jid:UnescapedJID, reason:String ):void
 		{
 			var message:Message = new Message( roomJID.escaped );
-			var muc:MUCUserExtension = new MUCUserExtension();
+			var userExt:MUCUserExtension = new MUCUserExtension();
 
-			muc.invite( jid.escaped, undefined, reason );
+			userExt.invite( jid.escaped, undefined, reason );
 
-			message.addExtension( muc );
+			message.addExtension( userExt );
 			_connection.send( message );
 		}
 
@@ -675,11 +674,10 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ));
-				var ext:MUCAdminExtension = new MUCAdminExtension( iq.getNode());
-				//ext.addItem(null, MUC.ROLE_NONE, null, null, null, reason);
-				ext.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
-				iq.addExtension( ext );
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ) );
+				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
+				adminExt.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
+				iq.addExtension( adminExt );
 				_connection.send( iq );
 			}
 		}
@@ -730,8 +728,8 @@ package org.igniterealtime.xiff.conference
 			finish_admin( iq );
 			if ( iq.type == IQ.TYPE_RESULT )
 			{
-				var owner:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
-				var items:Array = owner.getAllItems();
+				var adminExt:MUCAdminExtension = iq.getAllExtensionsByNS( MUCAdminExtension.NS )[ 0 ];
+				var items:Array = adminExt.getAllItems();
 				// trace("Affiliates: " + items);
 				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
 				event.data = items;
@@ -762,15 +760,18 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function handleEvent( eventObj:Object ):void
 		{
+			var userExt:MUCUserExtension;
+			
 			switch ( eventObj.type )
 			{
 				case "message":
 					var message:Message = eventObj.data;
+					var userExts:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
+					var roomEvent:RoomEvent;
 
 					// Check to see that the message is from this room
 					if ( isThisRoom( message.from.unescaped ))
 					{
-						var roomEvent:RoomEvent;
 						if ( message.type == Message.TYPE_GROUPCHAT )
 						{
 							// Check for a subject change
@@ -785,8 +786,7 @@ package org.igniterealtime.xiff.conference
 							{
 								//silently ignore "room is not anonymous" message, identified by status code 100
 								//Clients should display that information in their UI based on the appropriate room property
-								var userexts:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
-								if ( !userexts || userexts.length == 0 || !( userexts[ 0 ].hasStatusCode( 100 )))
+								if ( !userExts || userExts.length == 0 || !( userExts[ 0 ].hasStatusCode( 100 )))
 								{
 									roomEvent = new RoomEvent( RoomEvent.GROUP_MESSAGE );
 									roomEvent.nickname = message.from.resource;
@@ -821,16 +821,15 @@ package org.igniterealtime.xiff.conference
 					}
 					else
 					{
-						// Could be an decline to a previous invite
-						var mucExtensions:Array = message.getAllExtensionsByNS( MUCUserExtension.NS );
-						if ( mucExtensions != null && mucExtensions.length > 0 )
+						// Could be a decline to a previous invite
+						if ( userExts != null && userExts.length > 0 )
 						{
-							var muc:MUCUserExtension = mucExtensions[ 0 ];
-							if ( muc && muc.type == MUCUserExtension.TYPE_DECLINE )
+							userExt = userExts[ 0 ];
+							if ( userExt && userExt.type == MUCUserExtension.TYPE_DECLINE )
 							{
 								roomEvent = new RoomEvent( RoomEvent.DECLINED );
-								roomEvent.from = muc.reason;
-								roomEvent.reason = muc.reason;
+								roomEvent.from = userExt.reason;
+								roomEvent.reason = userExt.reason;
 								roomEvent.data = message;
 								dispatchEvent( roomEvent );
 							}
@@ -888,8 +887,8 @@ package org.igniterealtime.xiff.conference
 								pendingNickname = null;
 							}
 
-							var user:MUCUserExtension = presence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
-							for each ( var status:MUCStatus in user.statuses )
+							userExt = presence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
+							for each ( var status:MUCStatus in userExt.statuses )
 							{
 								switch ( status.code )
 								{
@@ -915,7 +914,7 @@ package org.igniterealtime.xiff.conference
 							{
 								//trace("Room: becoming inactive: " + presence.getNode());
 								setActive( false );
-								if ( user.type == MUCUserExtension.TYPE_DESTROY )
+								if ( userExt.type == MUCUserExtension.TYPE_DESTROY )
 								{
 									roomEvent = new RoomEvent( RoomEvent.ROOM_DESTROYED );
 								}
@@ -972,13 +971,13 @@ package org.igniterealtime.xiff.conference
 				// so the application can decide to block configuration messages
 
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-				var owner:MUCOwnerExtension = new MUCOwnerExtension();
+				var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 				var form:FormExtension = new FormExtension();
 
 				form.type = FormExtension.TYPE_SUBMIT;
 
-				owner.addExtension( form );
-				iq.addExtension( owner );
+				ownerExt.addExtension( form );
+				iq.addExtension( ownerExt );
 				_connection.send( iq );
 			}
 		}
@@ -1020,8 +1019,8 @@ package org.igniterealtime.xiff.conference
 				{
 					removeItemAt( getItemIndex( occupant ));
 
-					var user:MUCUserExtension = aPresence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
-					for each ( var status:MUCStatus in user.statuses )
+					var userExt:MUCUserExtension = aPresence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
+					for each ( var status:MUCStatus in userExt.statuses )
 					{
 						switch ( status.code )
 						{
@@ -1092,13 +1091,13 @@ package org.igniterealtime.xiff.conference
 		public function requestAffiliations( affiliation:String ):void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var adminExt:MUCAdminExtension = new MUCAdminExtension();
 
 			iq.callback = finish_requestAffiliates;
 
-			owner.addItem( affiliation );
+			adminExt.addItem( affiliation );
 
-			iq.addExtension( owner );
+			iq.addExtension( adminExt );
 			_connection.send( iq );
 		}
 
@@ -1117,10 +1116,10 @@ package org.igniterealtime.xiff.conference
 		public function requestConfiguration():void
 		{
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
-			var owner:MUCOwnerExtension = new MUCOwnerExtension();
+			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 
 			iq.callback = finish_requestConfiguration;
-			iq.addExtension( owner );
+			iq.addExtension( ownerExt );
 
 			_connection.send( iq );
 		}
@@ -1203,9 +1202,9 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ) );
-				var ext:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
-				ext.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
-				iq.addExtension( ext );
+				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
+				adminExt.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
+				iq.addExtension( adminExt );
 				_connection.send( iq );
 			}
 		}
