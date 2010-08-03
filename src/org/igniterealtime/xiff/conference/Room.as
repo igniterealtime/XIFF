@@ -184,14 +184,14 @@ package org.igniterealtime.xiff.conference
 	 * @see	#configure
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.CONFIGURE_ROOM
 	 */
-	[Event( name="configureForm",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="configureRoom",type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a room configuration form is complete.
 	 *
 	 * @see #configure
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.CONFIGURE_ROOM_COMPLETE
 	 */
-	[Event(name="configureFormComplete", type="org.igniterealtime.xiff.events.RoomEvent")]
+	[Event(name="configureRoomComplete", type="org.igniterealtime.xiff.events.RoomEvent")]
 	/**
 	 * Dispatched when an invite to this room has been declined by the invitee. The <code>RoomEvent</code>
 	 * <code>data</code> property that has the following attributes:
@@ -318,7 +318,8 @@ package org.igniterealtime.xiff.conference
 		 * <p>You must have joined the room and have the owner affiliation to
 		 * configure the room.</p>
 		 *
-		 * @see	#configureForm
+		 * @see	#configureRoom
+		 * @see	#configure
 		 * @see	#join
 		 */
 		public function cancelConfiguration():void
@@ -359,7 +360,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	fieldmap FormExtension, or a hash that is an object with keys being the room configuration
 		 * form variables and the values being arrays. For single value fields, use a single
 		 * element array.
-		 * @see	#configureForm
+		 * @see	#configureRoom
 		 * @see http://xmpp.org/extensions/xep-0045.html#registrar-formtype-owner
 		 */
 		public function configure( fieldmap:Object ):void
@@ -703,14 +704,14 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Requests a configuration form from the room.	Listen to <code>configureForm</code>
+		 * Requests a configuration form from the room.	Listen to <code>configureRoom</code>
 		 * event to fill out the form then call either <code>configure</code> or
 		 * <code>cancelConfiguration</code> to complete the configuration process
 		 *
 		 * You must be joined to the room and have the owner affiliation to request
 		 * a configuration form
 		 *
-		 * @see	#configureForm
+		 * @see	#configureRoom
 		 * @see	#configure
 		 * @see	#cancelConfiguration
 		 */

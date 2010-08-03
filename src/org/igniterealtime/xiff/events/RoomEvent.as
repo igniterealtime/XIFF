@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,9 +34,9 @@ package org.igniterealtime.xiff.events
 
 		public static const BANNED_ERROR:String = "bannedError";
 
-		public static const CONFIGURE_ROOM:String = "configureForm";
+		public static const CONFIGURE_ROOM:String = "configureRoom";
 		
-		public static const CONFIGURE_ROOM_COMPLETE:String = "configureFormComplete";
+		public static const CONFIGURE_ROOM_COMPLETE:String = "configureRoomComplete";
 
 		public static const DECLINED:String = "declined";
 
