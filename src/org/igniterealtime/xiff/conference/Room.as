@@ -25,7 +25,7 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.Event;
-	
+
 	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
@@ -203,7 +203,7 @@ package org.igniterealtime.xiff.conference
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.DECLINED
 	 */
 	[Event( name="declined",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	
+
 	/**
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
@@ -249,6 +249,9 @@ package org.igniterealtime.xiff.conference
 		// Used to store nicknames in pending status, awaiting change approval from server
 		private var pendingNickname:String;
 
+		private var affiliationExtension:MUCBaseExtension;
+		private var affiliationArgs:Array = [];
+
 		/**
 		 *
 		 * @param	aConnection  A XMPPConnection instance that is providing the primary server connection
@@ -260,6 +263,7 @@ package org.igniterealtime.xiff.conference
 			{
 				connection = aConnection;
 			}
+			affiliationExtension = new MUCAdminExtension();
 		}
 
 		private static function RoomStaticConstructor():Boolean
@@ -296,10 +300,8 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function ban( jids:Array ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, null, ban_response, ban_error );
 			var adminExt:MUCAdminExtension = new MUCAdminExtension();
-
-			iq.callback = finish_admin;
 
 			for each ( var banJID:UnescapedJID in jids )
 			{
@@ -365,7 +367,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function configure( fieldmap:Object ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, null, configure_response, configure_error );
 			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension;
 
@@ -381,10 +383,9 @@ package org.igniterealtime.xiff.conference
 			}
 			form.type = FormExtension.TYPE_SUBMIT;
 			ownerExt.addExtension( form );
-			
-			iq.callback = finish_configure;
+
 			iq.addExtension( ownerExt );
-			
+
 			_connection.send( iq );
 		}
 
@@ -473,12 +474,18 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Grants permissions on a room one or more JIDs by setting the
-		 * affiliation of a user based * on their JID.
+		 * Grants permissions on a room to one or more JIDs by setting the
+		 * affiliation of a user based on their JID.
+		 * 
+		 * <p>XMPP spec states that the #admin schema should be used for affiliation changes.
+		 * Unfortunately to this date, Openfire does not match spec and requires the #owner schema.
+		 * Because of this, if granting privileges fails on the first attempt using the #admin schema,
+		 * we try again using the #owner schema.
+		 * @see http://xmpp.org/extensions/xep-0045.html#schemas-admin</p>
 		 *
 		 * <p>If the JID currenly has an existing affiliation, then the existing
 		 * affiliation will be replaced with the one passed. If the process could not be
-		 * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.
+		 * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.</p>
 		 *
 		 * @param	affiliation Use one of the
 		 * following affiliations: <code>Room.AFFILIATION_MEMBER</code>,
@@ -490,17 +497,16 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function grant( affiliation:String, jids:Array ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET );
-			var adminExt:MUCAdminExtension = new MUCAdminExtension();
+			affiliationArgs = arguments;
 
-			iq.callback = finish_grant;
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, null, grant_response, grant_error );
 
 			for each ( var jid:UnescapedJID in jids )
 			{
-				adminExt.addItem( affiliation, null, null, jid.escaped, null, null );
+				affiliationExtension.addItem( affiliation, null, null, jid.escaped, null, null );
 			}
 
-			iq.addExtension( adminExt );
+			iq.addExtension( affiliationExtension as IExtension );
 			_connection.send( iq );
 		}
 
@@ -626,7 +632,7 @@ package org.igniterealtime.xiff.conference
 
 			var joinPresence:Presence = new Presence( userJID.escaped );
 			joinPresence.addExtension( mucExtension );
-			
+
 			if ( joinPresenceExtensions != null )
 			{
 				for each ( var joinExt:*in joinPresenceExtensions )
@@ -692,10 +698,8 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function requestAffiliations( affiliation:String ):void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET, null, requestAffiliations_response, requestAffiliations_error );
 			var adminExt:MUCAdminExtension = new MUCAdminExtension();
-
-			iq.callback = finish_requestAffiliates;
 
 			adminExt.addItem( affiliation );
 
@@ -717,10 +721,9 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function requestConfiguration():void
 		{
-			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET );
+			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_GET, null, requestConfiguration_response, requestConfiguration_error );
 			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 
-			iq.callback = finish_requestConfiguration;
 			iq.addExtension( ownerExt );
 
 			_connection.send( iq );
@@ -818,99 +821,100 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * The default handler for admin IQ messages.
-		 * Dispatches the adminError event if anything went wrong.
+		 * @private
+		 *
+		 * The default error handler for admin IQ messages.
+		 * Dispatches the adminError event.
 		 */
-		private function finish_admin( iq:IQ ):void
+		private function admin_error( iq:IQ ):void
 		{
-			if ( iq.type == IQ.TYPE_ERROR )
-			{
-				var event:RoomEvent = new RoomEvent( RoomEvent.ADMIN_ERROR );
-				event.errorCondition = iq.errorCondition;
-				event.errorMessage = iq.errorMessage;
-				event.errorType = iq.errorType;
-				event.errorCode = iq.errorCode;
-				dispatchEvent( event );
-			}
+			var event:RoomEvent = new RoomEvent( RoomEvent.ADMIN_ERROR );
+			event.errorCondition = iq.errorCondition;
+			event.errorMessage = iq.errorMessage;
+			event.errorType = iq.errorType;
+			event.errorCode = iq.errorCode;
+			dispatchEvent( event );
 		}
 
 		/**
-		 * IQ callback when configuration is complete.
+		 * @private
+		 *
+		 * The default response handler for admin IQ messages.
 		 */
-		private function finish_configure( iq:IQ ):void
+		private function admin_response( iq:IQ ):void
 		{
-			if( iq.type == IQ.TYPE_ERROR )
-			{
-				finish_admin( iq );
-				return;
-			}
+		}
 
+		/**
+		 * @private
+		 */
+		private function ban_error( iq:IQ ):void
+		{
+			admin_error( iq );
+		}
+
+		/**
+		 * @private
+		 */
+		private function ban_response( iq:IQ ):void
+		{
+		}
+
+		/**
+		 * @private
+		 */
+		private function configure_error( iq:IQ ):void
+		{
+			admin_error( iq );
+		}
+
+		/**
+		 * @private
+		 */
+		private function configure_response( iq:IQ ):void
+		{
 			var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM_COMPLETE );
 			dispatchEvent( event );
 		}
 
 		/**
-		 * IQ callback when grant is complete.
+		 * @private
 		 */
-		private function finish_grant( iq:IQ ):void
+		private function grant_error( iq:IQ ):void
 		{
-			if( iq.type == IQ.TYPE_ERROR )
+			if( affiliationExtension is MUCAdminExtension && affiliationArgs.length > 0 )
 			{
-				finish_admin( iq );
-				return;
+				affiliationExtension = new MUCOwnerExtension();
+				grant.apply( null, affiliationArgs );
 			}
+			else
+			{
+				affiliationArgs = [];
 
+				admin_error( iq );
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		private function grant_response( iq:IQ ):void
+		{
+			affiliationArgs = [];
+			
 			var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATION_CHANGE_COMPLETE );
 			dispatchEvent( event );
 		}
 
 		/**
-		 * IQ callback when affiliate request is complete.
-		 */
-		private function finish_requestAffiliates( iq:IQ ):void
-		{
-			finish_admin( iq );
-			if ( iq.type == IQ.TYPE_RESULT )
-			{
-				var adminExt:MUCAdminExtension = iq.getAllExtensionsByNS( MUCAdminExtension.NS )[ 0 ];
-				var items:Array = adminExt.getAllItems();
-				// trace("Affiliates: " + items);
-				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
-				event.data = items;
-				dispatchEvent( event );
-			}
-		}
-
-		/**
-		 * IQ callback when form is ready.
-		 */
-		private function finish_requestConfiguration( iq:IQ ):void
-		{
-			if ( iq.type == IQ.TYPE_ERROR )
-			{
-				finish_admin( iq );
-				return;
-			}
-
-			var ownerExt:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
-			var form:FormExtension = ownerExt.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
-
-			if ( form.type == FormExtension.TYPE_REQUEST )
-			{
-				var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
-				event.data = form;
-				dispatchEvent( event );
-			}
-		}
-
-		/**
+		 * @private
 		 *
 		 * @param	eventObj
 		 */
 		private function handleEvent( eventObj:Object ):void
 		{
 			var userExt:MUCUserExtension;
-			
+
 			switch ( eventObj.type )
 			{
 				case "message":
@@ -1090,6 +1094,55 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
+		 * @private
+		 */
+		private function requestAffiliations_error( iq:IQ ):void
+		{
+			admin_error( iq );
+		}
+
+		/**
+		 * @private
+		 */
+		private function requestAffiliations_response( iq:IQ ):void
+		{
+			if ( iq.type == IQ.TYPE_RESULT )
+			{
+				var adminExt:MUCAdminExtension = iq.getAllExtensionsByNS( MUCAdminExtension.NS )[ 0 ];
+				var items:Array = adminExt.getAllItems();
+				// trace("Affiliates: " + items);
+				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
+				event.data = items;
+				dispatchEvent( event );
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		private function requestConfiguration_error( iq:IQ ):void
+		{
+			admin_error( iq );
+		}
+
+		/**
+		 * @private
+		 */
+		private function requestConfiguration_response( iq:IQ ):void
+		{
+			var ownerExt:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
+			var form:FormExtension = ownerExt.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
+
+			if ( form.type == FormExtension.TYPE_REQUEST )
+			{
+				var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
+				event.data = form;
+				dispatchEvent( event );
+			}
+		}
+
+		/**
+		 * @private
 		 *
 		 * @param	state
 		 */
@@ -1099,7 +1152,9 @@ package org.igniterealtime.xiff.conference
 			dispatchEvent( new Event( "activeStateUpdated" ));
 		}
 
-		/*
+		/**
+		 * @private
+		 *
 		 * Room owner (creation/configuration/destruction) methods
 		 * @see	http://xmpp.org/extensions/xep-0045.html#createroom
 		 */
@@ -1132,6 +1187,8 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
+		 * @private
+		 *
 		 * If we receive a presence about ourselves, it means
 		 * a) we've joined the room; tell everyone, then proceed as usual
 		 * b) we're being told we left, which we handle in the caller
@@ -1180,7 +1237,7 @@ package org.igniterealtime.xiff.conference
 								roomEvent.data = aPresence;
 								dispatchEvent( roomEvent );
 								return;
-								
+
 							case 307:
 								roomEvent = new RoomEvent( RoomEvent.USER_KICKED );
 								roomEvent.nickname = userNickname;
@@ -1201,7 +1258,7 @@ package org.igniterealtime.xiff.conference
 					occupant.affiliation = item.affiliation;
 					occupant.role = item.role;
 					occupant.show = aPresence.show;
-					
+
 					// Notify listeners that a user's presence has been updated
 					roomEvent = new RoomEvent( RoomEvent.USER_PRESENCE_CHANGE );
 					roomEvent.nickname = userNickname;
