@@ -34,41 +34,24 @@ package org.igniterealtime.xiff.conference
 	import org.igniterealtime.xiff.events.*;
 
 	/**
-	 * Dispatched when the room subject changes.
+	 * Dispatched when the active, affiliation, or role property changes.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.SUBJECT_CHANGE
+	 * @eventType org.igniterealtime.xiff.events.PropertyChangeEvent.CHANGE
 	 */
-	[Event( name="subjectChange",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="change", type="org.igniterealtime.xiff.events.PropertyChangeEvent" )]
 	/**
-	 * Dispatched whenever a new message intented for all room occupants is received. The
-	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the
-	 * group message as an instance of the <code>Message</code> class.
+	 * Dispatched when an administration action failed.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.GROUP_MESSAGE
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ADMIN_ERROR
+	 * @see	org.igniterealtime.xiff.core.XMPPConnection.error
 	 */
-	[Event( name="groupMessage",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="adminError", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
-	 * Dispatched whenever a new private message is received. The <code>RoomEvent</code> class
-	 * contains an attribute <code>data</code> with the private message as an instance of the
-	 * <code>Message</code> class.
+	 * Dispatched when an affiliation change has completed.
 	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PRIVATE_MESSAGE
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.AFFILIATION_CHANGE_COMPLETE
 	 */
-	[Event( name="privateMessage",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when you have entered the room and messages that are sent
-	 * will be displayed to other users. The room's role and affiliation will
-	 * be visible from this point forward.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_JOIN
-	 */
-	[Event( name="roomJoin",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when the server acknoledges that you have the left the room.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_LEAVE
-	 */
-	[Event( name="roomLeave",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="affiliationChangeComplete", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when an affiliation list has been requested. The event object contains an
 	 * array of <code>MUCItems</code> containing the JID and affiliation properties.
@@ -78,93 +61,14 @@ package org.igniterealtime.xiff.conference
 	 *
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.AFFILIATIONS
 	 */
-	[Event( name="affiliations",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when an administration action failed.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ADMIN_ERROR
-	 * @see	org.igniterealtime.xiff.core.XMPPConnection.error
-	 */
-	[Event( name="adminError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when the room requires a password and the user did not supply one (or
-	 * the password provided is incorrect).
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PASSWORD_ERROR
-	 */
-	[Event( name="passwordError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when the room is members-only and the user is not on the member list.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.REGISTRATION_REQ_ERROR
-	 */
-	[Event( name="registrationReqError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when the room is removed.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_DESTROYED
-	 */
-	[Event( name="roomDestroyed",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="affiliations", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched if the user attempted to join the room but was not allowed to do so because
 	 * they are banned (i.e., has an affiliation of "outcast").
 	 *
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.BANNED_ERROR
 	 */
-	[Event( name="bannedError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched if the room has reached its maximum number of occupants.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.MAX_USERS_ERROR
-	 */
-	[Event( name="maxUsersError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
-	 * creator provides an initial configuration and therefore before the room officially exists).
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.LOCKED_ERROR
-	 */
-	[Event( name="lockedError",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will
-	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_JOIN
-	 */
-	[Event( name="userJoin",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
-	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_DEPARTURE
-	 */
-	[Event( name="userDeparture",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when a user is kicked from the room.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_KICKED
-	 */
-	[Event( name="userKicked",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when a user is banned from the room.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_BANNED
-	 */
-	[Event( name="userBanned",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when a user's presence changes.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_PRESENCE_CHANGE
-	 */
-	[Event( name="userPresenceChange",type="org.igniterealtime.xiff.events.RoomEvent" )]
-	/**
-	 * Dispatched when the user's preferred nickname already exists in the room.	The
-	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname
-	 * already existing in the room.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RoomEvent.NICK_CONFLICT
-	 */
-	[Event( name="nickConflict",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="bannedError", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a room configuration form is required.	This can occur during the
 	 * creation of a room, or if a room configuration is requested.	The <code>RoomEvent</code>
@@ -184,7 +88,7 @@ package org.igniterealtime.xiff.conference
 	 * @see	#configure
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.CONFIGURE_ROOM
 	 */
-	[Event( name="configureRoom",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="configureRoom", type="org.igniterealtime.xiff.events.RoomEvent" )]
 	/**
 	 * Dispatched when a room configuration form is complete.
 	 *
@@ -202,7 +106,115 @@ package org.igniterealtime.xiff.conference
 	 *
 	 * @eventType org.igniterealtime.xiff.events.RoomEvent.DECLINED
 	 */
-	[Event( name="declined",type="org.igniterealtime.xiff.events.RoomEvent" )]
+	[Event( name="declined", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched whenever a new message intented for all room occupants is received. The
+	 * <code>RoomEvent</code> class will contain an attribute <code>data</code> with the
+	 * group message as an instance of the <code>Message</code> class.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.GROUP_MESSAGE
+	 */
+	[Event( name="groupMessage", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched if a user attempts to enter a room while it is "locked" (i.e., before the room
+	 * creator provides an initial configuration and therefore before the room officially exists).
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.LOCKED_ERROR
+	 */
+	[Event( name="lockedError", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched if the room has reached its maximum number of occupants.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.MAX_USERS_ERROR
+	 */
+	[Event( name="maxUsersError", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the user's preferred nickname already exists in the room.	The
+	 * <code>RoomEvent</code> will contain an attribute <code>nickname</code> with the nickname
+	 * already existing in the room.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.NICK_CONFLICT
+	 */
+	[Event( name="nickConflict", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the room requires a password and the user did not supply one (or
+	 * the password provided is incorrect).
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PASSWORD_ERROR
+	 */
+	[Event( name="passwordError", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched whenever a new private message is received. The <code>RoomEvent</code> class
+	 * contains an attribute <code>data</code> with the private message as an instance of the
+	 * <code>Message</code> class.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.PRIVATE_MESSAGE
+	 */
+	[Event( name="privateMessage", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the room is members-only and the user is not on the member list.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.REGISTRATION_REQ_ERROR
+	 */
+	[Event( name="registrationReqError", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the room is removed.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_DESTROYED
+	 */
+	[Event( name="roomDestroyed", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when you have entered the room and messages that are sent
+	 * will be displayed to other users. The room's role and affiliation will
+	 * be visible from this point forward.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_JOIN
+	 */
+	[Event( name="roomJoin", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the server acknoledges that you have the left the room.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.ROOM_LEAVE
+	 */
+	[Event( name="roomLeave", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when the room subject changes.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.SUBJECT_CHANGE
+	 */
+	[Event( name="subjectChange", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when a user is banned from the room.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_BANNED
+	 */
+	[Event( name="userBanned", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched whenever an occpant leaves the room. The <code>RoomEvent</code> instance will
+	 * contain an attribute <code>nickname</code> with the nickname of the occupant who left.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_DEPARTURE
+	 */
+	[Event( name="userDeparture", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched whenever an occupant joins the room. The <code>RoomEvent</code> instance will
+	 * contain an attribute <code>nickname</code> with the nickname of the occupant who joined.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_JOIN
+	 */
+	[Event( name="userJoin", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when a user is kicked from the room.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_KICKED
+	 */
+	[Event( name="userKicked", type="org.igniterealtime.xiff.events.RoomEvent" )]
+	/**
+	 * Dispatched when a user's presence changes.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RoomEvent.USER_PRESENCE_CHANGE
+	 */
+	[Event( name="userPresenceChange", type="org.igniterealtime.xiff.events.RoomEvent" )]
 
 	/**
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
@@ -878,6 +890,21 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
+		 * Helper to dispatch a property change event.
+		 * @param	name
+		 * @param	newValue
+		 * @param	oldValue
+		 */
+		private function dispatchChangeEvent( name:String, newValue:*, oldValue:* ):void
+		{
+			var event:PropertyChangeEvent = new PropertyChangeEvent( PropertyChangeEvent.CHANGE );
+			event.name = name;
+			event.newValue = newValue;
+			event.oldValue = oldValue;
+			dispatchEvent( event );
+		}
+
+		/**
 		 * @private
 		 */
 		private function grant_error( iq:IQ ):void
@@ -1148,8 +1175,9 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function setActive( state:Boolean ):void
 		{
+			var oldActive:Boolean = _active;
 			_active = state;
-			dispatchEvent( new Event( "activeStateUpdated" ));
+			if( _active != oldActive ) dispatchChangeEvent( "active", _active, oldActive );
 		}
 
 		/**
@@ -1203,10 +1231,13 @@ package org.igniterealtime.xiff.conference
 
 			if ( isThisUser( aPresence.from.unescaped ))
 			{
+				var oldAffiliation:String = _affiliation;
 				_affiliation = item.affiliation;
-				dispatchEvent( new Event( "affiliationSet" )); //update bindings
+				if( _affiliation != oldAffiliation ) dispatchChangeEvent( "affiliation", _affiliation, oldAffiliation );
+
+				var oldRole:String = _role;
 				_role = item.role;
-				dispatchEvent( new Event( "roleSet" )); //update bindings
+				if( _role != oldRole ) dispatchChangeEvent( "role", _role, oldRole );
 
 				if ( !isActive && aPresence.type != Presence.TYPE_UNAVAILABLE )
 				{
