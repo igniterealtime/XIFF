@@ -109,4 +109,11 @@
 	<component class="org.igniterealtime.xiff.util.DateTimeParser" />
 	<component class="org.igniterealtime.xiff.util.SHA1" />
 	<component class="org.igniterealtime.xiff.vcard.VCard" />
+	<component class="org.igniterealtime.xiff.vcard.VCardAddress" />
+	<component class="org.igniterealtime.xiff.vcard.VCardGeographicalPosition" />
+	<component class="org.igniterealtime.xiff.vcard.VCardName" />
+	<component class="org.igniterealtime.xiff.vcard.VCardOrganization" />
+	<component class="org.igniterealtime.xiff.vcard.VCardPhoto" />
+	<component class="org.igniterealtime.xiff.vcard.VCardSound" />
+	<component class="org.igniterealtime.xiff.vcard.VCardTelephone" />
 </componentPackage>
