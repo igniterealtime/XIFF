@@ -488,16 +488,15 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * Grants permissions on a room to one or more JIDs by setting the
 		 * affiliation of a user based on their JID.
-		 * 
+		 *
+		 * <p>If the JID currently has an existing affiliation, then the existing
+		 * affiliation will be replaced with the one passed. If the process could not be
+		 * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.</p>
+		 *
 		 * <p>XMPP spec states that the #admin schema should be used for affiliation changes.
 		 * Unfortunately to this date, Openfire does not match spec and requires the #owner schema.
 		 * Because of this, if granting privileges fails on the first attempt using the #admin schema,
-		 * we try again using the #owner schema.
-		 * @see http://xmpp.org/extensions/xep-0045.html#schemas-admin</p>
-		 *
-		 * <p>If the JID currenly has an existing affiliation, then the existing
-		 * affiliation will be replaced with the one passed. If the process could not be
-		 * completed, the room will dispatch the event <code>RoomEvent.ADMIN_ERROR</code>.</p>
+		 * we try again using the #owner schema.</p>
 		 *
 		 * @param	affiliation Use one of the
 		 * following affiliations: <code>Room.AFFILIATION_MEMBER</code>,
@@ -506,6 +505,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	jids An array of UnescapedJIDs to grant these permissions to
 		 * @see	#revoke
 		 * @see	#allow
+		 * @see http://xmpp.org/extensions/xep-0045.html#schemas-admin
 		 */
 		public function grant( affiliation:String, jids:Array ):void
 		{

@@ -59,6 +59,7 @@
 	<target name="compile-docs">
 		<exec executable="${flex.bin}/${asdoc}">
 			<arg line="-source-path ${src.dir}" />
+			<arg line="-external-library-path ${libs.dir}" />
 			<arg line="-namespace ${manifest.ns} ${manifest}" />
 			<arg line="-doc-namespaces ${manifest.ns}" />
 			<arg line="-output ${docs.dir}" />
