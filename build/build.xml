@@ -70,7 +70,7 @@
 	<!-- Package project for distribution -->
 	<target name="release" depends="component,docs">
 		<mkdir dir="${bin-release.dir}" />
-		<zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}" includes="src/**,bin/**,docs/**,libs/**" />
+		<zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}" includes="bin/**,docs/**,libs/**,src/**,changelog.html,LICENSE.html,README.html" />
 	</target>
 	
 </project>
