@@ -12,12 +12,12 @@
 	<!-- Define Ant-Contrib Tasks -->
 	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.contrib.tasks}" />
 	
-	<!-- Have you edited the properties file to make sure the paths are right on your system? -->
+	<!-- Display warning -->
 	<target name="properties">
 		<echo message="Have you edited the properties file to make sure the paths are right on your system?" />
 	</target>
 	
-	<!-- Updating the manifest file. -->
+	<!-- Update the manifest file. -->
 	<target name="manifest" depends="properties">
 		<echo message="Updating the manifest file." />
 		<echo file="${manifest}">&lt;?xml version="1.0"?&gt;${nl}&lt;componentPackage&gt;</echo>
@@ -34,8 +34,8 @@
 		<echo file="${manifest}" append="true">${nl}&lt;/componentPackage&gt;</echo>
 	</target>
 	
-	<!-- Create a SWC file -->
-	<target name="release" depends="manifest">
+	<!-- Generate the SWC file -->
+	<target name="component" depends="manifest">
 		<compc output="${bin.dir}/${output.name}.swc">
 			<library-path dir="${libs.dir}" append="true">
 				<include name="*.swc" />
@@ -56,7 +56,7 @@
 	</target>
 	
 	<!-- Generate the documentation -->
-	<target name="compile-docs">
+	<target name="compile-docs" depends="manifest">
 		<exec executable="${flex.bin}/${asdoc}">
 			<arg line="-source-path ${src.dir}" />
 			<arg line="-external-library-path ${libs.dir}" />
@@ -65,6 +65,12 @@
 			<arg line="-output ${docs.dir}" />
 			<arg line="-templates-path ${flex.asdoc.templates}" />
 		</exec>
+	</target>
+	
+	<!-- Package project for distribution -->
+	<target name="release" depends="component,docs">
+		<mkdir dir="${bin-release.dir}" />
+		<zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}" includes="src/**,bin/**,docs/**,libs/**" />
 	</target>
 	
 </project>
