@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2010 Igniterealtime Community Contributors
  *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -7,6 +7,7 @@
  *     Nick Velloff <nick.velloff@gmail.com>
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
+ *     Mark Walters <mark@yourpalmark.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
