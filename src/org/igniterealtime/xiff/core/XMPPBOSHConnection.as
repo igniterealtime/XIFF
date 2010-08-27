@@ -361,7 +361,7 @@ package org.igniterealtime.xiff.core
 			var byteData:ByteArray = loader.data as ByteArray;
 
 			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = ignoreWhiteSpace;
+			xmlData.ignoreWhite = ignoreWhitespace;
 			xmlData.parseXML( byteData.readUTFBytes(byteData.length) );
 			
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();

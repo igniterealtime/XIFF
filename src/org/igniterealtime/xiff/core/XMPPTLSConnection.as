@@ -22,271 +22,240 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.igniterealtime.xiff.core
 {
-    import com.hurlant.crypto.tls.*;
+	import com.hurlant.crypto.tls.*;
 
-    import flash.errors.IOError;
-    import flash.events.*;
-    import flash.xml.XMLNode;
+	import flash.errors.IOError;
+	import flash.events.*;
+	import flash.xml.XMLNode;
 
-    import org.igniterealtime.xiff.events.*;
+	import org.igniterealtime.xiff.events.*;
 
-    /**
-     * TLS supporting connection. You need to have <a href="http://code.google.com/p/as3crypto/">AS3Crypto library</a>
-     * in order to use this class.
-     *
-     * <p>Work in progress. Not expected to work.</p>
-     *
-     * @see org.igniterealtime.xiff.core.XMPPConnection
-     */
-    public class XMPPTLSConnection extends XMPPConnection
-    {
-        private var _config : TLSConfig;
-        private var _tlsSocket : TLSSocket;
+	/**
+	 * This class is used to connect to and manage data coming from an XMPP server that supports TLS.
+	 * Use one instance of this class per connection.
+	 */
+	public class XMPPTLSConnection extends XMPPConnection
+	{
+		/**
+		 * @private
+		 */
+		protected var tlsEnabled:Boolean = false;
 
-        private var _tlsRequired : Boolean = false;
-        private var _tlsEnabled : Boolean = false;
+		/**
+		 * @private
+		 */
+		protected var tlsSocket:TLSSocket;
 
-        public function XMPPTLSConnection()
-        {
-            super();
-        }
+		/**
+		 * @private
+		 */
+		protected var _config:TLSConfig;
 
-        /**
-         * @see com.hurlant.crypto.tls.TLSSocket
-         */
-        private function configureTLSSocket() : void
-        {
-            _tlsSocket = new TLSSocket();
-            _tlsSocket.addEventListener(Event.CLOSE, socketClosed);
-            _tlsSocket.addEventListener(Event.CONNECT, socketConnected);
-            _tlsSocket.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
-            _tlsSocket.addEventListener(ProgressEvent.SOCKET_DATA, socketDataReceived);
-            _tlsSocket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
-            _tlsSocket.addEventListener(TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt);
-            if (_config != null)
-            {
-                _tlsSocket.setTLSConfig(_config);
-            }
-        }
+		/**
+		 * @private
+		 */
+		protected var _tls:Boolean = false;
 
-        override public function connect(streamType : uint = 0) : Boolean
-        {
-            // check if a TLS socket is active (reconnect)
-            if (_tlsEnabled)
-            {
-                // reset
-                removeTLSSocketEventListeners();
-                _tlsEnabled = false;
-            }
+		/**
+		 * Constructor.
+		 */
+		public function XMPPTLSConnection()
+		{
+			super();
+		}
 
-            // check if socket is active (reconnect)
-            if (active)
-            {
-                removeSocketEventListeners();
-                active = false;
-            }
+		/**
+		 * @inheritDoc
+		 */
+		override public function connect( streamType:uint=0 ):Boolean
+		{
+			if ( tlsEnabled )
+			{
+				removeTLSSocketEventListeners();
+				tlsEnabled = false;
+			}
 
-            // reset
-            loggedIn = false;
+			if ( active )
+			{
+				removeSocketEventListeners();
+			}
 
-            // create socket, add event listeners
-            createSocket();
+			return super.connect( streamType );
+		}
 
-            _streamType = streamType;
-            chooseStreamTags(streamType);
+		/**
+		 * @inheritDoc
+		 */
+		override public function disconnect():void
+		{
+			if ( isActive() )
+			{
+				if ( tlsEnabled )
+				{
+					removeTLSSocketEventListeners();
+					tlsEnabled = false;
+					tlsSocket.close();
+				}
 
-            socket.connect(server, port);
+				removeSocketEventListeners();
 
-            return true;
-        }
+				super.disconnect();
+			}
+		}
 
-        override public function disconnect() : void
-        {
-            if (isActive())
-            {
-                sendXML(closingStreamTag);
+		/**
+		 * @inheritDoc
+		 */
+		override protected function handleNodeType( node:XMLNode ):void
+		{
+			var nodeName:String = node.nodeName.toLowerCase();
 
-                // reset
-                active = false;
-                loggedIn = false;
+			switch( nodeName )
+			{
+				case 'proceed':
+					startTLS();
+					break;
 
-                try
-                {
-                    if (_tlsEnabled)
-                    {
-                        this.removeTLSSocketEventListeners();
-                        _tlsSocket.close();
-                    }
-                    else
-                    {
-                        this.removeSocketEventListeners();
-                        socket.close();
-                    }
-                }
-                catch (e : IOError)
-                {
-                    dispatchError("service-unavailable", "Service Unavailable", "cancel", 503);
-                }
+				default:
+					super.handleNodeType( node );
+					break;
+			}
+		}
 
-                var disconnectionEvent : DisconnectionEvent = new DisconnectionEvent();
-                dispatchEvent(disconnectionEvent);
-            }
-        }
+		/**
+		 * @inheritDoc
+		 */
+		override protected function handleStreamTLS( node:XMLNode ):void
+		{
+			// If the user did not turn on TLS but the server requires it
+			if ( node.firstChild && node.firstChild.nodeName == 'required' )
+			{
+				_tls = true;
+			}
 
-        protected override function handleStreamFeatures(node : XMLNode) : void
-        {
-            if (loggedIn)
-            {
-                bindConnection();
-            }
-            else
-            {
-                for each(var feature : XMLNode in node.childNodes)
-                {
-                    if (feature.nodeName == 'starttls')
-                    {
-                        handleStreamTLS(feature);
-                    }
-                    else if (feature.nodeName == 'mechanisms')
-                    {
-                        configureAuthMechanisms(feature);
-                    }
-                    else if (feature.nodeName == 'compression')
-                    {
-                        // zlib is the most common and the one which is required to be implemented.
-                        if (_compress)
-                        {
-                            configureStreamCompression();
-                        }
-                    }
-                }
+			// If the user turned on TLS or the server requires it.
+			if ( _tls )
+			{
+				sendXML( "<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls' />" );
+			}
+		}
 
-                // Authenticate only after the possible compression
-                // Authenticate only after the possible TLS encoding negotiation.
-                // TODO improve robustness of this complex check
-                if (((_tlsEnabled && _tlsRequired) || !_tlsRequired) && ((compress && compressionNegotiated) || !compress))
-                {
-                    // TODO: Why is the username required here but it is not used at the backend?
-                    if (useAnonymousLogin || (username != null && username.length > 0))
-                    {
-                        beginAuthentication();
-                    }
-                    else
-                    {
-                        getRegistrationFields();
-                    }
-                }
-            }
-        }
+		/**
+		 * @see com.hurlant.crypto.tls.TLSSocket
+		 */
+		protected function configureTLSSocket():void
+		{
+			tlsSocket = new TLSSocket();
+			tlsSocket.addEventListener( Event.CLOSE, onSocketClosed );
+			tlsSocket.addEventListener( Event.CONNECT, onSocketConnected );
+			tlsSocket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			tlsSocket.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			tlsSocket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+			tlsSocket.addEventListener( TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt );
 
-        protected override function handleStreamTLS(node : XMLNode) : void
-        {
-            if (node.firstChild && node.firstChild.nodeName == 'required') //if the user did not turn it on but the server needs it
-            {
-                _tlsRequired = true;
-            }
+			if ( _config != null )
+			{
+				tlsSocket.setTLSConfig( _config );
+			}
+		}
 
-            //if the user turned it on on the Client. If you are here the server offers TLS.
-            if (_tlsRequired)
-            {
-                this.sendXML("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls' />");
-            }
-        }
+		/**
+		 * @private
+		 *
+		 * @param	event
+		 */
+		protected function onAcceptPeerCertPrompt( event:Event ):void
+		{
+			trace( 'onAcceptPeerCertPrompt', event.toString() );
+		}
 
-        protected override function handleNodeType(node : XMLNode) : void
-        {
-            var nodeName : String = node.nodeName.toLowerCase();
-            //<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls' />
-            //<proceed xmlns='urn:ietf:params:xml:ns:xmpp-tls'  />
-            switch (nodeName)
-            {
-                case 'proceed':
-                    startTLS();
-                    break;
+		/**
+		 * @private
+		 */
+		protected function removeSocketEventListeners():void
+		{
+			socket.removeEventListener( Event.CONNECT, onSocketConnected );
+			socket.removeEventListener( Event.CLOSE, onSocketClosed );
+			socket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			socket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			socket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+		}
 
-                default:
-                    super.handleNodeType(node);
-                    break;
-            }
-        }
+		/**
+		 * @private
+		 */
+		protected function removeTLSSocketEventListeners():void
+		{
+			tlsSocket.removeEventListener( Event.CONNECT, onSocketConnected );
+			tlsSocket.removeEventListener( Event.CLOSE, onSocketClosed );
+			tlsSocket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			tlsSocket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			tlsSocket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+			tlsSocket.removeEventListener( TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt );
+		}
 
-        protected function startTLS() : void
-        {
-            // remove listeners from non-TLS socket
-            removeSocketEventListeners();
+		/**
+		 * @private
+		 */
+		protected function startTLS():void
+		{
+			// remove listeners from non-TLS socket
+			removeSocketEventListeners();
 
-            // add listeners to TLS socket
-            configureTLSSocket();
+			// add listeners to TLS socket
+			configureTLSSocket();
 
-            _tlsSocket.startTLS(socket, this.server, _config);
+			tlsSocket.startTLS( socket, server, _config );
 
-            // overwrite super
-            socket = _tlsSocket;
+			// overwrite super
+			socket = tlsSocket;
 
-            _tlsEnabled = true;
+			tlsEnabled = true;
 
-            // we have tls. The socket is now wrapped as a TLSSocket
-            // Create a new stream and continue
-            sendXML(openingStreamTag);
-        }
+			// we have tls. The socket is now wrapped as a TLSSocket
+			// Create a new stream and continue
+			sendXML( openingStreamTag );
+		}
 
-        /**
-         *
-         * @param    event
-         */
-        private function onAcceptPeerCertPrompt(event : Event) : void
-        {
-            trace('onAcceptPeerCertPrompt', event.toString());
-        }
+		/**
+		 * TLS configuration.
+		 */
+		public function get config():TLSConfig
+		{
+			return _config;
+		}
+		public function set config( value:TLSConfig ):void
+		{
+			_config = value;
 
-        protected function removeTLSSocketEventListeners() : void
-        {
-            _tlsSocket.removeEventListener(Event.CONNECT, socketConnected);
-            _tlsSocket.removeEventListener(Event.CLOSE, socketClosed);
-            _tlsSocket.removeEventListener(ProgressEvent.SOCKET_DATA, socketDataReceived);
-            _tlsSocket.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
-            _tlsSocket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
-            _tlsSocket.removeEventListener(TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt);
-        }
+			if ( tlsSocket != null && _config != null )
+			{
+				// TODO: This might not be a good idea when the socket is active
+				tlsSocket.setTLSConfig( _config );
+			}
+		}
 
-        protected function removeSocketEventListeners() : void
-        {
-            socket.removeEventListener(Event.CONNECT, socketConnected);
-            socket.removeEventListener(Event.CLOSE, socketClosed);
-            socket.removeEventListener(ProgressEvent.SOCKET_DATA, socketDataReceived);
-            socket.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
-            socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
-        }
+		/**
+		 * Specifies whether to enable TLS.
+		 */
+		public function get tls():Boolean
+		{
+			return _tls;
+		}
+		public function set tls( value:Boolean ):void
+		{
+			_tls = value;
+		}
 
-        /**
-         * TLS configuration. Set after creating the socket.
-         */
-        public function get config() : TLSConfig
-        {
-            return _config;
-        }
-
-        public function set config(value : TLSConfig) : void
-        {
-            _config = value;
-            if (_tlsSocket != null && _config != null)
-            {
-                // TODO this might not be a good idea when the socket is active
-                _tlsSocket.setTLSConfig(_config);
-            }
-        }
-
-        public function set tls(tlsBool : Boolean) : void
-        {
-            _tlsRequired = tlsBool;
-        }
-
-        public function get tls() : Boolean
-        {
-            return _tlsRequired;
-        }
-    }
+		/**
+		 * @private
+		 */		
+		override protected function get authenticationReady():Boolean
+		{
+			// Ready for authentication only after the possible compression and TLS negotiation
+			return super.authenticationReady && ( ( _tls && tlsEnabled ) || !_tls );
+		}
+	}
 }
