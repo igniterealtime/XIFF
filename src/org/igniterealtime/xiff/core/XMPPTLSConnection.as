@@ -221,7 +221,7 @@ package org.igniterealtime.xiff.core
             // add listeners to TLS socket
             configureTLSSocket();
 
-            _tlsSocket.startTLS(socket, this.server);
+            _tlsSocket.startTLS(socket, this.server, _config);
 
             // overwrite super
             socket = _tlsSocket;
