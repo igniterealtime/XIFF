@@ -988,6 +988,7 @@ package org.igniterealtime.xiff.conference
 						else if ( message.type == Message.TYPE_CHAT )
 						{
 							roomEvent = new RoomEvent( RoomEvent.PRIVATE_MESSAGE );
+							roomEvent.nickname = message.from.resource;
 							roomEvent.data = message;
 							dispatchEvent( roomEvent );
 						}
