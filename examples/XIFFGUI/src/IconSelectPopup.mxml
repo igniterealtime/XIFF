@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				title="Icon Select" width="240" height="240" borderAlpha="1" showCloseButton="true"
+				initialize="onInit( event )" close="onCloseClick( event )">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.yourpalmark.chat.ChatManager;
+			
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.igniterealtime.xiff.events.VCardEvent;
+			import org.igniterealtime.xiff.vcard.VCardPhoto;
+			
+			private var file:FileReference;
+			private var photo:Loader;
+			private var bitmapData:BitmapData;
+			
+			private var _chatManager:ChatManager;
+			
+			public function set chatManager( value:ChatManager ):void
+			{
+				_chatManager = value;
+			}
+			
+			private function browse():void
+			{
+				file.browse( getImageTypes() );
+			}
+			
+			private function getImageTypes():Array
+			{
+				return [ new FileFilter( "Images (*.jpg, *.jpeg, *.gif, *.png)", "*.jpg;*.jpeg;*.gif;*.png" ) ];
+			}
+			
+			private function close():void
+			{
+				PopUpManager.removePopUp( this );
+			}
+			
+			
+			private function onInit( event:FlexEvent ):void
+			{
+				photoHolder.graphics.lineStyle( 1 );
+				photoHolder.graphics.drawRect( 0, 0, photoHolder.width - 1, photoHolder.height - 1 );
+				
+				file = new FileReference();
+				file.addEventListener( Event.SELECT, onFileSelect );
+				file.addEventListener( Event.CANCEL, onFileCancel );
+				file.addEventListener( Event.OPEN, onFileOpen );
+				file.addEventListener( Event.COMPLETE, onFileComplete );
+				file.addEventListener( ProgressEvent.PROGRESS, onFileProgress );
+				file.addEventListener( DataEvent.UPLOAD_COMPLETE_DATA, onFileUploadCompleteData );
+				file.addEventListener( IOErrorEvent.IO_ERROR, onFileIOError );
+				file.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+				
+				photo = new Loader();
+				photo.contentLoaderInfo.addEventListener( Event.COMPLETE, onPhotoComplete );
+			}
+			
+			private function onCloseClick( event:CloseEvent ):void
+			{
+				close();
+			}
+			
+			private function onBrowseClick( event:MouseEvent ):void
+			{
+				browse();
+			}
+			
+			private function onFileSelect( event:Event ):void
+			{
+				file.load();
+			}
+			
+			private function onFileCancel( event:Event ):void
+			{
+			}
+			
+			private function onFileOpen( event:Event ):void
+			{
+			}
+			
+			private function onFileComplete( event:Event ):void
+			{
+				photo.loadBytes( file.data );
+			}
+			
+			private function onFileProgress( event:ProgressEvent ):void
+			{
+			}
+			
+			private function onFileUploadCompleteData( event:DataEvent ):void
+			{
+			}
+			
+			private function onFileIOError( event:IOErrorEvent ):void
+			{
+			}
+			
+			private function onSecurityError( event:SecurityErrorEvent ):void
+			{
+			}
+			
+			private function onPhotoComplete( event:Event ):void
+			{
+				photoHolder.addChild( photo );
+				
+				bitmapData = new BitmapData( 100, 100, false );
+				var matrix:Matrix = new Matrix();
+				matrix.createBox( 100 / photo.content.width, 100 / photo.content.height );
+				bitmapData.draw( photo, matrix, null, null, null, true );
+				
+				var bitmap:Bitmap = new Bitmap( bitmapData, PixelSnapping.AUTO, true );
+				photoHolder.removeChild( photo );
+				photoHolder.addChild( bitmap );
+				
+				uploadButton.enabled = true;
+			}
+			
+			private function onUploadClick( event:Event ):void
+			{
+				_chatManager.currentUser.vCard.removeEventListener( VCardEvent.SAVED, onSaved );
+				_chatManager.currentUser.vCard.addEventListener( VCardEvent.SAVED, onSaved );
+				
+				if( !_chatManager.currentUser.vCard.photo ) _chatManager.currentUser.vCard.photo = new VCardPhoto();
+				_chatManager.currentUser.vCard.photo.bytes = photo.contentLoaderInfo.bytes;
+				var extension:String = file.name.split( "." )[ 1 ];
+				extension = extension == "jpeg" ? "jpg" : extension;
+				_chatManager.currentUser.vCard.photo.type = "image/" + extension;
+				_chatManager.currentUser.vCard.saveVCard( _chatManager.connection );
+			}
+			
+			private function onSaved( event:VCardEvent ):void
+			{
+				close();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5" horizontalAlign="center">
+		<mx:Label id="chooseIconLabel" text="Click browse to find an icon." width="100%" fontWeight="bold" />
+		<mx:UIComponent id="photoHolder" width="100" height="100" />
+		<mx:Button id="browseButton" label="Browse" click="onBrowseClick( event )" />
+		<mx:Button id="uploadButton" label="Upload" click="onUploadClick( event )" enabled="false" />
+	</mx:VBox>
+	
+</mx:TitleWindow>

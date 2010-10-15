@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				title="Alert" width="300" height="230" borderAlpha="1">
+	
+	<mx:Script>
+		<![CDATA[
+			import org.igniterealtime.xiff.core.UnescapedJID;
+			
+			public static var ACCEPT:String = "accept";
+			public static var DECLINE:String = "decline";
+			
+			private var _jid:UnescapedJID;
+			private var _additionalData:*;
+			
+			public function get jid():UnescapedJID
+			{
+				return _jid;
+			}
+			public function set jid( value:UnescapedJID ):void
+			{
+				_jid = value;
+			}
+			
+			public function get additionalData():*
+			{
+				return _additionalData;
+			}
+			public function set additionalData( value:* ):void
+			{
+				_additionalData = value;
+			}
+			
+			public function set message( value:String ):void
+			{
+				callLater( setMessage, [ value ] );
+			}
+			
+			private function setMessage( message:String ):void
+			{
+				messageBody.text = message;
+			}
+			
+			
+			private function onAcceptClick( event:MouseEvent ):void
+			{
+				var acceptEvent:Event = new Event( ACCEPT );
+				dispatchEvent( acceptEvent );
+			}
+			
+			private function onDeclineClick( event:MouseEvent ):void
+			{
+				var declineEvent:Event = new Event( DECLINE );
+				dispatchEvent( declineEvent );
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:TextArea id="messageBody" width="100%" height="100%" wordWrap="true" backgroundColor="#EFEFEF" borderStyle="inset" editable="false" />
+		<mx:HBox width="100%" horizontalAlign="center">
+			<mx:Button id="acceptButton" label="Accept" click="onAcceptClick( event )" />
+			<mx:Button id="declineButton" label="Decline" click="onDeclineClick( event )" />
+		</mx:HBox>
+	</mx:VBox>
+	
+</mx:TitleWindow>

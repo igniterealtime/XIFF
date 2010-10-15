@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="18" height="18" initialize="onInit( event )">
+	<mx:Script>
+		<![CDATA[
+			import com.yourpalmark.chat.data.ChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import org.igniterealtime.xiff.events.VCardEvent;
+			
+			private var photoLoader:Loader;
+			
+			override public function set data( value:Object ):void
+			{
+				super.data = value;
+				invalidateProperties();
+				invalidateDisplayList();
+			}
+			
+			override protected function commitProperties():void
+			{
+				if( data )
+				{
+					var user:ChatUser = data as ChatUser;
+					
+					if( !user.photo || ( !user.photo.binaryValue && !user.photo.externalValue ) )
+					{
+						user.vCard.removeEventListener( VCardEvent.LOADED, onVCardLoaded );
+						user.vCard.addEventListener( VCardEvent.LOADED, onVCardLoaded );
+						photoLoader.unload();
+					}
+					else if( user.photo.binaryValue )
+					{
+						photoLoader.loadBytes( user.photo.bytes );
+					}
+					else if( user.photo.externalValue )
+					{
+						photoLoader.load( new URLRequest( user.photo.externalValue ) );
+					}
+				}
+			}
+			
+			override protected function updateDisplayList( unscaledWidth:Number, unscaledHeight:Number ):void
+			{
+				photoHolder.x = ( unscaledWidth - 18 ) / 2;
+				photoHolder.y = ( unscaledHeight - 18 ) / 2;
+			}
+			
+			
+			private function onInit( event:FlexEvent ):void
+			{
+				photoLoader = new Loader();
+				photoLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, onPhotoComplete );
+			}
+			
+			private function onPhotoComplete( event:Event ):void
+			{
+				photoLoader.width = 18;
+				photoLoader.height = 18;
+				photoHolder.addChild( photoLoader );
+			}
+			
+			private function onVCardLoaded( event:VCardEvent ):void
+			{
+				invalidateProperties();
+				invalidateDisplayList();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:UIComponent id="photoHolder"/>
+</mx:Canvas>

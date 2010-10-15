@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				title="Personal Message" width="400" height="314" borderAlpha="1" showCloseButton="true"
+				initialize="onInit( event )" close="onCloseClick( event )">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			
+			import org.igniterealtime.xiff.core.UnescapedJID;
+			import org.igniterealtime.xiff.data.Message;
+			import org.igniterealtime.xiff.data.Presence;
+			import org.igniterealtime.xiff.events.MessageEvent;
+			
+			public static var CLOSE:String = "close";
+			
+			private var _tojid:UnescapedJID;
+			private var _fromjid:UnescapedJID;
+			
+			public function get toJID():UnescapedJID
+			{
+				return _tojid;
+			}
+			public function set toJID( value:UnescapedJID ):void
+			{
+				_tojid = value;
+				callLater( setToJID, [ value ] );
+			}
+			
+			public function set fromJID( value:UnescapedJID ):void
+			{
+				_fromjid = value;
+			}
+			
+			public function set userPresence( value:String ):void
+			{
+				callLater( setPresence, [ value ] );
+			}
+			
+			public function set userStatus( value:String ):void
+			{
+				callLater( setStatus, [ value ] );
+			}
+			
+			public function updateMessage( message:Message ):void
+			{
+				if( message.state ) callLater( setState, [ message.state ] );
+				
+				if( message.body ) callLater( updateMessageDisplay, [ message.body, _tojid, message.time ] );
+			}
+			
+			private function setToJID( jid:UnescapedJID ):void
+			{
+				userJIDLabel.text = jid.toString();
+			}
+			
+			private function setPresence( presence:String ):void
+			{
+				userPresenceLabel.text = presence;
+			}
+			
+			private function setStatus( status:String ):void
+			{
+				userStatusLabel.text = status;
+			}
+			
+			private function setState( state:String ):void
+			{
+				userStateLabel.text = state;
+			}
+			
+			private function updateMessageDisplay( message:String, jid:UnescapedJID, time:Date ):void
+			{
+				if( !time ) time = new Date();
+				
+				var hours:int = ( time.hours == 0 || time.hours == 12 ) ? 12 : time.hours > 12 ? time.hours - 12 : time.hours;
+				var minutes:String = time.minutes.toString().length == 1 ? "0" + time.minutes.toString() : time.minutes.toString();
+				messageTextArea.htmlText += "[" + hours.toString() + ":" + minutes + " | " + jid.bareJID + "] " + message;
+				callLater( updateScrollPosition );
+			}
+			
+			private function updateScrollPosition():void
+			{
+				messageTextArea.verticalScrollPosition = messageTextArea.maxVerticalScrollPosition;
+			}
+			
+			private function sendMessage():void
+			{
+				if( inputTextArea.text.length > 0 )
+				{
+					var message:Message = new Message( _tojid.escaped, null, null, null, Message.TYPE_CHAT, null );
+					message.from = _fromjid.escaped;
+					message.body = inputTextArea.text;
+					
+					updateMessageDisplay( inputTextArea.text, _fromjid, message.time );
+					
+					callLater( clearTypeArea );
+					callLater( updateScrollPosition );
+					
+					var messageEvent:MessageEvent = new MessageEvent();
+					messageEvent.data = message;
+					dispatchEvent( messageEvent );
+				}
+			}
+			
+			private function clearTypeArea():void
+			{
+				inputTextArea.text = "";
+			}
+			
+			
+			private function onInit( event:FlexEvent ):void
+			{
+				inputTextArea.addEventListener( FocusEvent.FOCUS_IN, onMessageFocusIn, false, 0, true );
+				inputTextArea.addEventListener( FocusEvent.FOCUS_OUT, onMessageFocusOut, false, 0, true );
+			}
+			
+			private function onMessageFocusIn( event:FocusEvent ):void
+			{
+				inputTextArea.addEventListener( KeyboardEvent.KEY_DOWN, onMessageKeyDown );
+			}
+			
+			private function onMessageFocusOut( event:FocusEvent ):void
+			{
+				inputTextArea.removeEventListener( KeyboardEvent.KEY_DOWN, onMessageKeyDown );
+			}
+			
+			private function onMessageKeyDown( event:KeyboardEvent ):void
+			{
+				if( event.keyCode == Keyboard.ENTER )
+				{
+					sendMessage();
+				}
+			}
+			
+			private function onCloseClick( event:CloseEvent ):void
+			{
+				inputTextArea.removeEventListener( FocusEvent.FOCUS_IN, onMessageFocusIn );
+				inputTextArea.removeEventListener( FocusEvent.FOCUS_OUT, onMessageFocusOut );
+				inputTextArea.removeEventListener( KeyboardEvent.KEY_DOWN, onMessageKeyDown );
+			}
+			
+			private function onSendClick( event:MouseEvent ):void
+			{
+				sendMessage();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+		<mx:HBox width="100%">
+			<mx:Image width="50" height="50" includeInLayout="false" />
+			<mx:Label id="userJIDLabel" text="" width="100%" fontWeight="bold" />
+			<mx:Label id="userStateLabel" text="" width="100%" />
+		</mx:HBox>
+		<mx:Label id="userPresenceLabel" text="" width="100%" fontWeight="bold" />
+		<mx:Label id="userStatusLabel" text="" width="100%" fontWeight="bold" />
+		<mx:TextArea id="messageTextArea" width="100%" height="100%" backgroundColor="#EFEFEF" borderStyle="inset" editable="false" />
+		<mx:HBox width="100%">
+			<mx:TextArea id="inputTextArea" width="100%" height="21" wordWrap="false" backgroundColor="#EFEFEF" borderStyle="inset" editable="true" />
+			<mx:Button id="sendButton" label="Send" click="onSendClick( event )" />
+		</mx:HBox>
+	</mx:VBox>
+	
+</mx:TitleWindow>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				title="Manage Privileges" width="640" height="400" borderAlpha="1" showCloseButton="true"
+				initialize="onInit( event )" close="onCloseClick( event )">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.yourpalmark.chat.ChatManager;
+			import com.yourpalmark.chat.data.ChatRoom;
+			import com.yourpalmark.chat.data.ChatUser;
+			
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.igniterealtime.xiff.conference.Room;
+			import org.igniterealtime.xiff.core.UnescapedJID;
+			import org.igniterealtime.xiff.events.RoomEvent;
+			
+			private var _room:ChatRoom;
+			private var _chatManager:ChatManager;
+			
+			public function set chatManager( value:ChatManager ):void
+			{
+				_chatManager = value;
+				invalidateProperties();
+			}
+			
+			public function set room( value:ChatRoom ):void
+			{
+				if( _room ) removeRoomListeners();
+				_room = value;
+				if( _room ) addRoomListeners();
+				
+				invalidateProperties();
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if( _room )
+				{
+					ownerOccupantComboBox.dataProvider = _room.users.source;
+					ownerComboBox.dataProvider = _room.owners.source;
+					adminComboBox.dataProvider = _room.admins.source;
+					
+					adminOccupantComboBox.dataProvider = _room.users.source;
+					moderatorComboBox.dataProvider = _room.moderators.source;
+				}
+				
+				if( _room && _chatManager )
+				{
+					var isOwner:Boolean = _room.room.affiliation == Room.AFFILIATION_OWNER;
+					var isAdmin:Boolean = _room.room.affiliation == Room.AFFILIATION_ADMIN;
+					var isModerator:Boolean = _room.room.role == Room.ROLE_MODERATOR;
+					
+					ownerOccupantComboBox.enabled = isOwner;
+					grantOwnerButton.enabled = isOwner;
+					grantAdminButton.enabled = isOwner;
+					ownerComboBox.enabled = isOwner;
+					revokeOwnerButton.enabled = isOwner;
+					adminComboBox.enabled = isOwner;
+					revokeAdminButton.enabled = isOwner;
+					adminOccupantComboBox.enabled = isOwner || isAdmin;
+					grantModeratorButton.enabled = isOwner || isAdmin;
+					moderatorComboBox.enabled = isOwner || isAdmin;
+					revokeModeratorButton.enabled = isOwner || isAdmin;
+				}
+			}
+			
+			private function close():void
+			{
+				removeRoomListeners();
+				
+				_room = null;
+				
+				PopUpManager.removePopUp( this );
+			}
+			
+			private function addRoomListeners():void
+			{
+				_room.addEventListener( RoomEvent.ROOM_DESTROYED, onRoomDestroyed, false, 0, true );
+			}
+			
+			private function removeRoomListeners():void
+			{
+				_room.removeEventListener( RoomEvent.ROOM_DESTROYED, onRoomDestroyed );
+			}
+			
+			
+			private function onInit( event:FlexEvent ):void
+			{
+			}
+			
+			private function onCloseClick( event:CloseEvent ):void
+			{
+				close();
+			}
+			
+			private function onGrantOwnerClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( ownerOccupantComboBox.selectedItem ).jid;
+				_room.room.grant( Room.AFFILIATION_OWNER, [ jid ] );
+			}
+			
+			private function onRevokeOwnerClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( ownerComboBox.selectedItem ).jid;
+				_room.room.revoke( [ jid ] );
+			}
+			
+			private function onGrantAdminClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( ownerOccupantComboBox.selectedItem ).jid;
+				_room.room.grant( Room.AFFILIATION_ADMIN, [ jid ] );
+			}
+			
+			private function onRevokeAdminClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( adminComboBox.selectedItem ).jid;
+				_room.room.revoke( [ jid ] );
+			}
+			
+			private function onGrantModeratorClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( adminOccupantComboBox.selectedItem ).jid;
+				_room.room.grant( Room.ROLE_MODERATOR, [ jid ] );
+			}
+			
+			private function onRevokeModeratorClick( event:MouseEvent ):void
+			{
+				var jid:UnescapedJID = ChatUser( moderatorComboBox.selectedItem ).jid;
+				_room.room.revoke( [ jid ] );
+			}
+			
+			private function onRoomDestroyed( event:RoomEvent ):void
+			{
+				close();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+		<mx:TitleWindow title="Owner Actions" width="100%">
+			<mx:HBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5" verticalAlign="middle">
+				<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%" verticalGap="2">
+						<mx:Label text="Select Room Occupant" fontWeight="bold" />
+						<mx:ComboBox id="ownerOccupantComboBox" width="100%" enabled="false" labelField="displayName" />
+					</mx:VBox>
+					<mx:HBox width="100%">
+						<mx:Button id="grantOwnerButton" label="Grant Owner" width="100%" enabled="false" click="onGrantOwnerClick( event )" />
+						<mx:Button id="grantAdminButton" label="Grant Admin" width="100%" enabled="false" click="onGrantAdminClick( event )" />
+					</mx:HBox>
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%" verticalGap="2">
+						<mx:Label text="Select Owner" fontWeight="bold" />
+						<mx:ComboBox id="ownerComboBox" width="100%" enabled="false" labelField="displayName" />
+					</mx:VBox>
+					<mx:Button id="revokeOwnerButton" label="Revoke Owner" width="100%" enabled="false" click="onRevokeOwnerClick( event )" />
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%" verticalGap="2">
+						<mx:Label text="Select Admin" fontWeight="bold" />
+						<mx:ComboBox id="adminComboBox" width="100%" enabled="false" labelField="displayName" />
+					</mx:VBox>
+					<mx:Button id="revokeAdminButton" label="Revoke Admin" width="100%" enabled="false" click="onRevokeAdminClick( event )" />
+				</mx:VBox>
+			</mx:HBox>
+		</mx:TitleWindow>
+		<mx:TitleWindow title="Admin Actions" width="100%">
+			<mx:HBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5" verticalAlign="middle">
+				<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%" verticalGap="2">
+						<mx:Label text="Select Room Occupant" fontWeight="bold" />
+						<mx:ComboBox id="adminOccupantComboBox" width="100%" enabled="false" labelField="displayName" />
+					</mx:VBox>
+					<mx:Button id="grantModeratorButton" label="Grant Moderator" width="100%" enabled="false" click="onGrantModeratorClick( event )" />
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%" verticalGap="2">
+						<mx:Label text="Select Moderator" fontWeight="bold" />
+						<mx:ComboBox id="moderatorComboBox" width="100%" enabled="false" labelField="displayName" />
+					</mx:VBox>
+					<mx:Button id="revokeModeratorButton" label="Revoke Moderator" width="100%" enabled="false" click="onRevokeModeratorClick( event )" />
+				</mx:VBox>
+			</mx:HBox>
+		</mx:TitleWindow>
+	</mx:VBox>
+	
+</mx:TitleWindow>

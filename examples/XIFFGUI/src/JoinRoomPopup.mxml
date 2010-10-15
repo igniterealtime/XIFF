@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+				title="Join Chat Room" width="500" height="400" borderAlpha="1" showCloseButton="true"
+				initialize="onInit( event )" close="onCloseClick( event )">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.yourpalmark.chat.ChatManager;
+			import com.yourpalmark.chat.data.ChatRoom;
+			
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.igniterealtime.xiff.core.Browser;
+			import org.igniterealtime.xiff.core.EscapedJID;
+			import org.igniterealtime.xiff.core.UnescapedJID;
+			import org.igniterealtime.xiff.data.IQ;
+			import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
+			import org.igniterealtime.xiff.data.disco.ItemDiscoExtension;
+			import org.igniterealtime.xiff.events.RoomEvent;
+			
+			public static var JOIN:String = "join";
+			
+			private var browser:Browser;
+			private var browserRooms:Array;
+			private var rooms:Array = [];
+			
+			private var _room:ChatRoom;
+			private var _chatManager:ChatManager;
+			
+			public function set chatManager( value:ChatManager ):void
+			{
+				_chatManager = value;
+				invalidateProperties();
+			}
+			
+			public function get room():ChatRoom
+			{
+				return _room;
+			}
+			
+			public function joinRoom( roomJID:UnescapedJID ):void
+			{
+				_room.join( roomJID );
+			}
+			
+			override protected function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if( _chatManager ) _room.chatManager = _chatManager;
+			}
+			
+			public function close():void
+			{
+				removeRoomListeners();
+				
+				_room = null;
+				
+				PopUpManager.removePopUp( this );
+			}
+			
+			private function addRoomListeners():void
+			{
+				_room.addEventListener( RoomEvent.ROOM_JOIN, onRoomJoin, false, 0, true );
+			}
+			
+			private function removeRoomListeners():void
+			{
+				_room.removeEventListener( RoomEvent.ROOM_JOIN, onRoomJoin );
+			}
+			
+			private function getNextRoomInfo():void
+			{
+				var server:EscapedJID = new EscapedJID( _chatManager.conferenceServer );
+				
+				if( browserRooms.length > 0 )
+				{
+					browser.getNodeInfo( server, new UnescapedJID( browserRooms.shift().jid ).node, onGetRoomInfo );
+				}
+			}
+			
+			
+			private function onInit( event:FlexEvent ):void
+			{
+				_room = new ChatRoom();
+				addRoomListeners();
+				
+				var server:EscapedJID = new EscapedJID( _chatManager.conferenceServer );
+				browser = new Browser( _chatManager.connection );
+				browser.getServiceItems( server, onGetServiceItems );
+			}
+			
+			private function onGetServiceItems( iq:IQ ):void
+			{
+				var extensions:Array = iq.getAllExtensions();
+				var disco:ItemDiscoExtension = extensions.length > 0 ? extensions[ 0 ] : null;
+				
+				if( disco )
+				{
+					browserRooms = disco.items.concat();
+					roomGrid.dataProvider = disco.items;
+					//getNextRoomInfo();
+				}
+			}
+			
+			private function onGetRoomInfo( iq:IQ ):void
+			{
+				var extensions:Array = iq.getAllExtensions();
+				var disco:InfoDiscoExtension = extensions.length > 0 ? extensions[ 0 ] : null;
+				
+				getNextRoomInfo();
+			}
+			
+			private function onCloseClick( event:CloseEvent ):void
+			{
+				close();
+			}
+			
+			private function onItemClick( event:ListEvent ):void
+			{
+				joinButton.enabled = true;
+			}
+			
+			private function onJoinClick( event:MouseEvent ):void
+			{
+				joinRoom( new UnescapedJID( roomGrid.selectedItem.jid ) );
+			}
+			
+			private function onRoomJoin( event:RoomEvent ):void
+			{
+				var joinEvent:Event = new Event( JOIN );
+				dispatchEvent( joinEvent );
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+		<mx:Label text="Chat Rooms" fontWeight="bold" />
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%">
+				<mx:DataGrid id="roomGrid" width="100%" height="100%" editable="false" sortableColumns="false" itemClick="onItemClick( event )">
+					<mx:columns>
+						<mx:DataGridColumn headerText="Name" dataField="name" width="100" />
+						<mx:DataGridColumn headerText="JID" dataField="jid" width="100" />
+					</mx:columns>
+				</mx:DataGrid>
+				<mx:HBox width="100%" paddingTop="10">
+					<mx:Spacer width="100%" />
+					<mx:Button id="joinButton" label="Join Selected Room" enabled="false" click="onJoinClick( event )" />
+				</mx:HBox>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:VBox>
+	
+</mx:TitleWindow>
