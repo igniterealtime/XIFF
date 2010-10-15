@@ -5,6 +5,7 @@
 	<component class="org.igniterealtime.xiff.auth.External" />
 	<component class="org.igniterealtime.xiff.auth.Plain" />
 	<component class="org.igniterealtime.xiff.auth.SASLAuth" />
+	<component class="org.igniterealtime.xiff.auth.XFacebookPlatform" />
 	<component class="org.igniterealtime.xiff.bookmark.BookmarkManager" />
 	<component class="org.igniterealtime.xiff.bookmark.BookmarkPrivatePayload" />
 	<component class="org.igniterealtime.xiff.bookmark.GroupChatBookmark" />
