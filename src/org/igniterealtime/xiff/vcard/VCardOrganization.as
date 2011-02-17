@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2003-2010 Igniterealtime Community Contributors
+* Copyright (C) 2003-2011 Igniterealtime Community Contributors
 *   
 *     Daniel Henninger
 *     Derrick Grigg <dgrigg@rogers.com>
