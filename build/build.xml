@@ -1,76 +1,117 @@
 <?xml version="1.0"?>
 <project name="XIFF" basedir="../" default="release">
-	
-	<!-- Define variables/paths used in this build script -->
-	<property file="build/build.properties" />
-	<property name="nl" value="&#13;&#10;" />
-	<property name="tab" value="&#x0009;" />
-	
-	<!-- Define Flex Ant Tasks -->
-	<taskdef resource="flexTasks.tasks" classpath="${flex.ant.tasks}" />
-	
-	<!-- Define Ant-Contrib Tasks -->
-	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.contrib.tasks}" />
-	
-	<!-- Display warning -->
-	<target name="properties">
-		<echo message="Have you edited the properties file to make sure the paths are right on your system?" />
+
+    <!-- Define variables/paths used in this build script -->
+    <property file="build/build.properties"/>
+    <property name="nl" value="&#13;&#10;"/>
+    <property name="tab" value="&#x0009;"/>
+
+    <!-- Define Flex Ant Tasks -->
+    <taskdef resource="flexTasks.tasks" classpath="${flex.ant.tasks}"/>
+
+    <!-- Define Ant-Contrib Tasks -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${ant.contrib.tasks}"/>
+
+    <!-- Define FlexUnit Tasks -->
+    <taskdef resource="flexUnitTasks.tasks" classpath="${flexunit.tasks}"/>
+
+    <!-- Remove all directories created during the build process -->
+    <target name="clean">
+		<delete dir="${output.dir}" />
 	</target>
-	
-	<!-- Update the manifest file. -->
-	<target name="manifest" depends="properties">
-		<echo message="Updating the manifest file." />
-		<echo file="${manifest}">&lt;?xml version="1.0"?&gt;${nl}&lt;componentPackage&gt;</echo>
-		<for param="file">
-			<path>
-				<fileset dir="${src.dir}" includes="**/*as" />
-			</path>
-			<sequential>
-				<propertyregex property="classpath" override="true" input="@{file}" regexp=".*(org\${file.separator}igniterealtime[^\.]*).as" replace="\1" casesensitive="false" />
-				<propertyregex property="class" override="true" input="${classpath}" regexp="\${file.separator}" replace="." global="true" />
-				<echo file="${manifest}" append="true">${nl}${tab}&lt;component class="${class}" /&gt;</echo>
-			</sequential>
-		</for>
-		<echo file="${manifest}" append="true">${nl}&lt;/componentPackage&gt;</echo>
+
+    <!-- Create directories needed for the build process -->
+    <target name="init" depends="clean">
+		<mkdir dir="${output.dir}" />
+		<mkdir dir="${report.dir}" />
 	</target>
-	
-	<!-- Generate the SWC file -->
-	<target name="component" depends="manifest">
-		<compc output="${bin.dir}/${output.name}.swc">
-			<library-path dir="${libs.dir}" append="true">
-				<include name="*.swc" />
-			</library-path>
-			<source-path path-element="${src.dir}" />
-			<namespace uri="${manifest.ns}" manifest="${manifest}" />
-			<in uri="${manifest.ns}"/>
-		</compc>
-	</target>
-	
-	<!-- Clean and re-generate the documentation -->
-	<target name="docs" depends="clean-docs,compile-docs" />
-	
-	<!-- Clean the documentation -->
-	<target name="clean-docs">
-		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
-		<mkdir dir="${docs.dir}" />
-	</target>
-	
-	<!-- Generate the documentation -->
-	<target name="compile-docs" depends="manifest">
-		<exec executable="${flex.bin}/${asdoc}">
-			<arg line="-source-path ${src.dir}" />
-			<arg line="-external-library-path ${libs.dir}" />
-			<arg line="-namespace ${manifest.ns} ${manifest}" />
-			<arg line="-doc-namespaces ${manifest.ns}" />
-			<arg line="-output ${docs.dir}" />
-			<arg line="-templates-path ${flex.asdoc.templates}" />
-		</exec>
-	</target>
-	
-	<!-- Package project for distribution -->
-	<target name="release" depends="component,docs">
-		<mkdir dir="${bin-release.dir}" />
-		<zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}" includes="bin/**,docs/**,examples/**,libs/**,src/**,changelog.html,LICENSE.html,README.html" />
-	</target>
-	
+
+    <!-- Display warning -->
+    <target name="properties" depends="init">
+        <echo message="Have you edited the properties file to make sure the paths are right on your system?"/>
+    </target>
+
+    <!-- Update the manifest file. -->
+    <target name="manifest" depends="properties">
+        <echo message="Updating the manifest file."/>
+        <echo file="${manifest}">&lt;?xml version="1.0"?&gt;${nl}&lt;componentPackage&gt;</echo>
+        <for param="file">
+            <path>
+                <fileset dir="${src.dir}" includes="**/*as"/>
+            </path>
+            <sequential>
+                <propertyregex property="classpath" override="true" input="@{file}"
+                               regexp=".*(org\${file.separator}igniterealtime[^\.]*).as" replace="\1"
+                               casesensitive="false"/>
+                <propertyregex property="class" override="true" input="${classpath}" regexp="\${file.separator}"
+                               replace="." global="true"/>
+                <echo file="${manifest}" append="true">${nl}${tab}&lt;component class="${class}" /&gt;</echo>
+            </sequential>
+        </for>
+        <echo file="${manifest}" append="true">${nl}&lt;/componentPackage&gt;</echo>
+    </target>
+
+    <!-- Generate the SWC file -->
+    <target name="component" depends="manifest">
+        <compc output="${bin.dir}/${output.name}.swc">
+            <library-path dir="${libs.dir}" append="true">
+                <include name="as3crypto.swc"/>
+            </library-path>
+            <source-path path-element="${src.dir}"/>
+            <namespace uri="${manifest.ns}" manifest="${manifest}"/>
+            <in uri="${manifest.ns}"/>
+        </compc>
+    </target>
+
+    <target name="test" depends="component">
+        <!-- Execute FlexUnit tests and publish reports -->
+        <flexunit
+                toDir="${report.dir}"
+                haltonfailure="false"
+                verbose="true"
+                localTrusted="true">
+            <source dir="${src.dir}"/>
+            <testSource dir="${test.dir}">
+                <include name="**/*Test.as"/>
+            </testSource>
+            <library dir="${libs.dir}"/>
+        </flexunit>
+
+        <!-- Generate readable JUnit-style reports -->
+        <junitreport todir="${report.dir}">
+            <fileset dir="${report.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${report.dir}/html"/>
+        </junitreport>
+    </target>
+
+    <!-- Clean and re-generate the documentation -->
+    <target name="docs" depends="clean-docs,compile-docs"/>
+
+    <!-- Clean the documentation -->
+    <target name="clean-docs">
+        <delete dir="${docs.dir}" includeemptydirs="true" failonerror="true"/>
+        <mkdir dir="${docs.dir}"/>
+    </target>
+
+    <!-- Generate the documentation -->
+    <target name="compile-docs" depends="manifest">
+        <exec executable="${flex.bin}/${asdoc}">
+            <arg line="-source-path ${src.dir}"/>
+            <arg line="-external-library-path ${libs.dir}"/>
+            <arg line="-namespace ${manifest.ns} ${manifest}"/>
+            <arg line="-doc-namespaces ${manifest.ns}"/>
+            <arg line="-output ${docs.dir}"/>
+            <arg line="-templates-path ${flex.asdoc.templates}"/>
+        </exec>
+    </target>
+
+    <!-- Package project for distribution -->
+    <target name="release" depends="component,docs">
+        <mkdir dir="${bin-release.dir}"/>
+        <zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}"
+             includes="bin/**,docs/**,examples/**,libs/**,src/**,changelog.html,LICENSE.html,README.html"/>
+    </target>
+
 </project>
