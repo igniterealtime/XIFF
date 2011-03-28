@@ -15,19 +15,8 @@
 	<!-- Define FlexUnit Tasks -->
 	<taskdef resource="flexUnitTasks.tasks" classpath="${flexunit.tasks}" />
 	
-	<!-- Remove all directories created during the build process -->
-	<target name="clean">
-		<delete dir="${output.dir}" />
-	</target>
-	
-	<!-- Create directories needed for the build process -->
-	<target name="init" depends="clean">
-		<mkdir dir="${output.dir}" />
-		<mkdir dir="${report.dir}" />
-	</target>
-	
 	<!-- Display warning -->
-	<target name="properties" depends="init">
+	<target name="properties">
 		<echo message="Have you edited the properties file to make sure the paths are right on your system?" />
 	</target>
 	
@@ -60,10 +49,37 @@
 		</compc>
 	</target>
 	
-	<target name="test" depends="component">
+	<!-- Clean the documentation -->
+	<target name="clean-docs">
+		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+	
+	<!-- Generate the documentation -->
+	<target name="docs" depends="clean-docs,manifest">
+		<exec executable="${flex.bin}/${asdoc}">
+			<arg line="-source-path ${src.dir}" />
+			<arg line="-external-library-path ${libs.dir}" />
+			<arg line="-namespace ${manifest.ns} ${manifest}" />
+			<arg line="-doc-namespaces ${manifest.ns}" />
+			<arg line="-output ${docs.dir}" />
+			<arg line="-templates-path ${flex.asdoc.templates}" />
+		</exec>
+	</target>
+	
+	<!-- Clean the tests -->
+	<target name="clean-tests">
+		<delete dir="${report.dir}" includeemptydirs="true" failonerror="true" />
+		<delete dir="${test.bin.dir}" includeemptydirs="true" failonerror="true" />
+		<mkdir dir="${report.dir}" />
+		<mkdir dir="${test.bin.dir}" />
+	</target>
+	
+	<target name="test" depends="clean-tests,component">
 		<!-- Execute FlexUnit tests and publish reports -->
 		<flexunit
 				toDir="${report.dir}"
+				workingDir="${test.bin.dir}"
 				haltonfailure="false"
 				verbose="true"
 				localTrusted="true">
@@ -83,31 +99,10 @@
 		</junitreport>
 	</target>
 	
-	<!-- Clean and re-generate the documentation -->
-	<target name="docs" depends="clean-docs,compile-docs" />
-	
-	<!-- Clean the documentation -->
-	<target name="clean-docs">
-		<delete dir="${docs.dir}" includeemptydirs="true" failonerror="true" />
-		<mkdir dir="${docs.dir}" />
-	</target>
-	
-	<!-- Generate the documentation -->
-	<target name="compile-docs" depends="manifest">
-		<exec executable="${flex.bin}/${asdoc}">
-			<arg line="-source-path ${src.dir}" />
-			<arg line="-external-library-path ${libs.dir}" />
-			<arg line="-namespace ${manifest.ns} ${manifest}" />
-			<arg line="-doc-namespaces ${manifest.ns}" />
-			<arg line="-output ${docs.dir}" />
-			<arg line="-templates-path ${flex.asdoc.templates}" />
-		</exec>
-	</target>
-	
 	<!-- Package project for distribution -->
 	<target name="release" depends="component,docs">
-		<mkdir dir="${bin-release.dir}" />
-		<zip destfile="${bin-release.dir}/${output.name}.zip" basedir="${basedir}" includes="bin/**,docs/**,examples/**,libs/**,src/**,changelog.html,LICENSE.html,README.html" />
+		<mkdir dir="${release.bin.dir}" />
+		<zip destfile="${release.bin.dir}/${output.name}.zip" basedir="${basedir}" includes="bin/**,docs/**,examples/**,libs/**,src/**,changelog.html,LICENSE.html,README.html" />
 	</target>
 	
 </project>
