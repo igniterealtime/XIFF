@@ -106,7 +106,7 @@ package org.igniterealtime.xiff.core
 	 * This class is used to connect to and manage data coming from an XMPP server.
 	 * Use one instance of this class per connection.
 	 */
-	public class XMPPConnection extends EventDispatcher
+	public class XMPPConnection extends EventDispatcher implements IXMPPConnection
 	{
 		/**
 		 * Stream type lets user set opening/closing tag.
@@ -449,7 +449,7 @@ package org.igniterealtime.xiff.core
 		 * "<b>Hi Bob.</b>", Message.TYPE_CHAT );
 		 * myXMPPConnection.send( message );</code>
 		 */
-		public function send( data:XMPPStanza ):void
+		public function send( data:IXMPPStanza ):void
 		{
 			if ( isActive() )
 			{

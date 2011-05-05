@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.core
 	 * This class is used to connect to and manage data coming from an XMPP server that supports TLS.
 	 * Use one instance of this class per connection.
 	 */
-	public class XMPPTLSConnection extends XMPPConnection
+	public class XMPPTLSConnection extends XMPPConnection implements IXMPPConnection
 	{
 		/**
 		 * @private

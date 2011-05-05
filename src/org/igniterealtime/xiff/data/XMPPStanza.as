@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data
 	 *
 	 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
 	 */
-	public dynamic class XMPPStanza extends XMLStanza implements ISerializable, IExtendable
+	public dynamic class XMPPStanza extends XMLStanza implements IXMPPStanza
 	{
 		public static const CLIENT_NAMESPACE:String = "jabber:client";
 		

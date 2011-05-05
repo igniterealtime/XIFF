@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.core
 	 * @see http://xmpp.org/extensions/xep-0124.html
 	 * @see http://xmpp.org/extensions/xep-0206.html
 	 */
-	public class XMPPBOSHConnection extends XMPPConnection
+	public class XMPPBOSHConnection extends XMPPConnection implements IXMPPConnection
 	{
 		/**
 		 * @default 1.6

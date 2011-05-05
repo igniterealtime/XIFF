@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data
 	/**
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
-	public class Message extends XMPPStanza implements ISerializable
+	public class Message extends XMPPStanza implements IXMPPStanza
 	{
 		/**
 		 * The message is sent in the context of a one-to-one chat

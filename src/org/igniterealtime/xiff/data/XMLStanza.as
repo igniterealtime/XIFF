@@ -24,15 +24,14 @@
  */
 package org.igniterealtime.xiff.data
 {
-	import org.igniterealtime.xiff.data.INodeProxy;
-	import flash.xml.XMLNode;
 	import flash.xml.XMLDocument;
+	import flash.xml.XMLNode;
 	
 	/**
 	 * This is a base class for all classes that encapsulate XML stanza data. It provides
 	 * a set of methods that faciliate easy manipulation of XML data.
 	 */
-	public class XMLStanza extends ExtensionContainer implements INodeProxy, IExtendable
+	public class XMLStanza extends ExtensionContainer implements IXMLStanza
 	{
 	    // Global factory for all XMLNode generation
 		public static var XMLFactory:XMLDocument = new XMLDocument();
@@ -78,7 +77,7 @@ package org.igniterealtime.xiff.data
 		 * @param	value The value of the new node
 		 * @return A reference to the new node
 		 */
-		public function addTextNode( parent:XMLNode, elementName:String, value:String):XMLNode
+		public function addTextNode( parent:XMLNode, elementName:String, value:String ):XMLNode
 		{
 			var newNode:XMLNode = XMLStanza.XMLFactory.createElement(elementName);
 			newNode.appendChild(XMLFactory.createTextNode(value));
