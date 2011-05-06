@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.data.muc
 	 *
 	 * @param	parent (Optional) The containing XMLNode for this extension
 	 */
-	public class MUCExtension extends Extension implements IExtension, ISerializable
+	public class MUCExtension extends Extension implements IMUCExtension
 	{
 		public static const NS:String = "http://jabber.org/protocol/muc";
 		public static const ELEMENT_NAME:String = "x";
@@ -95,7 +95,7 @@ package org.igniterealtime.xiff.data.muc
 			return true;
 		}
 		
-		public function addChildNode(childNode:XMLNode):void
+		public function addChildNode( childNode:XMLNode ):void
 		{
 			getNode().appendChild(childNode);
 		}
@@ -111,7 +111,7 @@ package org.igniterealtime.xiff.data.muc
 			return null;
 		}
 	
-		public function set password(value:String):void
+		public function set password( value:String ):void
 		{
 			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", value);
 		}
@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.data.muc
 			return exists(myHistoryNode);
 		}
 	
-		public function set history(value:Boolean):void
+		public function set history( value:Boolean ):void
 		{
 			if (value)
 			{
@@ -148,7 +148,7 @@ package org.igniterealtime.xiff.data.muc
 			return parseInt(myHistoryNode.attributes.maxchars);
 		}
 	
-		public function set maxchars(value:int):void
+		public function set maxchars( value:int ):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxchars = value.toString();
@@ -162,7 +162,7 @@ package org.igniterealtime.xiff.data.muc
 			return parseInt(myHistoryNode.attributes.maxstanzas);
 		}
 	
-		public function set maxstanzas(value:int):void
+		public function set maxstanzas( value:int ):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.maxstanzas = value.toString();
@@ -176,7 +176,7 @@ package org.igniterealtime.xiff.data.muc
 			return Number(myHistoryNode.attributes.seconds);
 		}
 	
-		public function set seconds(value:Number):void
+		public function set seconds( value:Number ):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.seconds = value.toString();
@@ -192,7 +192,7 @@ package org.igniterealtime.xiff.data.muc
 			return myHistoryNode.attributes.since;
 		}
 	
-		public function set since(value:String):void
+		public function set since( value:String ):void
 		{
 			myHistoryNode = ensureNode(myHistoryNode, "history");
 			myHistoryNode.attributes.since = value;

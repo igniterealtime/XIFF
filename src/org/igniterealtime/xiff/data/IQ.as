@@ -26,13 +26,13 @@ package org.igniterealtime.xiff.data
 {
 
 	import flash.xml.XMLNode;
-
+	
 	import org.igniterealtime.xiff.core.EscapedJID;
 
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
 	 */
-	public class IQ extends XMPPStanza implements IXMPPStanza
+	public class IQ extends XMPPStanza implements IIQ
 	{
 		private var myCallback:Function;
 		

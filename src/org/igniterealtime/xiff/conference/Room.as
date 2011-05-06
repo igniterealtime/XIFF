@@ -24,15 +24,13 @@
  */
 package org.igniterealtime.xiff.conference
 {
-	import flash.events.Event;
-
 	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.muc.*;
 	import org.igniterealtime.xiff.events.*;
-
+	
 	/**
 	 * Dispatched when the active, affiliation, or role property changes.
 	 *
@@ -220,7 +218,7 @@ package org.igniterealtime.xiff.conference
 	 * Manages incoming and outgoing data from a conference room as part of multi-user conferencing (XEP-0045).
 	 * You will need an instance of this class for each room that the user joins.
 	 */
-	public class Room extends ArrayCollection
+	public class Room extends ArrayCollection implements IRoom
 	{
 		public static const AFFILIATION_ADMIN:String = MUC.AFFILIATION_ADMIN;
 		public static const AFFILIATION_MEMBER:String = MUC.AFFILIATION_MEMBER;
@@ -242,7 +240,7 @@ package org.igniterealtime.xiff.conference
 
 		private var _anonymous:Boolean = true;
 
-		private var _connection:XMPPConnection;
+		private var _connection:IXMPPConnection;
 
 		//private var _fileRepo:RoomFileRepository;
 
@@ -268,7 +266,7 @@ package org.igniterealtime.xiff.conference
 		 *
 		 * @param	aConnection  A XMPPConnection instance that is providing the primary server connection
 		 */
-		public function Room( aConnection:XMPPConnection = null )
+		public function Room( aConnection:IXMPPConnection = null )
 		{
 			setActive( false );
 			if ( aConnection != null )
@@ -460,7 +458,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	htmlBody The message body with HTML formatting
 		 * @return A <code>Message</code> class instance
 		 */
-		public function getMessage( body:String = null, htmlBody:String = null ):Message
+		public function getMessage( body:String = null, htmlBody:String = null ):IMessage
 		{
 			var message:Message = new Message( roomJID.escaped, null, body, htmlBody,
 												   Message.TYPE_GROUPCHAT );
@@ -473,7 +471,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	name
 		 * @return
 		 */
-		public function getOccupantNamed( name:String ):RoomOccupant
+		public function getOccupantNamed( name:String ):IRoomOccupant
 		{
 			for each ( var occ:RoomOccupant in this )
 			{
@@ -633,7 +631,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room.
 		 * @return A boolean indicating whether the join attempt was successfully sent.
 		 */
-		public function joinWithExplicitMUCExtension( createReserved:Boolean, mucExtension:MUCExtension, joinPresenceExtensions:Array = null ):Boolean
+		public function joinWithExplicitMUCExtension( createReserved:Boolean, mucExtension:IMUCExtension, joinPresenceExtensions:Array = null ):Boolean
 		{
 			if ( !_connection.isActive() || isActive )
 			{
@@ -779,7 +777,7 @@ package org.igniterealtime.xiff.conference
 		 *
 		 * @param	message The message to send
 		 */
-		public function sendMessageWithExtension( message:Message ):void
+		public function sendMessageWithExtension( message:IMessage ):void
 		{
 			if ( isActive )
 			{
@@ -1248,7 +1246,7 @@ package org.igniterealtime.xiff.conference
 				}
 			}
 
-			var occupant:RoomOccupant = getOccupantNamed( userNickname );
+			var occupant:IRoomOccupant = getOccupantNamed( userNickname );
 
 			//if we already know about this occupant, we're either being told about them leaving, or about a presence update
 			if ( occupant )
@@ -1335,11 +1333,11 @@ package org.igniterealtime.xiff.conference
 		 *
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
-		public function get connection():XMPPConnection
+		public function get connection():IXMPPConnection
 		{
 			return _connection;
 		}
-		public function set connection( value:XMPPConnection ):void
+		public function set connection( value:IXMPPConnection ):void
 		{
 			if ( _connection != null )
 			{

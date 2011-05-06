@@ -24,18 +24,17 @@
  */
 package org.igniterealtime.xiff.data.im
 {
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
-
-	import org.igniterealtime.xiff.events.PropertyChangeEvent;
+	
 	import org.igniterealtime.xiff.core.UnescapedJID;
-
+	import org.igniterealtime.xiff.events.PropertyChangeEvent;
+	
 	/**
 	 * @eventType org.igniterealtime.xiff.events.PropertyChangeEvent.CHANGE
 	 */
 	[Event( name="change", type="org.igniterealtime.xiff.events.PropertyChangeEvent" )]
 
-	public class RosterItemVO extends EventDispatcher implements Contact
+	public class RosterItemVO extends EventDispatcher implements IRosterItemVO
 	{
 		private static var allContacts:Object = {};
 

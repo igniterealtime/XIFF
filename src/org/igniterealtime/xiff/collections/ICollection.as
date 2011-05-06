@@ -22,27 +22,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data
+package org.igniterealtime.xiff.collections
 {
-	import org.igniterealtime.xiff.data.IExtension;
+	import flash.events.IEventDispatcher;
 	
-	/**
-	 * This interface provides access to contained extensions and methods to modify the contained extensions.  
-	 * All XMPP stanzas that can be extended should implement this interface.
-	 *
-	 * @see	org.igniterealtime.xiff.data.ExtensionContainer
-	 * @see	org.igniterealtime.xiff.data.IExtension
-	 */
-	public interface IExtendable
+	public interface ICollection extends IEventDispatcher
 	{
-		function addExtension( extension:IExtension ):IExtension;
+		function get length():int;
 		
-		function getAllExtensionsByNS( ns:String ):Array;
+		function getItemAt( index:int ):*;
 		
-		function getAllExtensions():Array;
+		function setItemAt( item:*, index:int ):*;
 		
-		function removeExtension( extension:IExtension ):Boolean;
+		function addItem( item:* ):void;
 		
-		function removeAllExtensions( ns:String ):void;
+		function addItemAt( item:*, index:int ):void;
+		
+		function getItemIndex( item:* ):int;
+		
+		function removeItem( item:* ):Boolean;
+		
+		function removeItemAt( index:int ):*;
+		
+		function removeAll():void;
+		
+		function clearSource():void;
+		
+		function contains( item:* ):Boolean;
+		
+		function itemUpdated( item:* ):void;
+		
+		function toString():String;
 	}
 }

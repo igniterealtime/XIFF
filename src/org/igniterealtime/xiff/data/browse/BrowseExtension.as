@@ -24,12 +24,10 @@
  */
 package org.igniterealtime.xiff.data.browse
 {
-	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
 	 * Implements jabber:iq:browse namespace.  Use this extension to request the items
@@ -38,7 +36,7 @@ package org.igniterealtime.xiff.data.browse
 	 * OBSOLETE
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
-	public class BrowseExtension extends BrowseItem implements IExtension, ISerializable
+	public class BrowseExtension extends BrowseItem implements IExtension
 	{
 		public static const NS:String = "jabber:iq:browse";
 		public static const ELEMENT_NAME:String = "query";

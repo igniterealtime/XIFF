@@ -24,15 +24,15 @@
  */
 package org.igniterealtime.xiff.data.events
 {
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
 	import flash.xml.XMLNode;
+	
+	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * OBSOLETE
 	 * @see http://xmpp.org/extensions/xep-0022.html
 	 */
-	public class MessageEventExtension implements IExtension, ISerializable
+	public class MessageEventExtension implements IExtension
 	{
 		
 		public function getNS():String

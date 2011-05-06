@@ -30,13 +30,12 @@ package org.igniterealtime.xiff.data.bind
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
-
+	
 	/**
 	 * @see http://xmpp.org/extensions/xep-0193.html
 	 */
-	public class BindExtension extends Extension implements IExtension, ISerializable
+	public class BindExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-bind";
 		public static const ELEMENT_NAME:String = "bind";

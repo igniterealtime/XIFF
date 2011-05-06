@@ -24,17 +24,13 @@
  */
 package org.igniterealtime.xiff.data.xhtml
 {
-
-
-
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
-
+	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
-
+	
 	/**
 	 * This class provides an extension for XHTML body text in messages.
 	 * <p>html --> http://jabber.org/protocol/xhtml-im</p>
@@ -42,7 +38,7 @@ package org.igniterealtime.xiff.data.xhtml
 
 	 * @see http://xmpp.org/extensions/xep-0071.html
 	 */
-	public class XHTMLExtension extends Extension implements IExtension, ISerializable
+	public class XHTMLExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "http://jabber.org/protocol/xhtml-im";
 		public static const ELEMENT_NAME:String = "html";

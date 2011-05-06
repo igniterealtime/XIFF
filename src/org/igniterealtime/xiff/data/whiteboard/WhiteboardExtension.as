@@ -24,17 +24,17 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-	import org.igniterealtime.xiff.data.*;	
-	import org.igniterealtime.xiff.data.whiteboard.Path;
 	import flash.xml.XMLNode;
-	 
+	
+	import org.igniterealtime.xiff.data.*;
+	
 	/**
 	 * A message extension for whitboard exchange. This class is the base class
 	 * for other extension classes such as Path
 	 *
 	 * All child whiteboard objects are contained and serialized by this class
 	 */
-	public class WhiteboardExtension extends Extension implements IExtension, ISerializable
+	public class WhiteboardExtension extends Extension implements IExtension
 	{
 		public static const ELEMENT_NAME:String = "x";
 		public static const NS:String = "xiff:wb";

@@ -22,22 +22,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.im
+package org.igniterealtime.xiff.data
 {
-	import org.igniterealtime.xiff.core.UnescapedJID;
-	
-	public interface Contact
+	public interface IPresence extends IXMPPStanza
 	{
-		function get jid():UnescapedJID;
-		function set jid(value:UnescapedJID):void;
-		
-		function get displayName():String;
-		function set displayName(value:String):void;
-		
 		function get show():String;
-		function set show(value:String):void;
+		function set show( value:String ):void;
 		
-		function get online():Boolean;
-		function set online(value:Boolean):void;
+		function get status():String;
+		function set status( value:String ):void;
+		
+		function get priority():int;
+		function set priority( value:int ):void;
 	}
 }

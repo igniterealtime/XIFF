@@ -24,15 +24,15 @@
  */
 package org.igniterealtime.xiff.data.rpc
 {
-	import org.igniterealtime.xiff.data.*;
-	import org.igniterealtime.xiff.data.rpc.XMLRPC;
 	import flash.xml.XMLNode;
+	
+	import org.igniterealtime.xiff.data.*;
 	
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
 	 * @see http://xmpp.org/extensions/xep-0009.html
 	 */
-	public class RPCExtension extends Extension implements IExtension, ISerializable
+	public class RPCExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:rpc";
 		public static const ELEMENT_NAME:String = "query";

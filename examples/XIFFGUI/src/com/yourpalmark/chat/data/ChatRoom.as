@@ -5,8 +5,8 @@ package com.yourpalmark.chat.data
 	import flash.events.EventDispatcher;
 	
 	import org.igniterealtime.xiff.collections.ArrayCollection;
+	import org.igniterealtime.xiff.conference.IRoomOccupant;
 	import org.igniterealtime.xiff.conference.Room;
-	import org.igniterealtime.xiff.conference.RoomOccupant;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.muc.MUCItem;
 	import org.igniterealtime.xiff.events.PresenceEvent;
@@ -288,7 +288,7 @@ package com.yourpalmark.chat.data
 		
 		private function onUserJoin( event:RoomEvent ):void
 		{
-			var occupant:RoomOccupant = room.getOccupantNamed( event.nickname );
+			var occupant:IRoomOccupant = room.getOccupantNamed( event.nickname );
 			if( !occupant ) return;
 			
 			var chatUser:ChatUser = new ChatUser( occupant.jid );

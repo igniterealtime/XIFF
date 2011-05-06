@@ -22,16 +22,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.search{
-	
+package org.igniterealtime.xiff.data.search
+{
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
-		
+	
 	/**
 	 * Implements jabber:iq:search namespace.  Use this to perform user searches.
 	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be
@@ -41,7 +40,7 @@ package org.igniterealtime.xiff.data.search{
 	 * Check the result and re-establish the connection with the new account.
 	 * @see http://xmpp.org/extensions/xep-0055.html
 	 */
-	public class SearchExtension extends Extension implements IExtension, ISerializable
+	public class SearchExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:search";
 		public static const ELEMENT_NAME:String = "query";

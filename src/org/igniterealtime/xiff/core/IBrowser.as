@@ -22,27 +22,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data
+package org.igniterealtime.xiff.core
 {
-	import org.igniterealtime.xiff.data.IExtension;
-	
-	/**
-	 * This interface provides access to contained extensions and methods to modify the contained extensions.  
-	 * All XMPP stanzas that can be extended should implement this interface.
-	 *
-	 * @see	org.igniterealtime.xiff.data.ExtensionContainer
-	 * @see	org.igniterealtime.xiff.data.IExtension
-	 */
-	public interface IExtendable
+	public interface IBrowser
 	{
-		function addExtension( extension:IExtension ):IExtension;
+		function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void;
 		
-		function getAllExtensionsByNS( ns:String ):Array;
+		function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void;
 		
-		function getAllExtensions():Array;
+		function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):void;
 		
-		function removeExtension( extension:IExtension ):Boolean;
+		function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):void;
 		
-		function removeAllExtensions( ns:String ):void;
+		function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):void;
+		
+		function get connection():IXMPPConnection;
+		function set connection( value:IXMPPConnection ):void;
 	}
 }

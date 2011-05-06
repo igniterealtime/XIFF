@@ -37,9 +37,9 @@ package org.igniterealtime.xiff.core
 	 * <a href="http://xmpp.org/extensions/xep-0011.html">XEP-0011</a> for the
 	 * protocol enhancement specifications.
 	 */
-	public class Browser
+	public class Browser implements IBrowser
 	{
-		private var _connection:XMPPConnection;
+		private var _connection:IXMPPConnection;
 
 		private var _pending:Object = {};
 
@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.core
 		 * @param	aConnection A reference to the <code>XMPPConnection</code> instance
 		 * to use.
 		 */
-		public function Browser( aConnection:XMPPConnection )
+		public function Browser( aConnection:IXMPPConnection )
 		{
 			connection = aConnection;
 		}
@@ -154,11 +154,11 @@ package org.igniterealtime.xiff.core
 		 * The instance of the XMPPConnection class to use for sending and
 		 * receiving data.
 		 */
-		public function get connection():XMPPConnection
+		public function get connection():IXMPPConnection
 		{
 			return _connection;
 		}
-		public function set connection( value:XMPPConnection ):void
+		public function set connection( value:IXMPPConnection ):void
 		{
 			_connection = value;
 		}

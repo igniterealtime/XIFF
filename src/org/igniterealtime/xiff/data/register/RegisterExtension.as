@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.data.register
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.*;
-		
+	
 	/**
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
 	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be a conflict,
@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.data.register
 	 *
 	 * @see http://xmpp.org/extensions/xep-0077.html
 	 */
-	public class RegisterExtension extends Extension implements IExtension, ISerializable
+	public class RegisterExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:register";
 		public static const ELEMENT_NAME:String = "query";

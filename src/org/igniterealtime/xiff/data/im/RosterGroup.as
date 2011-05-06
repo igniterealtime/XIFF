@@ -25,15 +25,15 @@
 package org.igniterealtime.xiff.data.im
 {
 	import org.igniterealtime.xiff.collections.ArrayCollection;
+	import org.igniterealtime.xiff.collections.ICollection;
 	
 	/**
 	 * Represents the groups in users roster.
 	 */
-	public class RosterGroup
+	public class RosterGroup implements IRosterGroup
 	{
-		public var label:String;
-		public var shared:Boolean = false;
-		
+		private var _label:String;
+		private var _shared:Boolean;
 		private var _items:ArrayCollection;
 		
 		/**
@@ -51,7 +51,7 @@ package org.igniterealtime.xiff.data.im
 		 * Insert a new roster item if it does not already exist in this group
 		 * @param	item
 		 */
-		public function addItem(item:RosterItemVO):void
+		public function addItem( item:IRosterItemVO ):void
 		{
 			if (!_items.contains(item))
 			{
@@ -63,7 +63,7 @@ package org.igniterealtime.xiff.data.im
 		 * Remove the given roster item from this group.
 		 * @param	item
 		 */
-		public function removeItem(item:RosterItemVO):Boolean
+		public function removeItem( item:IRosterItemVO ):Boolean
 		{
 			return _items.removeItem(item);
 		}
@@ -73,15 +73,35 @@ package org.igniterealtime.xiff.data.im
 		 * @param	item
 		 * @return
 		 */
-		public function contains(item:RosterItemVO):Boolean
+		public function contains( item:IRosterItemVO ):Boolean
 		{
 			return _items.contains(item);
+		}
+		
+		public function get label():String
+		{
+			return _label;
+		}
+		
+		public function set label( value:String ):void
+		{
+			_label = value;
+		}
+		
+		public function get shared():Boolean
+		{
+			return _shared;
+		}
+		
+		public function set shared( value:Boolean ):void
+		{
+			_shared = value;
 		}
 		
 		/**
 		 * Roster items in this group.
 		 */
-		public function get items():ArrayCollection
+		public function get items():ICollection
 		{
 			return _items;
 		}

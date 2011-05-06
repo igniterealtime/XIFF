@@ -24,25 +24,23 @@
  */
 package org.igniterealtime.xiff.data
 {
-	import org.igniterealtime.xiff.data.IExtension;
-	
-	/**
-	 * This interface provides access to contained extensions and methods to modify the contained extensions.  
-	 * All XMPP stanzas that can be extended should implement this interface.
-	 *
-	 * @see	org.igniterealtime.xiff.data.ExtensionContainer
-	 * @see	org.igniterealtime.xiff.data.IExtension
-	 */
-	public interface IExtendable
+	public interface IMessage extends IXMPPStanza
 	{
-		function addExtension( extension:IExtension ):IExtension;
+		function get body():String;
+		function set body( value:String ):void;
 		
-		function getAllExtensionsByNS( ns:String ):Array;
+		function get htmlBody():String;
+		function set htmlBody( value:String ):void;
 		
-		function getAllExtensions():Array;
+		function get subject():String;
+		function set subject( value:String ):void;
 		
-		function removeExtension( extension:IExtension ):Boolean;
+		function get thread():String;
+		function set thread( value:String ):void;
 		
-		function removeAllExtensions( ns:String ):void;
+		function get time():Date;
+		
+		function get state():String;
+		function set state( value:String ):void;
 	}
 }

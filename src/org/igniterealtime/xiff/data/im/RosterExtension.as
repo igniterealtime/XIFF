@@ -22,17 +22,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.im{
-
-	
+package org.igniterealtime.xiff.data.im
+{
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
-	 
+	
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
 	 * that is sent or received with the "jabber:iq:roster" namespace.
@@ -40,7 +38,7 @@ package org.igniterealtime.xiff.data.im{
 	 * @param	theRoot The extension root
 	 * @param	theNode The extension node
 	 */
-	public class RosterExtension extends Extension implements IExtension, ISerializable
+	public class RosterExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:roster";
 		public static const ELEMENT_NAME:String = "query";

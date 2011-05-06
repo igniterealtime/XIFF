@@ -104,7 +104,7 @@ package org.igniterealtime.xiff.im
 	 * provides a "read-only" form of the Data Provider API for external use. Non-read operations
 	 * are performed using alternative, roster-specific methods.
 	 */
-	public class Roster extends ArrayCollection
+	public class Roster extends ArrayCollection implements IRoster
 	{
 
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
@@ -112,7 +112,7 @@ package org.igniterealtime.xiff.im
 		private static const staticConstructorDependencies:Array = [ ExtensionClassRegistry,
 																	 RosterExtension ]
 
-		private var _connection:XMPPConnection;
+		private var _connection:IXMPPConnection;
 
 		/**
 		 * Store groups as RosterGroup.
@@ -133,7 +133,7 @@ package org.igniterealtime.xiff.im
 		 *
 		 * @param	aConnection A reference to an XMPPConnection class instance
 		 */
-		public function Roster( aConnection:XMPPConnection = null )
+		public function Roster( aConnection:IXMPPConnection = null )
 		{
 			if ( aConnection != null )
 			{
@@ -289,7 +289,7 @@ package org.igniterealtime.xiff.im
 		 * @param	item
 		 * @return
 		 */
-		public function getContainingGroups( item:RosterItemVO ):Array
+		public function getContainingGroups( item:IRosterItemVO ):Array
 		{
 			var result:Array = [];
 			for ( var key:String in _groups )
@@ -308,7 +308,7 @@ package org.igniterealtime.xiff.im
 		 * @param	name
 		 * @return
 		 */
-		public function getGroup( name:String ):RosterGroup
+		public function getGroup( name:String ):IRosterGroup
 		{
 			return _groups[ name ] as RosterGroup;
 		}
@@ -318,7 +318,7 @@ package org.igniterealtime.xiff.im
 		 * @param	jid
 		 * @return
 		 */
-		public function getPresence( jid:UnescapedJID ):Presence
+		public function getPresence( jid:UnescapedJID ):IPresence
 		{
 			return _presenceMap[ jid.toString() ] as Presence;
 		}
@@ -351,7 +351,7 @@ package org.igniterealtime.xiff.im
 		 *
 		 * @param	rosterItem The value object which is to be removed
 		 */
-		public function removeContact( rosterItem:RosterItemVO ):void
+		public function removeContact( rosterItem:IRosterItemVO ):void
 		{
 			if ( contains( rosterItem ) )
 			{
@@ -434,7 +434,7 @@ package org.igniterealtime.xiff.im
 		 * @param	rosterItem The value object of the contact to update
 		 * @param	newGroups The new groups to associate the contact with
 		 */
-		public function updateContactGroups( rosterItem:RosterItemVO, newGroupNames:Array ):void
+		public function updateContactGroups( rosterItem:IRosterItemVO, newGroupNames:Array ):void
 		{
 			updateContact( rosterItem, rosterItem.displayName, newGroupNames );
 		}
@@ -445,7 +445,7 @@ package org.igniterealtime.xiff.im
 		 * @param	rosterItem The value object of the contact to update
 		 * @param	newName The new display name for this contact
 		 */
-		public function updateContactName( rosterItem:RosterItemVO, newName:String ):void
+		public function updateContactName( rosterItem:IRosterItemVO, newName:String ):void
 		{
 			var groupNames:Array = [];
 			for each ( var group:RosterGroup in getContainingGroups( rosterItem ) )
@@ -660,7 +660,7 @@ package org.igniterealtime.xiff.im
 		 * @param	contact
 		 * @param	groupNames
 		 */
-		private function setContactGroups( contact:RosterItemVO, groupNames:Array ):void
+		private function setContactGroups( contact:IRosterItemVO, groupNames:Array ):void
 		{
 			if ( !groupNames || groupNames.length == 0 )
 			{
@@ -693,7 +693,7 @@ package org.igniterealtime.xiff.im
 		 * @param	newName The new display name for this contact
 		 * @param	newGroups The new groups to associate the contact with
 		 */
-		private function updateContact( rosterItem:RosterItemVO, newName:String, groupNames:Array ):void
+		private function updateContact( rosterItem:IRosterItemVO, newName:String, groupNames:Array ):void
 		{
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, XMPPStanza.generateID( "update_contact_" ) );
 			var ext:RosterExtension = new RosterExtension( iq.getNode() );
@@ -709,7 +709,7 @@ package org.igniterealtime.xiff.im
 		 * @param	item
 		 * @param	presence
 		 */
-		private function updateRosterItemPresence( item:RosterItemVO, presence:Presence ):void
+		private function updateRosterItemPresence( item:IRosterItemVO, presence:Presence ):void
 		{
 			try
 			{
@@ -746,7 +746,7 @@ package org.igniterealtime.xiff.im
 		 * @param	name
 		 * @param	newGroupNames
 		 */
-		private function updateRosterItemSubscription( item:RosterItemVO, type:String, name:String, newGroupNames:Array ):void
+		private function updateRosterItemSubscription( item:IRosterItemVO, type:String, name:String, newGroupNames:Array ):void
 		{
 			item.subscribeType = type;
 
@@ -767,12 +767,12 @@ package org.igniterealtime.xiff.im
 		 * The instance of the XMPPConnection class to use for the roster to use for
 		 * sending and receiving data.
 		 */
-		public function get connection():XMPPConnection
+		public function get connection():IXMPPConnection
 		{
 			return _connection;
 		}
 
-		public function set connection( value:XMPPConnection ):void
+		public function set connection( value:IXMPPConnection ):void
 		{
 			_connection = value;
 			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent );

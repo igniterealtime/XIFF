@@ -37,7 +37,7 @@ package org.igniterealtime.xiff.collections
 	 * The ArrayCollection class is a wrapper class that exposes an Array as a
 	 * collection that can be accessed and manipulated using collection methods.
 	 */
-	public class ArrayCollection extends Proxy implements IEventDispatcher
+	public class ArrayCollection extends Proxy implements ICollection
 	{
 		protected const OUT_OF_BOUNDS_MESSAGE:String = "The supplied index is out of bounds.";
 		

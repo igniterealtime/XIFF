@@ -22,27 +22,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data
+package org.igniterealtime.xiff.data.im
 {
-	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.im.IContact;
 	
-	/**
-	 * This interface provides access to contained extensions and methods to modify the contained extensions.  
-	 * All XMPP stanzas that can be extended should implement this interface.
-	 *
-	 * @see	org.igniterealtime.xiff.data.ExtensionContainer
-	 * @see	org.igniterealtime.xiff.data.IExtension
-	 */
-	public interface IExtendable
+	public interface IRosterItemVO extends IContact
 	{
-		function addExtension( extension:IExtension ):IExtension;
+		function get askType():String;
+		function set askType( value:String ):void;
 		
-		function getAllExtensionsByNS( ns:String ):Array;
+		function get pending():Boolean;
 		
-		function getAllExtensions():Array;
+		function get priority():int;
+		function set priority( value:int ):void;
 		
-		function removeExtension( extension:IExtension ):Boolean;
+		function get status():String;
+		function set status( value:String ):void;
 		
-		function removeAllExtensions( ns:String ):void;
+		function get subscribeType():String;
+		function set subscribeType( value:String ):void;
 	}
 }

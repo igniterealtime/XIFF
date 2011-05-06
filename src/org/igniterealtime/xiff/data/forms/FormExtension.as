@@ -29,14 +29,12 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
-	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * Implements the base functionality shared by all MUC extensions
 	 * @see http://xmpp.org/extensions/xep-0004.html
 	 */
-	public class FormExtension extends Extension implements IExtension, ISerializable
+	public class FormExtension extends Extension implements IExtension
 	{
 	    public static const FIELD_TYPE_BOOLEAN:String = "boolean";
 	    public static const FIELD_TYPE_FIXED:String = "fixed";

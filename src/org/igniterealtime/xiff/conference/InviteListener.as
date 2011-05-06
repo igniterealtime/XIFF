@@ -25,13 +25,14 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.EventDispatcher;
-
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	
+	import org.igniterealtime.xiff.core.IListener;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.Message;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.events.InviteEvent;
 	import org.igniterealtime.xiff.events.MessageEvent;
-
+	
 	/**
 	 * Dispatched when an invitations has been received.
 	 *
@@ -50,16 +51,16 @@ package org.igniterealtime.xiff.conference
 	 * <p>You only need a single instance of this class to listen for all invite
 	 * or decline events.</p>
 	 */
-	public class InviteListener extends EventDispatcher
+	public class InviteListener extends EventDispatcher implements IListener
 	{
-		private var _connection:XMPPConnection;
+		private var _connection:IXMPPConnection;
 
 		/**
 		 *
 		 * @param	aConnection	An XMPPConnection instance that is providing the primary server
 		 * connection.
 		 */
-		public function InviteListener( aConnection:XMPPConnection = null )
+		public function InviteListener( aConnection:IXMPPConnection = null )
 		{
 			if ( aConnection != null )
 			{
@@ -115,11 +116,11 @@ package org.igniterealtime.xiff.conference
 		 * @return	The XMPPConnection used
 		 * @see	org.igniterealtime.xiff.core.XMPPConnection
 		 */
-		public function get connection():XMPPConnection
+		public function get connection():IXMPPConnection
 		{
 			return _connection;
 		}
-		public function set connection( value:XMPPConnection ):void
+		public function set connection( value:IXMPPConnection ):void
 		{
 			if ( _connection != null )
 			{

@@ -24,8 +24,6 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-
-	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;

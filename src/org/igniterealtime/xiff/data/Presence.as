@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.data
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
 	 */
-	public class Presence extends XMPPStanza implements IXMPPStanza
+	public class Presence extends XMPPStanza implements IPresence
 	{
 		/**
 		 * An error has occurred regarding processing of a

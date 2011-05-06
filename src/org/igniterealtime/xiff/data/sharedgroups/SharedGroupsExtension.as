@@ -25,14 +25,14 @@
 package org.igniterealtime.xiff.data.sharedgroups
 {
 	import flash.xml.XMLNode;
-	import org.igniterealtime.xiff.data.ISerializable;
+	
 	import org.igniterealtime.xiff.data.IExtension;
-
+	
 	/**
 	 * Similar idea to XEP-0140 (http://xmpp.org/extensions/xep-0140.html) which was
 	 * retracted in favor of XEP-0144 (http://xmpp.org/extensions/xep-0144.html).
 	 */
-	public class SharedGroupsExtension implements IExtension, ISerializable
+	public class SharedGroupsExtension implements IExtension
 	{
 		public function getNS():String
 		{

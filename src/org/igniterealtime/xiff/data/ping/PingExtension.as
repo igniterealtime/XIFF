@@ -24,15 +24,15 @@
  */
 package org.igniterealtime.xiff.data.ping
 {
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import flash.xml.XMLNode;
+	
+	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * @see http://xmpp.org/extensions/xep-0199.html
 	 */
-	public class PingExtension implements IExtension, ISerializable
+	public class PingExtension implements IExtension
 	{
 		public static const ELEMENT_NAME:String = "ping";
 		

@@ -25,15 +25,15 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.EventDispatcher;
-
+	
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.data.im.Contact;
+	import org.igniterealtime.xiff.data.im.IRosterItemVO;
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
-
+	
 	/**
 	 * A person in a room
 	 */
-	public class RoomOccupant extends EventDispatcher implements Contact
+	public class RoomOccupant extends EventDispatcher implements IRoomOccupant
 	{
 		private var _affiliation:String;
 
@@ -43,7 +43,7 @@ package org.igniterealtime.xiff.conference
 
 		private var _role:String;
 
-		private var _room:Room;
+		private var _room:IRoom;
 
 		private var _show:String;
 
@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.conference
 		 * @param	room
 		 */
 		public function RoomOccupant( nickname:String, show:String, affiliation:String,
-										role:String, jid:UnescapedJID, room:Room )
+										role:String, jid:UnescapedJID, room:IRoom )
 		{
 			this.displayName = nickname;
 			this.show = show;
@@ -133,11 +133,11 @@ package org.igniterealtime.xiff.conference
 		/**
 		 *
 		 */
-		public function get room():Room
+		public function get room():IRoom
 		{
 			return _room;
 		}
-		public function set room( value:Room ):void
+		public function set room( value:IRoom ):void
 		{
 			_room = value;
 		}
@@ -146,7 +146,7 @@ package org.igniterealtime.xiff.conference
 		 * If there isn't a roster item associated with this room occupant
 		 * (for example, if the room is anonymous), this will return null
 		 */
-		public function get rosterItem():RosterItemVO
+		public function get rosterItem():IRosterItemVO
 		{
 			if ( !_jid )
 			{

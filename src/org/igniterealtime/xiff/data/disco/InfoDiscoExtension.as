@@ -24,7 +24,6 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;

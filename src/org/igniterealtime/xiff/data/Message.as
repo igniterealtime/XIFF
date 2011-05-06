@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data
 	/**
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
-	public class Message extends XMPPStanza implements IXMPPStanza
+	public class Message extends XMPPStanza implements IMessage
 	{
 		/**
 		 * The message is sent in the context of a one-to-one chat
@@ -371,10 +371,6 @@ package org.igniterealtime.xiff.data
 			value.setUTCMinutes(stamp.substr(12, 2));
 			value.setUTCSeconds(stamp.substr(15, 2));
 			return value;
-		}
-		public function set time( value:Date ): void
-		{
-			
 		}
 		
 		/**

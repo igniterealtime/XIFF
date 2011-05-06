@@ -28,10 +28,9 @@ package org.igniterealtime.xiff.data.privatedata
 	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 	
-	public class PrivateDataExtension implements IExtension, ISerializable
+	public class PrivateDataExtension implements IExtension
 	{
 		private var _extension:XMLNode;
 		

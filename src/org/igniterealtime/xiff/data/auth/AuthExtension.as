@@ -25,9 +25,8 @@
 package org.igniterealtime.xiff.data.auth
 {
 	import flash.xml.XMLNode;
-	import flash.utils.ByteArray;
-	import org.igniterealtime.xiff.data.*;
 	
+	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.util.SHA1;
 	//import com.hurlant.crypto.hash.SHA1;
 	
@@ -36,7 +35,7 @@ package org.igniterealtime.xiff.data.auth
 	 * for non SASL authentication.
 	 * @see	http://xmpp.org/extensions/xep-0078.html
 	 */
-	public class AuthExtension extends Extension implements IExtension, ISerializable
+	public class AuthExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:auth";
 		public static const ELEMENT_NAME:String = "query";
