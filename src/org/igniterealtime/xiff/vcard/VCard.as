@@ -31,8 +31,10 @@ package org.igniterealtime.xiff.vcard
 	import flash.xml.XMLDocument;
 
 	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.data.IIQ;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.XMPPStanza;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
@@ -63,7 +65,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * @see http://tools.ietf.org/html/rfc2426
 	 */
-	public class VCard extends EventDispatcher
+	public class VCard extends EventDispatcher implements IVCard
 	{
 		/**
 		 * The interval on which to flush the vCard cache.
@@ -92,160 +94,59 @@ package org.igniterealtime.xiff.vcard
 		private static var requestTimer:Timer;
 
 		/**
-		 * Birthday.
+		 * @private
 		 */
-		public var birthday:Date;
-
-		/**
-		 * Free-form descriptive text.
-		 */
-		public var description:String;
-
-		/**
-		 * Email address.
-		 */
-		public var email:String;
-
-		/**
-		 * Formatted or display name.
-		 */
-		public var formattedName:String;
-
-		/**
-		 * Geographical position.
-		 */
-		public var geographicalPosition:VCardGeographicalPosition;
-
-		/**
-		 * Structured home address.
-		 */
-		public var homeAddress:VCardAddress;
-
-		/**
-		 * Home address label.
-		 */
-		public var homeAddressLabel:String;
-
-		/**
-		 * Home telephone number.
-		 */
-		public var homeTelephone:VCardTelephone;
-
-		/**
-		 * Jabber ID.
-		 */
-		public var jid:UnescapedJID;
-
-		/**
-		 * Organization logo.
-		 */
-		public var logo:VCardPhoto;
-
-		/**
-		 * Mailer (e.g., Mail User Agent Type).
-		 */
-		public var mailer:String;
-
-		/**
-		 * Structured name.
-		 */
-		public var name:VCardName;
-
-		/**
-		 * Nickname.
-		 */
-		public var nickname:String;
-
-		/**
-		 * Commentary note.
-		 */
-		public var note:String;
-
-		/**
-		 * Organizational name and unit.
-		 */
-		public var organization:VCardOrganization;
-
-		/**
-		 * Photograph.
-		 */
-		public var photo:VCardPhoto;
-
-		/**
-		 * Privacy classification.
-		 */
-		public var privacyClass:String;
-
-		/**
-		 * Identifier of product that generated the vCard.
-		 */
-		public var productID:String;
-
-		/**
-		 * Last revised.
-		 */
-		public var revision:Date;
-
-		/**
-		 * Role.
-		 */
-		public var role:String;
-
-		/**
-		 * Sort string.
-		 */
-		public var sortString:String;
-
-		/**
-		 * Formatted name pronunciation.
-		 */
-		public var sound:VCardSound;
-
-		/**
-		 * Time zone's Standard Time UTC offset.
-		 */
-		public var timezone:Date;
-
-		/**
-		 * Title.
-		 */
-		public var title:String;
-
-		/**
-		 * Unique identifier.
-		 */
-		public var uid:String;
-
-		/**
-		 * Directory URL.
-		 */
-		public var url:String;
-
-		/**
-		 * Version of the vCard. Usually 2.0 or 3.0.
-		 * @see http://xmpp.org/extensions/xep-0054.html#impl
-		 */
-		public var version:String;
-
-		/**
-		 * Structured work address.
-		 */
-		public var workAddress:VCardAddress;
-
-		/**
-		 * Work address label.
-		 */
-		public var workAddressLabel:String;
-
-		/**
-		 * Work telephone number.
-		 */
-		public var workTelephone:VCardTelephone;
+		private var extensionNames:Array = [];
 
 		/**
 		 * @private
 		 */
-		private var extensionNames:Array = [];
+		private var _birthday:Date;
+
+		/**
+		 * @private
+		 */
+		private var _description:String;
+
+		/**
+		 * @private
+		 */
+		private var _email:String;
+
+		/**
+		 * @private
+		 */
+		private var _extensions:Dictionary = new Dictionary();
+
+		/**
+		 * @private
+		 */
+		private var _formattedName:String;
+
+		/**
+		 * @private
+		 */
+		private var _geographicalPosition:VCardGeographicalPosition;
+
+		/**
+		 * @private
+		 */
+		private var _homeAddress:VCardAddress;
+
+		/**
+		 * @private
+		 */
+		private var _homeAddressLabel:String;
+
+		/**
+		 * @private
+		 */
+		private var _homeTelephone:VCardTelephone;
+
+		/**
+		 * @private
+		 */
+		private var _jid:UnescapedJID;
 
 		/**
 		 * @private
@@ -255,7 +156,107 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _extensions:Dictionary = new Dictionary();
+		private var _logo:VCardPhoto;
+
+		/**
+		 * @private
+		 */
+		private var _mailer:String;
+
+		/**
+		 * @private
+		 */
+		private var _name:VCardName;
+
+		/**
+		 * @private
+		 */
+		private var _nickname:String;
+
+		/**
+		 * @private
+		 */
+		private var _note:String;
+
+		/**
+		 * @private
+		 */
+		private var _organization:VCardOrganization;
+
+		/**
+		 * @private
+		 */
+		private var _photo:VCardPhoto;
+
+		/**
+		 * @private
+		 */
+		private var _privacyClass:String;
+
+		/**
+		 * @private
+		 */
+		private var _productID:String;
+
+		/**
+		 * @private
+		 */
+		private var _revision:Date;
+
+		/**
+		 * @private
+		 */
+		private var _role:String;
+
+		/**
+		 * @private
+		 */
+		private var _sortString:String;
+
+		/**
+		 * @private
+		 */
+		private var _sound:VCardSound;
+
+		/**
+		 * @private
+		 */
+		private var _timezone:Date;
+
+		/**
+		 * @private
+		 */
+		private var _title:String;
+
+		/**
+		 * @private
+		 */
+		private var _uid:String;
+
+		/**
+		 * @private
+		 */
+		private var _url:String;
+
+		/**
+		 * @private
+		 */
+		private var _version:String;
+
+		/**
+		 * @private
+		 */
+		private var _workAddress:VCardAddress;
+
+		/**
+		 * @private
+		 */
+		private var _workAddressLabel:String;
+
+		/**
+		 * @private
+		 */
+		private var _workTelephone:VCardTelephone;
 
 		/**
 		 * Don't call directly, use the static method getVCard() and add a callback.
@@ -371,7 +372,7 @@ package org.igniterealtime.xiff.vcard
 		 * Deserializes the incoming IQ to fill the values of this vCard.
 		 * @param iq
 		 */
-		public function handleVCard( iq:IQ ):void
+		public function handleVCard( iq:IIQ ):void
 		{
 			namespace ns = "vcard-temp";
 			use namespace ns;
@@ -652,7 +653,7 @@ package org.igniterealtime.xiff.vcard
 		 * Saves a vCard.
 		 * @param connection
 		 */
-		public function saveVCard( connection:XMPPConnection ):void
+		public function saveVCard( connection:IXMPPConnection ):void
 		{
 			var id:String = XMPPStanza.generateID( "save_vcard_" );
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, saveVCard_result );
@@ -1206,11 +1207,51 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 * Indicates whether the vCard has been loaded.
+		 * Birthday.
 		 */
-		public function get loaded():Boolean
+		public function get birthday():Date
 		{
-			return _loaded;
+			return _birthday;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set birthday( value:Date ):void
+		{
+			_birthday = value;
+		}
+
+		/**
+		 * Free-form descriptive text.
+		 */
+		public function get description():String
+		{
+			return _description;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set description( value:String ):void
+		{
+			_description = value;
+		}
+
+		/**
+		 * Email address.
+		 */
+		public function get email():String
+		{
+			return _email;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set email( value:String ):void
+		{
+			_email = value;
 		}
 
 		/**
@@ -1219,6 +1260,447 @@ package org.igniterealtime.xiff.vcard
 		public function get extensions():Dictionary
 		{
 			return _extensions;
+		}
+
+		/**
+		 * Formatted or display name.
+		 */
+		public function get formattedName():String
+		{
+			return _formattedName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set formattedName( value:String ):void
+		{
+			_formattedName = value;
+		}
+
+		/**
+		 * Geographical position.
+		 */
+		public function get geographicalPosition():VCardGeographicalPosition
+		{
+			return _geographicalPosition;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set geographicalPosition( value:VCardGeographicalPosition ):void
+		{
+			_geographicalPosition = value;
+		}
+
+		/**
+		 * Structured home address.
+		 */
+		public function get homeAddress():VCardAddress
+		{
+			return _homeAddress;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set homeAddress( value:VCardAddress ):void
+		{
+			_homeAddress = value;
+		}
+
+		/**
+		 * Home address label.
+		 */
+		public function get homeAddressLabel():String
+		{
+			return _homeAddressLabel;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set homeAddressLabel( value:String ):void
+		{
+			_homeAddressLabel = value;
+		}
+
+		/**
+		 * Home telephone number.
+		 */
+		public function get homeTelephone():VCardTelephone
+		{
+			return _homeTelephone;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set homeTelephone( value:VCardTelephone ):void
+		{
+			_homeTelephone = value;
+		}
+
+		/**
+		 * Jabber ID.
+		 */
+		public function get jid():UnescapedJID
+		{
+			return _jid;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set jid( value:UnescapedJID ):void
+		{
+			_jid = value;
+		}
+
+		/**
+		 * Indicates whether the vCard has been loaded.
+		 */
+		public function get loaded():Boolean
+		{
+			return _loaded;
+		}
+
+		/**
+		 * Organization logo.
+		 */
+		public function get logo():VCardPhoto
+		{
+			return _logo;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set logo( value:VCardPhoto ):void
+		{
+			_logo = value;
+		}
+
+		/**
+		 * Mailer (e.g., Mail User Agent Type).
+		 */
+		public function get mailer():String
+		{
+			return _mailer;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set mailer( value:String ):void
+		{
+			_mailer = value;
+		}
+
+		/**
+		 * Structured name.
+		 */
+		public function get name():VCardName
+		{
+			return _name;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set name( value:VCardName ):void
+		{
+			_name = value;
+		}
+
+		/**
+		 * Nickname.
+		 */
+		public function get nickname():String
+		{
+			return _nickname;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set nickname( value:String ):void
+		{
+			_nickname = value;
+		}
+
+		/**
+		 * Commentary note.
+		 */
+		public function get note():String
+		{
+			return _note;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set note( value:String ):void
+		{
+			_note = value;
+		}
+
+		/**
+		 * Organizational name and unit.
+		 */
+		public function get organization():VCardOrganization
+		{
+			return _organization;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set organization( value:VCardOrganization ):void
+		{
+			_organization = value;
+		}
+
+		/**
+		 * Photograph.
+		 */
+		public function get photo():VCardPhoto
+		{
+			return _photo;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set photo( value:VCardPhoto ):void
+		{
+			_photo = value;
+		}
+
+		/**
+		 * Privacy classification.
+		 */
+		public function get privacyClass():String
+		{
+			return _privacyClass;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set privacyClass( value:String ):void
+		{
+			_privacyClass = value;
+		}
+
+		/**
+		 * Identifier of product that generated the vCard.
+		 */
+		public function get productID():String
+		{
+			return _productID;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set productID( value:String ):void
+		{
+			_productID = value;
+		}
+
+		/**
+		 * Last revised.
+		 */
+		public function get revision():Date
+		{
+			return _revision;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set revision( value:Date ):void
+		{
+			_revision = value;
+		}
+
+		/**
+		 * Role.
+		 */
+		public function get role():String
+		{
+			return _role;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set role( value:String ):void
+		{
+			_role = value;
+		}
+
+		/**
+		 * Sort string.
+		 */
+		public function get sortString():String
+		{
+			return _sortString;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set sortString( value:String ):void
+		{
+			_sortString = value;
+		}
+
+		/**
+		 * Formatted name pronunciation.
+		 */
+		public function get sound():VCardSound
+		{
+			return _sound;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set sound( value:VCardSound ):void
+		{
+			_sound = value;
+		}
+
+		/**
+		 * Time zone's Standard Time UTC offset.
+		 */
+		public function get timezone():Date
+		{
+			return _timezone;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set timezone( value:Date ):void
+		{
+			_timezone = value;
+		}
+
+		/**
+		 * Title.
+		 */
+		public function get title():String
+		{
+			return _title;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set title( value:String ):void
+		{
+			_title = value;
+		}
+
+		/**
+		 * Unique identifier.
+		 */
+		public function get uid():String
+		{
+			return _uid;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set uid( value:String ):void
+		{
+			_uid = value;
+		}
+
+		/**
+		 * Directory URL.
+		 */
+		public function get url():String
+		{
+			return _url;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set url( value:String ):void
+		{
+			_url = value;
+		}
+
+		/**
+		 * Version of the vCard. Usually 2.0 or 3.0.
+		 * @see http://xmpp.org/extensions/xep-0054.html#impl
+		 */
+		public function get version():String
+		{
+			return _version;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set version( value:String ):void
+		{
+			_version = value;
+		}
+
+		/**
+		 * Structured work address.
+		 */
+		public function get workAddress():VCardAddress
+		{
+			return _workAddress;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set workAddress( value:VCardAddress ):void
+		{
+			_workAddress = value;
+		}
+
+		/**
+		 * Work address label.
+		 */
+		public function get workAddressLabel():String
+		{
+			return _workAddressLabel;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set workAddressLabel( value:String ):void
+		{
+			_workAddressLabel = value;
+		}
+
+		/**
+		 * Work telephone number.
+		 */
+		public function get workTelephone():VCardTelephone
+		{
+			return _workTelephone;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set workTelephone( value:VCardTelephone ):void
+		{
+			_workTelephone = value;
 		}
 	}
 }
