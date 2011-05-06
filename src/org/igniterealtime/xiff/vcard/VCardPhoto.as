@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Photograph.
 	 */
-	public class VCardPhoto
+	public class VCardPhoto implements IVCardPhoto
 	{
 		private var _binaryValue:String;
 

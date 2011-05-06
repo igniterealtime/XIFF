@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Geographical position.
 	 */
-	public class VCardGeographicalPosition
+	public class VCardGeographicalPosition implements IVCardGeographicalPosition
 	{
 		private var _latitude:Number;
 

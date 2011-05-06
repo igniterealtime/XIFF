@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Structured address.
 	 */
-	public class VCardAddress
+	public class VCardAddress implements IVCardAddress
 	{
 		private var _country:String;
 

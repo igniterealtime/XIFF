@@ -126,12 +126,12 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _geographicalPosition:VCardGeographicalPosition;
+		private var _geographicalPosition:IVCardGeographicalPosition;
 
 		/**
 		 * @private
 		 */
-		private var _homeAddress:VCardAddress;
+		private var _homeAddress:IVCardAddress;
 
 		/**
 		 * @private
@@ -141,7 +141,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _homeTelephone:VCardTelephone;
+		private var _homeTelephone:IVCardTelephone;
 
 		/**
 		 * @private
@@ -156,7 +156,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _logo:VCardPhoto;
+		private var _logo:IVCardPhoto;
 
 		/**
 		 * @private
@@ -166,7 +166,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _name:VCardName;
+		private var _name:IVCardName;
 
 		/**
 		 * @private
@@ -181,12 +181,12 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _organization:VCardOrganization;
+		private var _organization:IVCardOrganization;
 
 		/**
 		 * @private
 		 */
-		private var _photo:VCardPhoto;
+		private var _photo:IVCardPhoto;
 
 		/**
 		 * @private
@@ -216,7 +216,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _sound:VCardSound;
+		private var _sound:IVCardSound;
 
 		/**
 		 * @private
@@ -246,7 +246,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _workAddress:VCardAddress;
+		private var _workAddress:IVCardAddress;
 
 		/**
 		 * @private
@@ -256,7 +256,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var _workTelephone:VCardTelephone;
+		private var _workTelephone:IVCardTelephone;
 
 		/**
 		 * Don't call directly, use the static method getVCard() and add a callback.
@@ -1281,7 +1281,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Geographical position.
 		 */
-		public function get geographicalPosition():VCardGeographicalPosition
+		public function get geographicalPosition():IVCardGeographicalPosition
 		{
 			return _geographicalPosition;
 		}
@@ -1289,7 +1289,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set geographicalPosition( value:VCardGeographicalPosition ):void
+		public function set geographicalPosition( value:IVCardGeographicalPosition ):void
 		{
 			_geographicalPosition = value;
 		}
@@ -1297,7 +1297,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Structured home address.
 		 */
-		public function get homeAddress():VCardAddress
+		public function get homeAddress():IVCardAddress
 		{
 			return _homeAddress;
 		}
@@ -1305,7 +1305,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set homeAddress( value:VCardAddress ):void
+		public function set homeAddress( value:IVCardAddress ):void
 		{
 			_homeAddress = value;
 		}
@@ -1329,7 +1329,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Home telephone number.
 		 */
-		public function get homeTelephone():VCardTelephone
+		public function get homeTelephone():IVCardTelephone
 		{
 			return _homeTelephone;
 		}
@@ -1337,7 +1337,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set homeTelephone( value:VCardTelephone ):void
+		public function set homeTelephone( value:IVCardTelephone ):void
 		{
 			_homeTelephone = value;
 		}
@@ -1369,7 +1369,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Organization logo.
 		 */
-		public function get logo():VCardPhoto
+		public function get logo():IVCardPhoto
 		{
 			return _logo;
 		}
@@ -1377,7 +1377,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set logo( value:VCardPhoto ):void
+		public function set logo( value:IVCardPhoto ):void
 		{
 			_logo = value;
 		}
@@ -1401,7 +1401,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Structured name.
 		 */
-		public function get name():VCardName
+		public function get name():IVCardName
 		{
 			return _name;
 		}
@@ -1409,7 +1409,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set name( value:VCardName ):void
+		public function set name( value:IVCardName ):void
 		{
 			_name = value;
 		}
@@ -1449,7 +1449,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Organizational name and unit.
 		 */
-		public function get organization():VCardOrganization
+		public function get organization():IVCardOrganization
 		{
 			return _organization;
 		}
@@ -1457,7 +1457,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set organization( value:VCardOrganization ):void
+		public function set organization( value:IVCardOrganization ):void
 		{
 			_organization = value;
 		}
@@ -1465,7 +1465,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Photograph.
 		 */
-		public function get photo():VCardPhoto
+		public function get photo():IVCardPhoto
 		{
 			return _photo;
 		}
@@ -1473,7 +1473,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set photo( value:VCardPhoto ):void
+		public function set photo( value:IVCardPhoto ):void
 		{
 			_photo = value;
 		}
@@ -1561,7 +1561,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Formatted name pronunciation.
 		 */
-		public function get sound():VCardSound
+		public function get sound():IVCardSound
 		{
 			return _sound;
 		}
@@ -1569,7 +1569,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set sound( value:VCardSound ):void
+		public function set sound( value:IVCardSound ):void
 		{
 			_sound = value;
 		}
@@ -1658,7 +1658,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Structured work address.
 		 */
-		public function get workAddress():VCardAddress
+		public function get workAddress():IVCardAddress
 		{
 			return _workAddress;
 		}
@@ -1666,7 +1666,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set workAddress( value:VCardAddress ):void
+		public function set workAddress( value:IVCardAddress ):void
 		{
 			_workAddress = value;
 		}
@@ -1690,7 +1690,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * Work telephone number.
 		 */
-		public function get workTelephone():VCardTelephone
+		public function get workTelephone():IVCardTelephone
 		{
 			return _workTelephone;
 		}
@@ -1698,7 +1698,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		public function set workTelephone( value:VCardTelephone ):void
+		public function set workTelephone( value:IVCardTelephone ):void
 		{
 			_workTelephone = value;
 		}

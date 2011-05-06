@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Organizational name and unit.
 	 */
-	public class VCardOrganization
+	public class VCardOrganization implements IVCardOrganization
 	{
 		private var _name:String;
 

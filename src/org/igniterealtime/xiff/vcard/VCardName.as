@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Structured name.
 	 */
-	public class VCardName
+	public class VCardName implements IVCardName
 	{
 		private var _family:String;
 

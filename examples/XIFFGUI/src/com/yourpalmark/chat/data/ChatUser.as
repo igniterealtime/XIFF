@@ -4,9 +4,9 @@ package com.yourpalmark.chat.data
 	import org.igniterealtime.xiff.core.XMPPConnection;
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
 	import org.igniterealtime.xiff.events.VCardEvent;
+	import org.igniterealtime.xiff.vcard.IVCardName;
+	import org.igniterealtime.xiff.vcard.IVCardPhoto;
 	import org.igniterealtime.xiff.vcard.VCard;
-	import org.igniterealtime.xiff.vcard.VCardName;
-	import org.igniterealtime.xiff.vcard.VCardPhoto;
 	
 	public class ChatUser
 	{
@@ -58,9 +58,9 @@ package com.yourpalmark.chat.data
 		
 		public function get status():String { return _rosterItem ? _rosterItem.status : null; }
 		
-		public function get name():VCardName { return vCard ? vCard.name : null; }
+		public function get name():IVCardName { return vCard ? vCard.name : null; }
 		
-		public function get photo():VCardPhoto { return vCard ? vCard.photo : null; }
+		public function get photo():IVCardPhoto { return vCard ? vCard.photo : null; }
 		
 		public function equals( other:ChatUser ):Boolean
 		{

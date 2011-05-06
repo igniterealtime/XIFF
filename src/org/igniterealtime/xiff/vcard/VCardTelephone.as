@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Telephone number.
 	 */
-	public class VCardTelephone
+	public class VCardTelephone implements IVCardTelephone
 	{
 		private var _cell:String;
 

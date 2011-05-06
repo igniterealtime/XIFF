@@ -51,31 +51,31 @@ package org.igniterealtime.xiff.vcard
 		function get formattedName():String;
 		function set formattedName( value:String ):void;
 		
-		function get geographicalPosition():VCardGeographicalPosition;
-		function set geographicalPosition( value:VCardGeographicalPosition ):void;
+		function get geographicalPosition():IVCardGeographicalPosition;
+		function set geographicalPosition( value:IVCardGeographicalPosition ):void;
 		
-		function get homeAddress():VCardAddress;
-		function set homeAddress( value:VCardAddress ):void;
+		function get homeAddress():IVCardAddress;
+		function set homeAddress( value:IVCardAddress ):void;
 		
 		function get homeAddressLabel():String;
 		function set homeAddressLabel( value:String ):void;
 		
-		function get homeTelephone():VCardTelephone;
-		function set homeTelephone( value:VCardTelephone ):void;
+		function get homeTelephone():IVCardTelephone;
+		function set homeTelephone( value:IVCardTelephone ):void;
 		
 		function get jid():UnescapedJID;
 		function set jid( value:UnescapedJID ):void;
 		
 		function get loaded():Boolean;
 		
-		function get logo():VCardPhoto;
-		function set logo( value:VCardPhoto ):void;
+		function get logo():IVCardPhoto;
+		function set logo( value:IVCardPhoto ):void;
 		
 		function get mailer():String;
 		function set mailer( value:String ):void;
 		
-		function get name():VCardName;
-		function set name( value:VCardName ):void;
+		function get name():IVCardName;
+		function set name( value:IVCardName ):void;
 		
 		function get nickname():String;
 		function set nickname( value:String ):void;
@@ -83,11 +83,11 @@ package org.igniterealtime.xiff.vcard
 		function get note():String;
 		function set note( value:String ):void;
 		
-		function get organization():VCardOrganization;
-		function set organization( value:VCardOrganization ):void;
+		function get organization():IVCardOrganization;
+		function set organization( value:IVCardOrganization ):void;
 		
-		function get photo():VCardPhoto;
-		function set photo( value:VCardPhoto ):void;
+		function get photo():IVCardPhoto;
+		function set photo( value:IVCardPhoto ):void;
 		
 		function get privacyClass():String;
 		function set privacyClass( value:String ):void;
@@ -104,8 +104,8 @@ package org.igniterealtime.xiff.vcard
 		function get sortString():String;
 		function set sortString( value:String ):void;
 		
-		function get sound():VCardSound;
-		function set sound( value:VCardSound ):void;
+		function get sound():IVCardSound;
+		function set sound( value:IVCardSound ):void;
 		
 		function get timezone():Date;
 		function set timezone( value:Date ):void;
@@ -122,13 +122,13 @@ package org.igniterealtime.xiff.vcard
 		function get version():String;
 		function set version( value:String ):void;
 		
-		function get workAddress():VCardAddress;
-		function set workAddress( value:VCardAddress ):void;
+		function get workAddress():IVCardAddress;
+		function set workAddress( value:IVCardAddress ):void;
 		
 		function get workAddressLabel():String;
 		function set workAddressLabel( value:String ):void;
 		
-		function get workTelephone():VCardTelephone;
-		function set workTelephone( value:VCardTelephone ):void;
+		function get workTelephone():IVCardTelephone;
+		function set workTelephone( value:IVCardTelephone ):void;
 	}
 }

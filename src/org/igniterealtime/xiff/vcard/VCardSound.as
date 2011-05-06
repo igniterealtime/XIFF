@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * Formatted name pronunciation property.
 	 */
-	public class VCardSound
+	public class VCardSound implements IVCardSound
 	{
 		private var _binaryValue:String;
 
