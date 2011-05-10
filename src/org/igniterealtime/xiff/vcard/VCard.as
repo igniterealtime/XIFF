@@ -273,7 +273,7 @@ package org.igniterealtime.xiff.vcard
 		 * @param jid
 		 * @return Reference to the vCard which will be filled once the loaded event occurs.
 		 */
-		public static function getVCard( connection:XMPPConnection, jid:UnescapedJID ):VCard
+		public static function getVCard( connection:IXMPPConnection, jid:UnescapedJID ):VCard
 		{
 			if ( !cacheFlushTimer.running )
 			{
@@ -330,7 +330,7 @@ package org.igniterealtime.xiff.vcard
 		 * @param connection
 		 * @param vCard
 		 */
-		private static function pushRequest( connection:XMPPConnection, vCard:VCard ):void
+		private static function pushRequest( connection:IXMPPConnection, vCard:VCard ):void
 		{
 			if ( !requestTimer )
 			{
@@ -1153,7 +1153,7 @@ package org.igniterealtime.xiff.vcard
 					var privateNode:XML = <PRIVATE/>;
 					classNode.appendChild( privateNode );
 				}
-				else ( privacyClass == "confidential" )
+				else if ( privacyClass == "confidential" )
 				{
 					var confidentialNode:XML = <CONFIDENTIAL/>;
 					classNode.appendChild( confidentialNode );
