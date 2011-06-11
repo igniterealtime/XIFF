@@ -24,17 +24,19 @@
  */
 package org.igniterealtime.xiff.core
 {
+	import org.igniterealtime.xiff.data.IIQ;
+	
 	public interface IBrowser
 	{
-		function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void;
+		function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ;
 		
-		function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void;
+		function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ;
 		
-		function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):void;
+		function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ;
 		
-		function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):void;
+		function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ;
 		
-		function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):void;
+		function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ;
 		
 		function get connection():IXMPPConnection;
 		function set connection( value:IXMPPConnection ):void;

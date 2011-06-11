@@ -73,7 +73,7 @@ package org.igniterealtime.xiff.core
 			return true;
 		}
 
-		public function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void
+		public function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.getNode());
@@ -83,9 +83,10 @@ package org.igniterealtime.xiff.core
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
 			_connection.send( iq );
+			return iq;
 		}
 
-		public function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):void
+		public function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.getNode());
@@ -95,6 +96,7 @@ package org.igniterealtime.xiff.core
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
 			_connection.send( iq );
+			return iq;
 		}
 
 		/**
@@ -106,13 +108,14 @@ package org.igniterealtime.xiff.core
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):void
+		public function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( new InfoDiscoExtension( iq.getNode() ) );
 			_connection.send( iq );
+			return iq;
 		}
 
 		/**
@@ -124,13 +127,14 @@ package org.igniterealtime.xiff.core
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):void
+		public function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( new ItemDiscoExtension( iq.getNode()));
 			_connection.send( iq );
+			return iq;
 		}
 
 		/**
@@ -141,13 +145,14 @@ package org.igniterealtime.xiff.core
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 */
-		public function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):void
+		public function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( id, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( new BrowseExtension( iq.getNode()));
 			_connection.send( iq );
+			return iq;
 		}
 
 		/**
