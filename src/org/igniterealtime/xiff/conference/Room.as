@@ -415,7 +415,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function decline( jid:UnescapedJID, reason:String ):void
 		{
-			var message:Message = new Message( roomJID.escaped )
+			var message:Message = new Message( roomJID.escaped );
 			var userExt:MUCUserExtension = new MUCUserExtension();
 
 			userExt.decline( jid.escaped, undefined, reason );
@@ -553,12 +553,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function isThisRoom( sender:UnescapedJID ):Boolean
 		{
-			var value:Boolean = false;
-			if (_roomJID != null)
-			{
-				value = sender.bareJID.toLowerCase() == roomJID.bareJID.toLowerCase();
-			}
-			return value;
+			return _roomJID ? sender.bareJID.toLowerCase() == _roomJID.bareJID.toLowerCase() : false;
 		}
 
 		/**
@@ -1362,7 +1357,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get conferenceServer():String
 		{
-			return _roomJID.domain;
+			return _roomJID ? _roomJID.domain : null;
 		}
 		public function set conferenceServer( value:String ):void
 		{
@@ -1438,7 +1433,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get roomName():String
 		{
-			return _roomJID.node;
+			return _roomJID ? _roomJID.node : null;
 		}
 		public function set roomName( value:String ):void
 		{
@@ -1458,11 +1453,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get userJID():UnescapedJID
 		{
-			if (_roomJID != null)
-			{
-				return new UnescapedJID( _roomJID.bareJID + "/" + nickname );
-			}
-			return null;
+			return _roomJID ? new UnescapedJID( _roomJID.bareJID + "/" + nickname ) : null;
 		}
 	}
 }
