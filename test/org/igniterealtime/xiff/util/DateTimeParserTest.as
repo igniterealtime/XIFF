@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.util
 		{
 			var date:Date = new Date( 2000, 10, 30, 0, 0 );
 			var dateAsString:String = DateTimeParser.date2string( date );
-			assertEquals( "2000-11-30", dateAsString );
+			assertEquals( "2000-12-30", dateAsString );
 		}
 	}
 }
