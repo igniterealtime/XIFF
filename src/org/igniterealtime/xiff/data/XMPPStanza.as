@@ -359,7 +359,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorType():String
 		{
-			return myErrorNode.attributes.type;
+			return myErrorNode && myErrorNode.attributes ? myErrorNode.attributes.type : null;
 		}
 		
 		public function set errorType( value:String ):void
@@ -382,7 +382,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorCode():int
 		{
-			return parseInt( myErrorNode.attributes.code );
+			return myErrorNode && myErrorNode.attributes ? parseInt( myErrorNode.attributes.code ) : 0;
 		}
 		
 		public function set errorCode( value:int ):void
