@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.core
 	import flash.utils.*;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
-
+	
 	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
@@ -195,6 +195,11 @@ package org.igniterealtime.xiff.core
 		 * Hash to hold callbacks for IQs
 		 */
 		protected var pendingIQs:Object = {};
+
+		/**
+		 * @private
+		 */
+		protected var pingNotSupported:Boolean;
 
 		/**
 		 * @private
@@ -485,7 +490,9 @@ package org.igniterealtime.xiff.core
 		 */
 		public function sendKeepAlive():void
 		{
-			var ping:IQ = new IQ( new EscapedJID( server ), IQ.TYPE_GET );
+			if( pingNotSupported ) return;
+
+			var ping:IQ = new IQ( new EscapedJID( server ), IQ.TYPE_GET, null, sendKeepAlive_response, sendKeepAlive_error );
 			ping.addExtension( new PingExtension() );
 			send( ping );
 		}
@@ -1333,6 +1340,24 @@ package org.igniterealtime.xiff.core
 		protected function restartStream():void
 		{
 			sendXML( openingStreamTag ); // String
+		}
+
+		/**
+		 * @private
+		 */
+		private function sendKeepAlive_response( iq:IQ ):void
+		{
+		}
+
+		/**
+		 * @private
+		 */
+		private function sendKeepAlive_error( iq:IQ ):void
+		{
+			if( iq.errorType == "cancel" )
+			{
+				pingNotSupported = true;
+			}
 		}
 
 		/**
