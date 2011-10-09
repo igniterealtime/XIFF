@@ -24,47 +24,53 @@
  */
 package org.igniterealtime.xiff.data.id
 {
-	import org.igniterealtime.xiff.data.id.IIDGenerator;
-	
 	/**
-	 * Uses a simple incrementation of a static variable to generate new IDs.
-	 * Guaranteed to generate unique IDs for the duration of application execution.
+	 * Uses a simple incrementation of a variable to generate new IDs.
 	 */
 	public class IncrementalGenerator implements IIDGenerator
 	{
-		private var myCounter:int = 0;
-		private static var instance:IIDGenerator;
-		
-		public static function getInstance():IIDGenerator
+		protected var counter:int = 0;
+
+		protected var _prefix:String;
+
+		public function IncrementalGenerator( prefix:String=null )
 		{
-			if(instance == null)
-			{
-				instance = new IncrementalGenerator();
-			}
-			
-			return instance;
+			this.prefix = prefix;
 		}
-	
-		public function IncrementalGenerator()
-		{
-			
-		}
-	
+
 		/**
-		 * Gets the unique ID.
+		 * The prefix to use for the generated ID (for namespacing purposes).
+		 */
+		public function get prefix():String
+		{
+			return _prefix;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set prefix( value:String ):void
+		{
+			_prefix = value;
+		}
+
+		/**
+		 * Generates a unique ID.
 		 *
-		 * @param	prefix The ID prefix to use when generating the ID
 		 * @return The generated ID
 		 */
-		public function getID(prefix:String):String
+		public function generateID():String
 		{
-			myCounter++;
+			counter++;
 			var id:String;
-	
-			if ( prefix != null ) {
-				id = prefix + myCounter;
-			} else {
-				id = myCounter.toString();
+
+			if ( _prefix != null )
+			{
+				id = _prefix + counter;
+			}
+			else
+			{
+				id = counter.toString();
 			}
 			return id;
 		}

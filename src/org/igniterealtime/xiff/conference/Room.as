@@ -661,7 +661,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "kick_occupant_" ) );
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "kick_occupant_" ) );
 				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
 				adminExt.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
 				iq.addExtension( adminExt );
@@ -809,7 +809,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, XMPPStanza.generateID( "voice_" ) );
+				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "voice_" ) );
 				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
 				adminExt.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
 				iq.addExtension( adminExt );

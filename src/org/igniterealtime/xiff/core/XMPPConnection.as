@@ -342,7 +342,7 @@ package org.igniterealtime.xiff.core
 		public function changePassword( password:String ):void
 		{
 			var passwordIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
-									  XMPPStanza.generateID( "pswd_change_" ), changePassword_response );
+									  IQ.generateID( "pswd_change_" ), changePassword_response );
 			var ext:RegisterExtension = new RegisterExtension( passwordIQ.getNode() );
 
 			ext.username = jid.escaped.bareJID;
@@ -413,7 +413,7 @@ package org.igniterealtime.xiff.core
 		public function getRegistrationFields():void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_GET,
-								   XMPPStanza.generateID( "reg_info_" ), getRegistrationFields_response );
+								   IQ.generateID( "reg_info_" ), getRegistrationFields_response );
 			regIQ.addExtension( new RegisterExtension( regIQ.getNode() ) );
 
 			send( regIQ );
@@ -509,7 +509,7 @@ package org.igniterealtime.xiff.core
 		public function sendRegistrationFields( fieldMap:Object, key:String ):void
 		{
 			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
-								   XMPPStanza.generateID( "reg_attempt_" ), sendRegistrationFields_response );
+								   IQ.generateID( "reg_attempt_" ), sendRegistrationFields_response );
 			var ext:RegisterExtension = new RegisterExtension( regIQ.getNode() );
 
 			for ( var i:String in fieldMap )

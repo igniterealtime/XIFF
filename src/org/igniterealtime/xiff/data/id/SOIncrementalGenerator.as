@@ -24,49 +24,38 @@
  */
 package org.igniterealtime.xiff.data.id
 {
-	
-	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import flash.net.SharedObject;
-	
+
 	/**
 	 * Generates an incrementing ID and saves the last value in a local shared object.
-	 * Guaranteed to generate unique IDs for a single machine.
 	 */
-	public class SharedObjectGenerator implements IIDGenerator
+	public class SOIncrementalGenerator extends IncrementalGenerator implements IIDGenerator
 	{
-		private static const SO_COOKIE_NAME:String = "IIDGenerator";
-	
-		private var mySO:SharedObject;
-	
-		public function SharedObjectGenerator()
+		private static const SO_COOKIE_NAME:String = "SOIncrementalGenerator";
+
+		private var so:SharedObject;
+
+		public function SOIncrementalGenerator( id:String, prefix:String=null )
 		{
-			mySO = SharedObject.getLocal(SO_COOKIE_NAME);
-			if (mySO.data.myCounter == undefined)
+			super( prefix );
+			var soName:String = SO_COOKIE_NAME + ( id ? "_" + id : "" );
+			so = SharedObject.getLocal(soName);
+			if (so.data.counter == undefined)
 			{
-				mySO.data.myCounter = 0;
+				so.data.counter = 0;
 			}
+			counter = so.data.counter;
 		}
-	
+
 		/**
-		 * Gets the unique ID.
-		 *
-		 * @param	prefix The ID prefix to use when generating the ID
+		 * Generates a unique ID.
+		 * 
 		 * @return The generated ID
 		 */
-		public function getID(prefix:String):String
+		override public function generateID():String
 		{
-			mySO.data.myCounter++;
-	
-			var id:String;
-	
-			if (prefix != null)
-			{
-				id = prefix + mySO.data.myCounter;
-			}
-			else
-			{
-				id = mySO.data.myCounter.toString();
-			}
+			var id:String = super.generateID();
+			so.data.counter = counter;
 			return id;
 		}
 	}

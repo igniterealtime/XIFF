@@ -29,6 +29,7 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
+	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
@@ -51,13 +52,14 @@ package org.igniterealtime.xiff.data
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
 		public static const XML_LANG:String = "en";
-	
+		
 		private var myErrorNode:XMLNode;
 		private var myErrorConditionNode:XMLNode;
-	
-		//private static var theIDGenerator:IIDGenerator = new IncrementalGenerator();
+		
 		private static var staticDependencies:Array = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
+		
+		private static var _idGenerator:IIDGenerator = new IncrementalGenerator();
 		
 		/**
 		 * The following four first attributes are common to message, presence, and IQ stanzas.
@@ -85,37 +87,52 @@ package org.igniterealtime.xiff.data
 		}
 	
 		/**
-		 * (Static method) Generates a unique ID for the stanza. ID generation is handled using
+		 * Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
 		 *
-		 * @see	org.igniterealtime.xiff.data.id.IncrementalGenerator
 		 * @param	prefix The prefix for the ID to be generated
-		 * @return The generated ID
+		 * @return	The generated ID
 		 */
-		public static function generateID( prefix:String ):String
+		public static function generateID( prefix:String=null ):String
 		{
-			var id:String = IncrementalGenerator.getInstance().getID( prefix );
+			return XMPPStanza.xiff_internal::generateID( _idGenerator, prefix );
+		}
+	
+		xiff_internal static function generateID( generator:IIDGenerator, prefix:String=null ):String
+		{
+			var previousPrefix:String = generator.prefix;
+			if( prefix ) generator.prefix = prefix;
+			var id:String = generator.generateID();
+			if( prefix ) generator.prefix = previousPrefix;
 			return id;
 		}
 	
 		/**
-	 	 * (Static method) Sets the ID generator for this stanza type. ID generators must implement
+	 	 * The ID generator for this stanza type. ID generators must implement
 		 * the IIDGenerator interface. The XIFF library comes with a few default
 		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
 		 *
 		 * Setting the ID generator by stanza type is useful if you'd like to use
 		 * different ID generation schemes for each type. For instance, messages could
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
-		 * IQs could use the shared object ID generation scheme provided by the SharedObjectGenerator class.
+		 * IQs could use the shared object ID generation scheme provided by the SOIncrementalGenerator class.
 		 *
 		 * @param	generator The ID generator class
-		 * @example	The following sets the ID generator for the Message stanza type to the IncrementalGenerator
-		 * class found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
-		 * <pre>Message.setIDGenerator( org.igniterealtime.xiff.data.id.IncrementalGenerator );</pre>
+		 * @example	The following sets the ID generator for the Message stanza type to an IncrementalGenerator
+		 * found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
+		 * <pre>Message.idGenerator = new IncrementalGenerator();</pre>
 		 */
-		public static function setIDGenerator( generator:IIDGenerator ):void
+		public static function get idGenerator():IIDGenerator
 		{
-			//XMPPStanza.theIDGenerator = generator;
+			return _idGenerator;
+		}
+		
+		/**
+		 * @private
+		 */
+		public static function set idGenerator(  value:IIDGenerator ):void
+		{
+			_idGenerator = value;
 		}
 	
 		/**
@@ -260,7 +277,7 @@ package org.igniterealtime.xiff.data
 		
 		/**
 		 * The unique identifier of this stanza. ID generation is accomplished using
-		 * the static <code>generateID</code> method.
+		 * the static <code>generateID</code> method of the particular stanza type.
 		 *
 		 * @see	#generateID
 		 */

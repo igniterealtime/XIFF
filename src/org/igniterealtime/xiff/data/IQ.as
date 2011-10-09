@@ -28,6 +28,9 @@ package org.igniterealtime.xiff.data
 	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.id.IIDGenerator;
+	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
+	import org.igniterealtime.xiff.namespaces.xiff_internal;
 
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
@@ -68,6 +71,8 @@ package org.igniterealtime.xiff.data
 		 */
 		public static const TYPE_SET:String = "set";
 
+		private static var _idGenerator:IIDGenerator = new IncrementalGenerator( "iq_" );
+
 		/**
 		 * A class for abstraction and encapsulation of IQ (info-query) data.
 		 *
@@ -79,12 +84,52 @@ package org.igniterealtime.xiff.data
 		 */
 		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:Function = null, iqErrorCallback:Function = null )
 		{
-			var id:String = exists( iqID ) ? iqID : generateID( "iq_" );
+			var id:String = exists( iqID ) ? iqID : generateID();
 
 			super( recipient, null, iqType, id, "iq" );
 
 			callback = iqCallback;
 			errorCallback = iqErrorCallback;
+		}
+
+		/**
+		 * Generates a unique ID for the stanza. ID generation is handled using
+		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
+		 * 
+		 * @param	prefix The prefix for the ID to be generated
+		 * @return	The generated ID
+		 */
+		public static function generateID( prefix:String=null ):String
+		{
+			return XMPPStanza.xiff_internal::generateID( _idGenerator, prefix );
+		}
+		
+		/**
+		 * The ID generator for this stanza type. ID generators must implement
+		 * the IIDGenerator interface. The XIFF library comes with a few default
+		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
+		 *
+		 * Setting the ID generator by stanza type is useful if you'd like to use
+		 * different ID generation schemes for each type. For instance, messages could
+		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
+		 * IQs could use the shared object ID generation scheme provided by the SOIncrementalGenerator class.
+		 *
+		 * @param	generator The ID generator class
+		 * @example	The following sets the ID generator for the Message stanza type to an IncrementalGenerator
+		 * found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
+		 * <pre>Message.idGenerator = new IncrementalGenerator();</pre>
+		 */
+		public static function get idGenerator():IIDGenerator
+		{
+			return _idGenerator;
+		}
+		
+		/**
+		 * @private
+		 */
+		public static function set idGenerator(  value:IIDGenerator ):void
+		{
+			_idGenerator = value;
 		}
 
 		/**

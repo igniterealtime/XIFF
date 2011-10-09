@@ -50,7 +50,7 @@
 	<component class="org.igniterealtime.xiff.data.forms.FormField" />
 	<component class="org.igniterealtime.xiff.data.id.IIDGenerator" />
 	<component class="org.igniterealtime.xiff.data.id.IncrementalGenerator" />
-	<component class="org.igniterealtime.xiff.data.id.SharedObjectGenerator" />
+	<component class="org.igniterealtime.xiff.data.id.SOIncrementalGenerator" />
 	<component class="org.igniterealtime.xiff.data.im.Contact" />
 	<component class="org.igniterealtime.xiff.data.im.RosterExtension" />
 	<component class="org.igniterealtime.xiff.data.im.RosterGroup" />

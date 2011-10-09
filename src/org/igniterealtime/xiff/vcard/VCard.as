@@ -29,14 +29,13 @@ package org.igniterealtime.xiff.vcard
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	import flash.xml.XMLDocument;
-
+	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.XMPPConnection;
 	import org.igniterealtime.xiff.data.IIQ;
 	import org.igniterealtime.xiff.data.IQ;
-	import org.igniterealtime.xiff.data.XMPPStanza;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
 	import org.igniterealtime.xiff.events.VCardEvent;
 	import org.igniterealtime.xiff.util.DateTimeParser;
@@ -655,7 +654,7 @@ package org.igniterealtime.xiff.vcard
 		 */
 		public function saveVCard( connection:IXMPPConnection ):void
 		{
-			var id:String = XMPPStanza.generateID( "save_vcard_" );
+			var id:String = IQ.generateID( "save_vcard_" );
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, saveVCard_result );
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardExtNode:XML = new XML( vcardExt.getNode().toString() );
