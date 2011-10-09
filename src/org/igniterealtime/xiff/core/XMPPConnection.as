@@ -868,7 +868,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleIQ( node:XMLNode ):IQ
 		{
-			var iq:IQ = new IQ();
+			var iq:IQ = new IQ( null, null, "temp" );
 
 			// Populate the IQ with the incoming data
 			if ( !iq.deserialize( node ) )
