@@ -1,6 +1,5 @@
 package com.yourpalmark.chat
 {
-	import com.facebook.Facebook;
 	import com.hurlant.crypto.tls.TLSConfig;
 	import com.hurlant.crypto.tls.TLSEngine;
 	import com.yourpalmark.chat.data.ChatUser;
@@ -58,7 +57,6 @@ package com.yourpalmark.chat
 		protected var _roster:Roster;
 		protected var _chatUserRoster:ArrayCollection;
 		protected var _currentUser:ChatUser;
-		protected var _fbSession:Facebook;
 		
 		public function ChatManager()
 		{
@@ -114,11 +112,10 @@ package com.yourpalmark.chat
 			return "conference." + _connection.server;
 		}
 		
-		public function set fbSession( value:Facebook ):void
+		public function setFBData( appID:String, accessToken:String ):void
 		{
-			_fbSession = value;
-			
-			XFacebookPlatform.setFacebookSessionValues( _fbSession.api_key, _fbSession.secret, _fbSession.session_key );
+			XFacebookPlatform.fb_app_id = appID;
+			XFacebookPlatform.fb_access_token = accessToken;
 		}
 		
 		public function connect( credentials:LoginCredentials, facebook:Boolean=false ):void
@@ -130,6 +127,7 @@ package com.yourpalmark.chat
 			
 			Security.loadPolicyFile( "xmlsocket://" + serverName + ":" + serverPort );
 			registerUser = false;
+			connection.tls = facebook ? true : false;
 			connection.username = facebook ? "u" + username : username;
 			connection.password = credentials.password;
 			connection.domain = domain;

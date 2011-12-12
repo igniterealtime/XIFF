@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%">
+	<mx:Script>
+		<![CDATA[
+			import com.yourpalmark.chat.data.ChatUser;
+			
+			import mx.events.FlexEvent;
+			
+			import org.igniterealtime.xiff.events.VCardEvent;
+			
+			override public function set data( value:Object ):void
+			{
+				super.data = value;
+				invalidateProperties();
+			}
+			
+			override protected function commitProperties():void
+			{
+				if( data )
+				{
+					var user:ChatUser = data as ChatUser;
+					
+					labelField.text = ChatUser( data ).displayName;
+					
+					if( !user.vCard.nickname && !user.vCard.formattedName )
+					{
+						user.vCard.removeEventListener( VCardEvent.LOADED, onVCardLoaded );
+						user.vCard.addEventListener( VCardEvent.LOADED, onVCardLoaded );
+					}
+				}
+			}
+			
+			
+			private function onVCardLoaded( event:VCardEvent ):void
+			{
+				invalidateProperties();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Label id="labelField" width="100%"/>
+</mx:Canvas>

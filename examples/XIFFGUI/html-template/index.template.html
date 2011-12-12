@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="js/swfobject.js"></script>
 		<script type="text/javascript" src="js/swfmacmousewheel2.js"></script>
 		<script type="text/javascript" src="history/history.js" ></script>
+		<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
 		<script type="text/javascript">
     		var flashvars = {
 			};
@@ -22,7 +23,7 @@
 			  name: "${application}"
 			};
     		
-	   		swfobject.embedSWF ( "${swf}.swf", "${application}_div", "${width}", "${height}", "${version_major}", "js/expressInstall.swf", flashvars, params, attributes );
+    		swfobject.embedSWF( "${swf}.swf", "${application}", "${width}", "${height}", "${version_major}", "js/expressInstall.swf", flashvars, params, attributes );
 	   		swfmacmousewheel.registerObject( attributes.id );
 	   		swfobject.addLoadEvent( loadEventHandler );
 			function loadEventHandler() {
@@ -35,7 +36,8 @@
 		</style>
 	</head>
 	<body scroll="no">
-		<div id="${application}_div">
+		<div id="fb-root"></div>
+		<div id="${application}">
 			 <h1>Alternative content</h1>
 			 <p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>
 		</div>

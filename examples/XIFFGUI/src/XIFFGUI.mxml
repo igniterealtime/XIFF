@@ -5,19 +5,14 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.facebook.Facebook;
-			import com.facebook.commands.users.HasAppPermission;
-			import com.facebook.data.BooleanResultData;
-			import com.facebook.events.FacebookEvent;
-			import com.facebook.net.FacebookCall;
-			import com.facebook.utils.FacebookSessionUtil;
+			import com.facebook.graph.Facebook;
+			import com.facebook.graph.data.FacebookAuthResponse;
 			import com.pixelbreaker.ui.osx.MacMouseWheel;
 			import com.yourpalmark.chat.ChatManager;
 			import com.yourpalmark.chat.data.ChatRoom;
 			import com.yourpalmark.chat.data.LoginCredentials;
 			
 			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
@@ -42,15 +37,12 @@
 			import org.igniterealtime.xiff.events.RosterEvent;
 			import org.igniterealtime.xiff.events.XIFFErrorEvent;
 			
-			private const fbAPIKey:String = "";
-			private const fbSecret:String = "";
+			private const fbAppID:String = "FACEBOOK_APP_ID";
 			
 			private var chatManager:ChatManager;
 			private var messageDict:Dictionary;
 			private var roomPopup:RoomPopup;
 			private var iconPopup:IconSelectPopup;
-			private var facebook:Facebook;
-			private var fbSession:FacebookSessionUtil;
 			
 			[Bindable]
 			private var errorDataProvider:ArrayCollection = new ArrayCollection();
@@ -192,10 +184,18 @@
 				logList.verticalScrollPosition = logList.maxVerticalScrollPosition;
 			}
 			
-			private function connectToFBChat():void
+			private function loginToFB():void
 			{
-				chatManager.fbSession = facebook;
-				chatManager.connect( new LoginCredentials( facebook.uid ), true );
+				Facebook.login( onFBLogin, { scope:"xmpp_login" } );
+				logDataProvider.addItem( "Facebook " + "login" );
+			}
+			
+			private function connectToFBChat( authResponse:FacebookAuthResponse=null ):void
+			{
+				authResponse = authResponse ? authResponse : Facebook.getAuthResponse();
+				chatManager.setFBData( fbAppID, authResponse.accessToken );
+				chatManager.connect( new LoginCredentials( authResponse.uid ), true );
+				logDataProvider.addItem( "Facebook " + "connectToFBChat: " + "app_id:" + fbAppID + "  access_token:" + authResponse.accessToken );
 			}
 			
 			
@@ -231,43 +231,36 @@
 			
 			private function onFBImageClick( event:MouseEvent ):void
 			{
-				facebook = new Facebook();
-				fbSession = new FacebookSessionUtil( fbAPIKey, fbSecret, loaderInfo );
-				fbSession.addEventListener( FacebookEvent.CONNECT, onFBConnect );
-				facebook = fbSession.facebook;
-				fbSession.login();
-				
-				Alert.show( "Click after you log into Facebook", "Facebook Alert", Alert.OK, null, onConfirmFBLogin );
+				Facebook.init( fbAppID, onFBInit );
+				logDataProvider.addItem( "Facebook " + "init: " + "app_id:" + fbAppID );
 			}
 			
-			private function onConfirmFBLogin( event:CloseEvent ):void
+			private function onFBInit( response:Object, fail:Object ):void
 			{
-				fbSession.validateLogin();
-			}
-			
-			private function onFBConnect( event:FacebookEvent ):void
-			{
-				var call:FacebookCall = facebook.post( new HasAppPermission( "xmpp_login" ) );
-				call.addEventListener( FacebookEvent.COMPLETE, onHasAppPermission );
-			}
-			
-			private function onHasAppPermission( event:FacebookEvent ):void
-			{
-				if( event.success && ( event.data as BooleanResultData ).value )
+				if( response )
 				{
-					connectToFBChat();
+					var authResponse:FacebookAuthResponse = response is FacebookAuthResponse ? FacebookAuthResponse( response ) : null;
+					connectToFBChat( authResponse );
+					logDataProvider.addItem( "Facebook " + "onFBInit: " + "success" );
 				}
 				else
 				{
-					facebook.grantExtendedPermission( "xmpp_login" );
-					Alert.show( "Click after you grant permission", "Facebook Alert", Alert.OK, null, onGrantFBPermission );
+					callLater( loginToFB );
 				}
-				event.currentTarget.removeEventListener( FacebookEvent.COMPLETE, arguments.callee );
 			}
 			
-			private function onGrantFBPermission( event:CloseEvent ):void
+			private function onFBLogin( response:Object, fail:Object ):void
 			{
-				connectToFBChat();
+				if( response )
+				{
+					var authResponse:FacebookAuthResponse = response is FacebookAuthResponse ? FacebookAuthResponse( response ) : null;
+					connectToFBChat( authResponse );
+					logDataProvider.addItem( "Facebook " + "onFBLogin: " + "success" );
+				}
+				else
+				{
+					logDataProvider.addItem( "Facebook " + "onFBLogin: " + "fail" );
+				}
 			}
 			
 			private function onDisconnect( event:DisconnectionEvent ):void
@@ -722,7 +715,7 @@
 						<mx:columns>
 							<mx:DataGridColumn headerText="Icon" dataField="image" itemRenderer="IconRenderer" width="20"/>
 							<mx:DataGridColumn headerText="Online" dataField="online" width="25" />
-							<mx:DataGridColumn headerText="Name" dataField="displayName" width="100" />
+							<mx:DataGridColumn headerText="Name" dataField="displayName" itemRenderer="NameRenderer" width="100" />
 							<mx:DataGridColumn headerText="Status" dataField="status" width="36" />
 							<mx:DataGridColumn headerText="Show" dataField="show" width="36" />
 							<mx:DataGridColumn headerText="Ask" dataField="rosterItem.askType" width="36" />

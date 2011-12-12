@@ -46,7 +46,7 @@ package com.yourpalmark.chat.data
 		
 		public function get vCardRequested():Boolean { return _vCardRequested; }
 		
-		public function get displayName():String { return _vCard && _vCard.nickname ? _vCard.nickname : _displayName ? _displayName : _jid ? _jid.node : null; }
+		public function get displayName():String { return _vCard && _vCard.nickname ? _vCard.nickname : _vCard && _vCard.formattedName ? _vCard.formattedName : _displayName ? _displayName : _jid ? _jid.node : null; }
 		public function set displayName( value:String ):void
 		{
 			_displayName = value;
