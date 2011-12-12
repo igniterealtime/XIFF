@@ -112,7 +112,7 @@ package com.yourpalmark.chat
 			return "conference." + _connection.server;
 		}
 		
-		public function setFBData( appID:String, accessToken:String ):void
+		public function setFBAuthProperties( appID:String, accessToken:String ):void
 		{
 			XFacebookPlatform.fb_app_id = appID;
 			XFacebookPlatform.fb_access_token = accessToken;

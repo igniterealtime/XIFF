@@ -193,7 +193,7 @@
 			private function connectToFBChat( authResponse:FacebookAuthResponse=null ):void
 			{
 				authResponse = authResponse ? authResponse : Facebook.getAuthResponse();
-				chatManager.setFBData( fbAppID, authResponse.accessToken );
+				chatManager.setFBAuthProperties( fbAppID, authResponse.accessToken );
 				chatManager.connect( new LoginCredentials( authResponse.uid ), true );
 				logDataProvider.addItem( "Facebook " + "connectToFBChat: " + "app_id:" + fbAppID + "  access_token:" + authResponse.accessToken );
 			}
