@@ -42,9 +42,8 @@ package org.igniterealtime.xiff.auth
 
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
-		public static var fb_api_key:String;
-		public static var fb_secret:String;
-		public static var fb_session_key:String;
+		public static var fb_app_id:String;
+		public static var fb_access_token:String;
 
 		/**
 		 * Creates a new XFacebookPlatform authentication object.
@@ -59,45 +58,6 @@ package org.igniterealtime.xiff.auth
 			response.setNamespace( XFacebookPlatform.NS );
 
 			stage = 0;
-		}
-
-		public static function setFacebookSessionValues( api_key:String, secret:String, session_key:String ):void
-		{
-			fb_api_key = api_key;
-			fb_secret = secret;
-			fb_session_key = session_key;
-		}
-
-		/**
-		 * Construct the signature as described by Facebook api documentation.
-		 */
-		public static function formatSig( map:Dictionary ):String
-		{
-			var md5:MD5 = new MD5();
-
-			var a:Array = [];
-
-			for( var p:String in map )
-			{
-				var arg:* = map[ p ];
-
-				a.push( p + '=' + arg.toString() );
-			}
-
-			a.sort();
-
-			var s:String = a.join( '' );
-
-			if( fb_secret != null )
-			{
-				s += fb_secret;
-			}
-
-			var sig:ByteArray = new ByteArray();
-			sig.writeUTFBytes( s );
-			sig = md5.hash( sig );
-
-			return Hex.fromArray( sig );
 		}
 
 		/**
@@ -120,21 +80,19 @@ package org.igniterealtime.xiff.auth
 			}
 
 			var responseMap:Dictionary = new Dictionary();
-			responseMap.api_key = fb_api_key;
-			responseMap.call_id = new Date().time;
 			responseMap.method = challengeMap.method;
-			responseMap.nonce = challengeMap.nonce;
-			responseMap.session_key = fb_session_key;
+			responseMap.api_key = fb_app_id;
+			responseMap.access_token = fb_access_token;
+			responseMap.call_id = new Date().time;
 			responseMap.v = "1.0";
-			responseMap.sig = formatSig( responseMap );
+			responseMap.nonce = challengeMap.nonce;
 
-			var challengeResponse:String = "api_key=" + responseMap.api_key;
+			var challengeResponse:String = "method=" + responseMap.method;
+			challengeResponse += "&api_key=" + responseMap.api_key;
+			challengeResponse += "&access_token=" + responseMap.access_token;
 			challengeResponse += "&call_id=" + responseMap.call_id;
-			challengeResponse += "&method=" + responseMap.method;
-			challengeResponse += "&nonce=" + responseMap.nonce;
-			challengeResponse += "&session_key=" + responseMap.session_key;
-			challengeResponse += "&sig=" + responseMap.sig;
 			challengeResponse += "&v=" + responseMap.v;
+			challengeResponse += "&nonce=" + responseMap.nonce;
 			challengeResponse = Base64.encode( challengeResponse );
 
 			var resp:XML = response;
