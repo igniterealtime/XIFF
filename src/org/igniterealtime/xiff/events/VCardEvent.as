@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.events
 
 		public function VCardEvent( type:String, vcard:VCard, bubbles:Boolean, cancelable:Boolean )
 		{
-			super( type, bubbles, cancelable )
+			super( type, bubbles, cancelable );
 			_vcard = vcard;
 		}
 

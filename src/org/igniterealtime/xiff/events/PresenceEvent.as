@@ -26,8 +26,6 @@ package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 
-	import org.igniterealtime.xiff.data.*;
-
 	public class PresenceEvent extends Event
 	{
 		public static const PRESENCE:String = "presence";

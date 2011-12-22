@@ -183,7 +183,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			var item:RosterItem = new RosterItem( getNode() );
 			
-			if( exists( jid ) ) { item.jid = jid }
+			if( exists( jid ) ) { item.jid = jid; }
 			if( exists( subscription ) ) { item.subscription = subscription; }
 			if( exists( displayName ) ) { item.name = displayName; }
 			if( exists( groups ) ) {

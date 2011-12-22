@@ -139,8 +139,7 @@ package org.igniterealtime.xiff.bookmark
 		{
 			var node:XMLNode = new XMLNode( 1, getElementName());
 			node.attributes.xmlns = getNS();
-			var serializer:Function = function( element:ISerializable, index:int,
-												arr:Array ):void
+			var serializer:Function = function( element:ISerializable, index:int, arr:Array ):void
 			{
 				element.serialize( parentNode );
 			};

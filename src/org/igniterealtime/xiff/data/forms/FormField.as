@@ -263,7 +263,7 @@ package org.igniterealtime.xiff.data.forms
 	        		return {
 	        			label: optionNode.attributes.label,
 	                	value: optionNode.firstChild.firstChild.nodeValue
-	        		}
+	        		};
 	        	}
 	        );
 	    }

@@ -24,10 +24,6 @@
  */
 package org.igniterealtime.xiff.data
 {
-
-	
-	import org.igniterealtime.xiff.data.IExtension;
-	import flash.xml.XMLDocument;
 	
 	/**
 	 * This is a static class that contains class constructors for all extensions that could come from the network.

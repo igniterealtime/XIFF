@@ -118,7 +118,7 @@ package org.igniterealtime.xiff.core
 				n = n.replace(/@/g, "\\40");
 				n = n.replace(/ /g, "\\20");
 				n = n.replace(/&/g, "\\26");
-				n = n.replace(/>/g, "\\3e");
+				n = n.replace(/\>/g, "\\3e");
 				n = n.replace(/</g, "\\3c");
 				n = n.replace(/:/g, "\\3a");
 				n = n.replace(/\//g, "\\2f");

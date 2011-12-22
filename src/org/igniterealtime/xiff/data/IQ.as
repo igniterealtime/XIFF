@@ -84,7 +84,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:Function = null, iqErrorCallback:Function = null )
 		{
-			var id:String = exists( iqID ) ? iqID : generateID();
+			var id:String = exists( iqID ) ? iqID : IQ.generateID();
 
 			super( recipient, null, iqType, id, "iq" );
 

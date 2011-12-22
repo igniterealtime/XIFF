@@ -151,7 +151,7 @@ package org.igniterealtime.xiff.data
 			}
 	
 			if (!exists(node.parentNode)) {
-				node = node.cloneNode(true)
+				node = node.cloneNode(true);
 				parentNode.appendChild(node);
 			}
 	

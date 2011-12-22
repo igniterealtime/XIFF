@@ -26,11 +26,8 @@ package org.igniterealtime.xiff.core
 {
 	import com.hurlant.crypto.tls.*;
 
-	import flash.errors.IOError;
 	import flash.events.*;
 	import flash.xml.XMLNode;
-
-	import org.igniterealtime.xiff.events.*;
 
 	/**
 	 * This class is used to connect to and manage data coming from an XMPP server that supports TLS.

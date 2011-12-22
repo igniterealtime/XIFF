@@ -24,14 +24,13 @@
  */
 package org.igniterealtime.xiff.collections
 {
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
-	import flash.utils.Proxy;
-	import flash.utils.flash_proxy;
-	
 	import org.igniterealtime.xiff.collections.events.CollectionEvent;
 	import org.igniterealtime.xiff.collections.events.CollectionEventKind;
+
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.utils.Proxy;
+	import flash.utils.flash_proxy;
 	
 	/**
 	 * The ArrayCollection class is a wrapper class that exposes an Array as a

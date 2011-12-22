@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.data.muc
 	public class MUCStatus
 	{
 		private var node:XMLNode;
-		private var parent:XMLStanza
+		private var parent:XMLStanza;
 		public function MUCStatus(xmlNode:XMLNode, parentStanza:XMLStanza)
 		{
 			super();

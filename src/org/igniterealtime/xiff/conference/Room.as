@@ -232,7 +232,7 @@ package org.igniterealtime.xiff.conference
 
 		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
 
-		private static var staticConstructorDependencies:Array = [ FormExtension, MUC ]
+		private static var staticConstructorDependencies:Array = [ FormExtension, MUC ];
 
 		private var _active:Boolean;
 

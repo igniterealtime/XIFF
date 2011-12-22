@@ -110,7 +110,7 @@ package org.igniterealtime.xiff.im
 		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
 
 		private static const staticConstructorDependencies:Array = [ ExtensionClassRegistry,
-																	 RosterExtension ]
+																	 RosterExtension ];
 
 		private var _connection:IXMPPConnection;
 
@@ -184,7 +184,7 @@ package org.igniterealtime.xiff.im
 				callbackMethod = addContact_result;
 				pendingSubscriptionRequests[ iqID.toString() ] = id;
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
-				askType = RosterExtension.ASK_TYPE_SUBSCRIBE
+				askType = RosterExtension.ASK_TYPE_SUBSCRIBE;
 			}
 
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod );

@@ -178,7 +178,7 @@ package org.igniterealtime.xiff.data
 		public function Message( recipient:EscapedJID = null, msgID:String = null, msgBody:String = null, msgHTMLBody:String = null, msgType:String = null, msgSubject:String = null, chatState:String = null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
-			var id:String = exists( msgID ) ? msgID : generateID();
+			var id:String = exists( msgID ) ? msgID : Message.generateID();
 			super( recipient, null, msgType, id, "message" );
 			body = msgBody;
 			htmlBody = msgHTMLBody;

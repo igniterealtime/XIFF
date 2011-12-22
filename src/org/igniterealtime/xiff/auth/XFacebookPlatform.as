@@ -24,14 +24,11 @@
  */
 package org.igniterealtime.xiff.auth
 {
-	import com.hurlant.crypto.hash.MD5;
 	import com.hurlant.util.Base64;
-	import com.hurlant.util.Hex;
-
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
 
 	import org.igniterealtime.xiff.core.XMPPConnection;
+
+	import flash.utils.Dictionary;
 
 	/**
 	 * This class provides SASL authentication using the X-FACEBOOK-PLATFORM mechanism.
