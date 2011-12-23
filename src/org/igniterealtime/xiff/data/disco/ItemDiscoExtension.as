@@ -24,11 +24,11 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import flash.xml.XMLNode;
-	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
-	
+
+	import flash.xml.XMLNode;
+
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a>
 	 * for service item discovery.
@@ -37,33 +37,33 @@ package org.igniterealtime.xiff.data.disco
 	public class ItemDiscoExtension extends DiscoExtension implements IExtension
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#items";
-	
+
 		private var _items:Array;
-		
-		public function ItemDiscoExtension(xmlNode:XMLNode = null)
+
+		public function ItemDiscoExtension( parent:XMLNode=null )
 		{
-			super(xmlNode);
+			super( parent );
 		}
-		
+
 		public function getElementName():String
 		{
 			return DiscoExtension.ELEMENT_NAME;
 		}
-	
+
 		public function getNS():String
 		{
 			return ItemDiscoExtension.NS;
 		}
-	
-	    /**
-	     * Performs the registration of this extension into the extension
-	     * registry.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(ItemDiscoExtension);
-	    }
-	
+
+		/**
+		 * Performs the registration of this extension into the extension
+		 * registry.
+		 */
+		public static function enable():void
+		{
+			ExtensionClassRegistry.register( ItemDiscoExtension );
+		}
+
 		/**
 		 * An array of objects that represent the items discovered
 		 *
@@ -83,19 +83,44 @@ package org.igniterealtime.xiff.data.disco
 		{
 			return _items;
 		}
-	
-		override public function deserialize(node:XMLNode):Boolean
+
+		override public function serialize( parentNode:XMLNode ):Boolean
 		{
-			if (!super.deserialize(node))
-				return false;
-				
-			_items = [];
-			
-			for each(var item:XMLNode in getNode().childNodes)
+			if( !super.serialize( parentNode ) ) return false;
+
+			for each( var item:DiscoItem in _items )
 			{
-				_items.push(item.attributes);
+				item.serialize( parentNode );
+			}
+
+			return true;
+		}
+
+		override public function deserialize( node:XMLNode ):Boolean
+		{
+			if( !super.deserialize( node ) ) return false;
+
+			_items = [];
+
+			for each( var child:XMLNode in getNode().childNodes )
+			{
+				switch( child.nodeName )
+				{
+					case "item":
+						var item:DiscoItem = new DiscoItem( getNode() );
+						item.deserialize( child );
+						_items.push( item );
+						break;
+				}
 			}
 			return true;
 		}
+
+		public function addItem( item:DiscoItem ):DiscoItem
+		{
+			_items.push( item );
+			return item;
+		}
+
 	}
 }
