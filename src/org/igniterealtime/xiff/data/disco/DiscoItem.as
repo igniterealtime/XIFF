@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.disco
 
 		public function equals( other:DiscoItem ):Boolean
 		{
-			return jid == other.jid && name == other.name;
+			return jid == other.jid && name == other.name && node == other.node;
 		}
 
 		public function get jid():String
@@ -63,6 +63,16 @@ package org.igniterealtime.xiff.data.disco
 		public function set name( value:String ):void
 		{
 			getNode().attributes.name = value;
+		}
+
+		public function get node():String
+		{
+			return getNode().attributes.node;
+		}
+
+		public function set node( value:String ):void
+		{
+			getNode().attributes.node = value;
 		}
 
 	}
