@@ -177,7 +177,7 @@ package org.igniterealtime.xiff.data.forms
 			// Most likely at the start of the array
 			for each( var field:FormField in _fields )
 			{
-				if( field.name == "FORM_TYPE" )
+				if( field.varName == "FORM_TYPE" )
 					return field.value;
 			}
 			return "";
@@ -202,7 +202,7 @@ package org.igniterealtime.xiff.data.forms
 		{
 			for each( var field:FormField in _fields )
 			{
-				if( field.name == value )
+				if( field.varName == value )
 				{
 					return field;
 				}
@@ -233,7 +233,7 @@ package org.igniterealtime.xiff.data.forms
 			for( var f:String in fieldmap )
 			{
 				var field:FormField = new FormField();
-				field.name = f;
+				field.varName = f;
 				field.setAllValues( fieldmap[ f ] );
 				_fields.push( field );
 			}

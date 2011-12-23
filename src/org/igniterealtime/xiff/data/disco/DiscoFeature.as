@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.disco
 
 		public function equals( other:DiscoFeature ):Boolean
 		{
-			return name == other.name;
+			return varName == other.varName;
 		}
 
 		/**
@@ -50,15 +50,15 @@ package org.igniterealtime.xiff.data.disco
 		 *
 		 * Note: This serializes to the <code>var</code> attribute on the feature node.
 		 * Since <code>var</code> is a reserved word in ActionScript,
-		 * this field uses <code>name</code> to describe the var of this field.
+		 * this feature uses <code>varName</code> to describe the var of this feature.
 		 *
 		 */
-		public function get name():String
+		public function get varName():String
 		{
 			return getNode().attributes[ "var" ];
 		}
 
-		public function set name( value:String ):void
+		public function set varName( value:String ):void
 		{
 			getNode().attributes[ "var" ] = value;
 		}

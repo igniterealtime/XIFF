@@ -111,19 +111,19 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * The name of this field used by the application or server.
+		 * The var of this field used by the application or server.
 		 *
-		 * Note: this serializes to the <code>var</code> attribute on the
-		 * field node.  Since <code>var</code> is a reserved word in ActionScript
-		 * this field uses <code>name</code> to describe the name of this field.
+		 * Note: this serializes to the <code>var</code> attribute on the field node.
+		 * Since <code>var</code> is a reserved word in ActionScript
+		 * this field uses <code>varName</code> to describe the var of this field.
 		 *
 		 */
-		public function get name():String
+		public function get varName():String
 		{
 			return getNode().attributes[ "var" ];
 		}
 
-		public function set name( value:String ):void
+		public function set varName( value:String ):void
 		{
 			getNode().attributes[ "var" ] = value;
 		}
