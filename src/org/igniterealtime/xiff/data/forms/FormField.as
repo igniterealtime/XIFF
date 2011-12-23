@@ -43,10 +43,10 @@ package org.igniterealtime.xiff.data.forms
 	{
 		public static const ELEMENT_NAME:String = "field";
 
-		private var myDescNode:XMLNode;
-		private var myRequiredNode:XMLNode;
-		private var myValueNodes:Array;
-		private var myOptionNodes:Array;
+		private var descNode:XMLNode;
+		private var requiredNode:XMLNode;
+		private var valueNodes:Array;
+		private var optionNodes:Array;
 
 		public function FormField()
 		{
@@ -81,8 +81,8 @@ package org.igniterealtime.xiff.data.forms
 		{
 			setNode( node );
 
-			myValueNodes = [];
-			myOptionNodes = [];
+			valueNodes = [];
+			optionNodes = [];
 
 			var children:Array = node.childNodes;
 
@@ -93,16 +93,16 @@ package org.igniterealtime.xiff.data.forms
 				switch( children[ i ].nodeName )
 				{
 					case "desc":
-						myDescNode = c;
+						descNode = c;
 						break;
 					case "required":
-						myRequiredNode = c;
+						requiredNode = c;
 						break;
 					case "value":
-						myValueNodes.push( c );
+						valueNodes.push( c );
 						break;
 					case "option":
-						myOptionNodes.push( c );
+						optionNodes.push( c );
 						break;
 				}
 			}
@@ -195,8 +195,8 @@ package org.igniterealtime.xiff.data.forms
 		{
 			try
 			{
-				if( myValueNodes[ 0 ] != null && myValueNodes[ 0 ].firstChild != null )
-					return myValueNodes[ 0 ].firstChild.nodeValue;
+				if( valueNodes[ 0 ] != null && valueNodes[ 0 ].firstChild != null )
+					return valueNodes[ 0 ].firstChild.nodeValue;
 			}
 			catch( error:Error )
 			{
@@ -207,9 +207,9 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set value( value:String ):void
 		{
-			if( myValueNodes == null ) myValueNodes = [];
+			if( valueNodes == null ) valueNodes = [];
 
-			myValueNodes[ 0 ] = replaceTextNode( getNode(), myValueNodes[ 0 ], "value", value );
+			valueNodes[ 0 ] = replaceTextNode( getNode(), valueNodes[ 0 ], "value", value );
 		}
 
 		/**
@@ -229,7 +229,7 @@ package org.igniterealtime.xiff.data.forms
 		{
 			var res:Array = [];
 
-			for each( var valueNode:XMLNode in myValueNodes )
+			for each( var valueNode:XMLNode in valueNodes )
 			{
 				res.push( valueNode.firstChild.nodeValue );
 			}
@@ -243,12 +243,12 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function setAllValues( value:Array ):void
 		{
-			for each( var v:XMLNode in myValueNodes )
+			for each( var v:XMLNode in valueNodes )
 			{
 				v.removeNode();
 			}
 
-			myValueNodes = value.map( function( value:String, index:uint, arr:Array ):*
+			valueNodes = value.map( function( value:String, index:uint, arr:Array ):*
 			{
 				return replaceTextNode( getNode(), undefined, "value", value );
 			} );
@@ -269,7 +269,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function getAllOptions():Array
 		{
-			return myOptionNodes.map( function( optionNode:XMLNode, index:uint, arr:Array ):Object
+			return optionNodes.map( function( optionNode:XMLNode, index:uint, arr:Array ):Object
 			{
 				return { label: optionNode.attributes.label, value: optionNode.firstChild.firstChild.nodeValue };
 			} );
@@ -283,12 +283,12 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function setAllOptions( value:Array ):void
 		{
-			for each( var optionNode:XMLNode in myOptionNodes )
+			for each( var optionNode:XMLNode in optionNodes )
 			{
 				optionNode.removeNode();
 			}
 
-			myOptionNodes = value.map( function( v:Object, index:uint, arr:Array ):XMLNode
+			optionNodes = value.map( function( v:Object, index:uint, arr:Array ):XMLNode
 			{
 				var option:XMLNode = replaceTextNode( getNode(), undefined, "value", v.value );
 				option.attributes.label = v.label;

@@ -60,10 +60,10 @@ package org.igniterealtime.xiff.data.forms
 
 		private var _items:Array = [];
 		private var _fields:Array = [];
-		private var myReportedFields:Array = [];
+		private var reportedFields:Array = [];
 
-		private var myInstructionsNode:XMLNode;
-		private var myTitleNode:XMLNode;
+		private var instructionsNode:XMLNode;
+		private var titleNode:XMLNode;
 
 		/**
 		 *
@@ -128,11 +128,11 @@ package org.igniterealtime.xiff.data.forms
 				switch( c.nodeName )
 				{
 					case "instructions":
-						myInstructionsNode = c;
+						instructionsNode = c;
 						break;
 
 					case "title":
-						myTitleNode = c;
+						titleNode = c;
 						break;
 
 					case "reported":
@@ -140,7 +140,7 @@ package org.igniterealtime.xiff.data.forms
 						{
 							field = new FormField();
 							field.deserialize( reportedFieldXML );
-							myReportedFields.push( field );
+							reportedFields.push( field );
 						}
 						break;
 
@@ -279,9 +279,9 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get instructions():String
 		{
-			if( myInstructionsNode && myInstructionsNode.firstChild )
+			if( instructionsNode && instructionsNode.firstChild )
 			{
-				return myInstructionsNode.firstChild.nodeValue;
+				return instructionsNode.firstChild.nodeValue;
 			}
 
 			return null;
@@ -289,7 +289,7 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set instructions( value:String ):void
 		{
-			myInstructionsNode = replaceTextNode( getNode(), myInstructionsNode, "instructions", value );
+			instructionsNode = replaceTextNode( getNode(), instructionsNode, "instructions", value );
 		}
 
 		/**
@@ -298,9 +298,9 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get title():String
 		{
-			if( myTitleNode && myTitleNode.firstChild )
+			if( titleNode && titleNode.firstChild )
 			{
-				return myTitleNode.firstChild.nodeValue;
+				return titleNode.firstChild.nodeValue;
 			}
 
 			return null;
@@ -308,7 +308,7 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set title( value:String ):void
 		{
-			myTitleNode = replaceTextNode( getNode(), myTitleNode, "Title", value );
+			titleNode = replaceTextNode( getNode(), titleNode, "Title", value );
 		}
 
 		/**
@@ -319,7 +319,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function getReportedFields():Array
 		{
-			return myReportedFields;
+			return reportedFields;
 		}
 
 		/**
