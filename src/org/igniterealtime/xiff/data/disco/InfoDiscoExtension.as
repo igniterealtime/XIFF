@@ -95,17 +95,18 @@ package org.igniterealtime.xiff.data.disco
 
 		override public function serialize( parentNode:XMLNode ):Boolean
 		{
-			if( !super.serialize( parentNode ) ) return false;
-
+			var node:XMLNode = getNode();
 			for each( var identity:DiscoIdentity in _identities )
 			{
-				identity.serialize( parentNode );
+				identity.serialize( node );
 			}
 
 			for each( var feature:DiscoFeature in _features )
 			{
-				feature.serialize( parentNode );
+				feature.serialize( node );
 			}
+
+			if( !super.serialize( parentNode ) ) return false;
 
 			return true;
 		}
@@ -147,6 +148,18 @@ package org.igniterealtime.xiff.data.disco
 		{
 			_features.push( feature );
 			return feature;
+		}
+
+		public function addFeatures( varNames:Array ):Array
+		{
+			var features:Array = [];
+			for each( var varName:String in varNames )
+			{
+				var feature:DiscoFeature = new DiscoFeature();
+				feature.varName = varName;
+				features.push( feature );
+			}
+			return features;
 		}
 
 	}

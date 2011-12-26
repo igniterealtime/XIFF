@@ -86,12 +86,13 @@ package org.igniterealtime.xiff.data.disco
 
 		override public function serialize( parentNode:XMLNode ):Boolean
 		{
-			if( !super.serialize( parentNode ) ) return false;
-
+			var node:XMLNode = getNode();
 			for each( var item:DiscoItem in _items )
 			{
-				item.serialize( parentNode );
+				item.serialize( node );
 			}
+
+			if( !super.serialize( parentNode ) ) return false;
 
 			return true;
 		}

@@ -25,7 +25,7 @@ package org.igniterealtime.xiff.data.disco
 		{
 			var node:XMLNode = getNode();
 
-			if( !exists( node.parentNode ) )
+			if( parentNode != node.parentNode )
 			{
 				parentNode.appendChild( node.cloneNode( true ) );
 			}

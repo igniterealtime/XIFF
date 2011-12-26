@@ -224,7 +224,12 @@ package org.igniterealtime.xiff.data.forms
 		 * Sets the fields given a fieldmap object containing keys of field names
 		 * and values of value arrays
 		 *
-		 * @param	fieldmap Object in format obj[key:String].value:Array
+		 * @param	fieldmap Object
+		 * Format:
+		 * { "varName": [ value1, value2, ... ] }
+		 * TODO:
+		 * or
+		 * { varName: "varName", label: "label", type: "type", desc: "desc", required: true, values: [ value1, value2, ... ], options: [ option1, option2, ... ] }
 		 */
 		public function setFields( fieldmap:Object ):void
 		{
