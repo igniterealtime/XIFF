@@ -36,39 +36,19 @@ package org.igniterealtime.xiff.data.forms
 	 */
 	public class FormExtension extends Extension implements IExtension
 	{
-		public static const FIELD_TYPE_BOOLEAN:String = "boolean";
-		public static const FIELD_TYPE_FIXED:String = "fixed";
-		public static const FIELD_TYPE_HIDDEN:String = "hidden";
-		public static const FIELD_TYPE_JID_MULTI:String = "jid-multi";
-		public static const FIELD_TYPE_JID_SINGLE:String = "jid-single";
-		public static const FIELD_TYPE_LIST_MULTI:String = "list-multi";
-		public static const FIELD_TYPE_LIST_SINGLE:String = "list-single";
-		public static const FIELD_TYPE_TEXT_MULTI:String = "text-multi";
-		public static const FIELD_TYPE_TEXT_PRIVATE:String = "text-private";
-		public static const FIELD_TYPE_TEXT_SINGLE:String = "text-single";
-
-		public static const TYPE_REQUEST:String = "form";
-		public static const TYPE_RESULT:String = "result";
-		public static const TYPE_SUBMIT:String = "submit";
-		public static const TYPE_CANCEL:String = "cancel";
-
 		public static const NS:String = "jabber:x:data";
 		public static const ELEMENT_NAME:String = "x";
 
 		//private static var isStaticConstructed:Boolean = enable();
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 
-		private var _items:Array = [];
+		private var _reported:FormReported;
 		private var _fields:Array = [];
-		private var reportedFields:Array = [];
+		private var _items:Array = [];
 
-		private var instructionsNode:XMLNode;
+		private var instructionsNodes:Array;
 		private var titleNode:XMLNode;
 
-		/**
-		 *
-		 * @param	parent (Optional) The containing XMLNode for this extension
-		 */
 		public function FormExtension( parent:XMLNode=null )
 		{
 			super( parent );
@@ -106,6 +86,17 @@ package org.igniterealtime.xiff.data.forms
 				}
 			}
 
+			for each( var item:FormItem in _items )
+			{
+				if( !item.serialize( node ) )
+				{
+					return false;
+				}
+			}
+
+			if( _reported && !_reported.serialize( node ) )
+				return false;
+
 			if( parent != node.parentNode )
 			{
 				parent.appendChild( node.cloneNode( true ) );
@@ -118,17 +109,16 @@ package org.igniterealtime.xiff.data.forms
 		{
 			setNode( node );
 
-			removeAllItems();
+			instructionsNodes = [];
 			removeAllFields();
+			removeAllItems();
 
 			for each( var c:XMLNode in node.childNodes )
 			{
-				var field:FormField;
-
 				switch( c.nodeName )
 				{
 					case "instructions":
-						instructionsNode = c;
+						instructionsNodes.push( c );
 						break;
 
 					case "title":
@@ -136,61 +126,25 @@ package org.igniterealtime.xiff.data.forms
 						break;
 
 					case "reported":
-						for each( var reportedFieldXML:XMLNode in c.childNodes )
-						{
-							field = new FormField();
-							field.deserialize( reportedFieldXML );
-							reportedFields.push( field );
-						}
-						break;
-
-					case "item":
-						var itemFields:Array = [];
-						for each( var itemFieldXML:XMLNode in c.childNodes )
-						{
-							field = new FormField();
-							field.deserialize( itemFieldXML );
-							itemFields.push( field );
-						}
-						_items.push( itemFields );
+						var reportedItem:FormReported = new FormReported();
+						reportedItem.deserialize( c );
+						_reported = reportedItem;
 						break;
 
 					case "field":
-						field = new FormField();
+						var field:FormField = new FormField();
 						field.deserialize( c );
 						_fields.push( field );
+						break;
+
+					case "item":
+						var item:FormItem = new FormItem();
+						item.deserialize( c );
+						_items.push( item );
 						break;
 				}
 			}
 			return true;
-		}
-
-		/**
-		 * This is an accessor to the hidden field type <code>FORM_TYPE</code>
-		 * easily check what kind of form this is.
-		 *
-		 * @return String the registered namespace of this form type
-		 * @see	http://xmpp.org/extensions/xep-0068.html
-		 */
-		public function getFormType():String
-		{
-			// Most likely at the start of the array
-			for each( var field:FormField in _fields )
-			{
-				if( field.varName == "FORM_TYPE" )
-					return field.value;
-			}
-			return "";
-		}
-
-		/**
-		 * Item interface to array of fields if they are contained in an "item" element
-		 *
-		 * @return Array containing Arrays of FormFields objects
-		 */
-		public function getAllItems():Array
-		{
-			return _items;
 		}
 
 		/**
@@ -211,46 +165,48 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * Item interface to array of fields if they are contained in an "item" element
-		 *
-		 * @return Array of FormFields objects
-		 */
-		public function getAllFields():Array
-		{
-			return _fields;
-		}
-
-		/**
-		 * Sets the fields given a fieldmap object containing keys of field names
+		 * Sets the fields given a fieldMap object containing keys of field vars
 		 * and values of value arrays
 		 *
-		 * @param	fieldmap Object
+		 * @param	fieldMap Object
 		 * Format:
 		 * { "varName": [ value1, value2, ... ] }
-		 * TODO:
-		 * or
-		 * { varName: "varName", label: "label", type: "type", desc: "desc", required: true, values: [ value1, value2, ... ], options: [ option1, option2, ... ] }
 		 */
-		public function setFields( fieldmap:Object ):void
+		public function setFieldMap( fieldMap:Object ):void
 		{
 			removeAllFields();
 
-			for( var f:String in fieldmap )
+			for( var varName:String in fieldMap )
 			{
 				var field:FormField = new FormField();
-				field.varName = f;
-				field.setAllValues( fieldmap[ f ] );
+				field.varName = varName;
+				field.values = fieldMap[ varName ];
 				_fields.push( field );
 			}
 		}
 
 		/**
+		 * Use this method to remove all fields.
+		 */
+		public function removeAllFields():void
+		{
+			for each( var field:FormField in _fields )
+			{
+				for each( var f:* in field )
+				{
+					f.getNode().removeNode();
+					f.setNode( null );
+				}
+			}
+			_fields = [];
+		}
+
+		/**
 		 * Use this method to remove all items.
-		 *
 		 */
 		public function removeAllItems():void
 		{
-			for each( var item:FormField in _items )
+			for each( var item:FormItem in _items )
 			{
 				for each( var i:* in item )
 				{
@@ -262,90 +218,152 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * Use this method to remove all fields.
-		 *
-		 */
-		public function removeAllFields():void
-		{
-			for each( var item:FormField in _fields )
-			{
-				for each( var i:* in item )
-				{
-					i.getNode().removeNode();
-					i.setNode( null );
-				}
-			}
-			_fields = [];
-		}
-
-		/**
-		 * Instructions describing what to do with this form
-		 *
-		 */
-		public function get instructions():String
-		{
-			if( instructionsNode && instructionsNode.firstChild )
-			{
-				return instructionsNode.firstChild.nodeValue;
-			}
-
-			return null;
-		}
-
-		public function set instructions( value:String ):void
-		{
-			instructionsNode = replaceTextNode( getNode(), instructionsNode, "instructions", value );
-		}
-
-		/**
 		 * The title of this form
 		 *
 		 */
 		public function get title():String
 		{
 			if( titleNode && titleNode.firstChild )
-			{
 				return titleNode.firstChild.nodeValue;
-			}
 
 			return null;
 		}
 
 		public function set title( value:String ):void
 		{
-			titleNode = replaceTextNode( getNode(), titleNode, "Title", value );
+			titleNode = replaceTextNode( getNode(), titleNode, "title", value );
 		}
 
 		/**
-		 * Array of fields found in individual items due to a search query result
+		 * Natural-language instructions to be followed by the form-submitting entity.
 		 *
-		 * @return	Array of FormField objects containing information about the fields
-		 * in the fields retrieved by getAllItems
+		 * @return	Array containing instructions.
 		 */
-		public function getReportedFields():Array
+		public function get instructions():Array
 		{
-			return reportedFields;
+			var result:Array = [];
+
+			for each( var valueNode:XMLNode in instructionsNodes )
+			{
+				result.push( valueNode.firstChild.nodeValue );
+			}
+			return result;
 		}
 
 		/**
-		 * The type of form.  May be one of the following:
+		 * @private
+		 */
+		public function set instructions( value:Array ):void
+		{
+			for each( var v:XMLNode in instructionsNodes )
+			{
+				v.removeNode();
+			}
+
+			instructionsNodes = value.map( function( value:String, index:uint, arr:Array ):*
+			{
+				return replaceTextNode( getNode(), undefined, "instructions", value );
+			} );
+		}
+
+		/**
+		 * The type of form.
+		 * May be one of the following:
 		 *
-		 * <code>FormExtension.TYPE_REQUEST</code>
-		 * <code>FormExtension.TYPE_RESULT</code>
-		 * <code>FormExtension.TYPE_SUBMIT</code>
-		 * <code>FormExtension.TYPE_CANCEL</code>
-		 *
+		 * <code>FormType.FORM</code>
+		 * <code>FormType.SUBMIT</code>
+		 * <code>FormType.CANCEL</code>
+		 * <code>FormType.RESULT</code>
 		 */
 		public function get type():String
 		{
 			return getNode().attributes.type;
 		}
 
+		/**
+		 * @private
+		 */
 		public function set type( value:String ):void
 		{
 			// TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 			// TODO Change the behavior of the serialization depending on the type
 			getNode().attributes.type = value;
+		}
+
+		/**
+		 * This is an accessor to the hidden field type <code>FORM_TYPE</code>
+		 * easily check what kind of form this is.
+		 *
+		 * @return String the registered namespace of this form type
+		 * @see	http://xmpp.org/extensions/xep-0068.html
+		 */
+		public function get formType():String
+		{
+			// Most likely at the start of the array
+			for each( var field:FormField in _fields )
+			{
+				if( field.varName == "FORM_TYPE" )
+					return field.value;
+			}
+			return "";
+		}
+
+		/**
+		 * An element defining the data format for the result items.
+		 *
+		 * @return	A FormReported object
+		 */
+		public function get reported():FormReported
+		{
+			return _reported;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set reported( value:FormReported ):void
+		{
+			_reported = value;
+		}
+
+		/**
+		 * Interface to array of fields.
+		 *
+		 * @return Array of FormField objects
+		 */
+		public function get fields():Array
+		{
+			return _fields;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set fields( value:Array ):void
+		{
+			removeAllFields();
+
+			_fields = value;
+		}
+
+		/**
+		 * Interface to array of items.
+		 *
+		 * @return Array containing Arrays of FormItem objects
+		 */
+		public function get items():Array
+		{
+			return _items;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set items( value:Array ):void
+		{
+			removeAllItems();
+
+			_items = value;
 		}
 
 	}

@@ -25,11 +25,30 @@
 package org.igniterealtime.xiff.conference
 {
 	import org.igniterealtime.xiff.collections.ArrayCollection;
-	import org.igniterealtime.xiff.core.*;
-	import org.igniterealtime.xiff.data.*;
+	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
+	import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.data.IExtension;
+	import org.igniterealtime.xiff.data.IMessage;
+	import org.igniterealtime.xiff.data.IQ;
+	import org.igniterealtime.xiff.data.Message;
+	import org.igniterealtime.xiff.data.Presence;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
-	import org.igniterealtime.xiff.data.muc.*;
-	import org.igniterealtime.xiff.events.*;
+	import org.igniterealtime.xiff.data.forms.enum.FormType;
+	import org.igniterealtime.xiff.data.muc.IMUCExtension;
+	import org.igniterealtime.xiff.data.muc.MUC;
+	import org.igniterealtime.xiff.data.muc.MUCAdminExtension;
+	import org.igniterealtime.xiff.data.muc.MUCBaseExtension;
+	import org.igniterealtime.xiff.data.muc.MUCExtension;
+	import org.igniterealtime.xiff.data.muc.MUCItem;
+	import org.igniterealtime.xiff.data.muc.MUCOwnerExtension;
+	import org.igniterealtime.xiff.data.muc.MUCStatus;
+	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
+	import org.igniterealtime.xiff.events.DisconnectionEvent;
+	import org.igniterealtime.xiff.events.MessageEvent;
+	import org.igniterealtime.xiff.events.PresenceEvent;
+	import org.igniterealtime.xiff.events.PropertyChangeEvent;
+	import org.igniterealtime.xiff.events.RoomEvent;
 	
 	/**
 	 * Dispatched when the active, affiliation, or role property changes.
@@ -340,7 +359,7 @@ package org.igniterealtime.xiff.conference
 			var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 			var form:FormExtension = new FormExtension();
 
-			form.type = FormExtension.TYPE_CANCEL;
+			form.type = FormType.CANCEL;
 
 			ownerExt.addExtension( form );
 			iq.addExtension( ownerExt );
@@ -389,9 +408,9 @@ package org.igniterealtime.xiff.conference
 			{
 				form = new FormExtension();
 				fieldmap[ "FORM_TYPE" ] = [ "http://jabber.org/protocol/muc#roomconfig" ];
-				form.setFields( fieldmap );
+				form.setFieldMap( fieldmap );
 			}
-			form.type = FormExtension.TYPE_SUBMIT;
+			form.type = FormType.SUBMIT;
 			ownerExt.addExtension( form );
 
 			iq.addExtension( ownerExt );
@@ -1154,7 +1173,7 @@ package org.igniterealtime.xiff.conference
 			var ownerExt:MUCOwnerExtension = iq.getAllExtensionsByNS( MUCOwnerExtension.NS )[ 0 ];
 			var form:FormExtension = ownerExt.getAllExtensionsByNS( FormExtension.NS )[ 0 ];
 
-			if ( form.type == FormExtension.TYPE_REQUEST )
+			if ( form.type == FormType.FORM )
 			{
 				var event:RoomEvent = new RoomEvent( RoomEvent.CONFIGURE_ROOM );
 				event.data = form;
@@ -1200,7 +1219,7 @@ package org.igniterealtime.xiff.conference
 				var ownerExt:MUCOwnerExtension = new MUCOwnerExtension();
 				var form:FormExtension = new FormExtension();
 
-				form.type = FormExtension.TYPE_SUBMIT;
+				form.type = FormType.SUBMIT;
 
 				ownerExt.addExtension( form );
 				iq.addExtension( ownerExt );

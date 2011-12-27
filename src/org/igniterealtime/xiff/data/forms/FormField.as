@@ -48,9 +48,17 @@ package org.igniterealtime.xiff.data.forms
 		private var valueNodes:Array;
 		private var optionNodes:Array;
 
-		public function FormField()
+		public function FormField( varName:String=null, label:String=null, type:String=null, desc:String=null, required:Boolean=false, values:Array=null, options:Array=null )
 		{
 			super();
+
+			this.varName = varName;
+			this.label = label;
+			this.type = type;
+			this.desc = desc;
+			this.required = required;
+			this.values = values;
+			this.options = options;
 		}
 
 		/**
@@ -111,12 +119,11 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * The var of this field used by the application or server.
+		 * The var of this field used to uniquely identify the field in the context of the form.
 		 *
 		 * Note: this serializes to the <code>var</code> attribute on the field node.
 		 * Since <code>var</code> is a reserved word in ActionScript
 		 * this field uses <code>varName</code> to describe the var of this field.
-		 *
 		 */
 		public function get varName():String
 		{
@@ -125,6 +132,11 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set varName( value:String ):void
 		{
+			if( !value )
+			{
+				delete getNode().attributes[ "var" ];
+				return;
+			}
 			getNode().attributes[ "var" ] = value;
 		}
 
@@ -134,16 +146,16 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * May be one of the following:
 		 *
-		 * <code>FormExtension.FIELD_TYPE_BOOLEAN</code>
-		 * <code>FormExtension.FIELD_TYPE_FIXED</code>
-		 * <code>FormExtension.FIELD_TYPE_HIDDEN</code>
-		 * <code>FormExtension.FIELD_TYPE_JID_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_JID_SINGLE</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_PRIVATE</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_SINGLE</code>
+		 * <code>FormFieldType.BOOLEAN</code>
+		 * <code>FormFieldType.FIXED</code>
+		 * <code>FormFieldType.HIDDEN</code>
+		 * <code>FormFieldType.JID_MULTI</code>
+		 * <code>FormFieldType.JID_SINGLE</code>
+		 * <code>FormFieldType.LIST_MULTI</code>
+		 * <code>FormFieldType.LIST_SINGLE</code>
+		 * <code>FormFieldType.TEXT_MULTI</code>
+		 * <code>FormFieldType.TEXT_PRIVATE</code>
+		 * <code>FormFieldType.TEXT_SINGLE</code>
 		 *
 		 * @see	http://xmpp.org/extensions/xep-0004.html#protocol-fieldtypes
 		 */
@@ -154,13 +166,16 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set type( value:String ):void
 		{
+			if( !value )
+			{
+				delete getNode().attributes.type;
+				return;
+			}
 			getNode().attributes.type = value;
 		}
 
 		/**
-		 * The label of this field used by user interfaces to render a descriptive
-		 * title of this field
-		 *
+		 * A human-readable name for the field.
 		 */
 		public function get label():String
 		{
@@ -169,24 +184,72 @@ package org.igniterealtime.xiff.data.forms
 
 		public function set label( value:String ):void
 		{
+			if( !value )
+			{
+				delete getNode().attributes.label;
+				return;
+			}
 			getNode().attributes.label = value;
 		}
 
 		/**
-		 * The chosen value for this field.  In forms with a type
-		 * <code>FormExtension.TYPE_REQUEST</code> this is typically the default
+		 * A natural-language description of the field, intended for presentation in a user-agent
+		 * (e.g., as a "tool-tip", help button, or explanatory text provided near the field).
+		 */
+		public function get desc():String
+		{
+			if( descNode && descNode.firstChild )
+				return descNode.firstChild.nodeValue;
+
+			return null;
+		}
+	
+		/**
+		 * @private
+		 */
+		public function set desc( value:String ):void
+		{
+			descNode = replaceTextNode( getNode(), descNode, "desc", value );
+		}
+
+		/**
+		 * If true, flags the field as required in order for the form to be considered valid.
+		 */
+		public function get required():Boolean
+		{
+			if( requiredNode != null )
+				return true;
+
+			return false;
+		}
+	
+		/**
+		 * @private
+		 */
+		public function set required( value:Boolean ):void
+		{
+			if( requiredNode != null )
+				requiredNode.removeNode();
+
+			if( value )
+				requiredNode = ensureNode( getNode(), "required" );
+		}
+
+		/**
+		 * The chosen value for this field. In forms with a type
+		 * <code>FormType.FORM</code> this is typically the default
 		 * value of the field.
 		 *
 		 * Applies to the following field types:
 		 *
-		 * <code>FormExtension.FIELD_TYPE_BOOLEAN</code>
-		 * <code>FormExtension.FIELD_TYPE_FIXED</code>
-		 * <code>FormExtension.FIELD_TYPE_HIDDEN</code>
-		 * <code>FormExtension.FIELD_TYPE_JID_SINGLE</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_PRIVATE</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_SINGLE</code>
+		 * <code>FormFieldType.BOOLEAN</code>
+		 * <code>FormFieldType.FIXED</code>
+		 * <code>FormFieldType.HIDDEN</code>
+		 * <code>FormFieldType.JID_SINGLE</code>
+		 * <code>FormFieldType.LIST_SINGLE</code>
+		 * <code>FormFieldType.LIST_MULTI</code>
+		 * <code>FormFieldType.TEXT_PRIVATE</code>
+		 * <code>FormFieldType.TEXT_SINGLE</code>
 		 *
 		 * Suggested values can typically be retrieved in <code>getAllOptions</code>
 		 *
@@ -214,26 +277,26 @@ package org.igniterealtime.xiff.data.forms
 
 		/**
 		 * The values for this multiple field.  In forms with a type
-		 * <code>FormExtension.TYPE_REQUEST</code> these are typically the existing
+		 * <code>FormType.FORM</code> these are typically the existing
 		 * values of the field.
 		 *
 		 * Applies to the following field types:
 		 *
-		 * <code>FormExtension.FIELD_TYPE_JID_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_TEXT_MULTI</code>
+		 * <code>FormFieldType.JID_MULTI</code>
+		 * <code>FormFieldType.LIST_MULTI</code>
+		 * <code>FormFieldType.TEXT_MULTI</code>
 		 *
 		 * @return	Array containing strings representing the values of this field
 		 */
-		public function getAllValues():Array
+		public function get values():Array
 		{
-			var res:Array = [];
+			var result:Array = [];
 
 			for each( var valueNode:XMLNode in valueNodes )
 			{
-				res.push( valueNode.firstChild.nodeValue );
+				result.push( valueNode.firstChild.nodeValue );
 			}
-			return res;
+			return result;
 		}
 
 		/**
@@ -241,12 +304,14 @@ package org.igniterealtime.xiff.data.forms
 		 *
 		 * @param	value Array of Strings
 		 */
-		public function setAllValues( value:Array ):void
+		public function set values( value:Array ):void
 		{
 			for each( var v:XMLNode in valueNodes )
 			{
 				v.removeNode();
 			}
+
+			if( !value ) return;
 
 			valueNodes = value.map( function( value:String, index:uint, arr:Array ):*
 			{
@@ -255,19 +320,18 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * If options are provided for possible selections of the value they are listed
-		 * here.
+		 * If options are provided for possible selections of the value they are listed here.
 		 *
 		 * Applies to the following field types:
 		 *
-		 * <code>FormExtension.FIELD_TYPE_JID_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_JID_SINGLE</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_MULTI</code>
-		 * <code>FormExtension.FIELD_TYPE_LIST_SINGLE</code>
+		 * <code>FormFieldType.JID_MULTI</code>
+		 * <code>FormFieldType.JID_SINGLE</code>
+		 * <code>FormFieldType.LIST_MULTI</code>
+		 * <code>FormFieldType.LIST_SINGLE</code>
 		 *
 		 * @return	Array of objects with the properties <code>label</code> and <code>value</code>
 		 */
-		public function getAllOptions():Array
+		public function get options():Array
 		{
 			return optionNodes.map( function( optionNode:XMLNode, index:uint, arr:Array ):Object
 			{
@@ -281,12 +345,14 @@ package org.igniterealtime.xiff.data.forms
 		 * @param	Array containing objects with the properties <code>label</code> and
 		 * <code>value</code>
 		 */
-		public function setAllOptions( value:Array ):void
+		public function set options( value:Array ):void
 		{
 			for each( var optionNode:XMLNode in optionNodes )
 			{
 				optionNode.removeNode();
 			}
+
+			if( !value ) return;
 
 			optionNodes = value.map( function( v:Object, index:uint, arr:Array ):XMLNode
 			{
