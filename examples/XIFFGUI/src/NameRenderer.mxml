@@ -3,9 +3,7 @@
 	<mx:Script>
 		<![CDATA[
 			import com.yourpalmark.chat.data.ChatUser;
-			
-			import mx.events.FlexEvent;
-			
+
 			import org.igniterealtime.xiff.events.VCardEvent;
 			
 			override public function set data( value:Object ):void

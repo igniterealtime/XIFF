@@ -5,14 +5,12 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
-			import mx.events.CloseEvent;
-			import mx.events.FlexEvent;
-			
 			import org.igniterealtime.xiff.core.UnescapedJID;
 			import org.igniterealtime.xiff.data.Message;
-			import org.igniterealtime.xiff.data.Presence;
 			import org.igniterealtime.xiff.events.MessageEvent;
+
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			
 			public static var CLOSE:String = "close";
 			

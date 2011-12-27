@@ -193,7 +193,7 @@ package com.yourpalmark.chat
 			_connection.addEventListener( DisconnectionEvent.DISCONNECT, onDisconnect );
 			_connection.addEventListener( LoginEvent.LOGIN, onLogin );
 			_connection.addEventListener( XIFFErrorEvent.XIFF_ERROR, onXIFFError );
-			_connection.addEventListener( OutgoingDataEvent.OUTGOING_DATA, onOutgoingData )
+			_connection.addEventListener( OutgoingDataEvent.OUTGOING_DATA, onOutgoingData );
 			_connection.addEventListener( IncomingDataEvent.INCOMING_DATA, onIncomingData );
 			_connection.addEventListener( RegistrationFieldsEvent.REG_FIELDS, onRegistrationFields );
 			_connection.addEventListener( RegistrationSuccessEvent.REGISTRATION_SUCCESS, onRegistrationSuccess );
@@ -207,7 +207,7 @@ package com.yourpalmark.chat
 			_connection.removeEventListener( DisconnectionEvent.DISCONNECT, onDisconnect );
 			_connection.removeEventListener( LoginEvent.LOGIN, onLogin );
 			_connection.removeEventListener( XIFFErrorEvent.XIFF_ERROR, onXIFFError );
-			_connection.removeEventListener( OutgoingDataEvent.OUTGOING_DATA, onOutgoingData )
+			_connection.removeEventListener( OutgoingDataEvent.OUTGOING_DATA, onOutgoingData );
 			_connection.removeEventListener( IncomingDataEvent.INCOMING_DATA, onIncomingData );
 			_connection.removeEventListener( RegistrationFieldsEvent.REG_FIELDS, onRegistrationFields );
 			_connection.removeEventListener( RegistrationSuccessEvent.REGISTRATION_SUCCESS, onRegistrationSuccess );

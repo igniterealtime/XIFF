@@ -71,7 +71,7 @@
 				"Login server and port are used if you fill them in. For example Google Talk uses talk.google.com.\n" +
 				"If you are not registered, enter a username and password and press register.\n" +
 				"Check the error log to determine if there was a conflict (ie. someone already has your ID).\n" +
-				"Once you have successfully registered you may log in."
+				"Once you have successfully registered you may log in.";
 			
 			public function clearLog():void
 			{
@@ -113,7 +113,7 @@
 				if( serverInput.text == "" )
 				{
 					var domainIndex:int = usernameInput.text.lastIndexOf( "@" );
-					if( domainIndex > -1 ) serverInput.text = usernameInput.text.substring( domainIndex + 1 )
+					if( domainIndex > -1 ) serverInput.text = usernameInput.text.substring( domainIndex + 1 );
 					ChatManager.serverName = serverInput.text;
 				}
 				
@@ -423,7 +423,7 @@
 			private function onSubscriptionDenial( event:RosterEvent ):void
 			{
 				var generalPopup:GeneralPopup = new GeneralPopup();
-				generalPopup.message = event.jid + " denied you request to subscribe to their presence."
+				generalPopup.message = event.jid + " denied you request to subscribe to their presence.";
 				PopUpManager.addPopUp( generalPopup, this );
 				PopUpManager.centerPopUp( generalPopup );
 			}

@@ -25,7 +25,6 @@
 			
 			private var browser:Browser;
 			private var browserRooms:Array;
-			private var rooms:Array = [];
 			
 			private var _room:ChatRoom;
 			private var _chatManager:ChatManager;

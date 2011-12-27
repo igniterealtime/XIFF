@@ -316,7 +316,7 @@
 			
 			private function onDeclined( event:RoomEvent ):void
 			{
-				var generalPopup:GeneralPopup = new GeneralPopup()
+				var generalPopup:GeneralPopup = new GeneralPopup();
 				generalPopup.message = event.from + " declined to join room. Reason: " + event.reason;
 				PopUpManager.addPopUp( generalPopup, this );
 				PopUpManager.centerPopUp( generalPopup );
@@ -328,7 +328,7 @@
 			
 			private function onNickConflict( event:RoomEvent ):void
 			{
-				var generalPopup:GeneralPopup = new GeneralPopup()
+				var generalPopup:GeneralPopup = new GeneralPopup();
 				generalPopup.message = event.nickname + " is already taken, please use another nickname.";
 				PopUpManager.addPopUp( generalPopup, this );
 				PopUpManager.centerPopUp( generalPopup );
