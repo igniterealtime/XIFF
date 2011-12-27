@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" horizontalScrollPolicy="{ScrollPolicy.OFF}">
 	<mx:Script>
 		<![CDATA[
 			import com.yourpalmark.chat.data.ChatUser;
 
 			import org.igniterealtime.xiff.events.VCardEvent;
+
+			import mx.core.ScrollPolicy;
 			
 			override public function set data( value:Object ):void
 			{
