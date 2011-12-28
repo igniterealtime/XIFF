@@ -24,7 +24,6 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ISerializable;
 
@@ -50,48 +49,14 @@ package org.igniterealtime.xiff.data.disco
 			super( parent );
 		}
 
-		public function get serviceNode():String
+		public function get node():String
 		{
-			return getNode().parentNode.attributes.node;
+			return getNode().attributes.node;
 		}
 
-		public function set serviceNode( value:String ):void
+		public function set node( value:String ):void
 		{
-			getNode().parentNode.attributes.node = value;
-		}
-
-		/**
-		 * The service name of the discovery procedure
-		 */
-		public function get service():EscapedJID
-		{
-			var parent:XMLNode = getNode().parentNode;
-
-			if( parent.attributes.type == "result" )
-			{
-				return new EscapedJID( parent.attributes.from );
-			}
-			else
-			{
-				return new EscapedJID( parent.attributes.to );
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		public function set service( value:EscapedJID ):void
-		{
-			var parent:XMLNode = getNode().parentNode;
-
-			if( parent.attributes.type == "result" )
-			{
-				parent.attributes.from = value.toString();
-			}
-			else
-			{
-				parent.attributes.to = value.toString();
-			}
+			getNode().attributes.node = value;
 		}
 
 		public function serialize( parentNode:XMLNode ):Boolean

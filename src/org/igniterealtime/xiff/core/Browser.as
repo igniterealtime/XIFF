@@ -77,8 +77,6 @@ package org.igniterealtime.xiff.core
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.getNode());
-			ext.service = service;
-			ext.serviceNode = node;
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
@@ -90,8 +88,6 @@ package org.igniterealtime.xiff.core
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.getNode());
-			ext.service = service;
-			ext.serviceNode = node;
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
