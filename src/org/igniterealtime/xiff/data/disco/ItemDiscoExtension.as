@@ -84,6 +84,14 @@ package org.igniterealtime.xiff.data.disco
 			return _items;
 		}
 
+		/**
+		 * @private
+		 */
+		public function set items( value:Array ):void
+		{
+			_items = value;
+		}
+
 		override public function serialize( parentNode:XMLNode ):Boolean
 		{
 			var node:XMLNode = getNode();

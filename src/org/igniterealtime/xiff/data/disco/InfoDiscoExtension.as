@@ -85,17 +85,33 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
+		 * @private
+		 */
+		public function set identities( value:Array ):void
+		{
+			_identities = value;
+		}
+
+		/**
 		 * An array of namespaces this service supports for feature negotiation.
-		 *
 		 */
 		public function get features():Array
 		{
 			return _features;
 		}
 
+		/**
+		 * @private
+		 */
+		public function set features( value:Array ):void
+		{
+			_features = value;
+		}
+
 		override public function serialize( parentNode:XMLNode ):Boolean
 		{
 			var node:XMLNode = getNode();
+
 			for each( var identity:DiscoIdentity in _identities )
 			{
 				identity.serialize( node );
@@ -159,6 +175,7 @@ package org.igniterealtime.xiff.data.disco
 				feature.varName = varName;
 				features.push( feature );
 			}
+			_features = _features.concat( features );
 			return features;
 		}
 

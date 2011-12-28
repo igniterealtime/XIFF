@@ -48,17 +48,17 @@ package org.igniterealtime.xiff.data.forms
 		private var valueNodes:Array;
 		private var optionNodes:Array;
 
-		public function FormField( varName:String=null, label:String=null, type:String=null, desc:String=null, required:Boolean=false, values:Array=null, options:Array=null )
+		public function FormField( type:String=null, varName:String=null, values:Array=null, options:Array=null, label:String=null, desc:String=null, required:Boolean=false )
 		{
 			super();
 
-			this.varName = varName;
-			this.label = label;
 			this.type = type;
-			this.desc = desc;
-			this.required = required;
+			this.varName = varName;
 			this.values = values;
 			this.options = options;
+			this.label = label;
+			this.desc = desc;
+			this.required = required;
 		}
 
 		/**
