@@ -23,18 +23,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.util
+package org.igniterealtime.xiff.collections
 {
 	import org.flexunit.asserts.assertEquals;
 	
-	public class SHA1Test
+	public class ArrayCollectionTest
 	{
-		[Test( description="Calculate SHA1" )]
-		public function testCalcSHA1():void
+		[Test( description="Empty array" )]
+		public function testEmptyArray():void
 		{
-			var testString:String = "a test string";
-			var hashString:String = SHA1.calcSHA1( testString );
-			assertEquals( "2da75da5c85478df42df0f917700241ed282f599", hashString );
+			var collection:ArrayCollection = new ArrayCollection([]);
+			assertEquals( [], collection.source );
+		}
+		
+		[Test( description="Get item at a given index" )]
+		public function testValueAtIndex():void
+		{
+			var collection:ArrayCollection = new ArrayCollection([1, 2, 3, 4]);
+			assertEquals( 3, collection.getItemAt(2) );
 		}
 	}
 }
