@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2012 Igniterealtime Community Contributors
  *   
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -124,7 +124,7 @@ package org.igniterealtime.xiff.vcard
 		}
 
 		/**
-		 *
+		 * Possible types are ...
 		 */
 		public function get type():String
 		{

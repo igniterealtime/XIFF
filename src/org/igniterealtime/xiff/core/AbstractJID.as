@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2012 Igniterealtime Community Contributors
  *   
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -33,14 +33,14 @@ package org.igniterealtime.xiff.core
 	 * node, domain and resource from the JID.
 	 *
 	 * The structure of JID is defined in RFC3920.
-	 * <code>jid = [ node "@" ] domain [ "/" resource ]</code>
+	 * <code>jid = [ node "\@" ] domain [ "/" resource ]</code>
 	 * <code>domain = fqdn / address-literal</code>
 	 * <code>fqdn = (sub-domain 1*("." sub-domain))</code>
 	 * <code>sub-domain = (internationalized domain label)</code>
 	 * <code>address-literal = IPv4address / IPv6address</code>
 	 *
-	 * @exampleText user@host/resource
-	 * @exampleText room@service/nick
+	 * @exampleText user\@host/resource
+	 * @exampleText room\@service/nick
 	 */
 	public class AbstractJID
 	{
@@ -62,7 +62,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * <p>Each allowable portion of a JID (node identifier, domain identifier, and resource identifier)
 		 * MUST NOT be more than 1023 bytes in length, resulting in a maximum total size
-		 * (including the ’@’ and ’/’ separators) of 3071 bytes.</p>
+		 * (including the ’\@’ and ’/’ separators) of 3071 bytes.</p>
 		 *
 		 * @param	inJID The JID as a String.
 		 * @param	validate True if the JID should be validated.

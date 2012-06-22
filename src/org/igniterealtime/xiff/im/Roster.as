@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2012 Igniterealtime Community Contributors
  *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -165,7 +165,7 @@ package org.igniterealtime.xiff.im
 		 * You will be unable to view the contacts presence status until a subscription request is granted.
 		 * @example	This example adds a contact to the roster and simultaneously requests a presence subscription
 		 * with the new contact.
-		 * <pre>myRoster.addContact( "homer@springfield.com", "Homer", "Drinking Buddies", true );</pre>
+		 * <pre>myRoster.addContact( "homer\@springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
 		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean = true ):void
 		{
