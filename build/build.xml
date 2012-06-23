@@ -82,7 +82,6 @@
 				workingDir="${test.bin.dir}"
 				haltonfailure="false"
 				verbose="true"
-				headless="true"
 				localTrusted="true">
 			<source dir="${src.dir}"/>
 			<testSource dir="${test.dir}">
