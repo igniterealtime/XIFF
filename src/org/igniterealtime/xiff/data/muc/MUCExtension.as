@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.data.muc
 	import org.igniterealtime.xiff.data.ISerializable;
 	
 	/**
-	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
+	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045</a> for multi-user chat.
 	 *
 	 * This extension is typically used to test for the presence of MUC enabled conferencing
 	 * service, or a MUC related error condition.

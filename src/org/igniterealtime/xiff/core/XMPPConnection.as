@@ -449,8 +449,8 @@ package org.igniterealtime.xiff.core
 		 * @param	data The data to send. This must be an instance of a class that implements the ISerializable interface.
 		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 * @example	The following example sends a basic chat message to the user with the
-		 * JID "sideshowbob\@springfieldpenitentiary.gov".<br />
-		 * <code>var message:Message = new Message( "sideshowbob\@springfieldpenitentiary.gov", null, "Hi Bob.",
+		 * JID "sideshowbob&#64;springfieldpenitentiary.gov".<br />
+		 * <code>var message:Message = new Message( "sideshowbob&#64;springfieldpenitentiary.gov", null, "Hi Bob.",
 		 * "<b>Hi Bob.</b>", Message.TYPE_CHAT );
 		 * myXMPPConnection.send( message );</code>
 		 */

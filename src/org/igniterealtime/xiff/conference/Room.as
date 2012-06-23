@@ -628,9 +628,9 @@ package org.igniterealtime.xiff.conference
 		 * <code>true</code> to this method to begin the configuration process.	When
 		 * The configuration is complete, the room will be unlocked for others to join.
 		 * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and
-		 * either return or cancel the configuration of the room.
+		 * either return or cancel the configuration of the room.</p>
 		 *
-		 * This function adds an additional parameter to allow the caller to completely customize the MUC extension that
+		 * <p>This function adds an additional parameter to allow the caller to completely customize the MUC extension that
 		 * gets sent to the room.  For example, you can add a history element that specifies how much discussion
 		 * history you want sent when you join the room (http://xmpp.org/extensions/xep-0045.html#enter-managehistory):
 		 * <code>
@@ -639,6 +639,7 @@ package org.igniterealtime.xiff.conference
 		 * muc.maxchars = 0;
 		 * _room.joinWithExplicitMUCExtension(false, mucExt);
 		 * </code>
+		 * </p>
 		 *
 		 * @param	createReserved Set to true if you wish to create and configure a reserved room
 		 * @param	mucExtension The customized MUC extension to send with initial presence to the room.
@@ -1435,7 +1436,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * The unescaped JID of the room. <code>room&at;conference.server</code>
+		 * The unescaped JID of the room. <code>room&#64;conference.server</code>
 		 * Set this after initiating a new Room.
 		 */
 		public function get roomJID():UnescapedJID

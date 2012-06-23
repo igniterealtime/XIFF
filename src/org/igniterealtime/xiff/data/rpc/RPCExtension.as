@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.data.rpc
 	import org.igniterealtime.xiff.data.*;
 	
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009<a> for XML-RPC over XMPP.
+	 * Implements <a href="http://xmpp.org/extensions/xep-0009.html">XEP-0009</a> for XML-RPC over XMPP.
 	 * @see http://xmpp.org/extensions/xep-0009.html
 	 */
 	public class RPCExtension extends Extension implements IExtension

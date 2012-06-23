@@ -30,7 +30,7 @@ package org.igniterealtime.xiff.data.disco
 	import flash.xml.XMLNode;
 
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030<a>
+	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a>
 	 * for service item discovery.
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */

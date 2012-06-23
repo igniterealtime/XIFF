@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.data.muc
 	
 	/**
 	 * Implements the base MUC user protocol schema from
-	 * <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045<a> for multi-user chat.
+	 * <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045</a> for multi-user chat.
 	 * @see http://xmpp.org/extensions/xep-0045.html
 	 */
 	public class MUCUserExtension extends MUCBaseExtension implements IExtension

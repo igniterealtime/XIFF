@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.data.auth
 	//import com.hurlant.crypto.hash.SHA1;
 	
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078<a>
+	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078</a>
 	 * for non SASL authentication.
 	 * @see	http://xmpp.org/extensions/xep-0078.html
 	 */
