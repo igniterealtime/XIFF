@@ -32,6 +32,8 @@ package org.igniterealtime.xiff.bookmark
 
 	public class BookmarkPrivatePayload implements IPrivatePayload
 	{
+		public static const NS:String = "storage:bookmarks";
+		public static const ELEMENT_NAME:String = "storage";
 
 		private var _groupChatBookmarks:Array = [];
 
@@ -106,12 +108,12 @@ package org.igniterealtime.xiff.bookmark
 
 		public function getElementName():String
 		{
-			return "storage";
+			return BookmarkPrivatePayload.ELEMENT_NAME;
 		}
 
 		public function getNS():String
 		{
-			return "storage:bookmarks";
+			return BookmarkPrivatePayload.NS;
 		}
 
 		public function get groupChatBookmarks():Array
@@ -137,8 +139,8 @@ package org.igniterealtime.xiff.bookmark
 
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
-			var node:XMLNode = new XMLNode( 1, getElementName());
-			node.attributes.xmlns = getNS();
+			var node:XMLNode = new XMLNode( 1, ELEMENT_NAME);
+			node.attributes.xmlns = NS;
 			var serializer:Function = function( element:ISerializable, index:int, arr:Array ):void
 			{
 				element.serialize( parentNode );

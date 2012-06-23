@@ -29,8 +29,14 @@ package org.igniterealtime.xiff.data
 	 */
 	public interface IExtension extends ISerializable
 	{
+		/**
+		 * Namespace of the element
+		 */
 		function getNS():String;
 		
+		/**
+		 * Element name of the extension
+		 */
 		function getElementName():String;
 	}
 }

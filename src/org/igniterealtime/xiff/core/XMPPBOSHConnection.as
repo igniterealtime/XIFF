@@ -181,6 +181,7 @@ package org.igniterealtime.xiff.core
 
 			var result:XMLNode = new XMLNode( 1, "body" );
 			result.attributes = attrs;
+						
 			sendRequests( result );
 
 			return true;

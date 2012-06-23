@@ -34,15 +34,17 @@ package org.igniterealtime.xiff.data.events
 	 */
 	public class MessageEventExtension implements IExtension
 	{
+		public static const NS:String = "jabber:x:event";
+		public static const ELEMENT_NAME:String = "x";
 		
 		public function getNS():String
 		{
-			return "jabber:x:event";
+			return MessageEventExtension.NS;
 		}
 		
 		public function getElementName():String
 		{
-			return "x";
+			return MessageEventExtension.ELEMENT_NAME;
 		}
 		
 		/**
@@ -56,8 +58,8 @@ package org.igniterealtime.xiff.data.events
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
-			var xmlNode:XMLNode = new XMLNode(1, 'x');
-			xmlNode.attributes.xmlns = "jabber:x:event";
+			var xmlNode:XMLNode = new XMLNode(1, getElementName());
+			xmlNode.attributes.xmlns = getNS();
 			var childNode:XMLNode = new XMLNode(1, "composing");
 			xmlNode.appendChild(childNode);
 			parentNode.appendChild(xmlNode);
