@@ -8,6 +8,7 @@
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
+ *     Michael McCarthy <mikeycmccarthy@gmail.com>
  * 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
