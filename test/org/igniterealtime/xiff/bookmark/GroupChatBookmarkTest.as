@@ -24,6 +24,8 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
+	import org.flexunit.asserts.assertEquals;
+	
 	public class GroupChatBookmarkTest
 	{
 		[Test( description="Name checking" )]

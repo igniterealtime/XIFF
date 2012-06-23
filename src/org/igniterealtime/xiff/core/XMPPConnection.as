@@ -141,12 +141,12 @@ package org.igniterealtime.xiff.core
 		 * @see org.igniterealtime.xiff.auth.External
 		 * @see org.igniterealtime.xiff.auth.Plain
 		 */
-		protected static var saslMechanisms:Object = {
-				"ANONYMOUS": Anonymous,
-				"DIGEST-MD5": DigestMD5,
-				"EXTERNAL": External,
-				"PLAIN": Plain
-			};
+		protected static const SASL_MECHANISMS:Object = {
+			"ANONYMOUS": Anonymous,
+			"DIGEST-MD5": DigestMD5,
+			"EXTERNAL": External,
+			"PLAIN": Plain
+		};
 
 		/**
 		 * @private
@@ -319,7 +319,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public static function disableSASLMechanism( name:String ):void
 		{
-			saslMechanisms[ name ] = null;
+			SASL_MECHANISMS[ name ] = null;
 		}
 
 		/**
@@ -330,7 +330,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public static function registerSASLMechanism( name:String, authClass:Class ):void
 		{
-			saslMechanisms[ name ] = authClass;
+			SASL_MECHANISMS[ name ] = authClass;
 		}
 
 		/**
@@ -666,10 +666,10 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * @private
-		 * Use the authentication which is first in the list (saslMechanisms) if possible.
+		 * Use the authentication which is first in the list (SASL_MECHANISMS) if possible.
 		 *
 		 * @param	mechanisms
-		 * @see #saslMechanisms
+		 * @see #SASL_MECHANISMS
 		 */
 		protected function configureAuthMechanisms( mechanisms:XMLNode ):void
 		{
@@ -677,7 +677,7 @@ package org.igniterealtime.xiff.core
 
 			for each ( var mechanism:XMLNode in mechanisms.childNodes )
 			{
-				authClass = saslMechanisms[ mechanism.firstChild.nodeValue ];
+				authClass = SASL_MECHANISMS[ mechanism.firstChild.nodeValue ];
 
 				if ( useAnonymousLogin )
 				{
