@@ -601,7 +601,7 @@ package org.igniterealtime.xiff.conference
 		 * <code>true</code> to this method to begin the configuration process.	When
 		 * The configuration is complete, the room will be unlocked for others to join.
 		 * Listen for the <code>RoomEvent.CONFIGURE_ROOM</code> event to handle and
-		 * either return or cancel the configuration of the room.
+		 * either return or cancel the configuration of the room.</p>
 		 *
 		 * @param	createReserved Set to true if you wish to create and configure a reserved room
 		 * @param	joinPresenceExtensions An array of additional extensions to send with the initial presence to the room.
