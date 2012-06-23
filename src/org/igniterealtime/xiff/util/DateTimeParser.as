@@ -53,9 +53,8 @@ package org.igniterealtime.xiff.util
 		public static function string2date(stamp:String):Date
 		{
 			var date:Date = new Date();
-			date.setUTCFullYear(stamp.substr(0, 4)); 
-			date.setUTCMonth(parseInt(stamp.substr(5, 2)) - 1);
-			date.setUTCDate(stamp.substr(8, 2));
+			date.setUTCFullYear(stamp.substr(0, 4), parseInt(stamp.substr(5, 2)) - 1, stamp.substr(8, 2)); 
+			date.setUTCMinutes(0, 0, 0);
 			return date;
 		}
 		
@@ -86,9 +85,7 @@ package org.igniterealtime.xiff.util
 		public static function string2time(stamp:String):Date
 		{
 			var date:Date = new Date();
-			date.setUTCHours(stamp.substr(0, 2)); 
-			date.setUTCMinutes(stamp.substr(3, 2)); 
-			date.setUTCSeconds(stamp.substr(6, 2));
+			date.setUTCHours(stamp.substr(0, 2), stamp.substr(3, 2), stamp.substr(6, 2), 0); 
 			if (stamp.length > 10)
 			{
 				date.setUTCMilliseconds(parseInt(stamp.substr(10, 3)));

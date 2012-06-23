@@ -32,36 +32,44 @@ package org.igniterealtime.xiff.util
 	 */
 	public class DateTimeParserTest
 	{
+		private var _date:Date;
+		
+		[Before]
+		public function setup():void
+		{
+			_date = new Date();
+			_date.setUTCHours(23, 55, 23, 101);
+			_date.setUTCFullYear(2012, 11, 25);
+		}		
+		
 		[Test( description="Date as a string" )]
 		public function testDateString():void
 		{
-			var date:Date = new Date( 2000, 10, 30, 0, 0 );
-			var dateString:String = DateTimeParser.date2string( date );
-			assertEquals( "2000-11-30", dateString );
+			var dateString:String = DateTimeParser.date2string( _date );
+			assertEquals( "2012-12-25", dateString );
 		}
 		
 		[Test( description="String to Date parsing" )]
 		public function testStringDate():void
 		{
-			var dateString:String = "2012-06-22";
+			var dateString:String = "2012-12-25";
 			var date:Date = DateTimeParser.string2date(dateString);
-			assertEquals( new Date(2012, 5, 22), date );
+			assertEquals( _date, date );
 		}
 		
 		[Test( description="Time as a string" )]
 		public function testTimeString():void
 		{
-			var date:Date = new Date( 2000, 10, 30, 23, 59, 10 );
-			var timeString:String = DateTimeParser.time2string( date );
-			assertEquals( "23:59:10", timeString );
+			var timeString:String = DateTimeParser.time2string( _date );
+			assertEquals( "23:55:23", timeString );
 		}
 		
 		[Test( description="String to Time parsing" )]
 		public function testStringTime():void
 		{
-			var timeString:String = "12:34:22";
+			var timeString:String = "23:55:23";
 			var date:Date = DateTimeParser.string2time(timeString);
-			assertEquals( new Date(2012, 5, 22, 12, 34, 22), date );
+			assertEquals( _date, date );
 		}
 		
 		/*
@@ -70,9 +78,9 @@ package org.igniterealtime.xiff.util
 		[Test( description="String to Time parsing with milliseconds" )]
 		public function testStringTimeMs():void
 		{
-			var timeString:String = "12:34:22.101";
+			var timeString:String = "23:55:23.101";
 			var date:Date = DateTimeParser.string2time(timeString);
-			assertEquals( new Date(2012, 5, 22, 12, 34, 22), date );
+			assertEquals( _date, date );
 		}
 		*/
 	}
