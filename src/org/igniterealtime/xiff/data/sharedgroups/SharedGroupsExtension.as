@@ -35,19 +35,22 @@ package org.igniterealtime.xiff.data.sharedgroups
 	 */
 	public class SharedGroupsExtension implements IExtension
 	{
+		public static const NS:String = "http://www.jivesoftware.org/protocol/sharedgroup";
+		public static const ELEMENT_NAME:String = "sharedgroup";
+		
 		public function getNS():String
 		{
-			return "http://www.jivesoftware.org/protocol/sharedgroup";
+			return SharedGroupsExtension.NS;
 		}
 		
 		public function getElementName():String
 		{
-			return "sharedgroup";
+			return SharedGroupsExtension.ELEMENT_NAME;
 		}
 
 		public function serialize(parentNode:XMLNode):Boolean
 		{
-			var xmlNode:XMLNode = new XMLNode(1, getElementName() + " xmlns='" + getNS() + "'");
+			var xmlNode:XMLNode = new XMLNode(1, ELEMENT_NAME + " xmlns='" + NS + "'");
 			parentNode.appendChild(xmlNode);
 			return true;
 		}

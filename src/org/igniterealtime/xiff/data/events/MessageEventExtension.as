@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.data.events
 		 */
 		public function serialize( parentNode:XMLNode ):Boolean
 		{
-			var xmlNode:XMLNode = new XMLNode(1, getElementName());
+			var xmlNode:XMLNode = new XMLNode(1, ELEMENT_NAME );
 			xmlNode.attributes.xmlns = getNS();
 			var childNode:XMLNode = new XMLNode(1, "composing");
 			xmlNode.appendChild(childNode);

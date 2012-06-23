@@ -80,6 +80,11 @@ package org.igniterealtime.xiff.core
 		public static const HTTPS_PORT:uint = 7443;
 
 		/**
+		 * BOSH body element name
+		 */
+		public static const ELEMENT_NAME:String = "body";
+		
+		/**
 		 * Keys should match URLRequestMethod constants.
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestMethod.html
 		 */
@@ -180,7 +185,7 @@ package org.igniterealtime.xiff.core
 				"to": domain
 			};
 
-			var result:XMLNode = new XMLNode( 1, "body" );
+			var result:XMLNode = new XMLNode( 1, ELEMENT_NAME );
 			result.attributes = attrs;
 						
 			sendRequests( result );
@@ -321,7 +326,7 @@ package org.igniterealtime.xiff.core
 				"rid": nextRID,
 				"sid": sid
 			};
-			var req:XMLNode = new XMLNode( 1, "body" );
+			var req:XMLNode = new XMLNode( 1, ELEMENT_NAME );
 			if ( bodyContent )
 			{
 				for each ( var content:XMLNode in bodyContent )

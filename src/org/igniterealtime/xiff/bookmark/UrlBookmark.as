@@ -31,6 +31,8 @@ package org.igniterealtime.xiff.bookmark
 
 	public class UrlBookmark implements ISerializable
 	{
+		public static const ELEMENT_NAME:String = "url";
+		
 		private var _node:XMLNode;
 
 		/**
@@ -49,7 +51,7 @@ package org.igniterealtime.xiff.bookmark
 				throw new Error( "Name and url cannot be null, they must either both be null or an Object" );
 			}
 
-			_node = new XMLNode( 1, "url" );
+			_node = new XMLNode( 1, ELEMENT_NAME );
 			_node.attributes.name = name;
 			_node.attributes.url = url;
 		}

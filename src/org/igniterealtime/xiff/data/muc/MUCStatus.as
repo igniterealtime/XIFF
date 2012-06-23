@@ -31,12 +31,14 @@ package org.igniterealtime.xiff.data.muc
 	
 	public class MUCStatus
 	{
+		public static const ELEMENT_NAME:String = "status";
+		
 		private var node:XMLNode;
 		private var parent:XMLStanza;
 		public function MUCStatus(xmlNode:XMLNode, parentStanza:XMLStanza)
 		{
 			super();
-			node = xmlNode ? xmlNode : new XMLNode(1, "status");
+			node = xmlNode ? xmlNode : new XMLNode(1, ELEMENT_NAME);
 			parent = parentStanza;
 		}
 
@@ -66,7 +68,7 @@ package org.igniterealtime.xiff.data.muc
 	
 		public function set message(value:String):void
 		{
-			node = parent.replaceTextNode(parent.getNode(), node, "status", value);
+			node = parent.replaceTextNode(parent.getNode(), node, ELEMENT_NAME, value);
 		}
 	}
 }

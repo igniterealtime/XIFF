@@ -32,6 +32,8 @@ package org.igniterealtime.xiff.bookmark
 
 	public class GroupChatBookmark implements ISerializable
 	{
+		public static const ELEMENT_NAME:String = "conference";
+		
 		private var _groupChatNode:XMLNode;
 
 		private var _nickNode:XMLNode;
@@ -58,7 +60,7 @@ package org.igniterealtime.xiff.bookmark
 			{
 				throw new Error( "Name and jid cannot be null, they must either both be null or an Object" );
 			}
-			var groupChatNode:XMLNode = new XMLNode( 1, "conference" );
+			var groupChatNode:XMLNode = new XMLNode( 1, ELEMENT_NAME );
 			groupChatNode.attributes.name = name;
 			groupChatNode.attributes.jid = jid.toString();
 			if ( autoJoin )

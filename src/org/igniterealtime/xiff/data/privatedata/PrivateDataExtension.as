@@ -33,6 +33,9 @@ package org.igniterealtime.xiff.data.privatedata
 	
 	public class PrivateDataExtension implements IExtension
 	{
+		public static const NS:String = "jabber:iq:private";
+		public static const ELEMENT_NAME:String = "query";
+		
 		private var _extension:XMLNode;
 		
 		private var _payload:IPrivatePayload;
@@ -53,12 +56,12 @@ package org.igniterealtime.xiff.data.privatedata
 		
 		public function getNS():String
 		{
-			return "jabber:iq:private";
+			return PrivateDataExtension.NS;
 		}
 		
 		public function getElementName():String
 		{
-			return "query";
+			return PrivateDataExtension.ELEMENT_NAME;
 		}
 		
 		public function get privateName():String
@@ -79,8 +82,8 @@ package org.igniterealtime.xiff.data.privatedata
 		public function serialize(parentNode:XMLNode):Boolean
 		{
 			var extension:XMLNode = _extension.cloneNode(true);
-			var query:XMLNode = new XMLNode(1, "query");
-			query.attributes.xmlns = "jabber:iq:private";
+			var query:XMLNode = new XMLNode(1, ELEMENT_NAME);
+			query.attributes.xmlns = NS;
 			query.appendChild(extension);
 			parentNode.appendChild(query);
 			
