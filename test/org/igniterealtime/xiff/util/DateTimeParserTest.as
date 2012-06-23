@@ -27,6 +27,9 @@ package org.igniterealtime.xiff.util
 {
 	import org.flexunit.asserts.assertEquals;
 	
+	/**
+	 * @see http://docs.flexunit.org/index.php?title=Tests_and_Test_Cases
+	 */
 	public class DateTimeParserTest
 	{
 		[Test( description="Date as a string" )]

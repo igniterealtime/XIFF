@@ -27,6 +27,9 @@ package org.igniterealtime.xiff.data.auth
 	import org.flexunit.asserts.*;
 	import flash.xml.XMLNode;
 	
+	/**
+	 * @see http://docs.flexunit.org/index.php?title=Tests_and_Test_Cases
+	 */
 	public class AuthExtensionTest
 	{
 		[Test( description="Username value set and get" )]
@@ -65,7 +68,7 @@ package org.igniterealtime.xiff.data.auth
 			var sessionId:String = "555";
 			var password:String = "secret";
 	
-			var calculated:String = AuthExtension::computeDigest(sessionId, password);
+			var calculated:String = AuthExtension.computeDigest(sessionId, password);
 			
 			// http://www.sha1.cz/
 			assertEquals( "7b5611ad4f407915f3dec83957fe2c72320c459f", calculated );

@@ -27,6 +27,9 @@ package org.igniterealtime.xiff.collections
 {
 	import org.flexunit.asserts.assertEquals;
 	
+	/**
+	 * @see http://docs.flexunit.org/index.php?title=Tests_and_Test_Cases
+	 */
 	public class ArrayCollectionTest
 	{
 		[Test( description="Empty array" )]
