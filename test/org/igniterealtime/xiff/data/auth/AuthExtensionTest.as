@@ -26,7 +26,6 @@
 package org.igniterealtime.xiff.data.auth
 {
 	import org.flexunit.asserts.*;
-	import flash.xml.XMLNode;
 	
 	/**
 	 * @see http://docs.flexunit.org/index.php?title=Tests_and_Test_Cases
@@ -92,10 +91,10 @@ package org.igniterealtime.xiff.data.auth
 			var elementName:String = "query";
 			
 			var authExt:AuthExtension = new AuthExtension();
-			var node:XMLNode = authExt.getNode();
+			var node:XML = authExt.xml;
 			
-			assertEquals( nameSpace, node.namespaceURI );
-			assertEquals( elementName, node.localName );
+			assertEquals( nameSpace, node.namespace() );
+			assertEquals( elementName, node.localName() );
 		}
 		
 	}

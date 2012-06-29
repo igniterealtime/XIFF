@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.util
 		{
 			var dateString:String = "2012-12-25";
 			var date:Date = DateTimeParser.string2date(dateString);
-			assertEquals( _date, date );
+			assertEquals( _date.toDateString(), date.toDateString() );
 		}
 		
 		[Test( description="Time as a string" )]
@@ -69,7 +69,15 @@ package org.igniterealtime.xiff.util
 		{
 			var timeString:String = "23:55:23";
 			var date:Date = DateTimeParser.string2time(timeString);
-			assertEquals( _date, date );
+			assertEquals( _date.toTimeString(), date.toTimeString() );
+		}
+		
+		[Test( description="String to Date and Time parsing" )]
+		public function testStringDateTime():void
+		{
+			var timeString:String = "2012-12-25T23:55:23";
+			var date:Date = DateTimeParser.string2dateTime(timeString);
+			assertEquals( _date.toUTCString(), date.toUTCString() );
 		}
 		
 		/*
@@ -80,7 +88,7 @@ package org.igniterealtime.xiff.util
 		{
 			var timeString:String = "23:55:23.101";
 			var date:Date = DateTimeParser.string2time(timeString);
-			assertEquals( _date, date );
+			assertEquals( _date.toUTCString(), date.toUTCString() );
 		}
 		*/
 	}
