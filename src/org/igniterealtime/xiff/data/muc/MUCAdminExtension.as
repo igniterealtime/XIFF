@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.IExtension;
 	
@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.data.muc
 	 * Implements the administration command data model in <a href="http://xmpp.org/extensions/xep-0045.html">XEP-0045</a> for multi-user chat.
 	 * @see http://xmpp.org/extensions/xep-0045.html
 	 *
-	 * @param	parent (Optional) The containing XMLNode for this extension
+	 * @param	parent (Optional) The containing XML for this extension
 	 */
 	public class MUCAdminExtension extends MUCBaseExtension implements IExtension
 	{
@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.muc
 	
 		private var _items:Array;
 	
-		public function MUCAdminExtension( parent:XMLNode = null )
+		public function MUCAdminExtension( parent:XML = null )
 		{
 			super(parent);
 		}

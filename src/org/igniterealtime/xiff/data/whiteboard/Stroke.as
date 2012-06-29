@@ -27,7 +27,8 @@ package org.igniterealtime.xiff.data.whiteboard
 {
 	
 	import org.igniterealtime.xiff.data.ISerializable;
-	import flash.xml.XMLNode;
+	import org.igniterealtime.xiff.data.XMLStanza;
+	
 	
 	/**
 	 * A helper class that abstracts the serialization of strokes and
@@ -36,105 +37,87 @@ package org.igniterealtime.xiff.data.whiteboard
 	*/
 	public class Stroke implements ISerializable
 	{
-		private var _color:uint;
-		private var _width:Number;
-		private var _opacity:Number;
 	
+	    private var _xml:XML;
+		
+		/**
+		 * 
+		 */
 		public function Stroke() 
 		{ 
 			
 		}
 	
+
 		/**
-		 * Serializes the Stroke into the parent node.  Because the stroke
-	     * serializes into the attributes of the XML node, it will directly modify
-	     * the parent node passed.
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
+		 * The XML node that should be used for this stanza's internal XML representation,
+		 * 
+		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
+		 * 
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
+		 * @see http://www.w3.org/TR/xml/
 		 */
-		public function serialize( parent:XMLNode ):Boolean
+		public function get xml():XML 
 		{
-	        if (_color) 
-			{ 
-				parent.attributes['stroke'] = "#" + _color.toString(16); 
-			}
-	        if (_width)
-			{ 
-				parent.attributes['stroke-width'] = _width.toString(); 
-			}
-	        if (_opacity) 
-			{
-				parent.attributes['stroke-opacity'] = _opacity.toString(); 
-			}
-	
-	        return true;
-	    }
-	
-		/**
-		 * Extracts the known stroke attributes from the node
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function deserialize( node:XMLNode ):Boolean
+			return _xml;
+		}
+		public function set xml( elem:XML ):void 
 		{
-	        if (node.attributes['stroke'])
+			var parent:XML = _xml.parent();
+			if (parent != null)
 			{
-	            _color = new Number('0x' + node.attributes['stroke'].slice(1));
-	        }
-	        if (node.attributes['stroke-width']) 
-			{
-	            _width = new Number(node.attributes['stroke-width']);
-	        }
-	        if (node.attributes['stroke-opacity'])
-			{
-	            _opacity = new Number(node.attributes['stroke-opacity']);
-	        }
-	
-	        return true;
-	    }
+				parent.appendChild(elem);
+			}
+			
+			_xml = elem;
+		}
 	
 	    /**
 	     * The value of the RGB color.  This is the same color format used by
 	     * MovieClip.lineStyle
-	     *
+		 * 
+	     * <p>XML attribute "stroke"</p>
 	     */
 		public function get color():uint 
 		{ 
-			return _color ? _color : 0; 
+			// new Number('0x' + _xml.attributes["stroke"].slice(1));
+			return 0; 
 		}
 		public function set color(value:uint):void 
 		{
-			_color = value;
+			_xml.attribute["stroke"] = "#" + value.toString(16); 
 		}
 	
 	    /**
 	     * The width of the stroke in pixels.  This is in a format used by
 	     * MovieClip.lineStyle
-	     *
+		 * 
+	     * <p>XML attribute "stroke-width"</p>
 	     */
 	    public function get width():Number
 		{ 
-			return _width ? _width : 1; 
+			//new Number(_xml.attributes["stroke-width"]);
+			return 1; 
 		}
 	    public function set width(value:Number):void 
 		{
-			_width = value; 
+			_xml.attribute["stroke-width"] = value.toString(); 
 		}
 	
 	    /**
 	     * The opacity of the stroke, in percent. 100 is solid, 0 is transparent.
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
-	     *
+		 * 
+	     * <p>XML attribute "stroke-opacity"</p>
 	     */
 	    public function get opacity():Number
 		{ 
-			return _opacity ? _opacity : 100; 
+			//new Number(_xml.attributes["stroke-opacity"]);
+			return 100; 
 		}
 	    public function set opacity(value:Number):void 
 		{
-			_opacity = value;
+			_xml.attribute["stroke-opacity"] = value.toString(); 
 		}
 	}
 }

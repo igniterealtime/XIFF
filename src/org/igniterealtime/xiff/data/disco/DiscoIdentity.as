@@ -3,41 +3,22 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
-	import flash.xml.XMLNode;
+	
 
 	public class DiscoIdentity extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "identity";
 
-		public function DiscoIdentity( parent:XMLNode=null )
+		public function DiscoIdentity( parent:XML=null )
 		{
 			super();
 
-			getNode().nodeName = ELEMENT_NAME;
+			xml.setLocalName( ELEMENT_NAME );
 
 			if( exists( parent ) )
 			{
-				parent.appendChild( getNode() );
+				parent.appendChild( xml );
 			}
-		}
-
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			var node:XMLNode = getNode();
-
-			if( parentNode != node.parentNode )
-			{
-				parentNode.appendChild( node.cloneNode( true ) );
-			}
-
-			return true;
-		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-
-			return true;
 		}
 
 		public function equals( other:DiscoIdentity ):Boolean
@@ -47,42 +28,42 @@ package org.igniterealtime.xiff.data.disco
 
 		public function get category():String
 		{
-			return getNode().attributes.category;
+			return xml.@category;
 		}
 
 		public function set category( value:String ):void
 		{
-			getNode().attributes.category = value;
+			xml.@category = value;
 		}
 
 		public function get type():String
 		{
-			return getNode().attributes.type;
+			return xml.@type;
 		}
 
 		public function set type( value:String ):void
 		{
-			getNode().attributes.type = value;
+			xml.@type = value;
 		}
 
 		public function get name():String
 		{
-			return getNode().attributes.name;
+			return xml.@name;
 		}
 
 		public function set name( value:String ):void
 		{
-			getNode().attributes.name = value;
+			xml.@name = value;
 		}
 
 		public function get lang():String
 		{
-			return getNode().attributes[ "xml:lang" ];
+			return xml.attributes[ "xml:lang" ];
 		}
 
 		public function set lang( value:String ):void
 		{
-			getNode().attributes[ "xml:lang" ] = value;
+			xml.attributes[ "xml:lang" ] = value;
 		}
 
 	}

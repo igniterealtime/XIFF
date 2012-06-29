@@ -30,6 +30,9 @@ package org.igniterealtime.xiff.events
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.IQ;
 
+	/**
+	 * Event that occurs when an IQ has been received from the server.
+	 */
 	public class IQEvent extends Event
 	{
 		private var _data:IExtension;

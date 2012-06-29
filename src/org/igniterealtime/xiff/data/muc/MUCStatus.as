@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
@@ -33,13 +33,20 @@ package org.igniterealtime.xiff.data.muc
 	{
 		public static const ELEMENT_NAME:String = "status";
 		
-		private var node:XMLNode;
-		private var parent:XMLStanza;
-		public function MUCStatus(xmlNode:XMLNode, parentStanza:XMLStanza)
+		private var _parent:XMLStanza;
+		
+		/**
+		 * Please note that the xmlNode is not used.
+		 * @param	xmlNode
+		 * @param	parentStanza
+		 */
+		public function MUCStatus(xmlNode:XML, parentStanza:XMLStanza)
 		{
 			super();
-			node = xmlNode ? xmlNode : new XMLNode(1, ELEMENT_NAME);
-			parent = parentStanza;
+			
+			var elem:XML = <{ ELEMENT_NAME }/>;
+			
+			_parent = parentStanza;
 		}
 
 		/**
@@ -47,12 +54,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get code():Number
 		{
-			return node.attributes.code;
+			return _parent.xml.status.@code as Number;
 		}
 		
 		public function set code(value:Number):void
 		{
-			node.attributes.code = value.toString();
+			_parent.xml.status.@code = value.toString();
 		}
 		
 		/**
@@ -60,15 +67,16 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get message():String
 		{
-			if(node.firstChild)
-				return node.firstChild.nodeValue;
-			
-			return null;
+			return _parent.xml.status.toString();
 		}
 	
 		public function set message(value:String):void
 		{
-			node = parent.replaceTextNode(parent.getNode(), node, ELEMENT_NAME, value);
+			_parent.xml.status = value;
+			if ( value == null )
+			{
+				delete _parent.xml.status;
+			}
 		}
 	}
 }

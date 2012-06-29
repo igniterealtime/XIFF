@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * This class is used by the FormExtension class for managing fields
@@ -38,20 +38,17 @@ package org.igniterealtime.xiff.data.forms
 	 *
 	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see	http://xmpp.org/extensions/xep-0004.html
-	 * @param	parent The parent XMLNode
+	 * @param	parent The parent XML
 	 */
 	public class FormField extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "field";
 
-		private var descNode:XMLNode;
-		private var requiredNode:XMLNode;
-		private var valueNodes:Array;
-		private var optionNodes:Array;
-
-		public function FormField( type:String=null, varName:String=null, values:Array=null, options:Array=null, label:String=null, desc:String=null, required:Boolean=false )
+		public function FormField( type:String = null, varName:String = null, values:Array = null, options:Array = null, label:String = null, desc:String = null, required:Boolean = false )
 		{
 			super();
+			
+			xml.setLocalName( ELEMENT_NAME );
 
 			this.type = type;
 			this.varName = varName;
@@ -63,63 +60,6 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * Serializes the FormField data to XML for sending.
-		 *
-		 * @param	parent The parent node that this item should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function serialize( parent:XMLNode ):Boolean
-		{
-			getNode().nodeName = FormField.ELEMENT_NAME;
-
-			if( parent != getNode().parentNode )
-			{
-				parent.appendChild( getNode().cloneNode( true ) );
-			}
-
-			return true;
-		}
-
-		/**
-		 * Deserializes the FormField data.
-		 *
-		 * @param	node The XML node associated this data
-		 * @return An indicator as to whether deserialization was successful
-		 */
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-
-			valueNodes = [];
-			optionNodes = [];
-
-			var children:Array = node.childNodes;
-
-			for( var i:String in children )
-			{
-				var c:XMLNode = children[ i ];
-
-				switch( children[ i ].nodeName )
-				{
-					case "desc":
-						descNode = c;
-						break;
-					case "required":
-						requiredNode = c;
-						break;
-					case "value":
-						valueNodes.push( c );
-						break;
-					case "option":
-						optionNodes.push( c );
-						break;
-				}
-			}
-
-			return true;
-		}
-
-		/**
 		 * The var of this field used to uniquely identify the field in the context of the form.
 		 *
 		 * Note: this serializes to the <code>var</code> attribute on the field node.
@@ -128,17 +68,23 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get varName():String
 		{
-			return getNode().attributes[ "var" ];
+			var list:XMLList = xml.attribute("var");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
-
 		public function set varName( value:String ):void
 		{
-			if( !value )
+			if ( value == null )
 			{
-				delete getNode().attributes[ "var" ];
-				return;
+				delete xml.attribute("var");
 			}
-			getNode().attributes[ "var" ] = value;
+			else
+			{
+				xml.attribute("var")[0] = value;
+			}
 		}
 
 		/**
@@ -162,17 +108,23 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get type():String
 		{
-			return getNode().attributes.type;
+			var list:XMLList = xml.attribute("type");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
-
 		public function set type( value:String ):void
 		{
-			if( !value )
+			if ( value == null && xml.attribute("type").length() > 0)
 			{
-				delete getNode().attributes.type;
-				return;
+				delete xml.attribute("type")[0];
 			}
-			getNode().attributes.type = value;
+			else
+			{
+				xml.@type = value;
+			}
 		}
 
 		/**
@@ -180,17 +132,23 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get label():String
 		{
-			return getNode().attributes.label;
+			var list:XMLList = xml.attribute("label");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
-
 		public function set label( value:String ):void
 		{
-			if( !value )
+			if ( value == null && xml.attribute("label").length() > 0)
 			{
-				delete getNode().attributes.label;
-				return;
+				delete xml.attribute("label")[0];
 			}
-			getNode().attributes.label = value;
+			else
+			{
+				xml.@label = value;
+			}
 		}
 
 		/**
@@ -199,18 +157,23 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get desc():String
 		{
-			if( descNode && descNode.firstChild )
-				return descNode.firstChild.nodeValue;
-
+			var list:XMLList = xml.children().(localName() == "desc");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
 			return null;
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set desc( value:String ):void
 		{
-			descNode = replaceTextNode( getNode(), descNode, "desc", value );
+			if ( value == null && xml.children().(localName() == "desc").length() > 0)
+			{
+				delete xml.children().(localName() == "desc")[0];
+			}
+			else
+			{
+				xml.desc = value;
+			}
 		}
 
 		/**
@@ -218,22 +181,18 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get required():Boolean
 		{
-			if( requiredNode != null )
-				return true;
-
-			return false;
+			return xml.children().(localName() == "required").length() > 0;
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set required( value:Boolean ):void
 		{
-			if( requiredNode != null )
-				requiredNode.removeNode();
-
-			if( value )
-				requiredNode = ensureNode( getNode(), "required" );
+			if ( !value )
+			{
+				delete xml.children().(localName() == "required")[0];
+			}
+			else
+			{
+				xml.required = "";
+			}
 		}
 
 		/**
@@ -257,23 +216,23 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get value():String
 		{
-			try
+			var list:XMLList = xml.children().(localName() == "value");
+			if ( list.length() > 0 )
 			{
-				if( valueNodes[ 0 ] != null && valueNodes[ 0 ].firstChild != null )
-					return valueNodes[ 0 ].firstChild.nodeValue;
-			}
-			catch( error:Error )
-			{
-				trace( error.getStackTrace() );
+				return list[0];
 			}
 			return null;
 		}
-
 		public function set value( value:String ):void
 		{
-			if( valueNodes == null ) valueNodes = [];
-
-			valueNodes[ 0 ] = replaceTextNode( getNode(), valueNodes[ 0 ], "value", value );
+			if ( value == null && xml.children().(localName() == "value").length() > 0)
+			{
+				delete xml.children().(localName() == "value")[0];
+			}
+			else
+			{
+				xml.value = value;
+			}
 		}
 
 		/**
@@ -287,37 +246,28 @@ package org.igniterealtime.xiff.data.forms
 		 * <code>FormFieldType.LIST_MULTI</code>
 		 * <code>FormFieldType.TEXT_MULTI</code>
 		 *
-		 * @return	Array containing strings representing the values of this field
+		 * Array containing strings representing the values of this field
 		 */
 		public function get values():Array
 		{
 			var result:Array = [];
-
-			for each( var valueNode:XMLNode in valueNodes )
+			
+			var list:XMLList = xml.children().(localName() == "value");
+			for each ( var node:XML in list )
 			{
-				result.push( valueNode.firstChild.nodeValue );
+				result.push( node.toString() );
 			}
 			return result;
 		}
-
-		/**
-		 * Sets all the values of this field from an array of strings
-		 *
-		 * @param	value Array of Strings
-		 */
 		public function set values( value:Array ):void
 		{
-			for each( var v:XMLNode in valueNodes )
+			delete xml.value;
+
+			for each (var i:String in value)
 			{
-				v.removeNode();
+				var option:XML = <value>{ i }</value>;
+				xml.appendChild(option);
 			}
-
-			if( !value ) return;
-
-			valueNodes = value.map( function( value:String, index:uint, arr:Array ):*
-			{
-				return replaceTextNode( getNode(), undefined, "value", value );
-			} );
 		}
 
 		/**
@@ -330,37 +280,29 @@ package org.igniterealtime.xiff.data.forms
 		 * <code>FormFieldType.LIST_MULTI</code>
 		 * <code>FormFieldType.LIST_SINGLE</code>
 		 *
-		 * @return	Array of objects with the properties <code>label</code> and <code>value</code>
+		 * Array of objects with the properties <code>label</code> and <code>value</code>, {label, value}.
 		 */
 		public function get options():Array
 		{
-			return optionNodes.map( function( optionNode:XMLNode, index:uint, arr:Array ):Object
+			var result:Array = [];
+			
+			var list:XMLList = xml.children().(localName() == "options");
+			for each ( var node:XML in list )
 			{
-				return { label: optionNode.attributes.label, value: optionNode.firstChild.firstChild.nodeValue };
-			} );
+				result.push( { value: node.toString(), label: node.@label.toString() } );
+			}
+			return result;
 		}
-
-		/**
-		 * Sets all the options available from an array of objects
-		 *
-		 * @param	Array containing objects with the properties <code>label</code> and
-		 * <code>value</code>
-		 */
 		public function set options( value:Array ):void
 		{
-			for each( var optionNode:XMLNode in optionNodes )
+			delete xml.option;
+
+			for each (var i:Object in value)
 			{
-				optionNode.removeNode();
+				var option:XML = <option>{ i.value }</option>;
+				option.@label = i.label;
+				xml.appendChild(option);
 			}
-
-			if( !value ) return;
-
-			optionNodes = value.map( function( v:Object, index:uint, arr:Array ):XMLNode
-			{
-				var option:XMLNode = replaceTextNode( getNode(), undefined, "value", v.value );
-				option.attributes.label = v.label;
-				return option;
-			} );
 		}
 
 	}

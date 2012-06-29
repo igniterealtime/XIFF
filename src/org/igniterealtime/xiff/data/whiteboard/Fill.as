@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.whiteboard
 {
 	import org.igniterealtime.xiff.data.ISerializable;
-	import flash.xml.XMLNode;
+	
 	
 	/**
 	 * A helper class that abstracts the serialization of fills and
@@ -36,55 +36,36 @@ package org.igniterealtime.xiff.data.whiteboard
 	*/
 	public class Fill implements ISerializable
 	{
-	    private var _color:uint;
-	    private var _opacity:Number;
+	    private var _xml:XML;
 	
 	    public function Fill() 
 		{ 
 		
 		}
-	
+
+
 		/**
-		 * Serializes the Fill into the parent node.  Because the fill
-	     * serializes into the attributes of the XML node, it will directly modify
-	     * the parent node passed.
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
+		 * The XML node that should be used for this stanza's internal XML representation,
+		 * 
+		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
+		 * 
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
+		 * @see http://www.w3.org/TR/xml/
 		 */
-		public function serialize( parent:XMLNode ):Boolean
+		public function get xml():XML 
 		{
-	        if (_color) 
-			{ 
-				parent.attributes['fill'] = "#" + _color.toString(16);
-			}
-	        if (_opacity)
-			{
-				parent.attributes['fill-opacity'] = _opacity.toString(); 
-			}
-	
-	        return true;
-	    }
-	
-		/**
-		 * Extracts the known fill attributes from the node
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function deserialize( node:XMLNode ):Boolean
+			return _xml;
+		}
+		public function set xml( elem:XML ):void 
 		{
-	        if (node.attributes['fill'])
+			var parent:XML = _xml.parent();
+			if (parent != null)
 			{
-	            _color = new Number('0x' + node.attributes['fill'].slice(1));
-	        }
-	        if (node.attributes['fill-opacity']) 
-			{
-	            _opacity = new Number(node.attributes['fill-opacity']);
-	        }
-	
-	        return true;
-	    }
+				parent.appendChild(elem);
+			}
+			
+			_xml = elem;
+		}
 	
 	    /**
 	     * The value of the RGB color.  This is the same color format used by
@@ -93,13 +74,14 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 		public function get color():uint 
 		{
-			return _color ? _color : 0; 
+			return 0; 
+	        //new Number("0x" + _xml.attributes["fill"].slice(1));
 		}
 		public function set color(value:uint):void
 		{
-			_color = value;
+				_xml.attributes["fill"] = "#" + value.toString(16);
 		}
-	
+		
 	    /**
 	     * The opacity of the fill, in percent. 100 is solid, 0 is transparent.
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
@@ -107,11 +89,12 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 	    public function get opacity():Number 
 		{ 
-			return _opacity ? _opacity : 100; 
+	        // new Number(_xml.attributes["fill-opacity"]);
+			return 100; 
 		}
 	    public function set opacity(value:Number):void 
 		{
-			_opacity = value;
+			_xml.attributes["fill-opacity"] = value.toString(); 
 		}
 	}
 }

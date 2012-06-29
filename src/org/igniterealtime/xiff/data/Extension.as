@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data
 	
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	import flash.xml.XMLNode;
+	
 	
 	/**
 	 * This is a base class for all data extensions.
@@ -41,36 +41,73 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @param	parent The parent node that this extension should be appended to
 		 */
-		public function Extension(parent:XMLNode = null)
+		public function Extension( parent:XML = null )
 		{
 			super();
 	
-			getNode().nodeName = IExtension(this).getElementName();
-			getNode().attributes.xmlns = IExtension(this).getNS();
+			xml.setLocalName( IExtension(this).getElementName() );
+			xml.setNamespace( IExtension(this).getNS() );
 	
-			if (exists(parent)) 
+			if (exists(parent))
 			{
-				parent.appendChild(getNode());
+				parent.appendChild(xml);
 			}
+		}
+		
+		/**
+		 * Convinience method for getting element value from the XML.
+		 * @param	name
+		 * @return
+		 */
+		public function getField(name:String):String
+		{
+			var list:XMLList = xml.children().(localName() == name);
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * Convinience method for setting a value to a element in the XML.
+		 * @param	name
+		 * @param	value
+		 */
+		public function setField(name:String, value:String):void
+		{
+			var list:XMLList = xml.children().(localName() == name);
+			if ( value == null && list.length() > 0)
+			{
+				delete list[0];
+			}
+			else
+			{
+				xml[name] = value;
+			}
+		}
+		
+		/**
+		 * Append this extension to the given parent.
+		 * @param	parent
+		 */
+		public function append( parent:XML ):void
+		{
+			parent.appendChild( xml );
 		}
 	
 		/**
 		 * Removes the extension from its parent.
-		 *
 		 */
 		public function remove():void
 		{
-			getNode().removeNode();
-		}
-		
-		/**
-		 * Converts the extension stanza XML to a string.
-		 *
-		 * @return The extension XML in string form
-		 */
-		public function toString():String
-		{
-			return getNode().toString();
+			var parent:XML = xml.parent();
+			if (parent != null)
+			{
+				var index:int = parent.child(this).childIndex();
+				delete parent[index];
+			}
 		}
 	}
 }

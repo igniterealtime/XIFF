@@ -29,8 +29,6 @@ package org.igniterealtime.xiff.core
 	import flash.net.*;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
-	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
 
 	import org.igniterealtime.xiff.core.*;
 	import org.igniterealtime.xiff.data.*;
@@ -184,10 +182,10 @@ package org.igniterealtime.xiff.core
 				"ver": BOSH_VERSION,
 				"to": domain
 			};
-
-			var result:XMLNode = new XMLNode( 1, ELEMENT_NAME );
+			
+			var result:XML = <{ ELEMENT_NAME }/>;
 			result.attributes = attrs;
-						
+			
 			sendRequests( result );
 
 			return true;
@@ -197,8 +195,8 @@ package org.igniterealtime.xiff.core
 		{
 			if ( active )
 			{
-				var data:XMLNode = createRequest();
-				data.attributes.type = "terminate";
+				var data:XML = createRequest();
+				data.@type = "terminate";
 				sendRequests( data );
 				active = false;
 				loggedIn = false;
@@ -218,7 +216,7 @@ package org.igniterealtime.xiff.core
 
 			pollingEnabled = false;
 
-			var data:XMLNode = createRequest();
+			var data:XML = createRequest();
 			data.attributes[ "pause" ] = seconds;
 			sendRequests( data );
 
@@ -233,31 +231,31 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	responseBody
 		 */
-		public function processConnectionResponse( responseBody:XMLNode ):void
+		public function processConnectionResponse( responseBody:XML ):void
 		{
 			dispatchEvent( new ConnectionSuccessEvent());
 
-			var attributes:Object = responseBody.attributes;
+			var attr:Object = responseBody.attributes;
 
-			sid = attributes.sid;
-			wait = attributes.wait;
+			sid = attr.sid;
+			wait = attr.wait;
 
-			if ( attributes.polling )
+			if ( attr.polling )
 			{
-				boshPollingInterval = attributes.polling;
+				boshPollingInterval = attr.polling;
 			}
-			if ( attributes.inactivity )
+			if ( attr.inactivity )
 			{
-				inactivity = attributes.inactivity;
+				inactivity = attr.inactivity;
 			}
-			if ( attributes.maxpause )
+			if ( attr.maxpause )
 			{
-				maxPause = attributes.maxpause;
+				maxPause = attr.maxpause;
 				pauseEnabled = true;
 			}
-			if ( attributes.requests )
+			if ( attr.requests )
 			{
-				maxConcurrentRequests = attributes.requests;
+				maxConcurrentRequests = attr.requests;
 			}
 
 			trace( "Polling interval: {0}", boshPollingInterval );
@@ -277,7 +275,7 @@ package org.igniterealtime.xiff.core
 
 		override protected function restartStream():void
 		{
-			var data:XMLNode = createRequest();
+			var data:XML = createRequest();
 			data.attributes[ "xmpp:restart" ] = "true";
 			data.attributes[ "xmlns:xmpp" ] = "urn:xmpp:xbosh";
 			data.attributes[ "xml:lang" ] = "en";
@@ -286,27 +284,19 @@ package org.igniterealtime.xiff.core
 			streamRestarted = true;
 		}
 
-		override protected function sendXML( someData:* ):void
+		override protected function sendXML( someData:String ):void
 		{
-			var thisData:XMLNode;
-			if (someData is XML)
-			{
-				var x : XML = someData as XML;
-				thisData = new XMLDocument( x.toXMLString() );
-			}
-			else
-			{
-				thisData = someData as XMLNode;
-			}
-			// XMLNode
+			var thisData:XML;
+			thisData = someData as XML;
+			
 			sendQueuedRequests( thisData );
 		}
 
-		override protected function handleNodeType( node:XMLNode ):void
+		override protected function handleNodeType( node:XML ):void
 		{
 			super.handleNodeType( node );
 
-			var nodeName:String = node.nodeName.toLowerCase();
+			var nodeName:String = node.localName().toLowerCase();
 
 			if( nodeName == "stream:features" )
 			{
@@ -319,25 +309,22 @@ package org.igniterealtime.xiff.core
 		 * @param	bodyContent
 		 * @return
 		 */
-		private function createRequest( bodyContent:Array = null ):XMLNode
-		{
-			var attrs:Object = {
-				"xmlns": "http://jabber.org/protocol/httpbind",
-				"rid": nextRID,
-				"sid": sid
-			};
-			var req:XMLNode = new XMLNode( 1, ELEMENT_NAME );
+		private function createRequest( bodyContent:Array = null ):XML
+		{			
+			var elem:XML = <{ ELEMENT_NAME }/>;
+			elem.setNamespace( "http://jabber.org/protocol/httpbind" );
+			elem.@rid = nextRID;
+			elem.@sid = sid;
+			
 			if ( bodyContent )
 			{
-				for each ( var content:XMLNode in bodyContent )
+				for each ( var content:XML in bodyContent )
 				{
-					req.appendChild( content );
+					elem.appendChild( new XML(content.toString()) );
 				}
 			}
 
-			req.attributes = attrs;
-
-			return req;
+			return elem;
 		}
 
 		/**
@@ -367,17 +354,16 @@ package org.igniterealtime.xiff.core
 			requestCount--;
 			var byteData:ByteArray = loader.data as ByteArray;
 
-			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = ignoreWhitespace;
-			xmlData.parseXML( byteData.readUTFBytes(byteData.length) );
+			var xmlData:XML = new XML( byteData.readUTFBytes(byteData.length) );
+			//xmlData.ignoreWhite = ignoreWhitespace;
 			
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
 			dispatchEvent( incomingEvent );
 			
-			var bodyNode:XMLNode = xmlData.firstChild;
+			var bodyNode:XML = xmlData.children()[0];
 
-			if ( streamRestarted && !bodyNode.hasChildNodes())
+			if ( streamRestarted && bodyNode.children().length() == 0)
 			{
 				streamRestarted = false;
 				bindConnection();
@@ -394,9 +380,9 @@ package org.igniterealtime.xiff.core
 				processConnectionResponse( bodyNode );
 
 				var featuresFound:Boolean = false;
-				for each ( var child:XMLNode in bodyNode.childNodes )
+				for each ( var child:XML in bodyNode.children() )
 				{
-					if ( child.nodeName == "stream:features" )
+					if ( child.localName() == "stream:features" )
 					{
 						featuresFound = true;
 					}
@@ -408,7 +394,7 @@ package org.igniterealtime.xiff.core
 				}
 			}
 
-			for each ( var childNode:XMLNode in bodyNode.childNodes )
+			for each ( var childNode:XML in bodyNode.children() )
 			{
 				responseQueue.push( childNode );
 			}
@@ -452,7 +438,7 @@ package org.igniterealtime.xiff.core
 		private function processResponse( event:TimerEvent = null ):void
 		{
 			// Read the data and send it to the appropriate parser
-			var currentNode:XMLNode = responseQueue.shift();
+			var currentNode:XML = responseQueue.shift();
 
 			handleNodeType( currentNode );
 
@@ -482,7 +468,7 @@ package org.igniterealtime.xiff.core
 		 * @param	body
 		 * @return
 		 */
-		private function sendQueuedRequests( body:XMLNode = null ):Boolean
+		private function sendQueuedRequests( body:XML = null ):Boolean
 		{
 			if ( body )
 			{
@@ -502,7 +488,7 @@ package org.igniterealtime.xiff.core
 		 * @param	isPoll
 		 * @return
 		 */
-		private function sendRequests( data:XMLNode = null, isPoll:Boolean = false ):Boolean
+		private function sendRequests( data:XML = null, isPoll:Boolean = false ):Boolean
 		{
 			if ( requestCount >= maxConcurrentRequests )
 			{

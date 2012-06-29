@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,9 +25,6 @@
  */
 package org.igniterealtime.xiff.data
 {
-
-	import flash.xml.XMLNode;
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
@@ -38,14 +35,6 @@ package org.igniterealtime.xiff.data
 	 */
 	public class IQ extends XMPPStanza implements IIQ
 	{
-		private var myCallback:Function;
-		
-		private var myErrorCallback:Function;
-
-		private var myQueryName:String;
-
-		private var myQueryFields:Array;
-
 		/**
 		 * The stanza reports an error that has occurred
 		 * regarding processing or delivery of a previously-sent get or
@@ -74,8 +63,40 @@ package org.igniterealtime.xiff.data
 
 		private static var _idGenerator:IIDGenerator = new IncrementalGenerator( "iq_" );
 
+		
+		private var _callback:Function;
+		private var _errorCallback:Function;
+		
 		/**
 		 * A class for abstraction and encapsulation of IQ (info-query) data.
+		 *
+		 * <p>Info/Query, or <strong>IQ</strong>, is a request-response mechanism, similar in some
+		 * ways to [HTTP].  The semantics of IQ enable an entity to make a
+		 * request of, and receive a response from, another entity.  The data
+		 * content of the request and response is defined by the namespace
+		 * declaration of a direct child element of the IQ element, and the
+		 * interaction is tracked by the requesting entity through use of the
+		 * 'id' attribute.  Thus, IQ interactions follow a common pattern of
+		 * structured data exchange such as get/result or set/result (although
+		 * an error may be returned in reply to a request if appropriate):</p>
+		 * <pre>
+		 *    Requesting                 Responding
+		 *      Entity                     Entity
+		 *    ----------                 ----------
+		 *        |                           |
+		 *        | &lt;iq type='get' id='1'&gt;    |
+		 *        | ------------------------&gt; |
+		 *        |                           |
+		 *        | &lt;iq type='result' id='1'&gt; |
+		 *        | &lt;------------------------ |
+		 *        |                           |
+		 *        | &lt;iq type='set' id='2'&gt;    |
+		 *        | ------------------------&gt; |
+		 *        |                           |
+		 *        | &lt;iq type='error' id='2'&gt;  |
+		 *        | &lt;------------------------ |
+		 *        |                           |
+	     * </pre>
 		 *
 		 * @param	recipient The JID of the IQ recipient
 		 * @param	iqType The type of the IQ - there are static variables declared for each type
@@ -91,12 +112,14 @@ package org.igniterealtime.xiff.data
 
 			callback = iqCallback;
 			errorCallback = iqErrorCallback;
+			
+			trace("IQ constructed. xml: " + xml.toXMLString());
 		}
 
 		/**
 		 * Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
-		 * 
+		 *
 		 * @param	prefix The prefix for the ID to be generated
 		 * @return	The generated ID
 		 */
@@ -124,34 +147,9 @@ package org.igniterealtime.xiff.data
 		{
 			return _idGenerator;
 		}
-		
-		/**
-		 * @private
-		 */
 		public static function set idGenerator(  value:IIDGenerator ):void
 		{
 			_idGenerator = value;
-		}
-
-		/**
-		 * Serializes the IQ into XML form for sending to a server.
-		 *
-		 * @return An indication as to whether serialization was successful
-		 */
-		override public function serialize( parentNode:XMLNode ):Boolean
-		{
-			return super.serialize( parentNode );
-		}
-
-		/**
-		 * Deserializes an XML object and populates the IQ instance with its data.
-		 *
-		 * @param	xmlNode The XML to deserialize
-		 * @return An indication as to whether deserialization was sucessful
-		 */
-		override public function deserialize( xmlNode:XMLNode ):Boolean
-		{
-			return super.deserialize( xmlNode );
 		}
 
 		/**
@@ -166,11 +164,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get callback():Function
 		{
-			return myCallback;
+			return _callback;
 		}
 		public function set callback( value:Function ):void
 		{
-			myCallback = value;
+			_callback = value;
 		}
 		
 		/**
@@ -185,11 +183,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorCallback():Function
 		{
-			return myErrorCallback;
+			return _errorCallback;
 		}
 		public function set errorCallback( value:Function ):void
 		{
-			myErrorCallback = value;
+			_errorCallback = value;
 		}
 	}
 }

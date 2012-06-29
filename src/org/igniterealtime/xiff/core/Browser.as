@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,12 +31,17 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.disco.ItemDiscoExtension;
 
 	/**
-	 * This class provides a means of querying for available services on an XMPP
+	 * XEP-0030: Service Discovery
+	 *
+	 * <p>This class provides a means of querying for available services on an XMPP
 	 * server using the Disco protocol extension. For more information on Disco,
 	 * take a look at
 	 * <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a> and
-	 * <a href="http://xmpp.org/extensions/xep-0011.html">XEP-0011</a> for the
-	 * protocol enhancement specifications.
+	 * <a href="http://xmpp.org/extensions/xep-0011.html">XEP-0011 (obsolete)</a> for the
+	 * protocol enhancement specifications.</p>
+	 *
+	 * @see http://xmpp.org/extensions/xep-0030.html
+	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class Browser implements IBrowser
 	{
@@ -52,8 +57,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Creates a new Browser object.
 		 *
-		 * @param	aConnection A reference to the <code>XMPPConnection</code> instance
-		 * to use.
+		 * @param	aConnection A reference to the <code>XMPPConnection</code> instance to use.
 		 */
 		public function Browser( aConnection:IXMPPConnection )
 		{
@@ -74,10 +78,18 @@ package org.igniterealtime.xiff.core
 			return true;
 		}
 
+		/**
+		 *
+		 * @param	service
+		 * @param	node
+		 * @param	callback
+		 * @param	errorCallback
+		 * @return org.igniterealtime.xiff.data.IQ
+		 */
 		public function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
-			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.getNode());
+			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.xml );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
@@ -85,10 +97,18 @@ package org.igniterealtime.xiff.core
 			return iq;
 		}
 
+		/**
+		 *
+		 * @param	service
+		 * @param	node
+		 * @param	callback
+		 * @param	errorCallback
+		 * @return org.igniterealtime.xiff.data.IQ
+		 */
 		public function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
-			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.getNode());
+			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.xml );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
@@ -104,13 +124,14 @@ package org.igniterealtime.xiff.core
 		 * @param	server The server to query for available service information
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
+		 * @return org.igniterealtime.xiff.data.IQ
 		 */
 		public function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
-			iq.addExtension( new InfoDiscoExtension( iq.getNode() ) );
+			iq.addExtension( new InfoDiscoExtension( iq.xml ) );
 			_connection.send( iq );
 			return iq;
 		}
@@ -123,13 +144,14 @@ package org.igniterealtime.xiff.core
 		 * @param	server The server to query for service items
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
+		 * @return org.igniterealtime.xiff.data.IQ
 		 */
 		public function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( server, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
-			iq.addExtension( new ItemDiscoExtension( iq.getNode()));
+			iq.addExtension( new ItemDiscoExtension( iq.xml ) );
 			_connection.send( iq );
 			return iq;
 		}
@@ -141,13 +163,14 @@ package org.igniterealtime.xiff.core
 		 * @param	id The full JabberID to query for service items
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
+		 * @return org.igniterealtime.xiff.data.IQ
 		 */
 		public function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( id, IQ.TYPE_GET );
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
-			iq.addExtension( new BrowseExtension( iq.getNode()));
+			iq.addExtension( new BrowseExtension( iq.xml ) );
 			_connection.send( iq );
 			return iq;
 		}

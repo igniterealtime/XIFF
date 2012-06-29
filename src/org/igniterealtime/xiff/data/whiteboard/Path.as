@@ -27,10 +27,10 @@ package org.igniterealtime.xiff.data.whiteboard
 {
 	import org.igniterealtime.xiff.data.*;	
 	import org.igniterealtime.xiff.data.whiteboard.*;
-	import flash.xml.XMLNode;
+	
 	 
 	/**
-	 * A message extension for whitboard exchange. This class is the base class
+	 * A message extension for whiteboard exchange. This class is the base class
 	 * for other extension classes such as Path
 	 */
 	public class Path implements ISerializable
@@ -43,9 +43,16 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 	    private var _lastLocation:Object;
 		
-		public function Path( parent:XMLNode = null )
+	    private var _xml:XML;
+		
+		/**
+		 * 
+		 * @param	parent
+		 */
+		public function Path( parent:XML = null )
 		{
-			//super( parent );
+	        _xml = <{ Path.ELEMENT_NAME }/>;
+			
 			_stroke = new Stroke();
 			_fill = new Fill();
 		}
@@ -56,42 +63,52 @@ package org.igniterealtime.xiff.data.whiteboard
 		 * @param	parent The parent node that this extension should be serialized into
 		 * @return An indicator as to whether serialization was successful
 		 */
-		public function serialize( parent:XMLNode ):Boolean
+		public function serialize( parent:XML ):Boolean
 		{
-	        var node:XMLNode = XMLStanza.XMLFactory.createElement(Path.ELEMENT_NAME);
-			node.attributes['p'] = serializeSegments();
-	        stroke.serialize(node);
-	        fill.serialize(node);
-	        parent.appendChild(node);
+			_xml.attributes['p'] = serializeSegments();
+			
+	        parent.appendChild(_xml);
 	
 			return true;
 		}
-		
+	
 		/**
-		 * Deserializes the Path data.
-		 *
-		 * @param	node The XML node associated this data
-		 * @return true if deserialization was successful
+		 * The XML node that should be used for this stanza's internal XML representation,
+		 * 
+		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
+		 * 
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
+		 * @see http://www.w3.org/TR/xml/
 		 */
-		public function deserialize( node:XMLNode ):Boolean
+		public function get xml():XML 
 		{
-			var p:String = node.attributes['p'];
+			return _xml;
+		}
+		public function set xml( elem:XML ):void 
+		{
+			var parent:XML = _xml.parent();
+			if (parent != null)
+			{
+				parent.appendChild(elem);
+			}
+			
+			_xml = elem;
+			
+			
+			var p:String = elem.attributes['p'];
 	
 			// Divide and conquer, using commands as delims, joining
 			// the results in prefix order
 	        _segments = [];
-	        _lastLocation = new Object;
+	        _lastLocation = {};
 			loadNextCommand(p);
 	
 	        _stroke = new Stroke();
-	        _stroke.deserialize(node);
+	        _stroke.xml = elem;
 	
 	        _fill = new Fill();
-	        _fill.deserialize(node);
-	
-			return true;
+	        _fill.xml = elem;
 		}
-	
 		
 		/**
 		 * Creates the compact form of the segments
@@ -186,7 +203,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		{ 
 			return _segments; 
 		}
-	
+		
 	    /**
 	     * The Stroke object that contains the properties describing the stroke of this
 	     * path

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.auth
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.util.SHA1;
@@ -41,12 +41,8 @@ package org.igniterealtime.xiff.data.auth
 		public static const NS:String = "jabber:iq:auth";
 		public static const ELEMENT_NAME:String = "query";
 	
-		private var myUsernameNode:XMLNode;
-		private var myPasswordNode:XMLNode;
-		private var myDigestNode:XMLNode;
-		private var myResourceNode:XMLNode;
 		
-		public function AuthExtension( parent:XMLNode = null)
+		public function AuthExtension( parent:XML = null)
 		{
 			super(parent);
 		}
@@ -80,44 +76,6 @@ package org.igniterealtime.xiff.data.auth
 	    {
 	        ExtensionClassRegistry.register(AuthExtension);
 	    }
-		
-		public function serialize( parent:XMLNode ):Boolean
-		{
-			if (!exists(getNode().parentNode))
-			{
-				parent.appendChild(getNode().cloneNode(true));
-			}
-			return true;
-		}
-	
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			
-			setNode(node);
-			var children:Array = node.childNodes;
-			for ( var i:String in children )
-			{
-				switch( children[i].nodeName )
-				{
-					case "username":
-						myUsernameNode = children[i];
-						break;
-						
-					case "password":
-						myPasswordNode = children[i];
-						break;
-						
-					case "digest":
-						myDigestNode = children[i];
-						break;
-	
-					case "resource":
-						myResourceNode = children[i];
-						break;
-				}
-			}
-			return true;
-		}
 	
 		/**
 		 * Computes the SHA1 digest of the password and session ID for use when
@@ -146,7 +104,7 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function isDigest():Boolean
 		{
-			return exists(myDigestNode);
+			return xml.children().(localName() == "digest").length() > 0;
 		}
 	
 		/**
@@ -157,7 +115,7 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function isPassword():Boolean
 		{
-			return exists(myPasswordNode);
+			return xml.children().(localName() == "password").length() > 0;
 		}
 	
 		/**
@@ -165,71 +123,39 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function get username():String
 		{
-			if(myUsernameNode && myUsernameNode.firstChild)
-				return myUsernameNode.firstChild.nodeValue;
-			
-			return null;
+			return getField("username");
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set username(value:String):void
 		{
-			myUsernameNode = replaceTextNode(getNode(), myUsernameNode, "username", value);
+			setField("username", value);
 		}
 	
 		/**
 		 * The password to use for authentication.
+		 * While assigned, digest is removed.
 		 */
 		public function get password():String
 		{
-			if (myPasswordNode && myPasswordNode.firstChild)
-			{
-				return myPasswordNode.firstChild.nodeValue;
-			}
-			
-			return null;
+			return getField("password");
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set password(value:String):void
 		{
-			// Either or for digest or password
-			myDigestNode = (myDigestNode==null)?(XMLStanza.XMLFactory.createElement('')):(myDigestNode);
-			myDigestNode.removeNode();
-			myDigestNode = null;
-			//delete myDigestNode;
-	
-			myPasswordNode = replaceTextNode(getNode(), myPasswordNode, "password", value);
+			setField("password", value);
+			delete xml.digest;
 		}
 	
 		/**
 		 * The SHA1 digest to use for authentication.
+		 * While assigned, password is removed.
 		 */
 		public function get digest():String
 		{
-			if (myDigestNode && myDigestNode.firstChild)
-			{
-				return myDigestNode.firstChild.nodeValue;
-			}
-			
-			return null;
+			return getField("digest");
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set digest(value:String):void
 		{
-			// Either or for digest or password
-			myPasswordNode.removeNode();
-			myPasswordNode = null;
-			//delete myPasswordNode;
-	
-			myDigestNode = replaceTextNode(getNode(), myDigestNode, "digest", value);
+			setField("digest", value);
+			delete xml.password;
 		}
 	
 		/**
@@ -239,20 +165,11 @@ package org.igniterealtime.xiff.data.auth
 		 */
 		public function get resource():String
 		{
-			if (myResourceNode && myResourceNode.firstChild)
-			{
-				return myResourceNode.firstChild.nodeValue;
-			}
-			
-			return null;
+			return getField("resource");
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set resource(value:String):void
 		{
-			myResourceNode = replaceTextNode(getNode(), myResourceNode, "resource", value);
+			setField("resource", value);
 		}
 	
 	}

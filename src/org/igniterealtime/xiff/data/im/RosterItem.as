@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.im
 {
 	
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
@@ -38,68 +38,25 @@ package org.igniterealtime.xiff.data.im
 	 * contact, and this class is used to represent, abstract, and serialize/deserialize
 	 * this data.
 	 *
+	 * @param	parent The parent XML
 	 * @see	org.igniterealtime.xiff.data.im.RosterExtension
-	 * @param	parent The parent XMLNode
+	 * @see http://xmpp.org/extensions/xep-0144.html
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "item";
 		
-		private var myGroupNodes:Array;
 		
-		public function RosterItem( parent:XMLNode = null )
+		public function RosterItem( parent:XML = null )
 		{
 			super();
 			
-			getNode().nodeName = ELEMENT_NAME;
-			myGroupNodes = [];
+			xml.setLocalName(ELEMENT_NAME);
 			
-			if( exists( parent ) ) {
-				parent.appendChild( getNode() );
+			if ( exists( parent ) ) 
+			{
+				parent.appendChild( xml );
 			}
-		}
-		
-		/**
-		 * Serializes the RosterItem data to XML for sending.
-		 *
-		 * @param	parent The parent node that this item should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function serialize( parent:XMLNode ):Boolean
-		{
-			if (!exists(jid)) {
-				trace("Warning: required roster item attributes 'jid' missing");
-				return false;
-			}
-			
-			if( parent != getNode().parentNode ) {
-				parent.appendChild( getNode().cloneNode( true ) );
-			}
-	
-			return true;
-		}
-		
-		/**
-		 * Deserializes the RosterItem data.
-		 *
-		 * @param	node The XML node associated this data
-		 * @return An indicator as to whether deserialization was successful
-		 */
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-			
-	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-				switch( children[i].nodeName ) {
-					case "group":
-						myGroupNodes.push( children[i] );
-						break;
-				}
-			}
-			
-			return true;
 		}
 		
 		/**
@@ -110,9 +67,8 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function addGroupNamed( groupName:String ):void
 		{
-			var node:XMLNode = addTextNode( getNode(), "group", groupName );
-			
-			myGroupNodes.push( node );
+			var node:XML = <group>{ groupName }</group>;
+			xml.appendChild(node);
 		}
 		
 		/**
@@ -122,42 +78,55 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get groupNames():Array
 		{
-			var returnArr:Array = [];
-
-			for( var i:String in myGroupNodes ) {
-				var node:XMLNode = myGroupNodes[i].firstChild;
-				if(node != null){
-					returnArr.push(node.nodeValue);
-				}
-				//returnArr.push(myGroupNodes[i].firstChild.nodeValue);
-
+			var list:Array = [];
+			var groups:XMLList = xml.group;
+			
+			for each ( var item:XML in groups )
+			{
+				list.push( item );
 			}
-			return returnArr;
+			return list;
 		}
 		
-		public function get groupCount():uint
+		/**
+		 * Get the number of <code>group</code> elements in this roster item.
+		 */
+		public function get groupCount():int
 		{
-			return myGroupNodes.length;
+			return xml.group.length();
 		}
 		
+		/**
+		 * Remove all group elements
+		 */
 		public function removeAllGroups():void
 		{
-			for( var i:String in myGroupNodes ) {
-				myGroupNodes[i].removeNode();
-			}
-			
-			myGroupNodes = [];
+			delete xml.group;
 		}
 		
+		/**
+		 * Remove a single group with the given name
+		 * @param	groupName
+		 * @return
+		 */
 		public function removeGroupByName( groupName:String ):Boolean
 		{
-			for( var i:String in myGroupNodes )
+			var groups:XMLList = xml.group;
+			var index:int = -1;
+			
+			for each ( var item:XML in groups )
 			{
-				if( myGroupNodes[i].nodeValue == groupName ) {
-					myGroupNodes[i].removeNode();
-					myGroupNodes.splice( parseInt(i), 1 );
-					return true;
+				if (item.contains(groupName))
+				{
+					index = item.childIndex();
+					break;
 				}
+			}
+			
+			if (index !== -1)
+			{
+				delete xml.group.children()[index];
+				return true;
 			}
 			
 			return false;
@@ -165,16 +134,15 @@ package org.igniterealtime.xiff.data.im
 		
 		/**
 		 * The JID for this roster item.
-		 *
+		 * Required.
 		 */
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID(getNode().attributes.jid);
+			return new EscapedJID(xml.@jid);
 		}
-		
 		public function set jid( value:EscapedJID ):void
 		{
-			getNode().attributes.jid = value.toString();
+			xml.@jid = value.toString();
 		}
 		
 		/**
@@ -183,12 +151,11 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get name():String
 		{
-			return getNode().attributes.name;
+			return xml.@name;
 		}
-		
 		public function set name( value:String ):void
 		{
-			getNode().attributes.name = value;
+			xml.@name = value;
 		}
 		
 		/**
@@ -205,12 +172,11 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get subscription():String
 		{
-			return getNode().attributes.subscription;
+			return xml.@subscription;
 		}
-		
 		public function set subscription( value:String ):void
 		{
-			getNode().attributes.subscription = value;
+			xml.@subscription = value;
 		}
 		
 		/**
@@ -225,20 +191,21 @@ package org.igniterealtime.xiff.data.im
 		 */
 		 public function get askType():String
 		 {
-		 	return getNode().attributes.ask;
+		 	return xml.@ask;
 		 }
-		
 		 public function set askType( value:String ):void
 		 {
-		 	getNode().attributes.ask = value;
+		 	xml.@ask = value;
 		 }
 		
-		 /**
+		/**
 		 * Convenience routine to determine if a roster item is considered "pending" or not.
 		 */
-		 public function get pending():Boolean
-		 {
-		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && (subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || subscription == RosterExtension.SUBSCRIBE_TYPE_FROM))
+		public function get pending():Boolean
+		{
+		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && 
+				(subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || 
+				subscription == RosterExtension.SUBSCRIBE_TYPE_FROM))
 			{
 		 		return true;
 		 	}
@@ -246,7 +213,7 @@ package org.igniterealtime.xiff.data.im
 			{
 		 		return false;
 		 	}
-		 }
+		}
 	}
 	
 }

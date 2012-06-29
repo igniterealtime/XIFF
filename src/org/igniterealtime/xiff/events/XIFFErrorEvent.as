@@ -30,7 +30,10 @@ package org.igniterealtime.xiff.events
 	import org.igniterealtime.xiff.data.Extension;
 
 	/**
-	 *
+	 * RFC 3920 (XMPP Core, published October 2004), 
+	 * in chapters 4.7. defines Stream Errors.
+	 * 
+	 * @see http://www.ietf.org/rfc/rfc3920.txt
 	 */
 	public class XIFFErrorEvent extends Event
 	{

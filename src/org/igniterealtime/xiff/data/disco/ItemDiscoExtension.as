@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a>
@@ -41,7 +41,11 @@ package org.igniterealtime.xiff.data.disco
 
 		private var _items:Array;
 
-		public function ItemDiscoExtension( parent:XMLNode=null )
+		/**
+		 * 
+		 * @param	parent
+		 */
+		public function ItemDiscoExtension( parent:XML=null )
 		{
 			super( parent );
 		}
@@ -86,46 +90,37 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 * @private
+		 * 
 		 */
 		public function set items( value:Array ):void
 		{
 			_items = value;
 		}
 
-		override public function serialize( parentNode:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode();
-			for each( var item:DiscoItem in _items )
-			{
-				item.serialize( node );
-			}
-
-			if( !super.serialize( parentNode ) ) return false;
-
-			return true;
-		}
-
-		override public function deserialize( node:XMLNode ):Boolean
-		{
-			if( !super.deserialize( node ) ) return false;
+			super.xml = node;
 
 			_items = [];
 
-			for each( var child:XMLNode in getNode().childNodes )
+			for each( var child:XML in xml.children() )
 			{
-				switch( child.nodeName )
+				switch( child.localName() )
 				{
 					case "item":
-						var item:DiscoItem = new DiscoItem( getNode() );
-						item.deserialize( child );
+						var item:DiscoItem = new DiscoItem( xml );
+						item.xml = child;
 						_items.push( item );
 						break;
 				}
 			}
-			return true;
 		}
 
+		/**
+		 * 
+		 * @param	item
+		 * @return
+		 */
 		public function addItem( item:DiscoItem ):DiscoItem
 		{
 			_items.push( item );

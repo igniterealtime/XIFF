@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.search
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
@@ -47,7 +47,6 @@ package org.igniterealtime.xiff.data.search
 		public static const ELEMENT_NAME:String = "query";
 	
 		private var _fields:Object = {};
-		private var _instructionsNode:XMLNode;
 		private var _items:Array = [];
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
@@ -56,7 +55,7 @@ package org.igniterealtime.xiff.data.search
 		 *
 		 * @param	parent (Optional) The parent node used to build the XML tree.
 		 */
-		public function SearchExtension( parent:XMLNode = null )
+		public function SearchExtension( parent:XML = null )
 		{
 			super(parent);
 		}
@@ -79,50 +78,37 @@ package org.igniterealtime.xiff.data.search
 	        ExtensionClassRegistry.register(SearchExtension);
 	    }
 		
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			if (!exists(getNode().parentNode))
-			{
-				parentNode.appendChild(getNode().cloneNode( true ));
-			}
-			return true;
-		}
 	
-		public function deserialize( node:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			setNode(node);
+			super.xml = node;
 	
-			var children:Array = getNode().childNodes;
-			for (var i:String in children)
+			for each ( var child:XML in node.children() )
 			{
 	
-				switch (children[i].nodeName)
+				switch (child.localName())
 				{
-					case "instructions":
-						_instructionsNode = children[i];
-						break;
 						
 					case "x":
-						if (children[i].namespaceURI == FormExtension.NS)
+						if (child.namespace().uri == FormExtension.NS)
 						{
-							var dataFormExt:FormExtension = new FormExtension(getNode());
-							dataFormExt.deserialize(children[i]);
+							var dataFormExt:FormExtension = new FormExtension(xml);
+							dataFormExt.xml = child;
 							addExtension(dataFormExt);
 						}
 						break;
 						
 					case "item":
-						var item:SearchItem = new SearchItem(getNode());
-						item.deserialize(children[i]);
+						var item:SearchItem = new SearchItem(xml);
+						item.xml = child;
 						_items.push(item);
 						break;
 	
 					default:
-						_fields[children[i].nodeName] = children[i];
+						_fields[child.localName()] = child;
 						break;
 				}
 			}
-			return true;
 	
 		}
 	
@@ -143,36 +129,16 @@ package org.igniterealtime.xiff.data.search
 			return _items;
 		}
 	
+		/**
+		 * Use <code>null</code> to remove.
+		 */
 		public function get instructions():String
 		{
-			if (_instructionsNode && _instructionsNode.firstChild)
-			{
-				return _instructionsNode.firstChild.nodeValue;
-			}
-			
-			return null;
+			return getField("instructions");
 		}
-	
 		public function set instructions(value:String):void
 		{
-			_instructionsNode = replaceTextNode(getNode(), _instructionsNode, "instructions", value);
+			setField("instructions", value);
 		}
-	
-		public function getField(name:String):String
-		{
-			var node:XMLNode = _fields[name];
-			if (node && node.firstChild)
-			{
-				return node.firstChild.nodeValue;
-			}
-			
-			return null;
-		}
-	
-		public function setField(name:String, value:String):void
-		{
-			_fields[name] = replaceTextNode(getNode(), _fields[name], name, value);
-		}
-				
 	}
 }

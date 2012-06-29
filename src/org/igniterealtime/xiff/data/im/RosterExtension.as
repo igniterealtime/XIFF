@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.im
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
@@ -59,7 +59,7 @@ package org.igniterealtime.xiff.data.im
 	
 		private var _items:Array = [];
 		
-		public function RosterExtension( parent:XMLNode = null )
+		public function RosterExtension( parent:XML = null )
 		{
 			super( parent );
 		}
@@ -87,37 +87,14 @@ package org.igniterealtime.xiff.data.im
 		}
 		
 	    /**
-	     * Performs the registration of this extension into the extension registry.  
-	     * 
+	     * Performs the registration of this extension into the extension registry.
+	     *
 	     */
 	    public static function enable():void
 	    {
 	        ExtensionClassRegistry.register(RosterExtension);
 	    }
 	
-		/**
-		 * Serializes the RosterExtension data to XML for sending.
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function serialize( parent:XMLNode ):Boolean
-		{
-			var node:XMLNode = getNode();
-			
-			// Serialize each roster item
-			for( var i:String in _items ) {
-				if( !_items[i].serialize( node ) ){
-					return false;
-				}
-			}
-			
-			if( !exists( getNode().parentNode ) ) {
-				parent.appendChild( getNode().cloneNode( true ) );
-			}
-			
-			return true;
-		}
 		
 		/**
 		 * Deserializes the RosterExtension data.
@@ -125,25 +102,22 @@ package org.igniterealtime.xiff.data.im
 		 * @param	node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
-		public function deserialize( node:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			setNode( node );
+			super.xml = node;
 			removeAllItems();
 			
-			var children:Array = node.childNodes;
-			for( var i:String in children ){
-				switch( children[i].nodeName ) {
+			for each ( var child:XML in node.children() )
+			{
+				switch( child.localName() )
+				{
 					case "item":
-						var item:RosterItem = new RosterItem( getNode() );
-						if( !item.deserialize( children[i] ) ) {
-							return false;
-						}
+						var item:RosterItem = new RosterItem( xml );
+						item.xml = child;
 						_items.push( item );
 						break;
 				}
 			}
-			
-			return true;
 		}
 		
 		/**
@@ -163,8 +137,10 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
-			for( var i:String in _items ) {
-				if( _items[i].jid == jid.toString() ) {
+			for ( var i:String in _items )
+			{
+				if ( _items[i].jid == jid.toString() )
+				{
 					return _items[i];
 				}
 			}
@@ -182,15 +158,28 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function addItem( jid:EscapedJID=null, subscription:String="", displayName:String="", groups:Array=null ):void
 		{
-			var item:RosterItem = new RosterItem( getNode() );
+			var item:RosterItem = new RosterItem( xml );
 			
-			if( exists( jid ) ) { item.jid = jid; }
-			if( exists( subscription ) ) { item.subscription = subscription; }
-			if( exists( displayName ) ) { item.name = displayName; }
-			if( exists( groups ) ) {
-				for each( var group:String in groups ) {
-					if(group)
+			if ( exists( jid ) )
+			{
+				item.jid = jid;
+			}
+			if ( exists( subscription ) )
+			{
+				item.subscription = subscription;
+			}
+			if ( exists( displayName ) )
+			{
+				item.name = displayName;
+			}
+			if ( exists( groups ) )
+			{
+				for each( var group:String in groups )
+				{
+					if (group)
+					{
 						item.addGroupNamed( group );
+					}
 				}
 			}
 		}
@@ -201,8 +190,9 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function removeAllItems():void
 		{
-			for( var i:String in _items ) {
-				_items[i].setNode( null );
+			for ( var i:String in _items )
+			{
+				//_items[i].setNode( null );
 			}
 			
 			_items = [];

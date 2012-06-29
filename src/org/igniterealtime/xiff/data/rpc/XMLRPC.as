@@ -25,18 +25,12 @@
  */
 package org.igniterealtime.xiff.data.rpc
 {
-	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
-	
 	/**
 	 * Implements client side XML marshalling of methods and parameters into XMLRPC.
-	 * For more information on RPC over XMPP, see <a href="http://xmpp.org/extensions/xep-0009.html">
-	 * http://xmpp.org/extensions/xep-0009.html</a>.
+	 * @see http://xmpp.org/extensions/xep-0009.html
 	 */
 	public class XMLRPC
-	{
-		private static var XMLFactory:XMLDocument = new XMLDocument();
-	
+	{	
 		/**
 		 * Extract and marshall the XML-RPC response to Flash types.
 		 *
@@ -44,29 +38,28 @@ package org.igniterealtime.xiff.data.rpc
 		 * @return Mixed object of either an array of results from the method call or a fault.
 		 * If the result is a fault, "result.isFault" will evaulate as true.
 		 */
-		public static function fromXML(xml:XMLNode):Array
+		public static function fromXML(xml:XML):Array
 		{
 			var result:Array;
-			var response:XMLNode = findNode("methodResponse", xml);
+			var response:XML = findNode("methodResponse", xml);
 	
-			if (response.firstChild.nodeName == "fault")
+			if (response.hasOwnProperty("fault"))
 			{
 				// methodResponse/fault/value/struct
-				result = extractValue(response.firstChild.firstChild.firstChild);
+				result = extractValue(response..struct);
 				result.isFault = true;
 			} 
 			else 
 			{
 				result = [];
-				var params:XMLNode = findNode("params", response);
-				if (params != null) {
-					for (var param_idx:int = 0; param_idx < params.childNodes.length; param_idx++)
+				var params:XML = findNode("params", response);
+				if (params != null) 
+				{
+					for each (var param:XML in params.children())
 					{
-						var param:Array = params.childNodes[param_idx].firstChild;
-	
-						for (var type_idx:int = 0; type_idx < param.childNodes.length; type_idx++)
+						for each (var child:XML in param.children())
 						{
-							result.push(extractValue(param.childNodes[type_idx]));
+							result.push(extractValue(child.toString()));
 						}
 					}
 				}
@@ -78,14 +71,14 @@ package org.igniterealtime.xiff.data.rpc
 		 * The marshalling process, accepting a block of XML, a string description of the remote method,
 		 * and an array of flash type parameters.
 		 *
-		 * @return XMLNode containing the XML marshalled result
+		 * @return XML containing the XML marshalled result
 		 */
-		public static function toXML(parent:XMLNode, method:String, params:Array):XMLNode
+		public static function toXML(parent:XML, method:String, params:Array):XML
 		{
-			var mc:XMLNode = addNode(parent, "methodCall");
+			var mc:XML = addNode(parent, "methodCall");
 			addText(addNode(mc, "methodName"), method);
 	
-			var p:XMLNode = addNode(mc, "params");
+			var p:XML = addNode(mc, "params");
 			for (var i:int = 0; i < params.length; ++i)
 			{
 				addParameter(p, params[i]);
@@ -94,40 +87,37 @@ package org.igniterealtime.xiff.data.rpc
 			return mc;
 		}
 	
-		private static function extractValue(value:XMLNode):*
+		private static function extractValue(value:XML):*
 		{
 			var result:* = null;
 	
-			switch (value.nodeName)
+			switch (value.localName())
 			{ 
 				case "int":
 				case "i4":
 				case "double":
-					result = Number(value.firstChild.nodeValue);
+					result = Number(value.toString());
 					break;
 	
 				case "boolean":
-					result = Number(value.firstChild.nodeValue) ? true : false;
+					result = Number(value.toString()) ? true : false;
 					break;
 	
 				case "array":
 					var value_array:Array = [];
-					var next_value:*;
-					for (var data_idx:int = 0; data_idx < value.firstChild.childNodes.length; data_idx++)
+					for each (var next_value:XML in value.children())
 					{
-						next_value = value.firstChild.childNodes[data_idx];
-						value_array.push(extractValue(next_value.firstChild));
+						value_array.push(extractValue(next_value.toString()));
 					}
 					result = value_array;
 					break;
 	
 				case "struct":
 					var value_object:Object = {};
-					for (var member_idx:int = 0; member_idx < value.childNodes.length; member_idx++)
+					for each (var member:XML in value.children())
 					{
-						var member:Array = value.childNodes[member_idx];
-						var m_name:String = member.childNodes[0].firstChild.nodeValue;
-						var m_value:* = extractValue(member.childNodes[1].firstChild);
+						var m_name:String = member.children()[0].toString();
+						var m_value:* = extractValue(member.children()[1].toString());
 						value_object[m_name] = m_value;
 					}
 					result = value_object;
@@ -137,7 +127,7 @@ package org.igniterealtime.xiff.data.rpc
 				case "Base64":
 				case "string":
 				default:
-					result = value.firstChild.nodeValue.toString();
+					result = value.toString();
 					break;
 	
 			}
@@ -145,41 +135,57 @@ package org.igniterealtime.xiff.data.rpc
 			return result;
 		}
 	
-		private static function addParameter(node:XMLNode, param:*):XMLNode
+		private static function addParameter(node:XML, param:*):XML
 		{
 			return addValue(addNode(node, "param"), param);
 		}
 	
-		private static function addValue(node:XMLNode, value:*):XMLNode
+		private static function addValue(node:XML, value:*):XML
 		{
-			var value_node:XMLNode = addNode(node, "value");
+			var value_node:XML = addNode(node, "value");
 	
-			if (typeof(value) == "string") {
+			if (typeof(value) == "string")
+			{
 				addText(addNode(value_node, "string"), value);
 	
-			} else if (typeof(value) == "number") {
-				if (Math.floor(value) != value) {
+			} 
+			else if (typeof(value) == "number")
+			{
+				if (Math.floor(value) != value)
+				{
 					addText(addNode(value_node, "double"), value);
-				} else {
+				} 
+				else 
+				{
 					addText(addNode(value_node, "int"), value.toString());
 				}
 	
-			} else if (typeof(value) == "boolean") {
+			}
+			else if (typeof(value) == "boolean")
+			{
 				addText(addNode(value_node, "boolean"), value == false ? "0" : "1");
-	
-			} else if (value is Array) {
-				var data:XMLNode = addNode(addNode(value_node, "array"), "data");
-				for (var i:int=0; i < value.length; ++i) {
+			} 
+			else if (value is Array) 
+			{
+				var data:XML = addNode(addNode(value_node, "array"), "data");
+				for (var i:int = 0; i < value.length; ++i)
+				{
 					addValue(data, value[i]);
 				}
-			} else if (typeof(value) == "object") {
+			}
+			else if (typeof(value) == "object") 
+			{
 				// Special case where type is simple custom type is defined
-				if (value.type != undefined && value.value != undefined) {
+				if (value.type != undefined && value.value != undefined) 
+				{
 					addText(addNode(value_node, value.type), value.value);
-				} else {
-					var struct:XMLNode = addNode(value_node, "struct");
-					for (var attr:String in value) {
-						var member:XMLNode = addNode(struct, "member");
+				} 
+				else 
+				{
+					var struct:XML = addNode(value_node, "struct");
+					for (var attr:String in value) 
+					{
+						var member:XML = addNode(struct, "member");
 						addText(addNode(member, "name"), attr);
 						addValue(member, value[attr]);
 					}
@@ -189,30 +195,34 @@ package org.igniterealtime.xiff.data.rpc
 			return node;
 		}
 	
-		private static function addNode(parent:XMLNode, name:String):XMLNode
+		private static function addNode(parent:XML, name:String):XML
 		{
-			var child:XMLNode = XMLRPC.XMLFactory.createElement(name);
+			var child:XML = <{ name }/>;
 			parent.appendChild(child);
-			return parent.lastChild;
+			return child;
 		}
 	
-		private static function addText(parent:XMLNode, value:String):XMLNode
+		private static function addText(parent:XML, value:String):XML
 		{
-			var child:XMLNode = XMLRPC.XMLFactory.createTextNode(value);
-			parent.appendChild(child);
-			return parent.lastChild;
+			parent.appendChild(value);
+			return parent.children()[parent.children().length() - 1];
 		}
 	
-		private static function findNode(name:String, xml:XMLNode):XMLNode
+		private static function findNode(name:String, xml:XML):XML
 		{
-			if (xml.nodeName == name) {
+			if (xml.localName() == name) 
+			{
 				return xml;
-			} else {
-				var child:XMLNode = null;
-				for (var i:String in xml.childNodes) {
-					child = findNode(name, xml.childNodes[i]);
-					if (child != null) {
-						return child;
+			} 
+			else
+			{
+				var found:XML = null;
+				for each (var child:XML in xml.children())
+				{
+					found = findNode(name, child);
+					if (found != null)
+					{
+						return found;
 					}
 				}
 			}

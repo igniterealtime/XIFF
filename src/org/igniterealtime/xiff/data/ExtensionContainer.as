@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,6 @@
  */
 package org.igniterealtime.xiff.data
 {
-
-	
-	import org.igniterealtime.xiff.data.IExtension;
-	import org.igniterealtime.xiff.data.IExtendable;
 	
 	/**
 	 * Contains the implementation for a generic extension container.
@@ -36,29 +32,67 @@ package org.igniterealtime.xiff.data
 	 */
 	public class ExtensionContainer implements IExtendable
 	{
-		public var _exts:Object = {};
+	
 		
+		/**
+		 * From ExtensionContainer
+		 * { NS: [ Extension, Extension, ... ], ... }
+		 */
+		private var _exts:Object = { };
+		
+		/**
+		 * The XML.
+		 */
+		private var _xml:XML;
+		
+		/**
+		 *
+		 */
 		public function ExtensionContainer()
 		{
+			// Initialize here to make sure that methods are available.
+			_xml = <xmlstanza/>;
 			
+			trace("XMLStanza. constructed. _xml: " + _xml.toXMLString());
 		}
-	
-		public function addExtension( ext:IExtension ):IExtension
+		
+		/**
+		 * Add extension to the list of the given namespace and insert to the XML element as a child.
+		 * @param	extension
+		 * @return The same IExtension that was passed via the parameter
+		 */
+		public function addExtension( extension:IExtension ):IExtension
 		{
-			if (_exts[ext.getNS()] == null)
+			trace("addExtension. extension.getNS(): " + extension.getNS());
+			// addExtension. extension.getNS(): urn:ietf:params:xml:ns:xmpp-bind
+			
+			if (!_exts.hasOwnProperty(extension.getNS()))
 			{
-				_exts[ext.getNS()] = [];
+				_exts[extension.getNS()] = [];
 			}
-			_exts[ext.getNS()].push(ext);
-			return ext;
+			trace("addExtension. _exts[extension.getNS()].length before: " + _exts[extension.getNS()].length);
+			_exts[extension.getNS()].push(extension);
+			
+			// Append...
+			if (!xml.children().contains(extension.xml))
+			{
+				xml.appendChild(extension.xml);
+			}
+			
+			return extension;
 		}
 	
-		public function removeExtension( ext:IExtension ):Boolean
+		/**
+		 *
+		 * @param	extension
+		 * @return
+		 */
+		public function removeExtension( extension:IExtension ):Boolean
 		{
-			var extensions:Object = _exts[ext.getNS()];
+			var extensions:Object = _exts[extension.getNS()];
 			for (var i:String in extensions)
 			{
-				if (extensions[i] === ext)
+				if (extensions[i] === extension)
 				{
 					extensions[i].remove();
 					extensions.splice(parseInt(i), 1);
@@ -68,28 +102,58 @@ package org.igniterealtime.xiff.data
 			return false;
 		}
 		
-		public function removeAllExtensions( ns:String ):void
+		/**
+		 *
+		 * @param	nameSpace
+		 */
+		public function removeAllExtensions( nameSpace:String ):void
 		{
-			for (var i:String in _exts[ns])
+			if (!_exts.hasOwnProperty(nameSpace))
 			{
-				removeExtension( _exts[ns][i] );
+				return;
 			}
-			_exts[ns] = [];
+			for (var i:String in _exts[nameSpace])
+			{
+				removeExtension( _exts[nameSpace][i] );
+			}
+			_exts[nameSpace] = [];
 		}
 	
-		public function getAllExtensionsByNS( ns:String ):Array
+		/**
+		 *
+		 * @param	nameSpace
+		 * @return
+		 */
+		public function getAllExtensionsByNS( nameSpace:String ):Array
 		{
-			return _exts[ns];
+			return _exts[nameSpace];
 		}
 		
-		public function getExtension( name:String ):Extension
+		/**
+		 * Get the extension having the given element name.
+		 * Unfortunetly only takes the oldest of the list...
+		 * @param	name
+		 * @return
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/Array.html#filter%28%29
+		 */
+		public function getExtension( elementName:String ):Extension
 		{
-			return getAllExtensions().filter( function(obj:IExtension, idx:int, arr:Array):Boolean
+			var exts:Array = getAllExtensions();
+			trace("getExtension. exts.length: " + exts.length);
+			
+			var list:Array = exts.filter( function(obj:IExtension, idx:int, arr:Array):Boolean
 			{
-				return obj.getElementName() == name;
-			})[0];
+				return obj.getElementName() == elementName;
+			});
+			trace("getExtension. elementName: " + elementName + ", list.length: " + list.length);
+			
+			return list[0];
 		}
 	
+		/**
+		 *
+		 * @return
+		 */
 		public function getAllExtensions():Array
 		{
 			var exts:Array = [];
@@ -98,6 +162,30 @@ package org.igniterealtime.xiff.data
 				exts = exts.concat(_exts[ns]);
 			}
 			return exts;
+		}
+		
+		/**
+		 * The XML node that should be used for this stanza's internal XML representation,
+		 * base of the XMLStanza, XML element.
+		 *
+		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
+		 *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
+		 * @see http://www.w3.org/TR/xml/
+		 */
+		public function get xml():XML
+		{
+			return _xml;
+		}
+		public function set xml( elem:XML ):void
+		{
+			var parent:XML = _xml.parent();
+			if ( parent != null )
+			{
+				parent.appendChild(elem);
+			}
+			
+			_xml = elem;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.IExtension;
@@ -45,15 +45,14 @@ package org.igniterealtime.xiff.data.muc
 		public static const TYPE_INVITE:String = "invite";
 		public static const TYPE_OTHER:String = "other";
 	
-		private var _actionNode:XMLNode;
-		private var _passwordNode:XMLNode;
+		private var _actionNode:XML;
 		private var _statuses:Array = [];
 	
 		/**
 		 *
-		 * @param	parent (Optional) The containing XMLNode for this extension
+		 * @param	parent (Optional) The containing XML for this extension
 		 */
-		public function MUCUserExtension( parent:XMLNode = null )
+		public function MUCUserExtension( parent:XML = null )
 		{
 			super(parent);
 		}
@@ -68,36 +67,21 @@ package org.igniterealtime.xiff.data.muc
 			return MUCUserExtension.ELEMENT_NAME;
 		}
 	
-		override public function deserialize( node:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			super.deserialize(node);
+			super.xml = node;
 	
-			for each( var child:XMLNode in node.childNodes )
+			for each( var child:XML in node.children() )
 			{
-				switch( child.nodeName )
+				switch( child.localName() )
 				{
-					case TYPE_DECLINE:
-						_actionNode = child;
-						break;
-						
-					case TYPE_DESTROY:
-						_actionNode = child;
-						break;
-						
-					case TYPE_INVITE:
-						_actionNode = child;
-						break;
 						
 					case "status":
 						_statuses.push(new MUCStatus(child, this));
 						break;
 						
-					case "password":
-						_passwordNode = child;
-						break;
 				}
 			}
-			return true;
 		}
 	
 		/**
@@ -128,8 +112,10 @@ package org.igniterealtime.xiff.data.muc
 		{
 			for each(var status:MUCStatus in statuses)
 			{
-				if(status.code == code)
+				if (status.code == code)
+				{
 					return true;
+				}
 			}
 			return false;
 		}
@@ -139,18 +125,25 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
-			if (_actionNode != null) _actionNode.removeNode();
+			xml[type] = "";
 	
-			_actionNode = XMLFactory.createElement(type);
-			for (var i:String in attrs) {
-				if (exists(attrs[i])) {
-					_actionNode.attributes[i] = attrs[i];
+			_actionNode = <{ type }/>;
+			for (var i:String in attrs)
+			{
+				if (attrs.hasOwnProperty(i))
+				{
+					xml[type].attributes[i] = attrs[i];
 				}
 			}
-			getNode().appendChild(_actionNode);
 	
-			if (reason.length > 0) {
-				replaceTextNode(_actionNode, undefined, "reason", reason);
+			
+			if (reason == null)
+			{
+				delete xml[type].reason;
+			}
+			else
+			{
+				xml[type].reason = reason;
 			}
 		}
 	
@@ -159,9 +152,22 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get type():String
 		{
-			if (_actionNode == null)
-				return null;
-			return _actionNode.nodeName == null ? TYPE_OTHER : _actionNode.nodeName;
+			if (xml.children().(localName() == TYPE_DECLINE).length() > 0)
+			{
+				return TYPE_DECLINE;
+			}
+			else if (xml.children().(localName() == TYPE_DESTROY).length() > 0)
+			{
+				return TYPE_DESTROY;
+			}
+			else if (xml.children().(localName() == TYPE_INVITE).length() > 0)
+			{
+				return TYPE_INVITE;
+			}
+			else
+			{
+				return TYPE_OTHER;
+			}
 		}
 	
 		/**
@@ -169,7 +175,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get to():EscapedJID
 		{
-			return new EscapedJID(_actionNode.attributes.to);
+			return new EscapedJID(_actionNode.@to);
 		}
 	
 		/**
@@ -177,7 +183,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get from():EscapedJID
 		{
-			return new EscapedJID(_actionNode.attributes.from);
+			return new EscapedJID(_actionNode.@from);
 		}
 	
 		/**
@@ -185,7 +191,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID(_actionNode.attributes.jid);
+			return new EscapedJID(_actionNode.@jid);
 		}
 	
 	    /**
@@ -193,13 +199,7 @@ package org.igniterealtime.xiff.data.muc
 	     */
 	    public function get reason():String
 	    {
-	    	if (_actionNode.firstChild != null)
-			{
-	    		if (_actionNode.firstChild.firstChild != null) {
-	    			return _actionNode.firstChild.firstChild.nodeValue;
-	    		}
-	    	}
-	        return null;
+			return getField("reason");
 	    }
 	
 		/**
@@ -207,16 +207,16 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get password():String
 		{
-			if (_passwordNode == null) return null;
-			return _passwordNode.firstChild.nodeValue;
+			return getField("password");
 		}
-	
 		public function set password(value:String):void
 		{
-			_passwordNode = replaceTextNode(getNode(), _passwordNode, "password", value);
+			setField("password", value);
 		}
 	
-		
+		/**
+		 *
+		 */
 		public function get statuses():Array
 		{
 			return _statuses;

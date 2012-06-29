@@ -25,20 +25,24 @@
  */
 package org.igniterealtime.xiff.data.privatedata
 {
-	import flash.xml.XMLNode;
 	
+	
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 	
-	public class PrivateDataExtension implements IExtension
+	/**
+	 * @see http://xmpp.org/extensions/xep-0049.html
+	 */
+	public class PrivateDataExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:private";
 		public static const ELEMENT_NAME:String = "query";
+	
+		private var _query:XML;
 		
-		private var _extension:XMLNode;
-		
-		private var _payload:IPrivatePayload;
+		private var _payloadExt:IPrivatePayload;
 		
 		/**
 		 *
@@ -48,10 +52,19 @@ package org.igniterealtime.xiff.data.privatedata
 		 */
 		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null,
 											 payload:IPrivatePayload = null)
-		{
-			_extension = new XMLNode(1, privateName);
-			_extension.attributes["xmlns"] = privateNamespace;
-			_payload = payload;
+		{			
+			
+			var extension:XML = <{ privateName }/>;
+			if (privateNamespace != null)
+			{
+				extension.setNamespace( privateNamespace );
+			}
+			
+			_query = <{ ELEMENT_NAME }/>;
+			_query.setNamespace( NS );
+			_query.appendChild(extension);
+			
+			_payloadExt = payload;
 		}
 		
 		public function getNS():String
@@ -66,69 +79,46 @@ package org.igniterealtime.xiff.data.privatedata
 		
 		public function get privateName():String
 		{
-			return _extension.nodeName;
+			return _query.children()[0].localName();
 		}
 		
 		public function get privateNamespace():String
 		{
-			return _extension.attributes["xmlns"];
+			return _query.children()[0].attributes["xmlns"];
 		}
 		
 		public function get payload():IPrivatePayload
 		{
-			return _payload;
+			return _payloadExt;
 		}
-		
-		public function serialize(parentNode:XMLNode):Boolean
+				
+		override public function set xml( node:XML ):void
 		{
-			var extension:XMLNode = _extension.cloneNode(true);
-			var query:XMLNode = new XMLNode(1, ELEMENT_NAME);
-			query.attributes.xmlns = NS;
-			query.appendChild(extension);
-			parentNode.appendChild(query);
+			_query = node;
 			
-			return _serializePayload(extension);
-		}
-		
-		private function _serializePayload(parentNode:XMLNode):Boolean
-		{
-			if (_payload == null)
-			{
-				return true;
-			}
-			else
-			{
-				return _payload.serialize(parentNode);
-			}
-		}
-		
-		public function deserialize(node:XMLNode):Boolean
-		{
-			var payloadNode:XMLNode = node.firstChild;
+			var payloadNode:XML = node.children()[0];
 			var ns:String = payloadNode.attributes["xmlns"];
 			if (ns == null)
 			{
-				return false;
+				return;
 			}
 			
-			_extension = new XMLNode(1, payloadNode.nodeName);
-			_extension.attributes["xmlns"] = ns;
 			
 			var extClass:Class = ExtensionClassRegistry.lookup(ns);
 			if (extClass == null)
 			{
-				return false;
+				return;
 			}
 			var ext:IPrivatePayload = new extClass();
 			if (ext != null && ext is IPrivatePayload)
 			{
-				ext.deserialize(payloadNode);
-				_payload = ext;
-				return true;
+				ext.xml = payloadNode;
+				_payloadExt = ext;
+				return;
 			}
 			else
 			{
-				return false;
+				return;
 			}
 		}
 	

@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.data.search{
 	
 	import org.igniterealtime.xiff.data.XMLStanza;
 	import org.igniterealtime.xiff.data.ISerializable;
-	import flash.xml.XMLNode;
+	
 	
 	/**
 	 * This class is used by the SearchExtension for internal representation of
@@ -38,54 +38,30 @@ package org.igniterealtime.xiff.data.search{
 	{
 		public static const ELEMENT_NAME:String = "item";
 	
-		private var _fields:Object = {};
-	
-		public function SearchItem(parent:XMLNode = null)
+		public function SearchItem(parent:XML = null)
 		{
 			super();
 			
-			getNode().nodeName = ELEMENT_NAME;
+			xml.setLocalName( ELEMENT_NAME );
 	
 			if (exists(parent))
 			{
-				parent.appendChild(getNode());
+				parent.appendChild(xml);
 			}
-		}
-	
-		public function serialize(parent:XMLNode):Boolean
-		{
-			if (parent != getNode().parentNode)
-			{
-				parent.appendChild(getNode().cloneNode(true));
-			}
-	
-			return true;
-		}
-	
-		public function deserialize(node:XMLNode):Boolean
-		{
-			setNode(node);
-	
-			var children:Array = node.childNodes;
-			for ( var i:String in children )
-			{
-				_fields[children[i].nodeName.toLowerCase()] = children[i];
-			}
-			return true;
 		}
 
 		public function getField(name:String):String
 		{
-			if (_fields[name] != null && _fields[name].firstChild != null)
-			{
-				return _fields[name].firstChild.nodeValue;
-			}
-			return null;
+			return xml.child(name).toString();
 		}
 	
 		public function setField(name:String, value:String):void
 		{
-			_fields[name] = replaceTextNode(getNode(), _fields[name], name, value);
+			xml[name] = value;
+			if ( value == null )
+			{
+				delete xml[name];
+			}
 		}
 	
 		/**
@@ -93,12 +69,12 @@ package org.igniterealtime.xiff.data.search{
 		 */
 		public function get jid():String
 		{
-			return getNode().attributes.jid;
+			return xml.@jid;
 		}
 	
 		public function set jid(value:String):void
 		{
-			getNode().attributes.jid = value;
+			xml.@jid = value;
 		}
 		
 		/**

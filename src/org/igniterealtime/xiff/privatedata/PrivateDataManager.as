@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,9 @@ package org.igniterealtime.xiff.privatedata
 	import org.igniterealtime.xiff.filter.IPacketFilter;
 	import org.igniterealtime.xiff.util.Callback;
 
+	/**
+	 *
+	 */
 	public class PrivateDataManager extends EventDispatcher
 	{
 		private static var privateDataManagerConstructed:Boolean = privateDataManagerStaticConstructor();
@@ -48,29 +51,41 @@ package org.igniterealtime.xiff.privatedata
 		private var _connection:XMPPConnection;
 		
 		/**
-		 * 
+		 *
 		 * @param	connection
 		 */
-		public function PrivateDataManager(connection:XMPPConnection) 
+		public function PrivateDataManager(connection:XMPPConnection)
 		{
 			_connection = connection;
 		}
 		
-		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void 
+		/**
+		 *
+		 * @param	elementName
+		 * @param	elementNamespace
+		 * @param	callback
+		 */
+		public function getPrivateData(elementName:String, elementNamespace:String, callback:Callback):void
 		{
 			var packetFilter:IPacketFilter = new CallbackPacketFilter(callback);
-			var privateDataGet:IQ = new IQ(null, IQ.TYPE_GET, null, packetFilter.accept );
-			privateDataGet.addExtension(new PrivateDataExtension(elementName, elementNamespace));
+			var iq:IQ = new IQ(null, IQ.TYPE_GET, null, packetFilter.accept );
+			iq.addExtension(new PrivateDataExtension(elementName, elementNamespace));
 			
-			_connection.send(privateDataGet);
+			_connection.send(iq);
 		}
 		
-		public function setPrivateData(elementName:String, elementNamespace:String, payload:IPrivatePayload):void 
+		/**
+		 *
+		 * @param	elementName
+		 * @param	elementNamespace
+		 * @param	payload
+		 */
+		public function setPrivateData(elementName:String, elementNamespace:String, payload:IPrivatePayload):void
 		{
-			var privateDataSet:IQ = new IQ(null, IQ.TYPE_SET);
-			privateDataSet.addExtension(new PrivateDataExtension(elementName, elementNamespace, payload));
+			var iq:IQ = new IQ(null, IQ.TYPE_SET);
+			iq.addExtension(new PrivateDataExtension(elementName, elementNamespace, payload));
 			
-			_connection.send(privateDataSet);
+			_connection.send(iq);
 		}
 	}
 }

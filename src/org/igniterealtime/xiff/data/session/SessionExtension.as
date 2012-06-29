@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.session
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
@@ -38,7 +38,9 @@ package org.igniterealtime.xiff.data.session
 	{
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-session";
 		public static const ELEMENT_NAME:String = "session";
-		private var jid:String;
+		
+		// Who sets this?
+		private var _jid:String;
 		
 		public function getNS():String
 		{
@@ -52,19 +54,10 @@ package org.igniterealtime.xiff.data.session
 		
 		public function getJID():String
 		{
-			return jid;
+			return _jid;
 		}
 		
-		public function serialize(parent:XMLNode):Boolean
-		{
-			if (!exists(getNode().parentNode)) {
-				var child:XMLNode = getNode().cloneNode(true);
-				parent.appendChild(child);
-			}
-			return true;
-		}
-		
-		public function SessionExtension( parent:XMLNode = null)
+		public function SessionExtension( parent:XML = null)
 		{
 			super(parent);
 		}
@@ -77,11 +70,6 @@ package org.igniterealtime.xiff.data.session
 	        ExtensionClassRegistry.register(SessionExtension);
 	    }
 		
-		public function deserialize(node:XMLNode):Boolean
-		{
-			setNode(node);
-			return true;
-		}
 		
 	}
 }

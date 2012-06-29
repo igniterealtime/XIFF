@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
@@ -39,93 +39,94 @@ package org.igniterealtime.xiff.data.muc
 	{
 		public static const ELEMENT_NAME:String = "item";
 	
-		private var myActorNode:XMLNode;
-		private var myReasonNode:XMLNode;
+		private var myActorNode:XML;
+		private var myReasonNode:XML;
 	
-		public function MUCItem(parent:XMLNode = null)
+		public function MUCItem(parent:XML = null)
 		{
 			super();
 	
-			getNode().nodeName = ELEMENT_NAME;
+			xml = <{ ELEMENT_NAME }/>;
 	
-			if (exists(parent)) {
-				parent.appendChild(getNode());
+			if (exists(parent))
+			{
+				parent.appendChild(xml);
 			}
 		}
-	
-		public function serialize(parent:XMLNode):Boolean
+
+		override public function set xml( node:XML ):void
 		{
-			if (parent != getNode().parentNode) {
-				parent.appendChild(getNode().cloneNode(true));
-			}
+			super.xml = node;
 	
-			return true;
-		}
-	
-		public function deserialize(node:XMLNode):Boolean
-		{
-			setNode(node);
-	
-			var children:Array = node.childNodes;
-			for( var i:String in children ) {
-				switch( children[i].nodeName )
+			for each ( var child:XML in node.children() )
+			{
+				switch( child.localName() )
 				{
 					case "actor":
-						myActorNode = children[i];
+						myActorNode = child;
 						break;
 						
 					case "reason":
-						myReasonNode = children[i];
+						myReasonNode = child;
 						break;
 				}
 			}
-			return true;
 		}
 	
+		/**
+		 *
+		 */
 		public function get actor():EscapedJID
 		{
-			return new EscapedJID(myActorNode.attributes.jid);
+			return new EscapedJID(xml.actor.@jid);
 		}
-	
 		public function set actor(value:EscapedJID):void
 		{
-			myActorNode = ensureNode(myActorNode, "actor");
-			myActorNode.attributes.jid = value.toString();
+			xml.actor.@jid = value.toString();
 		}
 	
+		/**
+		 *
+		 */
 		public function get reason():String
 		{
-			if(myReasonNode && myReasonNode.firstChild)
-				return myReasonNode.firstChild.nodeValue;
-			
-			return null;
+			return xml.reason.toString();
 		}
-	
 		public function set reason(value:String):void
 		{
-			myReasonNode = replaceTextNode(getNode(), myReasonNode, "reason", value);
+			xml.reason = value;
+			if ( value == null )
+			{
+				delete xml.reason;
+			}
 		}
 	
+		/**
+		 *
+		 */
 		public function get affiliation():String
 		{
-			return getNode().attributes.affiliation;
+			return xml.@affiliation;
 		}
-	
 		public function set affiliation(value:String):void
 		{
-			getNode().attributes.affiliation = value;
+			xml.@affiliation = value;
 		}
 	
+		/**
+		 *
+		 */
 		public function get jid():EscapedJID
 		{
-			if(getNode().attributes.jid == null)
+			if (xml.@jid == null)
+			{
 				return null;
-			return new EscapedJID(getNode().attributes.jid);
+			}
+			return new EscapedJID(xml.@jid);
 		}
-	
 		public function set jid(value:EscapedJID):void
 		{
-			getNode().attributes.jid = value.toString();
+			xml.@jid = value.toString();
 		}
 	
 		/**
@@ -134,22 +135,23 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get nick():String
 		{
-			return getNode().attributes.nick;
+			return xml.@nick;
 		}
-	
 		public function set nick(value:String):void
 		{
-			getNode().attributes.nick = value;
+			xml.@nick = value;
 		}
 	
+		/**
+		 *
+		 */
 		public function get role():String
 		{
-			return getNode().attributes.role;
+			return xml.@role;
 		}
-	
 		public function set role(value:String):void
 		{
-			getNode().attributes.role = value;
+			xml.@role = value;
 		}
 	}
 }

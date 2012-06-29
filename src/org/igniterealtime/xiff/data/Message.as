@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,17 +25,20 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
-	import flash.xml.XMLNode;
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
+	import org.igniterealtime.xiff.util.DateTimeParser;
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	
 	/**
+	 * TODO:
+	 * XEP-0079: Advanced Message Processing, http://xmpp.org/extensions/xep-0079.html
+	 * XEP-0184: Message Delivery Receipts, http://xmpp.org/extensions/xep-0184.html
+	 * XEP-0308: Last Message Correction, http://xmpp.org/extensions/xep-0308.html
+	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
 	public class Message extends XMPPStanza implements IMessage
@@ -135,29 +138,30 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Included by a sending entity that wishes to know if
 		 * the message has been received.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0184.html
 		 */
 		public static const RECEIPT_REQUEST:String = "request";
 		
 		/**
 		 * Included by a receiving entity that wishes to inform the
 		 * sending entity that the message has been received.
-		 * The <received/> element SHOULD be the only child of
-		 * the <message/> stanza and MUST mirror the 'id' of the sent message.
+		 *
+		 * <p>The <strong>received</strong> element SHOULD be the only child of
+		 * the <strong>message</strong> stanza and MUST mirror the 'id' of the sent message.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0184.html
 		 */
 		public static const RECEIPT_RECEIVED:String = "received";
 		
 		/**
-		 * The name space used in the message delivery node.
+		 * The namespace used in the message delivery node.
+		 *
 		 * @see http://xmpp.org/extensions/xep-0184.html
 		 */
 		public static const NS_RECEIPT:String = "urn:xmpp:receipts";
 	
-		// Private references to nodes within our XML
-		private var myBodyNode:XMLNode;
-		private var mySubjectNode:XMLNode;
-		private var myThreadNode:XMLNode;
-		private var myTimeStampNode:XMLNode;
-		private var myStateNode:XMLNode;
+		
 		
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
@@ -166,6 +170,15 @@ package org.igniterealtime.xiff.data
 		
 		/**
 		 * A class for abstraction and encapsulation of message data.
+		 *
+		 * <p>The <strong>message</strong> stanza kind can be seen as a "push" mechanism whereby
+		 * one entity pushes information to another entity, similar to the
+		 * communications that occur in a system such as email.  All message
+		 * stanzas SHOULD possess a 'to' attribute that specifies the intended
+		 * recipient of the message; upon receiving such a stanza, a server
+		 * SHOULD route or deliver it to the intended recipient (see Server
+		 * Rules for Handling XML Stanzas (Section 10) for general routing and
+		 * delivery rules related to XML stanzas).</p>
 		 *
 		 * @param	recipient The JID of the message recipient
 		 * @param	sender The JID of the message sender - the server should report an error if this is falsified
@@ -179,12 +192,16 @@ package org.igniterealtime.xiff.data
 		public function Message( recipient:EscapedJID = null, msgID:String = null, msgBody:String = null, msgHTMLBody:String = null, msgType:String = null, msgSubject:String = null, chatState:String = null )
 		{
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
-			var id:String = exists( msgID ) ? msgID : Message.generateID();
+			var id:String = (msgID != null) ? msgID : Message.generateID();
+			
 			super( recipient, null, msgType, id, "message" );
+			
 			body = msgBody;
 			htmlBody = msgHTMLBody;
 			subject = msgSubject;
 			state = chatState;
+			
+			trace("Message constructed. xml: " + xml.toXMLString());
 		}
 	
 		public static function MessageStaticConstructor():Boolean
@@ -196,7 +213,7 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
-		 * 
+		 *
 		 * @param	prefix The prefix for the ID to be generated
 		 * @return	The generated ID
 		 */
@@ -234,108 +251,57 @@ package org.igniterealtime.xiff.data
 		}
 	
 		/**
-		 * Serializes the Message into XML form for sending to a server.
-		 *
-		 * @return An indication as to whether serialization was successful
-		 */
-		override public function serialize( parentNode:XMLNode ):Boolean
-		{
-			return super.serialize( parentNode );
-		}
-	
-		/**
 		 * Deserializes an XML object and populates the Message instance with its data.
 		 *
 		 * @param	xmlNode The XML to deserialize
 		 * @return An indication as to whether deserialization was sucessful
 		 */
-		override public function deserialize( xmlNode:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var isSerialized:Boolean = super.deserialize( xmlNode );
-			if (isSerialized)
+			super.xml = node;
+			
+			
+			// TODO: Remember to handle
+			if (node.hasOwnProperty("x") && node.x.@xmlns == MUCUserExtension.NS)
 			{
-				var children:Array = xmlNode.childNodes;
-				for( var i:String in children )
-				{
-					switch( children[i].nodeName )
-					{
-						// Adding error handler for 404 sent back by server
-						case "error":
-							break;
-							
-						case "body":
-							myBodyNode = children[i];
-							break;
-						
-						case "subject":
-							mySubjectNode = children[i];
-							break;
-							
-						case "thread":
-							myThreadNode = children[i];
-							break;
-							
-						case "x":
-							// http://xmpp.org/extensions/xep-0091.html
-							if (children[i].attributes.xmlns == "jabber:x:delay")
-							{
-								myTimeStampNode = children[i];
-							}
-							if (children[i].attributes.xmlns == MUCUserExtension.NS)
-							{
-								var mucUserExtension:MUCUserExtension = new MUCUserExtension(getNode());
-								mucUserExtension.deserialize(children[i]);
-								addExtension(mucUserExtension);
-							}
-							break;
-						
-						case "delay":
-							// http://xmpp.org/extensions/xep-0203.html
-							trace("Message used 'delay' as defined in XEP-0203.");
-							break;
-						
-						case Message.STATE_ACTIVE :
-						case Message.STATE_COMPOSING :
-						case Message.STATE_GONE :
-						case Message.STATE_INACTIVE :
-						case Message.STATE_PAUSED :
-							myStateNode = children[i];
-							continue;
-					}
-				}
+				var mucUserExtension:MUCUserExtension = new MUCUserExtension(xml);
+				mucUserExtension.xml = node.x;
+				addExtension(mucUserExtension);
 			}
-			return isSerialized;
 		}
 		
 		/**
 		 * The message body in plain-text format. If a client cannot render HTML-formatted
 		 * text, this text is typically used instead.
+		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get body():String
 		{
-			if (!exists(myBodyNode) || !exists(myBodyNode.firstChild))
+			var list:XMLList = xml.children().(localName() == "body");
+			if ( list.length() > 0 )
 			{
-				return null;
+				return list[0];
 			}
-			var value: String = '';
-			
-			try
-			{
-				value = myBodyNode.firstChild.nodeValue;
-			}
-			catch (error:Error)
-			{
-				trace(error.getStackTrace());
-			}
-			return value;
+			return null;
 		}
 		public function set body( value:String ):void
 		{
-			myBodyNode = replaceTextNode(getNode(), myBodyNode, "body", value);
+			if ( value == null )
+			{
+				delete xml.body;
+			}
+			else
+			{
+				xml.body = value;
+			}
 		}
 		
 		/**
 		 * The message body in XHTML format. Internally, this uses the XHTML data extension.
+		 *
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
 		 * @see http://xmpp.org/extensions/xep-0071.html
 		 * @see	org.igniterealtime.xiff.data.xhtml.XHTMLExtension
 		 */
@@ -355,11 +321,11 @@ package org.igniterealtime.xiff.data
 		public function set htmlBody( value:String ):void
 		{
 			// Removes any existing HTML body text first
-	        removeAllExtensions(XHTMLExtension.NS);
+			removeAllExtensions(XHTMLExtension.NS);
 	
-	        if (exists(value) && value.length > 0)
+	        if (value != null)
 			{
-	            var ext:XHTMLExtension = new XHTMLExtension(getNode());
+	            var ext:XHTMLExtension = new XHTMLExtension(xml);
 	            ext.body = value;
 	            addExtension(ext);
 	        }
@@ -368,59 +334,108 @@ package org.igniterealtime.xiff.data
 		/**
 		 * The message subject. Typically chat and groupchat-type messages do not use
 		 * subjects. Rather, this is reserved for normal and headline-type messages.
+		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get subject():String
 		{
-			if (mySubjectNode == null || mySubjectNode.firstChild == null) return null;
-			return mySubjectNode.firstChild.nodeValue;
+			var list:XMLList = xml.children().(localName() == "subject");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
 		public function set subject( value:String ):void
 		{
-			mySubjectNode = replaceTextNode(getNode(), mySubjectNode, "subject", value);
+			if ( value == null )
+			{
+				delete xml.subject;
+			}
+			else
+			{
+				xml.subject = value;
+			}
 		}
 	
 		/**
 		 * The message thread ID. Threading is used to group messages of the same discussion together.
 		 * The library does not perform message grouping, rather it is up to any client authors to
 		 * properly perform this task.
+		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get thread():String
 		{
-			if (myThreadNode == null || myThreadNode.firstChild == null) return null;
-			return myThreadNode.firstChild.nodeValue;
+			var list:XMLList = xml.children().(localName() == "thread");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
 		public function set thread( value:String ):void
 		{
-			myThreadNode = replaceTextNode(getNode(), myThreadNode, "thread", value);
+			if ( value == null )
+			{
+				delete xml.thread;
+			}
+			else
+			{
+				xml.thread = value;
+			}
 		}
 		
 		/**
 		 * Time of the message in case of a delay. Used only for messages
 		 * which were sent while user was offline.
-		 * <p><code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
+		 *
+		 * <p>There are two ways that might be possible coming from the server,
+		 * XEP-0203 or XEP-0091, of which the latter is legacy.</p>
+		 *
+		 * <p>XEP-0203: <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
+		 * <p>XEP-0091: <code>CCYYMMDDThh:mm:ss</code></p>
+		 *
 		 * @see http://xmpp.org/extensions/xep-0203.html
 		 * @see http://xmpp.org/extensions/xep-0091.html
 		 */
 		public function get time():Date
 		{
-			if(myTimeStampNode == null) return null;
-			var stamp:String = myTimeStampNode.attributes.stamp;
+			var stamp:Date;
+			var list:XMLList = xml.children().(localName() == "delay");
+			var legacy:XMLList = xml.children().(localName() == "x");
 			
-			trace("myTimeStampNode: " + myTimeStampNode.toString());
-			// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
-			// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
-			var value:Date = new Date();
-			value.setUTCFullYear(stamp.substr(0, 4));
-			value.setUTCMonth(parseInt(stamp.substr(4, 2)) - 1);
-			value.setUTCDate(stamp.substr(6, 2));
-			value.setUTCHours(stamp.substr(9, 2));
-			value.setUTCMinutes(stamp.substr(12, 2));
-			value.setUTCSeconds(stamp.substr(15, 2));
-			return value;
+			if (list.length() > 0 && list[0].attribute("stamp").length() > 0)
+			{
+				// Current
+				// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
+				trace("Message used 'delay' as defined in XEP-0203.");
+				
+				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
+			}
+			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 &&
+				legacy[0].attribute("xmlns") == "jabber:x:delay")
+			{
+				// Legacy
+				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
+				var value:String = legacy[0].attribute("stamp")[0];
+				trace("Message used 'x' as defined in XEP-0091.");
+				
+				stamp = DateTimeParser.string2time(value.split("T").pop());
+				stamp.setUTCFullYear(value.substr(0, 4));
+				stamp.setUTCMonth(parseInt(value.substr(4, 2)) - 1);
+				stamp.setUTCDate(value.substr(6, 2));
+			}
+			else
+			{
+				return null;
+			}
+			
+			return stamp;
 		}
 		
 		/**
-		 * The chat state if any. Possible values, in addition to <code>null</code>, are:
+		 * The chat state if any. Possible values are:
 		 * <ul>
 		 * <li>Message.STATE_ACTIVE</li>
 		 * <li>Message.STATE_COMPOSING</li>
@@ -428,14 +443,32 @@ package org.igniterealtime.xiff.data
 		 * <li>Message.STATE_INACTIVE</li>
 		 * <li>Message.STATE_GONE</li>
 		 * </ul>
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
+		 * <p>TODO: XEP states that this protocol SHOULD NOT be used
+		 * with message types other than "chat" or "groupchat".</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0085.html
 		 */
 		public function get state():String
 		{
-			if (!myStateNode)
+			var list:Array = [
+				Message.STATE_ACTIVE,
+				Message.STATE_COMPOSING,
+				Message.STATE_PAUSED,
+				Message.STATE_INACTIVE,
+				Message.STATE_GONE
+			];
+			var len:uint = list.length;
+			for (var i:uint = 0; i < len; ++i)
 			{
-				return null;
+				var value:String = list[i];
+				if (xml.children().(localName() == value).length() > 0)
+				{
+					return value;
+				}
 			}
-			return myStateNode.nodeName;
+			return null;
 		}
 		public function set state( value:String ):void
 		{
@@ -444,30 +477,31 @@ package org.igniterealtime.xiff.data
 				&& value != Message.STATE_PAUSED
 				&& value != Message.STATE_INACTIVE
 				&& value != Message.STATE_GONE
-				&& value != null
-				&& value != "")
+				&& value != null)
 			{
 				throw new Error("Invalid state value: " + value + " for ChatState");
 			}
 			
-			// XML.name().uri == Message.NS_STATE
-			// XML.setName(value);
+			/*
+			5.5 Use in Groupchat:
+				A client MAY send chat state notifications even if not all room occupants do so.
+				A client SHOULD NOT generate <gone/> notifications.
+				A client SHOULD ignore <gone/> notifications received from other room occupants.
+			*/
 			
-			if (myStateNode && (value == null || value == ""))
+			trace("state: " + value);
+			
+			if ( value == null )
 			{
-				// XML.delete
-				myStateNode.removeNode();
-				myStateNode = null;
+				delete xml[Message.STATE_ACTIVE];
+				delete xml[Message.STATE_COMPOSING];
+				delete xml[Message.STATE_PAUSED];
+				delete xml[Message.STATE_INACTIVE];
+				delete xml[Message.STATE_GONE];
 			}
-			else if (myStateNode && (value != null && value != ""))
+			else
 			{
-				myStateNode.nodeName = value;
-			}
-			else if (!myStateNode && (value != null && value != ""))
-			{
-				myStateNode = XMLStanza.XMLFactory.createElement(value);
-				myStateNode.attributes = { xmlns: Message.NS_STATE };
-				getNode().appendChild(myStateNode);
+				xml[value].@xmlns = Message.NS_STATE;
 			}
 		}
 	}

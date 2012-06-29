@@ -25,13 +25,14 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-	import flash.xml.XMLNode;
+	
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 
-	public class BookmarkPrivatePayload implements IPrivatePayload
+	public class BookmarkPrivatePayload extends XMLStanza implements IPrivatePayload
 	{
 		public static const NS:String = "storage:bookmarks";
 		public static const ELEMENT_NAME:String = "storage";
@@ -45,6 +46,9 @@ package org.igniterealtime.xiff.bookmark
 		public function BookmarkPrivatePayload( groupChatBookmarks:Array = null,
 												urlBookmarks:Array = null )
 		{
+			var node:XML = <{ ELEMENT_NAME }/>;
+			node.@xmlns = NS;
+			
 			if ( groupChatBookmarks )
 			{
 				for each ( var bookmark:GroupChatBookmark in groupChatBookmarks )
@@ -70,15 +74,19 @@ package org.igniterealtime.xiff.bookmark
 				}
 			}
 		}
+		
+		
 
-		public function deserialize( bookmarks:XMLNode ):Boolean
+		override public function set xml( bookmarks:XML ):void
 		{
-			for each ( var child:XMLNode in bookmarks.childNodes )
+			super.xml = bookmarks;
+			
+			for each ( var child:XML in bookmarks.children() )
 			{
-				if ( child.nodeName == "conference" )
+				if ( child.localName() == "conference" )
 				{
 					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark();
-					groupChatBookmark.deserialize( child );
+					groupChatBookmark.xml =  child;
 					//don't add it if it's a duplicate
 					if ( _groupChatBookmarks.every( function( testGroupChatBookmark:GroupChatBookmark,
 															  index:int, array:Array ):Boolean
@@ -87,10 +95,10 @@ package org.igniterealtime.xiff.bookmark
 						}))
 						_groupChatBookmarks.push( groupChatBookmark );
 				}
-				else if ( child.nodeName == "url" )
+				else if ( child.localName() == "url" )
 				{
 					var urlBookmark:UrlBookmark = new UrlBookmark();
-					urlBookmark.deserialize( child );
+					urlBookmark.xml =  child;
 					//don't add it if it's a duplicate
 					if ( _urlBookmarks.every( function( testURLBookmark:UrlBookmark,
 														index:int, array:Array ):Boolean
@@ -104,8 +112,8 @@ package org.igniterealtime.xiff.bookmark
 					_others.push( child );
 				}
 			}
-			return true;
 		}
+		
 
 		public function getElementName():String
 		{
@@ -136,20 +144,6 @@ package org.igniterealtime.xiff.bookmark
 			}
 			_groupChatBookmarks = newBookmarks;
 			return removedItem;
-		}
-
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			//var node:XML = <{ELEMENT_NAME}/>;
-			var node:XMLNode = new XMLNode( 1, ELEMENT_NAME);
-			node.attributes.xmlns = NS;
-			var serializer:Function = function( element:ISerializable, index:int, arr:Array ):void
-			{
-				element.serialize( parentNode );
-			};
-			_groupChatBookmarks.forEach( serializer );
-			_urlBookmarks.forEach( serializer );
-			return true;
 		}
 
 		public function get urlBookmarks():Array

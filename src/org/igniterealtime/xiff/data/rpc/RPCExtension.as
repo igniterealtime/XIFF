@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.rpc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.*;
 	
@@ -63,7 +63,7 @@ package org.igniterealtime.xiff.data.rpc
 		 */
 		public function call(methodName:String, params:Array):void
 		{
-			XMLRPC.toXML(getNode(), methodName, params);
+			XMLRPC.toXML(xml, methodName, params);
 		}
 	
 		/**
@@ -100,23 +100,9 @@ package org.igniterealtime.xiff.data.rpc
 		 *
 		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
-		public function serialize( parent:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			if (!exists(getNode().parentNode))
-			{
-				parent.appendChild(getNode().cloneNode(true));
-			}
-			return true;
-		}
-	
-		/**
-		 * Interface method, returning the namespace for this extension
-		 *
-		 * @see	org.igniterealtime.xiff.data.ISerializable
-		 */
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode(node);
+			super.xml = node;
 	
 			var res:Array = XMLRPC.fromXML(node);
 			if (res.isFault)
@@ -128,7 +114,6 @@ package org.igniterealtime.xiff.data.rpc
 				_result = res[0];
 			}
 	
-			return true;
 		}
 	
 		/**

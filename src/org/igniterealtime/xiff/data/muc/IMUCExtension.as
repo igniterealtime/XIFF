@@ -25,13 +25,13 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	public interface IMUCExtension extends IExtension
 	{
-		function addChildNode( childNode:XMLNode ):void;
+		function addChildNode( childNode:XML ):void;
 		
 		function get password():String;
 		function set password( value:String ):void;

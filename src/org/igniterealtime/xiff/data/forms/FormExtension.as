@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * Implements the base functionality shared by all MUC extensions
@@ -44,13 +44,13 @@ package org.igniterealtime.xiff.data.forms
 		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 
 		private var _reported:FormReported;
-		private var _fields:Array = [];
-		private var _items:Array = [];
+		private var _fields:Array = []; // FormField
+		private var _items:Array = []; // FormItem
 
 		private var instructionsNodes:Array;
-		private var titleNode:XMLNode;
+		private var titleNode:XML;
 
-		public function FormExtension( parent:XMLNode=null )
+		public function FormExtension( parent:XML = null )
 		{
 			super( parent );
 		}
@@ -72,51 +72,19 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * Called when this extension is being put back on the network.
-		 * Perform any further serialization for Extensions and items
+		 * TODO: clean up...
 		 */
-		public function serialize( parent:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode();
-
-			for each( var field:FormField in _fields )
-			{
-				if( !field.serialize( node ) )
-				{
-					return false;
-				}
-			}
-
-			for each( var item:FormItem in _items )
-			{
-				if( !item.serialize( node ) )
-				{
-					return false;
-				}
-			}
-
-			if( _reported && !_reported.serialize( node ) )
-				return false;
-
-			if( parent != node.parentNode )
-			{
-				parent.appendChild( node.cloneNode( true ) );
-			}
-
-			return true;
-		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
+			super.xml = node;
 
 			instructionsNodes = [];
 			removeAllFields();
 			removeAllItems();
 
-			for each( var c:XMLNode in node.childNodes )
+			for each( var c:XML in node.children() )
 			{
-				switch( c.nodeName )
+				switch( c.localName() )
 				{
 					case "instructions":
 						instructionsNodes.push( c );
@@ -128,24 +96,23 @@ package org.igniterealtime.xiff.data.forms
 
 					case "reported":
 						var reportedItem:FormReported = new FormReported();
-						reportedItem.deserialize( c );
+						reportedItem.xml =  c;
 						_reported = reportedItem;
 						break;
 
 					case "field":
 						var field:FormField = new FormField();
-						field.deserialize( c );
+						field.xml =  c;
 						_fields.push( field );
 						break;
 
 					case "item":
 						var item:FormItem = new FormItem();
-						item.deserialize( c );
+						item.xml =  c;
 						_items.push( item );
 						break;
 				}
 			}
-			return true;
 		}
 
 		/**
@@ -195,8 +162,7 @@ package org.igniterealtime.xiff.data.forms
 			{
 				for each( var f:* in field )
 				{
-					f.getNode().removeNode();
-					f.setNode( null );
+					delete f.xml;
 				}
 			}
 			_fields = [];
@@ -211,8 +177,7 @@ package org.igniterealtime.xiff.data.forms
 			{
 				for each( var i:* in item )
 				{
-					i.getNode().removeNode();
-					i.setNode( null );
+					delete i.xml;
 				}
 			}
 			_items = [];
@@ -224,15 +189,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get title():String
 		{
-			if( titleNode && titleNode.firstChild )
-				return titleNode.firstChild.nodeValue;
-
-			return null;
+			return getField("title");
 		}
-
 		public function set title( value:String ):void
 		{
-			titleNode = replaceTextNode( getNode(), titleNode, "title", value );
+			setField("title", value);
 		}
 
 		/**
@@ -244,27 +205,21 @@ package org.igniterealtime.xiff.data.forms
 		{
 			var result:Array = [];
 
-			for each( var valueNode:XMLNode in instructionsNodes )
+			for each ( var valueNode:XML in xml.instructions )
 			{
-				result.push( valueNode.firstChild.nodeValue );
+				result.push( valueNode.toString() );
 			}
 			return result;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set instructions( value:Array ):void
 		{
-			for each( var v:XMLNode in instructionsNodes )
+			delete xml.instructions;
+			
+			for each (var i:String in value)
 			{
-				v.removeNode();
+				var option:XML = <instructions>{ i }</instructions>;
+				xml.appendChild(option);
 			}
-
-			instructionsNodes = value.map( function( value:String, index:uint, arr:Array ):*
-			{
-				return replaceTextNode( getNode(), undefined, "instructions", value );
-			} );
 		}
 
 		/**
@@ -278,17 +233,13 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get type():String
 		{
-			return getNode().attributes.type;
+			return xml.@type;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set type( value:String ):void
 		{
 			// TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 			// TODO Change the behavior of the serialization depending on the type
-			getNode().attributes.type = value;
+			xml.@type = value;
 		}
 
 		/**
@@ -303,8 +254,10 @@ package org.igniterealtime.xiff.data.forms
 			// Most likely at the start of the array
 			for each( var field:FormField in _fields )
 			{
-				if( field.varName == "FORM_TYPE" )
+				if ( field.varName == "FORM_TYPE" )
+				{
 					return field.value;
+				}
 			}
 			return "";
 		}
@@ -318,10 +271,6 @@ package org.igniterealtime.xiff.data.forms
 		{
 			return _reported;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set reported( value:FormReported ):void
 		{
 			_reported = value;
@@ -336,10 +285,6 @@ package org.igniterealtime.xiff.data.forms
 		{
 			return _fields;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set fields( value:Array ):void
 		{
 			removeAllFields();
@@ -356,10 +301,6 @@ package org.igniterealtime.xiff.data.forms
 		{
 			return _items;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set items( value:Array ):void
 		{
 			removeAllItems();

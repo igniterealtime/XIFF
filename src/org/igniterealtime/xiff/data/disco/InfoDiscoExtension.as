@@ -28,12 +28,13 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a> for service info discovery.
 	 * Also, take a look at <a href="http://xmpp.org/extensions/xep-0020.html">XEP-0020</a> and
 	 * <a href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</a>.
+	 * 
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
@@ -43,7 +44,11 @@ package org.igniterealtime.xiff.data.disco
 		private var _identities:Array = [];
 		private var _features:Array = [];
 
-		public function InfoDiscoExtension( parent:XMLNode=null )
+		/**
+		 * 
+		 * @param	parent
+		 */
+		public function InfoDiscoExtension( parent:XML=null )
 		{
 			super( parent );
 		}
@@ -84,10 +89,6 @@ package org.igniterealtime.xiff.data.disco
 		{
 			return _identities;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set identities( value:Array ):void
 		{
 			_identities = value;
@@ -100,59 +101,36 @@ package org.igniterealtime.xiff.data.disco
 		{
 			return _features;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set features( value:Array ):void
 		{
 			_features = value;
 		}
 
-		override public function serialize( parentNode:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode();
-
-			for each( var identity:DiscoIdentity in _identities )
-			{
-				identity.serialize( node );
-			}
-
-			for each( var feature:DiscoFeature in _features )
-			{
-				feature.serialize( node );
-			}
-
-			if( !super.serialize( parentNode ) ) return false;
-
-			return true;
-		}
-
-		override public function deserialize( node:XMLNode ):Boolean
-		{
-			if( !super.deserialize( node ) ) return false;
+			super.xml = node;
+			
 
 			_identities = [];
 			_features = [];
 
-			for each( var child:XMLNode in getNode().childNodes )
+			for each( var child:XML in xml.children() )
 			{
-				switch( child.nodeName )
+				switch( child.localName() )
 				{
 					case "identity":
-						var identity:DiscoIdentity = new DiscoIdentity( getNode() );
-						identity.deserialize( child );
+						var identity:DiscoIdentity = new DiscoIdentity( xml );
+						identity..xml = child;
 						_identities.push( identity );
 						break;
 
 					case "feature":
-						var feature:DiscoFeature = new DiscoFeature( getNode() );
-						feature.deserialize( child );
+						var feature:DiscoFeature = new DiscoFeature( xml );
+						feature.xml = child;
 						_features.push( feature );
 						break;
 				}
 			}
-			return true;
 		}
 
 		public function addIdentity( identity:DiscoIdentity ):DiscoIdentity

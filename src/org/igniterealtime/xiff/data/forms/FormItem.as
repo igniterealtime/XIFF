@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
-	import flash.xml.XMLNode;
+	
 
 	public class FormItem extends XMLStanza implements ISerializable
 	{
@@ -36,55 +36,33 @@ package org.igniterealtime.xiff.data.forms
 
 		private var _fields:Array = [];
 
-		public function FormItem( parent:XMLNode=null )
+		public function FormItem( parent:XML=null )
 		{
 			super();
 
-			getNode().nodeName = ELEMENT_NAME;
+			xml.setLocalName( ELEMENT_NAME );
 
 			if( exists( parent ) )
 			{
-				parent.appendChild( getNode() );
+				parent.appendChild( xml );
 			}
 		}
 
-		public function serialize( parentNode:XMLNode ):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode();
+			super.xml = node;
 
-			for each( var field:FormField in _fields )
+			for each( var c:XML in node.children() )
 			{
-				if( !field.serialize( node ) )
-				{
-					return false;
-				}
-			}
-
-			if( parentNode != node.parentNode )
-			{
-				parentNode.appendChild( node.cloneNode( true ) );
-			}
-
-			return true;
-		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-
-			for each( var c:XMLNode in node.childNodes )
-			{
-				switch( c.nodeName )
+				switch( c.localName() )
 				{
 					case "field":
 						var field:FormField = new FormField();
-						field.deserialize( c );
+						field.xml = c;
 						_fields.push( field );
 						break;
 				}
 			}
-
-			return true;
 		}
 
 		/**
@@ -96,8 +74,7 @@ package org.igniterealtime.xiff.data.forms
 			{
 				for each( var f:* in field )
 				{
-					f.getNode().removeNode();
-					f.setNode( null );
+					delete f.xml;
 				}
 			}
 			_fields = [];

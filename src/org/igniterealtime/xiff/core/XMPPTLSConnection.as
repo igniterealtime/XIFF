@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.core
 	import com.hurlant.crypto.tls.*;
 
 	import flash.events.*;
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * This class is used to connect to and manage data coming from an XMPP server that supports TLS.
@@ -106,13 +106,13 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @inheritDoc
 		 */
-		override protected function handleNodeType( node:XMLNode ):void
+		override protected function handleNodeType( node:XML ):void
 		{
-			var nodeName:String = node.nodeName.toLowerCase();
+			var nodeName:String = String(node.localName()).toLowerCase();
 
 			switch( nodeName )
 			{
-				case 'proceed':
+				case "proceed":
 					startTLS();
 					break;
 
@@ -125,10 +125,10 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @inheritDoc
 		 */
-		override protected function handleStreamTLS( node:XMLNode ):void
+		override protected function handleStreamTLS( node:XML ):void
 		{
 			// If the user did not turn on TLS but the server requires it
-			if ( node.firstChild && node.firstChild.nodeName == 'required' )
+			if ( node.hasOwnProperty("required") )
 			{
 				_tls = true;
 			}

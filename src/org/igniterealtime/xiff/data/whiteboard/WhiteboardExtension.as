@@ -25,15 +25,15 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-	import flash.xml.XMLNode;
-	
 	import org.igniterealtime.xiff.data.*;
 	
 	/**
 	 * A message extension for whitboard exchange. This class is the base class
-	 * for other extension classes such as Path
+	 * for other extension classes such as Path.
 	 *
 	 * All child whiteboard objects are contained and serialized by this class
+	 * 
+	 * @see http://xmpp.org/extensions/xep-0113.html
 	 */
 	public class WhiteboardExtension extends Extension implements IExtension
 	{
@@ -41,13 +41,14 @@ package org.igniterealtime.xiff.data.whiteboard
 		public static const NS:String = "xiff:wb";
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
-	
-	    private var _paths:Array;
 		
-		public function WhiteboardExtension( parent:XMLNode = null )
+		/**
+		 * 
+		 * @param	parent
+		 */
+		public function WhiteboardExtension( parent:XML = null )
 		{
 			super( parent );
-	        _paths = [];
 		}
 	
 		/**
@@ -71,29 +72,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		{
 			return WhiteboardExtension.ELEMENT_NAME;
 		}
-		
-		/**
-		 * Serializes the WhiteboardExtension data to XML for sending.
-		 *
-		 * @param	parent The parent node that this extension should be serialized into
-		 * @return An indicator as to whether serialization was successful
-		 */
-		public function serialize( parent:XMLNode ):Boolean
-		{
-	        getNode().removeNode();
-	        var ext_node:XMLNode = XMLFactory.createElement(getElementName());
-	        ext_node.attributes.xmlns = getNS();
-	
-	        for (var i:int = 0; i < _paths.length; ++i)
-			{
-	            _paths[i].serialize(ext_node);
-	        }
-	
-	        parent.appendChild(ext_node);
-	
-			return true;
-		}
-	
+
 	    /**
 	     * Performs the registration of this extension into the extension registry.  
 	     * 
@@ -103,39 +82,21 @@ package org.igniterealtime.xiff.data.whiteboard
 	        ExtensionClassRegistry.register(WhiteboardExtension);
 	    }
 		
-		/**
-		 * Deserializes the WhiteboardExtension data.
-		 *
-		 * @param	node The XML node associated this data
-		 * @return An indicator as to whether deserialization was successful
-		 */
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-	        _paths = [];
-			var len:uint = node.childNodes.length;
-	        for (var i:int = 0; i < len; ++i)
-			{
-	            var child:XMLNode = node.childNodes[i];
-	            switch (child.nodeName) 
-				{
-	                case "path":
-	                    var path:Path = new Path();
-	                    path.deserialize(child);
-	                    _paths.push(path);
-	                    break;
-	            }
-	        }
-			return true;
-		}
-	
+		
 	    /**
 	     * The paths available in this whiteboard message
-	     *
 	     */
 	    public function get paths():Array 
 		{ 
-			return _paths; 
+			var list:Array = [];
+			var paths:XMLList = xml.path;
+			for each (var p:XML in paths)
+			{
+				var path:Path = new Path();
+				path.xml = p;
+				list.push(path);
+			}
+			return list; 
 		}
 	
 	}

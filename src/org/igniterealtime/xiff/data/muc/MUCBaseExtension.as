@@ -26,8 +26,6 @@
 package org.igniterealtime.xiff.data.muc
 {
 	
-	import flash.xml.XMLNode;
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.*;
 	
@@ -35,66 +33,34 @@ package org.igniterealtime.xiff.data.muc
 	 * Implements the base functionality shared by all MUC extensions
 	 *
 	 * @see http://xmpp.org/extensions/xep-0045.html
-	 * @param	parent (Optional) The containing XMLNode for this extension
+	 * @param	parent (Optional) The containing XML for this extension
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
 	{
 		private var _items:Array = [];
 	
-		public function MUCBaseExtension( parent:XMLNode = null )
+		public function MUCBaseExtension( parent:XML = null )
 		{
 			super(parent);
 		}
-
-		/**
-		 * Called when this extension is being put back on the network.  Perform any further serialization for Extensions and items
-		 */
-		public function serialize( parent:XMLNode ):Boolean
+	
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode();
-			var len:uint = _items.length;
-			for (var i:uint = 0; i < len; ++i)
-			{
-				if (!_items[i].serialize(node))
-				{
-					return false;
-				}
-			}
-	
-			var exts:Array = getAllExtensions();
-			for each(var ii:* in exts)
-			{
-				if (!ii.serialize(node))
-				{
-					return false;
-				}
-			}
-	
-			if (parent != node.parentNode)
-			{
-				parent.appendChild(node.cloneNode(true));
-			}
-	
-			return true;
-		}
-	
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode(node);
+			super.xml = node;
 			removeAllItems();
 	
-			for each( var child:XMLNode in node.childNodes )
+			for each( var child:XML in node.children() )
 			{
-				switch( child.nodeName )
+				switch( child.localName() )
 				{
 					case "item":
-						var item:MUCItem = new MUCItem(getNode());
-						item.deserialize(child);
+						var item:MUCItem = new MUCItem(xml);
+						item.xml = child;
 						_items.push(item);
 						break;
 	
 					default:
-						var extClass:Class = ExtensionClassRegistry.lookup(child.attributes.xmlns);
+						var extClass:Class = ExtensionClassRegistry.lookup(child.@xmlns);
 						if (extClass != null)
 						{
 							var ext:IExtension = new extClass();
@@ -102,7 +68,7 @@ package org.igniterealtime.xiff.data.muc
 							{
 								if (ext is ISerializable)
 								{
-									ISerializable(ext).deserialize(child);
+									ISerializable(ext).xml = child;
 								}
 								addExtension(ext);
 							}
@@ -110,7 +76,6 @@ package org.igniterealtime.xiff.data.muc
 						break;
 				}
 			}
-			return true;
 		}
 	
 		/**
@@ -136,7 +101,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:EscapedJID=null, actor:String=null, reason:String=null):MUCItem
 		{
-			var item:MUCItem = new MUCItem(getNode());
+			var item:MUCItem = new MUCItem(xml);
 	
 			if (exists(affiliation)){ item.affiliation = affiliation; }
 			if (exists(role)) 		{ item.role = role; }
@@ -159,7 +124,12 @@ package org.igniterealtime.xiff.data.muc
 			for (var i:uint = 0; i < len; ++i)
 			{
 				var item:MUCItem = _items[i] as MUCItem;
-				item.setNode(null);
+				var parent:XML = item.xml.parent();
+				if (parent != null)
+				{
+					var index:int = parent.(child() == item.xml).childIndex();
+					delete parent.children()[index];
+				}
 			}
 		 	_items = [];
 		}

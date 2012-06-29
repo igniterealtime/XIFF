@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.browse
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
@@ -46,12 +46,12 @@ package org.igniterealtime.xiff.data.browse
 	
 		private var _items:Array = [];
 	
-		public function BrowseExtension(parent:XMLNode = null)
+		public function BrowseExtension( parent:XML = null )
 		{
 			super(parent);
 	
-			getNode().attributes.xmlns = getNS();
-			getNode().nodeName = getElementName();
+			xml.setLocalName( getElementName() );
+			xml.@xmlns = getNS();
 		}
 	
 		/**
@@ -93,28 +93,8 @@ package org.igniterealtime.xiff.data.browse
 		public function addItem(item:BrowseItem):BrowseItem
 		{
 			_items.push(item);
+			// TODO: also add it to the xml
 			return item;
-		}
-	
-		/**
-		 * ISerializable implementation which loads this extension from XML
-		 *
-		 * @see	org.igniterealtime.xiff.data.ISerializable
-		 */
-		override public function serialize(parentNode:XMLNode):Boolean
-		{
-			var node:XMLNode = getNode();
-			for each (var item:BrowseItem in _items)
-			{
-				item.serialize(node);
-			}
-	
-			if (!exists(node.parentNode))
-			{
-				parentNode.appendChild(node.cloneNode(true));
-			}
-	
-			return true;
 		}
 	
 		/**
@@ -122,26 +102,25 @@ package org.igniterealtime.xiff.data.browse
 		 *
 		 * @see	org.igniterealtime.xiff.data.ISerializable
 		 */
-		override public function deserialize(node:XMLNode):Boolean
+		override public function set xml( node:XML ):void
 		{
-			setNode(node);
+			super.xml = node;
 	
 			this['deserialized'] = true;
 	
 			_items = [];
 	
-			for each (var child:XMLNode in node.childNodes)
+			for each (var child:XML in node.children())
 			{
-				switch(child.nodeName)
+				switch(child.localName())
 				{
 					case "item":
-						var item:BrowseItem = new BrowseItem(getNode());
-						item.deserialize(child);
+						var item:BrowseItem = new BrowseItem(xml);
+						item.xml = child;
 						_items.push(item);
 						break;
 				}
 			}
-			return true;
 		}
 	
 		/**

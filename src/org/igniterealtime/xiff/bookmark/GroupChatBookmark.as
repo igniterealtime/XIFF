@@ -25,20 +25,17 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-	import flash.xml.XMLNode;
+	
 
 	import org.igniterealtime.xiff.core.EscapedJID;
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ISerializable;
 
-	public class GroupChatBookmark implements ISerializable
+	public class GroupChatBookmark extends Extension implements ISerializable
 	{
+		// TODO: NS?
 		public static const ELEMENT_NAME:String = "conference";
 		
-		private var _groupChatNode:XMLNode;
-
-		private var _nickNode:XMLNode;
-
-		private var _passwordNode:XMLNode;
 
 		/**
 		 *
@@ -60,98 +57,65 @@ package org.igniterealtime.xiff.bookmark
 			{
 				throw new Error( "Name and jid cannot be null, they must either both be null or an Object" );
 			}
-			var groupChatNode:XMLNode = new XMLNode( 1, ELEMENT_NAME );
-			groupChatNode.attributes.name = name;
-			groupChatNode.attributes.jid = jid.toString();
+			
+			xml.setLocalName( ELEMENT_NAME );
+			xml.@name = name;
+			xml.@jid = jid.toString();
+			
 			if ( autoJoin )
 			{
-				groupChatNode.attributes.autojoin = "true";
+				xml.@autojoin = "true";
 			}
 			if ( nickname )
 			{
-				var nicknameNode:XMLNode = new XMLNode( 1, "nick" );
-				nicknameNode.appendChild( new XMLNode( 3, nickname ));
-				groupChatNode.appendChild( nicknameNode );
+				xml.nick = nickname;
 			}
 			if ( password )
 			{
-				var passwordNode:XMLNode = new XMLNode( 1, "password" );
-				passwordNode.appendChild( new XMLNode( 3, password ));
-				groupChatNode.appendChild( passwordNode );
+				xml.password = password;
 			}
-			_groupChatNode = groupChatNode;
+		}
+		
+		public function getNS():String
+		{
+			return ""; // GroupChatBookmark.NS;
+		}
+		
+		public function getElementName():String
+		{
+			return GroupChatBookmark.ELEMENT_NAME;
 		}
 
 		public function get autoJoin():Boolean
 		{
-			return _groupChatNode.attributes.autojoin == "true";
+			return xml.@autojoin == "true";
 		}
 
 		public function set autoJoin( value:Boolean ):void
 		{
-			_groupChatNode.attributes.autojoin = value.toString();
+			xml.@autojoin = value.toString();
 		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			_groupChatNode = node.cloneNode( false );
-
-			var children:Array = node.childNodes;
-			for each ( var child:XMLNode in children )
-			{
-				if ( child.nodeName == "nick" )
-				{
-					_nickNode = child.cloneNode( true );
-				}
-				else if ( child.nodeName == "password" )
-				{
-					_passwordNode = child.cloneNode( true );
-				}
-			}
-
-			return true;
-		}
-
+		
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID( _groupChatNode.attributes.jid );
+			
+			return new EscapedJID( xml.@jid );
 		}
 
 		public function get name():String
 		{
-			return _groupChatNode.attributes.name;
+			return xml.@name;
 		}
 
 		public function get nickname():String
 		{
-			return _nickNode.firstChild.nodeValue;
+			return xml.nick.toString();
 		}
 
 		public function get password():String
 		{
-			return _passwordNode.firstChild.nodeValue;
+			return xml.password.toString();
 		}
 
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			var groupChatNode:XMLNode = _groupChatNode.cloneNode( true );
-			var nickNode:XMLNode = ( _nickNode != null ? _nickNode.cloneNode( true ) :
-				null );
-			var passwordNode:XMLNode = ( _passwordNode != null ? _passwordNode.cloneNode( true ) :
-				null );
-
-			if ( nickNode != null )
-			{
-				groupChatNode.appendChild( nickNode );
-			}
-			if ( passwordNode != null )
-			{
-				groupChatNode.appendChild( passwordNode );
-			}
-
-			parentNode.appendChild( groupChatNode );
-
-			return true;
-		}
 	}
 }

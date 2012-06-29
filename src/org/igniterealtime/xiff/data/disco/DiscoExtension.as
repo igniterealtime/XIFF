@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ISerializable;
 
-	import flash.xml.XMLNode;
+	
 
 	/**
 	 * Base class for service discovery extensions.
@@ -45,34 +45,21 @@ package org.igniterealtime.xiff.data.disco
 		 * <a href="http://www.jabber.org/registrar/disco-nodes.html">
 		 * http://www.jabber.org/registrar/disco-nodes.html</a>.
 		 */
-		public function DiscoExtension( parent:XMLNode )
+		public function DiscoExtension( parent:XML )
 		{
 			super( parent );
 		}
 
+		/**
+		 * 
+		 */
 		public function get node():String
 		{
-			return getNode().attributes.node;
+			return xml.@node;
 		}
-
 		public function set node( value:String ):void
 		{
-			getNode().attributes.node = value;
-		}
-
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			if( parentNode != getNode().parentNode )
-			{
-				parentNode.appendChild( getNode().cloneNode( true ) );
-			}
-			return true;
-		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-			return true;
+			xml.@node = value;
 		}
 
 	}

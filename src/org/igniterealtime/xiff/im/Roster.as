@@ -189,7 +189,7 @@ package org.igniterealtime.xiff.im
 			}
 
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod );
-			var ext:RosterExtension = new RosterExtension( iq.getNode() );
+			var ext:RosterExtension = new RosterExtension( iq.xml );
 			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
 						 null );
 			iq.addExtension( ext );
@@ -242,7 +242,7 @@ package org.igniterealtime.xiff.im
 		{
 			var iq:IQ = new IQ( null, IQ.TYPE_GET, IQ.generateID( "roster_" ),
 									fetchRoster_result );
-			iq.addExtension( new RosterExtension( iq.getNode() ) );
+			iq.addExtension( new RosterExtension( iq.xml ) );
 			_connection.send( iq );
 		}
 
@@ -358,7 +358,7 @@ package org.igniterealtime.xiff.im
 			{
 				var iq:IQ = new IQ( null, IQ.TYPE_SET, IQ.generateID( "remove_user_" ),
 										unsubscribe_result );
-				var ext:RosterExtension = new RosterExtension( iq.getNode() );
+				var ext:RosterExtension = new RosterExtension( iq.xml );
 				ext.addItem( new EscapedJID( rosterItem.jid.bareJID ), RosterExtension.SUBSCRIBE_TYPE_REMOVE );
 				iq.addExtension( ext );
 				_connection.send( iq );
@@ -697,7 +697,7 @@ package org.igniterealtime.xiff.im
 		private function updateContact( rosterItem:IRosterItemVO, newName:String, groupNames:Array ):void
 		{
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, IQ.generateID( "update_contact_" ) );
-			var ext:RosterExtension = new RosterExtension( iq.getNode() );
+			var ext:RosterExtension = new RosterExtension( iq.xml );
 
 			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName,
 						 groupNames );

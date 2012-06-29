@@ -3,41 +3,28 @@ package org.igniterealtime.xiff.data.disco
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
-	import flash.xml.XMLNode;
-
+	
+	/**
+	 * 
+	 */
 	public class DiscoItem extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "item";
 
-		public function DiscoItem( parent:XMLNode=null )
+		/**
+		 * 
+		 * @param	parent
+		 */
+		public function DiscoItem( parent:XML=null )
 		{
 			super();
 
-			getNode().nodeName = ELEMENT_NAME;
+			xml.setLocalName( ELEMENT_NAME );
 
 			if( exists( parent ) )
 			{
-				parent.appendChild( getNode() );
+				parent.appendChild( xml );
 			}
-		}
-
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			var node:XMLNode = getNode();
-
-			if( parentNode != node.parentNode )
-			{
-				parentNode.appendChild( node.cloneNode( true ) );
-			}
-
-			return true;
-		}
-
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			setNode( node );
-
-			return true;
 		}
 
 		public function equals( other:DiscoItem ):Boolean
@@ -45,34 +32,40 @@ package org.igniterealtime.xiff.data.disco
 			return jid == other.jid && name == other.name && node == other.node;
 		}
 
+		/**
+		 * 
+		 */
 		public function get jid():String
 		{
-			return getNode().attributes.jid;
+			return xml.@jid;
 		}
-
 		public function set jid( value:String ):void
 		{
-			getNode().attributes.jid = value;
+			xml.@jid = value;
 		}
 
+		/**
+		 * 
+		 */
 		public function get name():String
 		{
-			return getNode().attributes.name;
+			return xml.@name;
 		}
-
 		public function set name( value:String ):void
 		{
-			getNode().attributes.name = value;
+			xml.@name = value;
 		}
 
+		/**
+		 * 
+		 */
 		public function get node():String
 		{
-			return getNode().attributes.node;
+			return xml.@node;
 		}
-
 		public function set node( value:String ):void
 		{
-			getNode().attributes.node = value;
+			xml.@node = value;
 		}
 
 	}

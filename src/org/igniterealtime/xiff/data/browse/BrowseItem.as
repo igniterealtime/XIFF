@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.browse
 {
 	
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -36,42 +36,28 @@ package org.igniterealtime.xiff.data.browse
 	 */
 	public class BrowseItem extends XMLStanza implements ISerializable
 	{
-		public function BrowseItem(parent:XMLNode)
+		public function BrowseItem(parent:XML)
 		{
 			super();
-			getNode().nodeName = "item";
+			xml.setLocalName( "item" );
 	
 			if (exists(parent))
 			{
-				parent.appendChild(getNode());
+				parent.appendChild(xml);
 			}
 	
-		}
-	
-		public function serialize(parentNode:XMLNode):Boolean
-		{
-			var node:XMLNode = getNode();
-			if (!exists(node.parentNode))
-			{
-				parentNode.appendChild(node.cloneNode(true));
-			}
-	
-			return true;
-		}
-	
-		public function deserialize(node:XMLNode):Boolean
-		{
-			setNode(node);
-			return true;
 		}
 	
 		/**
 		 * Add new features that are supported if you are responding to a
 		 * browse request
 		 */
-		public function addNamespace(value:String):XMLNode
+		public function addNamespace(value:String):XML
 		{
-			return addTextNode(getNode(), "ns", value);
+			var node:XML = <ns>{ value }</ns>;
+			xml.appendChild(node);
+			
+			return node;
 		}
 	
 		/**
@@ -79,11 +65,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get jid():String
 		{
-			return getNode().attributes.jid;
+			return xml.@jid;
 		}
 		public function set jid(value:String):void
 		{
-			getNode().attributes.jid = value;
+			xml.@jid = value;
 		}
 	
 		/**
@@ -94,11 +80,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get category():String
 		{
-			return getNode().attributes.category;
+			return xml.@category;
 		}
 		public function set category(value:String):void
 		{
-			getNode().attributes.category = value;
+			xml.@category = value;
 		}
 	
 		/**
@@ -106,11 +92,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get name():String
 		{
-			return getNode().attributes.name;
+			return xml.@name;
 		}
 		public function set name(value:String):void
 		{
-			getNode().attributes.name = value;
+			xml.@name = value;
 		}
 	
 		/**
@@ -121,11 +107,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get type():String
 		{
-			return getNode().attributes.type;
+			return xml.@type;
 		}
 		public function set type(value:String):void
 		{
-			getNode().attributes.type = value;
+			xml.@type = value;
 		}
 	
 		/**
@@ -136,11 +122,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get version():String
 		{
-			return getNode().attributes.version;
+			return xml.@version;
 		}
 		public function set version(value:String):void
 		{
-			getNode().attributes.version = value;
+			xml.@version = value;
 		}
 	
 	 	/**
@@ -166,11 +152,11 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var res:Array = [];
 	
-			for each (var child:XMLNode in getNode().childNodes)
+			for each (var child:XML in xml.children())
 			{
-				if (child.nodeName == "ns")
+				if (child.localName() == "ns")
 				{
-					res.push(child.firstChild.nodeValue);
+					res.push(child.toString());
 				}
 			}
 			return res;

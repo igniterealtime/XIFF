@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
@@ -53,33 +53,59 @@ package org.igniterealtime.xiff.data
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
 		public static const XML_LANG:String = "en";
-		
-		private var myErrorNode:XMLNode;
-		private var myErrorConditionNode:XMLNode;
-		
+				
+		// Are these static variables needed also in AS3?
 		private static var staticDependencies:Array = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
 		
 		private static var _idGenerator:IIDGenerator = new IncrementalGenerator();
 		
+		
 		/**
 		 * The following four first attributes are common to message, presence, and IQ stanzas.
 		 * The fifth, xml:lang, is not included here.
+		 *
+		 * <p>RFC 3920: 9.  XML Stanzas</p>
+		 *
+		 * <p>After TLS negotiation (Section 5) if desired, SASL negotiation
+		 * (Section 6), and Resource Binding (Section 7) if necessary, XML
+		 * stanzas can be sent over the streams.  Three kinds of XML stanza are
+		 * defined for the 'jabber:client' and 'jabber:server' namespaces:
+		 * &gt;message/&lt;, &gt;presence/&lt;, and &gt;iq/&lt;.  In addition, there are five
+		 * common attributes for these kinds of stanza.  These common
+		 * attributes, as well as the basic semantics of the three stanza kinds,
+		 * are defined herein; more detailed information regarding the syntax of
+		 * XML stanzas in relation to instant messaging and presence
+		 * applications is provided in [XMPP-IM].</p>
+		 *
+		 * <pre>
+         *           |  initiating to receiving  |  receiving to initiating
+		 *  ---------+---------------------------+-----------------------
+		 *  to       |  hostname of receiver     |  silently ignored
+		 *  from     |  silently ignored         |  hostname of receiver
+		 *  id       |  silently ignored         |  session key
+		 *  xml:lang |  default language         |  default language
+		 *  version  |  signals XMPP 1.0 support |  signals XMPP 1.0 support
+		 * </pre>
+		 *
 		 * @param	recipient	to
 		 * @param	sender		from
 		 * @param	theType		type
 		 * @param	theID		id
 		 * @param	nName
+		 * @see http://www.ietf.org/rfc/rfc3920.txt
 		 */
 		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nName:String )
 		{
 			super();
 			
-			getNode().nodeName = nName;
+			xml.setLocalName( nName );
 			to = recipient;
 			from = sender;
 			type = theType;
 			id = theID;
+			
+			trace("XMPPStanza. constructed. xml: " + xml.toXMLString());
 		}
 	
 		private static function XMPPStanzaStaticConstructor():void
@@ -102,9 +128,15 @@ package org.igniterealtime.xiff.data
 		xiff_internal static function generateID( generator:IIDGenerator, prefix:String=null ):String
 		{
 			var previousPrefix:String = generator.prefix;
-			if( prefix ) generator.prefix = prefix;
+			if ( prefix )
+			{
+				generator.prefix = prefix;
+			}
 			var id:String = generator.generateID();
-			if( prefix ) generator.prefix = previousPrefix;
+			if ( prefix )
+			{
+				generator.prefix = previousPrefix;
+			}
 			return id;
 		}
 	
@@ -135,76 +167,69 @@ package org.igniterealtime.xiff.data
 		{
 			_idGenerator = value;
 		}
-	
-		/**
-		 * Prepares the XML version of the stanza for transmission to the server.
-		 *
-		 * @param	parentNode (Optional) The parent node that the stanza should be appended to during serialization
-		 * @return An indication as to whether serialization was successful
-		 */
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			var node:XMLNode = getNode();
-			var exts:Array = getAllExtensions();
-	
-			for each(var ext:ISerializable in exts) {
-				ext.serialize(node);
-			}
-	
-			if (!exists(node.parentNode)) {
-				node = node.cloneNode(true);
-				parentNode.appendChild(node);
-			}
-	
-			return true;
-		}
 		
-		public function deserialize( xmlNode:XMLNode ):Boolean
+		/**
+		 * In addition to saving the XML, check for possible Extensions that are registered for listening this XML data.
+		 */
+		override public function set xml( elem:XML ):void
 		{
-			setNode(xmlNode);
+			super.xml = elem;
 			
-			var children:Array = xmlNode.childNodes;
-			for( var i:String in children )
+		
+			trace("xml setter. elem: " + elem.toXMLString());
+			
+
+			// Check for possible IExtensions in the given incoming "elem"
+			for each ( var child:XML in elem.children() )
 			{
-				
-				var nName:String = children[i].nodeName;
-				var nNamespace:String = children[i].attributes.xmlns;
-				
-				nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NAMESPACE;
-				
-				if( nName == "error" ) {
-					myErrorNode = children[i];
-					// If there is an error condition node, then we need that saved as well
-					if( exists( myErrorNode.firstChild.nodeName ) ) {
-						myErrorConditionNode = myErrorNode.firstChild;
+				if (child.nodeKind() == "element")
+				{
+					var nName:String = child.localName();
+					var nNamespace:Namespace = child.namespace(); // Should this request only the unprefixed namespace?
+					
+					trace("xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
+					
+					//nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NAMESPACE;
+					
+					if ( nName != "error" )
+					{
+						// Check registered extensions that can be used with the given xml data
+						var ExtClass:Class = ExtensionClassRegistry.lookup(nNamespace.uri);
+						if (ExtClass != null)
+						{
+							var ext:IExtension = new ExtClass() as IExtension;
+							ext.xml = child;
+							addExtension(ext);
+						}
 					}
 				}
-				else {
-					var extClass:Class = ExtensionClassRegistry.lookup(nNamespace);
-					if (extClass != null) {
-						var ext:IExtension = new extClass();
-						ISerializable(ext).deserialize(children[i]);
-						addExtension(ext);
-					}
-				}
-			}
-			return true;
+				
+			} // for each ...
 		}
 		
 		/**
 		 * The JID of the recipient.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get to():EscapedJID
 		{
-			return new EscapedJID(getNode().attributes.to);
+			var list:XMLList = xml.attribute("to");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
 		public function set to( value:EscapedJID ):void
 		{
-			delete getNode().attributes.to;
-			if (exists(value))
+			if ( value == null )
 			{
-				getNode().attributes.to = value.toString();
+				delete xml.@to;
+			}
+			else
+			{
+				xml.@to = value.toString();
 			}
 		}
 		
@@ -213,19 +238,27 @@ package org.igniterealtime.xiff.data
 		 * that prevent this from being falsified. Thus, under normal circumstances, you don't
 		 * need to supply this information because the server will fill it in automatically.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get from():EscapedJID
 		{
-			// .@from.toString();
-			var jid:String = getNode().attributes.from;
-			return jid ? new EscapedJID(jid) : null;
+			var list:XMLList = xml.attribute("from");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
-		
 		public function set from( value:EscapedJID ):void
 		{
-			// .@from = sender.toString();
-			delete getNode().attributes.from;
-			if (exists(value)) { getNode().attributes.from = value.toString(); }
+			if ( value == null )
+			{
+				delete xml.@from;
+			}
+			else
+			{
+				xml.@from = value.toString();
+			}
 		}
 		
 		/**
@@ -261,18 +294,26 @@ package org.igniterealtime.xiff.data
 		 * <li>Message.TYPE_NORMAL</li>
 		 * </ul>
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get type():String
 		{
-			return getNode().attributes.type;
+			var list:XMLList = xml.attribute("type");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
-		
 		public function set type( value:String ):void
 		{
-			delete getNode().attributes.type;
-			if (exists(value))
+			if ( value == null )
 			{
-				getNode().attributes.type = value;
+				delete xml.@type;
+			}
+			else
+			{
+				xml.@type = value;
 			}
 		}
 		
@@ -280,137 +321,163 @@ package org.igniterealtime.xiff.data
 		 * The unique identifier of this stanza. ID generation is accomplished using
 		 * the static <code>generateID</code> method of the particular stanza type.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
 		 * @see	#generateID
 		 */
 		public function get id():String
 		{
-			return getNode().attributes.id;
+			var list:XMLList = xml.attribute("id");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			return null;
 		}
-		
 		public function set id( value:String ):void
 		{
-			delete getNode().attributes.id;
-			if (exists(value))
+			if ( value == null )
 			{
-				getNode().attributes.id = value;
+				delete xml.@id;
+			}
+			else
+			{
+				xml.@id = value;
 			}
 		}
 		
 		/**
 		 * The error message, assuming this stanza contains error information.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
+		 * TODO
 		 */
 		public function get errorMessage():String
 		{
-			
-			if ( exists( errorCondition ) )
+			var list:XMLList = xml.children().(localName() == "error");
+			if ( list.length() > 0 )
 			{
-				//return myErrorConditionNode.firstChild.nodeValue;
-				//return myErrorConditionNode.nextSibling.firstChild.nodeValue;  // fix recommended by bram 7/12/05
-				return errorCondition.toString();
+				return list[0];
 			}
-			else if (myErrorNode && myErrorNode.firstChild)
+			
+			if ( errorCondition != null )
 			{
-				return myErrorNode.firstChild.nodeValue;
+				return xml.error[errorCondition];
+			}
+			else if (xml.error.length() > 0)
+			{
+				return xml.error;
 			}
 			return null;
 		}
-		
 		public function set errorMessage( value:String ):void
 		{
-			myErrorNode = ensureNode( myErrorNode, "error" );
+			value = value != null ? value : "";
 			
-			value = exists( value ) ? value : "";
-			
-			if ( exists( errorCondition ) )
+			if ( errorCondition != null )
 			{
-				myErrorConditionNode = replaceTextNode( myErrorNode, myErrorConditionNode, errorCondition, value );
+				xml.error[errorCondition] = value;
 			}
 			else
 			{
-				var attributes:Object = myErrorNode.attributes;
-				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", value );
-				myErrorNode.attributes = attributes;
+				var attributes:XMLList = xml.error.attributes;
+				xml.error = value;
+				xml.error.attributes = attributes;
 			}
 		}
 		
 		/**
-		 * The error condition, assuming this stanza contains error information. For more information
-		 * on error conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
+		 * The error condition, assuming this stanza contains error information.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0086.html
 		 */
 		public function get errorCondition():String
 		{
-			if ( exists( myErrorConditionNode ) )
+			var list:XMLList = xml.children().(localName() == "error");
+			if ( list.length() > 0 )
 			{
-				return myErrorConditionNode.nodeName;
+				return list[0];
 			}
 			
 			return null;
 		}
-		
 		public function set errorCondition( value:String ):void
 		{
-			myErrorNode = ensureNode( myErrorNode, "error" );
-			
 			// A message might exist, so remove it first
-			var attributes:Object = myErrorNode.attributes;
+			var attributes:XMLList = xml.error.attributes;
 			var msg:String = errorMessage;
 			
-			if ( exists( value ) )
+			if ( value != null )
 			{
-				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", "" );
-				myErrorConditionNode = addTextNode( myErrorNode, value, msg );
+				xml.error = "";
+				xml.error[value] = msg;
 			}
 			else
 			{
-				myErrorNode = replaceTextNode( getNode(), myErrorNode, "error", msg );
+				xml.error = msg;
 			}
 			
-			myErrorNode.attributes = attributes;
+			xml.error.attributes = attributes;
 		}
 		
 		/**
-		 * The error type, assuming this stanza contains error information. For more information
-		 * on error types, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
+		 * The error type, assuming this stanza contains error information.
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0086.html
 		 */
 		public function get errorType():String
 		{
-			return myErrorNode && myErrorNode.attributes ? myErrorNode.attributes.type : null;
+			var list:XMLList = xml.children().(localName() == "error" && error.attribute("type").length() > 0);
+			if ( list.length() > 0 )
+			{
+				return list[0].attribute("type")[0];
+			}
+			return null;
 		}
-		
 		public function set errorType( value:String ):void
 		{
-			myErrorNode = ensureNode( myErrorNode, "error" );
-			
-			delete myErrorNode.attributes.type;
-			if ( exists( value ) )
+			if ( value == null )
 			{
-				myErrorNode.attributes.type = value;
+				delete xml.error.@type;
+			}
+			else
+			{
+				xml.error.@type = value;
 			}
 		}
 		
 		/**
 		 * The error code, assuming this stanza contains error information. Error codes are
 		 * deprecated in standard XMPP, but they are commonly used by older Jabber servers
-		 * like Jabberd 1.4. For more information on error codes, and corresponding error
-		 * conditions, see <a href="http://xmpp.org/extensions/xep-0086.html">http://xmpp.org/extensions/xep-0086.html</a>.
+		 * like Jabberd 1.4.
 		 *
+		 * <p>Use <code>NaN</code> to remove.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0086.html
 		 */
 		public function get errorCode():int
 		{
-			return myErrorNode && myErrorNode.attributes ? parseInt( myErrorNode.attributes.code ) : 0;
+			var list:XMLList = xml.children().(localName() == "error" && error.attribute("code").length() > 0);
+			if ( list.length() > 0 )
+			{
+				return parseInt(list[0].attribute("code")[0]);
+			}
+			return NaN;
 		}
-		
 		public function set errorCode( value:int ):void
 		{
-			myErrorNode = ensureNode( myErrorNode, "error" );
-			
-			delete myErrorNode.attributes.code;
-			if ( exists( value ) )
+			if ( isNaN(value) )
 			{
-				myErrorNode.attributes.code = value;
+				delete xml.error.@code;
+			}
+			else
+			{
+				xml.error.@code = value.toString();
 			}
 		}
 	}

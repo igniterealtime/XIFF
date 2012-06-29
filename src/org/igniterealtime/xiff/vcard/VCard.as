@@ -29,7 +29,6 @@ package org.igniterealtime.xiff.vcard
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	import flash.xml.XMLDocument;
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
@@ -377,7 +376,7 @@ package org.igniterealtime.xiff.vcard
 			namespace ns = "vcard-temp";
 			use namespace ns;
 
-			var node:XML = XML( iq.getNode() );
+			var node:XML = XML( iq.xml );
 			var vCardNode:XML = node.children()[ 0 ];
 
 			if ( !vCardNode )
@@ -658,7 +657,7 @@ package org.igniterealtime.xiff.vcard
 			var id:String = IQ.generateID( "save_vcard_" );
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, saveVCard_result );
 			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = new XML( vcardExt.getNode().toString() );
+			var vcardExtNode:XML = new XML( vcardExt.xml.toString() );
 
 			//FN
 			if ( formattedName )
@@ -1179,8 +1178,7 @@ package org.igniterealtime.xiff.vcard
 				}
 			}
 
-			var xmlDoc:XMLDocument = new XMLDocument( vcardExtNode.toString() );
-			vcardExt.setNode( xmlDoc.firstChild );
+			vcardExt.xml = vcardExtNode;
 
 			iq.addExtension( vcardExt );
 			connection.send( iq );

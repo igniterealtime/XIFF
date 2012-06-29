@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.vcard
 {
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
@@ -35,40 +35,18 @@ package org.igniterealtime.xiff.data.vcard
 	 */
 	public class VCardExtension extends Extension implements IExtension
 	{
+		public static const NS:String = "vcard-temp";
+		public static const ELEMENT_NAME:String = "vCard";
 		
 		public function getNS():String
 		{
-			return "vcard-temp";
+			return VCardExtension.NS;
 		}
 		
 		public function getElementName():String
 		{
-			return "vCard";
-		}
-		
-		/**
-		 * Called when the library need to retrieve the state of the instance.
-		 * If the instance manages its own state, then the state should be copied into the XMLNode passed.
-		 * If the instance also implements INodeProxy, then the parent should be verified against the
-		 * parent XMLNode passed to determine if the serialization is in the same namespace.
-		 *
-		 * @param	parentNode (XMLNode) The container of the XML.
-		 * @return	On success, return true.
-		 */
-		public function serialize( parentNode:XMLNode ):Boolean
-		{
-			parentNode.appendChild(getNode());
-			return true;
+			return VCardExtension.ELEMENT_NAME;
 		}
 	
-		/**
-		 * Called when data is retrieved from the XMLSocket, use this method to extract any state into internal state.
-		 * @param	node (XMLNode) The node that should be used as the data container.
-		 * @return	On success, return true.
-		 */
-		public function deserialize( node:XMLNode ):Boolean
-		{
-			return true;
-		}
 	}
 }

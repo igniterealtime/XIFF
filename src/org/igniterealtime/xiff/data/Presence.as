@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,12 +26,38 @@
 package org.igniterealtime.xiff.data
 {
 
-	import flash.xml.XMLNode;
+	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
+	 *
+	 * <p>2.2.1.  Types of Presence</p>
+	 *
+	 * <p>The 'type' attribute of a presence stanza is OPTIONAL.  A presence
+	 * stanza that does not possess a 'type' attribute is used to signal to
+	 * the server that the sender is online and available for communication.
+	 * If included, the 'type' attribute specifies a lack of availability, a
+	 * request to manage a subscription to another entity's presence, a
+	 * request for another entity's current presence, or an error related to
+	 * a previously-sent presence stanza.  If included, the 'type' attribute
+	 * MUST have one of the following values:</p>
+	 * <p>
+	 * o  unavailable -- Signals that the entity is no longer available for communication.<br />
+	 * o  subscribe -- The sender wishes to subscribe to the recipient's presence.<br />
+	 * o  subscribed -- The sender has allowed the recipient to receive their presence.<br />
+	 * o  unsubscribe -- The sender is unsubscribing from another entity's presence.<br />
+	 * o  unsubscribed -- The subscription request has been denied or a previously-granted subscription has been cancelled.<br />
+	 * o  probe -- A request for an entity's current presence; SHOULD be generated only by a server on behalf of a user.<br />
+	 * o  error -- An error has occurred regarding processing or delivery of a previously-sent presence stanza.</p>
+	 *
+	 * <p>For detailed information regarding presence semantics and the
+	 * subscription model used in the context of XMPP-based instant
+	 * messaging and presence applications, refer to Exchanging Presence
+	 * Information (Section 5) and Managing Subscriptions (Section 6).</p>
+
+	 * @see http://www.ietf.org/rfc/rfc3921.txt
 	 */
 	public class Presence extends XMPPStanza implements IPresence
 	{
@@ -95,12 +121,23 @@ package org.igniterealtime.xiff.data
 		 */
 		public static const SHOW_XA:String = "xa";
 	
-		// Private node references for property lookups
-		private var myShowNode:XMLNode;
-		private var myStatusNode:XMLNode;
-		private var myPriorityNode:XMLNode;
-	
 		/**
+		 * According to Google Talk developers via their presentation [somewhere few years ago],
+		 * most of the XMPP related traffic in their service is made by Presence.
+		 *
+		 * <p>The <strong>presence</strong> element can be seen as a basic broadcast or
+		 * "publish-subscribe" mechanism, whereby multiple entities receive
+		 * information about an entity to which they have subscribed (in this
+		 * case, network availability information).  In general, a publishing
+		 * entity SHOULD send a presence stanza with no 'to' attribute, in which
+		 * case the server to which the entity is connected SHOULD broadcast or
+		 * multiplex that stanza to all subscribing entities.  However, a
+		 * publishing entity MAY also send a presence stanza with a 'to'
+		 * attribute, in which case the server SHOULD route or deliver that
+		 * stanza to the intended recipient.  See Server Rules for Handling XML
+		 * Stanzas (Section 10) for general routing and delivery rules related
+		 * to XML stanzas, and [XMPP-IM] for presence-specific rules in the
+		 * context of an instant messaging and presence application.</p>
 		 *
 		 * @param	recipient The recipient of the presence, usually in the form of a JID.
 		 * @param	sender The sender of the presence, usually in the form of a JID.
@@ -116,50 +153,8 @@ package org.igniterealtime.xiff.data
 			show = showVal;
 			status = statusVal;
 			priority = priorityVal;
-		}
-		
-		/**
-		 * Serializes the Presence into XML form for sending to a server.
-		 *
-		 * @return An indication as to whether serialization was successful
-		 */
-		override public function serialize( parentNode:XMLNode ):Boolean
-		{
-			return super.serialize( parentNode );
-		}
-		
-		/**
-		 * Deserializes an XML object and populates the Presence instance with its data.
-		 *
-		 * @param	xmlNode The XML to deserialize
-		 * @return An indication as to whether deserialization was sucessful
-		 */
-		override public function deserialize( xmlNode:XMLNode ):Boolean
-		{
-			var isDeserialized:Boolean = super.deserialize( xmlNode );
 			
-			if (isDeserialized)
-			{
-				var children:Array = xmlNode.childNodes;
-				for( var i:String in children )
-				{
-					switch( children[i].nodeName )
-					{
-						case "show":
-							myShowNode = children[i];
-							break;
-							
-						case "status":
-							myStatusNode = children[i];
-							break;
-							
-						case "priority":
-							myPriorityNode = children[i];
-							break;
-					}
-				}
-			}
-			return isDeserialized;
+			trace("Presence constructed. xml: " + xml.toXMLString());
 		}
 		
 		/**
@@ -172,69 +167,99 @@ package org.igniterealtime.xiff.data
 		 * <li>Presence.SHOW_XA</li>
 		 * </ul>
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get show():String
 		{
-			if (!myShowNode || !exists(myShowNode.firstChild)) return null;
+			var list:XMLList = xml.children().(localName() == "show");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
 			
-			return myShowNode.firstChild.nodeValue;
+			return null;
 		}
 		public function set show( value:String ):void
 		{
 			if (value != SHOW_AWAY
-			&& value != SHOW_CHAT
-			&& value != SHOW_DND
-			&& value != SHOW_XA
-			&& value != null
-			&& value != "")
-				throw new Error("Invalid show value: " + value + " for presence");
-			
-			if (myShowNode && (value == null || value == ""))
+				&& value != SHOW_CHAT
+				&& value != SHOW_DND
+				&& value != SHOW_XA
+				&& value != null)
 			{
-				myShowNode.removeNode();
-				myShowNode = null;
+				throw new Error("Invalid show value: " + value + " for Presence");
 			}
-			myShowNode = replaceTextNode(getNode(), myShowNode, "show", value);
+			
+			if ( value == null )
+			{
+				delete xml.show;
+			}
+			else
+			{
+				xml.show = value;
+			}
 		}
 		
 		/**
 		 * The status; usually used for "away messages."
 		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get status():String
 		{
-			if (myStatusNode == null || myStatusNode.firstChild == null) return null;
-			return myStatusNode.firstChild.nodeValue;
+			var list:XMLList = xml.children().(localName() == "status");
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			
+			return null;
 		}
 		public function set status( value:String ):void
 		{
-			myStatusNode = replaceTextNode(getNode(), myStatusNode, "status", value);
+			if (status == null)
+			{
+				delete xml.status;
+			}
+			else
+			{
+				xml.status = value;
+			}
 		}
 		
 		/**
 		 * The priority of the presence, usually on a scale of 1-5.
-		 * RFC: "The value MUST be an integer between -128 and +127"
+		 *
+		 * <p>RFC: "The value MUST be an integer between -128 and +127".</p>
+		 *
+		 * <p>Use <code>NaN</code> to remove.</p>
 		 */
 		public function get priority():int
 		{
-			if (myPriorityNode == null)
+			var list:XMLList = xml.children().(localName() == "priority");
+			if ( list.length() > 0 )
 			{
-				return NaN;
+				return parseInt(list[0]);
 			}
-			var p:int = int(myPriorityNode.firstChild.nodeValue);
-			if ( isNaN( p ) )
-			{
-				return NaN;
-			}
-			else
-			{
-				return p;
-			}
+				
+			return NaN;
 		}
 		public function set priority( value:int ):void
 		{
-			// TODO: Check limits.
-			myPriorityNode = replaceTextNode(getNode(), myPriorityNode, "priority", value.toString());
+			if (isNaN(value))
+			{
+				delete xml.priority;
+				return;
+			}
+			
+			if ( -129 < value && value < 128)
+			{
+				xml.priority = value.toString();
+			}
+			else
+			{
+				throw new Error("Invalid priority value: " + value.toString() + " for Presence. Must be between -128 and 127.");
+			}
 		}
 	}
 }

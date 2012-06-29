@@ -25,46 +25,40 @@
  */
 package org.igniterealtime.xiff.data
 {
-	import flash.xml.XMLNode;
+	
 
+	/**
+	 * What is this?
+	 */
 	public class AbstractExtension extends Extension implements ISerializable
 	{
-		public function AbstractExtension(parent:XMLNode = null) {
+		public function AbstractExtension( parent:XML = null ) 
+		{
 			super(parent);
 		}
 		
-		public function serialize(parentNode:XMLNode):Boolean
+		override public function set xml( node:XML ):void
 		{
-			var node:XMLNode = getNode().cloneNode(true);
-			var extensions:Array = getAllExtensions();
-			for (var i:int = 0; i < extensions.length; ++i) {
-				if (extensions[i] is ISerializable) {
-					ISerializable(extensions[i]).serialize(node);
-				}
-			}
-			parentNode.appendChild(node);
-			return true;
-		}
-		
-		public function deserialize(node:XMLNode):Boolean
-		{
-			setNode(node);
-			for each(var extNode:XMLNode in node.childNodes) 
+			super.xml = node;
+			for each(var extNode:XML in node.children()) 
 			{
-				var extClass:Class = ExtensionClassRegistry.lookup(extNode.attributes.xmlns);
-				if (extClass == null) {
+				var ns:Namespace = extNode.namespace();
+				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
+				if (extClass == null)
+				{
 					continue;
 				}
 				var ext:IExtension = new extClass();
-				if (ext == null) {
+				if (ext == null)
+				{
 					continue;
 				}
-				if (ext is ISerializable) {
-					ISerializable(ext).deserialize(extNode);
+				if (ext is ISerializable)
+				{
+					ISerializable(ext).xml = extNode;
 				}
 				addExtension(ext);
 			}
-			return true;
 		}
 		
 	}

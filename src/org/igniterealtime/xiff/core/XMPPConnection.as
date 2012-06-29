@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,8 +28,6 @@ package org.igniterealtime.xiff.core
 	import flash.events.*;
 	import flash.net.*;
 	import flash.utils.*;
-	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
 	
 	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.data.*;
@@ -40,7 +38,6 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.register.RegisterExtension;
 	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.events.*;
-	import org.igniterealtime.xiff.exception.SerializationException;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -162,8 +159,26 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
+		protected var openingStreamTag:String;
+		
+		/**
+		 * @private
+		 * Depending of the STREAM_TYPE_* used in the <code>connect()</code> method,
+		 * this variable will contain a matching closing element for it.
+		 * <code>parseDataReceived()</code> method will use this value.
+		 */
 		protected var closingStreamTag:String;
 
+		/**
+		 * @private
+		 * Depending of the STREAM_TYPE_* used in the <code>connect()</code> method,
+		 * the name of the opening tag for stream is saved in this variable, such as
+		 * <code>stream:stream</code> or <code>flash:stream</code>.
+		 * Default value matches the default value of <code>connect()</code> method,
+		 * which is STREAM_TYPE_STANDARD.
+		 */
+		protected var openingStreamTagSearch:String = "stream:stream";
+		
 		/**
 		 * @private
 		 * True if both sides of the connected parties have accepted the zlib compression.
@@ -171,9 +186,12 @@ package org.igniterealtime.xiff.core
 		protected var compressionNegotiated:Boolean = false;
 
 		/**
+		 * Once received data from the socket, should the closing tag be seached?
+		 * Initially this should be <code>true</code> as for the first incoming data
+		 * there might be an error available.
 		 * @private
 		 */
-		protected var expireTagSearch:Boolean;
+		protected var expireTagSearch:Boolean = false;
 
 		/**
 		 * @private
@@ -188,17 +206,14 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * @private
-		 */
-		protected var openingStreamTag:String;
-
-		/**
-		 * @private
 		 * Hash to hold callbacks for IQs
 		 */
 		protected var pendingIQs:Object = {};
 
 		/**
 		 * @private
+		 * @see http://xmpp.org/extensions/xep-0199.html
+		 * @see org.igniterealtime.xiff.data.ping.PingExtension
 		 */
 		protected var pingNotSupported:Boolean;
 
@@ -241,7 +256,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * @private
-		 * Domain of the user. Might differ from the one used in the connection.
+		 * User domain. Used as the server unless <code>server</code> is specifically set to something different.
 		 * @exampleText gmail.com
 		 */
 		protected var _domain:String;
@@ -344,7 +359,7 @@ package org.igniterealtime.xiff.core
 		{
 			var passwordIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
 									  IQ.generateID( "pswd_change_" ), changePassword_response );
-			var ext:RegisterExtension = new RegisterExtension( passwordIQ.getNode() );
+			var ext:RegisterExtension = new RegisterExtension( passwordIQ.xml );
 
 			ext.username = jid.escaped.bareJID;
 			ext.password = password;
@@ -392,7 +407,7 @@ package org.igniterealtime.xiff.core
 		{
 			if ( isActive() )
 			{
-				sendXML( closingStreamTag ); // String
+				sendXML( closingStreamTag );
 
 				if ( socket && socket.connected )
 				{
@@ -415,7 +430,7 @@ package org.igniterealtime.xiff.core
 		{
 			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_GET,
 								   IQ.generateID( "reg_info_" ), getRegistrationFields_response );
-			regIQ.addExtension( new RegisterExtension( regIQ.getNode() ) );
+			regIQ.addExtension( new RegisterExtension( regIQ.xml ) );
 
 			send( regIQ );
 		}
@@ -468,21 +483,9 @@ package org.igniterealtime.xiff.core
 						addIQCallbackToPending( iq.id, iq.callback, iq.errorCallback );
 					}
 				}
-				var root:XMLNode = data.getNode().parentNode;
+				
+				sendXML( data.toString() );
 
-				if ( root == null )
-				{
-					root = new XMLDocument();
-				}
-
-				if ( data.serialize( root ) )
-				{
-					sendXML( root.firstChild ); // XMLNode
-				}
-				else
-				{
-					throw new SerializationException();
-				}
 			}
 		}
 
@@ -491,11 +494,14 @@ package org.igniterealtime.xiff.core
 		 */
 		public function sendKeepAlive():void
 		{
-			if( pingNotSupported ) return;
+			if ( pingNotSupported )
+			{
+				return;
+			}
 
-			var ping:IQ = new IQ( new EscapedJID( server ), IQ.TYPE_GET, null, sendKeepAlive_response, sendKeepAlive_error );
-			ping.addExtension( new PingExtension() );
-			send( ping );
+			var iq:IQ = new IQ( new EscapedJID( server ), IQ.TYPE_GET, null, sendKeepAlive_response, sendKeepAlive_error );
+			iq.addExtension( new PingExtension() );
+			send( iq );
 		}
 
 		/**
@@ -511,7 +517,7 @@ package org.igniterealtime.xiff.core
 		{
 			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
 								   IQ.generateID( "reg_attempt_" ), sendRegistrationFields_response );
-			var ext:RegisterExtension = new RegisterExtension( regIQ.getNode() );
+			var ext:RegisterExtension = new RegisterExtension( regIQ.xml );
 
 			for ( var i:String in fieldMap )
 			{
@@ -536,6 +542,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function addIQCallbackToPending( id:String, callback:Function, errorCallback:Function ):void
 		{
+			trace(getTimer() + " - addIQCallbackToPending. id: " + id);
 			pendingIQs[ id ] = { func: callback, errorFunc: errorCallback };
 		}
 
@@ -546,7 +553,7 @@ package org.igniterealtime.xiff.core
 		{
 			if ( auth != null )
 			{
-				sendXML( auth.request ); // XMLNode
+				sendXML( auth.request.toXMLString() );
 			}
 			else
 			{
@@ -555,14 +562,28 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Upon being so informed that resource binding is required, the client
+		 * MUST bind a resource to the stream by sending to the server an IQ
+		 * stanza of type "set" (see IQ Semantics (Section 9.2.3)) containing
+		 * data qualified by the 'urn:ietf:params:xml:ns:xmpp-bind' namespace.
+		 *
+		 * <p>If the client wishes to allow the server to generate the resource
+		 * identifier on its behalf, it sends an IQ stanza of type "set" that
+		 * contains an empty <bind/> element.</p>
+		 *
+		 * Client asks server to bind a resource:
+		 * <pre>
+		 * <iq type='set' id='bind_1'>
+		 *  <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
+		 * </iq>
+		 * </pre>
 		 */
 		protected function bindConnection():void
 		{
 			var bindIQ:IQ = new IQ( null, IQ.TYPE_SET );
 
 			var bindExt:BindExtension = new BindExtension();
-
+			
 			if ( resource )
 			{
 				bindExt.resource = resource;
@@ -583,15 +604,22 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function bindConnection_response( iq:IQ ):void
 		{
+			trace(getTimer() + " - bindConnection_response. iq: " + iq.toString());
+			
 			var bind:BindExtension = iq.getExtension( "bind" ) as BindExtension;
-
-			var jid:UnescapedJID = bind.jid.unescaped;
-
-			_resource = jid.resource;
-			_username = jid.node;
-			_domain = jid.domain;
-
-			establishSession();
+			trace(getTimer() + " - bindConnection_response. bind: " + bind.toString());
+			
+			var jid:EscapedJID = bind.jid;
+			trace(getTimer() + " - bindConnection_response. jid: " + jid);
+			
+			if (jid != null)
+			{
+				_resource = jid.unescaped.resource;
+				_username = jid.unescaped.node;
+				_domain = jid.unescaped.domain;
+				
+				establishSession();
+			}
 		}
 
 		/**
@@ -634,11 +662,13 @@ package org.igniterealtime.xiff.core
 
 			if ( type == STREAM_TYPE_FLASH || type == STREAM_TYPE_FLASH_TERMINATED )
 			{
+				openingStreamTagSearch = "flash:stream";
 				openingStreamTag += '<flash';
 				closingStreamTag = '</flash:stream>';
 			}
 			else
 			{
+				openingStreamTagSearch = "stream:stream";
 				openingStreamTag += '<stream';
 				closingStreamTag = '</stream:stream>';
 			}
@@ -672,49 +702,56 @@ package org.igniterealtime.xiff.core
 		 * @param	mechanisms
 		 * @see #SASL_MECHANISMS
 		 */
-		protected function configureAuthMechanisms( mechanisms:XMLNode ):void
+		protected function configureAuthMechanisms( mechanisms:XML ):void
 		{
-			var authClass:Class;
+			var AuthClass:Class = null;
 
-			for each ( var mechanism:XMLNode in mechanisms.childNodes )
+			for each ( var mechanism:XML in mechanisms.children() )
 			{
-				authClass = SASL_MECHANISMS[ mechanism.firstChild.nodeValue ];
+				var authName:String = mechanism.toString();
+				trace(getTimer() + " - configureAuthMechanisms. authName: " + authName);
+				
+				AuthClass = SASL_MECHANISMS[ authName ];
 
 				if ( useAnonymousLogin )
 				{
-					if ( authClass == Anonymous )
+					if ( AuthClass == Anonymous )
 					{
 						break;
 					}
 				}
 				else
 				{
-					if ( authClass != Anonymous && authClass != null )
+					if ( AuthClass != Anonymous && AuthClass != null )
 					{
 						break;
 					}
 				}
 			}
 
-			if ( !authClass )
+			if ( AuthClass == null )
 			{
-				dispatchError( "SASL missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1 );
+				dispatchError( "sasl-missing", "The server is not configured to support any available SASL mechanisms", "SASL", -1 );
 			}
 			else
 			{
-				auth = new authClass( this );
+				auth = new AuthClass( this );
 			}
 		}
 
 		/**
-		 * @private
-		 * Ask the server to enable Zlib compression of the stream.
+		 * <p>Ask the server to enable Zlib compression of the stream.</p>
+		 * <p>Supported types in XMPP are <code>zlib</code> and <code>lzw</code>.
+		 * XIFF however only supports <code>zlib</code> and only after the Adler32 checksum is somehow implemented.</p>
+		 *
+		 * <p>Flash Player code named "Dolores" (second half of 2012) might have LZMA ByteArray compression available...</p>
+		 * @see http://www.adobe.com/devnet/flashplatform/whitepapers/roadmap.html
+		 * @see http://xmpp.org/registrar/compress.html
 		 */
-		protected function configureStreamCompression():void
+		protected function configureStreamCompression( method:String = "zlib" ):void
 		{
-			// TODO: Build a proper extension which takes care XML building.
-			var ask:XML = <compress xmlns="http://jabber.org/protocol/compress"><method>zlib</method></compress>;
-			sendXML( ask ); // XML
+			var ask:String = "<compress xmlns='http://jabber.org/protocol/compress'><method>" + method + "</method></compress>";
+			sendXML( ask );
 		}
 
 		/**
@@ -757,14 +794,14 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function establishSession():void
 		{
-			var sessionIQ:IQ = new IQ( null, IQ.TYPE_SET );
+			var iq:IQ = new IQ( null, IQ.TYPE_SET );
 
-			sessionIQ.addExtension( new SessionExtension() );
+			iq.addExtension( new SessionExtension() );
 
-			sessionIQ.callback = establishSession_response;
-			sessionIQ.errorCallback = establishSession_error;
+			iq.callback = establishSession_response;
+			iq.errorCallback = establishSession_error;
 
-			send( sessionIQ );
+			send( iq );
 		}
 
 		/**
@@ -827,13 +864,16 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Upon receiving a success indication within the SASL negotiation, the
+		 * client MUST send a new stream header to the server, to which the
+		 * server MUST respond with a stream header as well as a list of
+		 * available stream features.
 		 *
 		 * @param	response
 		 */
-		protected function handleAuthentication( response:XMLNode ):void
+		protected function handleAuthentication( response:XML ):void
 		{
-			var status:Object = auth.handleResponse( 0, XML( response.toString() ) );
+			var status:Object = auth.handleResponse( 0, response );
 
 			if ( status.authComplete )
 			{
@@ -845,7 +885,7 @@ package org.igniterealtime.xiff.core
 				else
 				{
 					// ? dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
-					dispatchError( "Authentication Error", "", "", 401 );
+					dispatchError( "not-authorized", "Authentication Error", "", 401 );
 					disconnect();
 				}
 			}
@@ -856,10 +896,10 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	challenge
 		 */
-		protected function handleChallenge( challenge:XMLNode ):void
+		protected function handleChallenge( challenge:XML ):void
 		{
 			var response:XML = auth.handleChallenge( 0, XML( challenge.toString() ) );
-			sendXML( response );
+			sendXML( response.toXMLString() );
 		}
 
 		/**
@@ -867,69 +907,59 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handleIQ( node:XMLNode ):IQ
+		protected function handleIQ( node:XML ):IQ
 		{
 			var iq:IQ = new IQ( null, null, "temp" );
+			iq.xml = node;
 
-			// Populate the IQ with the incoming data
-			if ( !iq.deserialize( node ) )
-			{
-				throw new SerializationException();
-			}
+			trace(getTimer() + " - handleIQ. iq: " + iq.toString());
 
 			// If it's an error, handle it
-			var callbackInfo:*;
+			var callbackInfo:Object;
 
+			// Start the callback for this IQ if one exists
+			if ( pendingIQs[ iq.id ] !== undefined )
+			{
+				callbackInfo = pendingIQs[ iq.id ];
+
+				if ( callbackInfo.func != null && iq.type != IQ.TYPE_ERROR)
+				{
+					callbackInfo.func( iq );
+				}
+				else if ( callbackInfo.errorFunc != null )
+				{
+					callbackInfo.errorFunc( iq );
+				}
+				pendingIQs[ iq.id ] = null;
+				delete pendingIQs[ iq.id ];
+			}
+				
+			// Before XML migration, the IQEvent was only triggered if there was no error and no callback.
 			if ( iq.type == IQ.TYPE_ERROR )
 			{
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
-
-				// Start the callback for this IQ if one exists
-				if ( pendingIQs[ iq.id ] !== undefined )
-				{
-					callbackInfo = pendingIQs[ iq.id ];
-
-					if ( callbackInfo.errorFunc != null )
-					{
-						callbackInfo.errorFunc( iq );
-					}
-					pendingIQs[ iq.id ] = null;
-					delete pendingIQs[ iq.id ];
-				}
 			}
 			else
 			{
-				// Start the callback for this IQ if one exists
-				if ( pendingIQs[ iq.id ] !== undefined )
+				var exts:Array = iq.getAllExtensions();
+				var len:uint = exts.length;
+
+				for ( var i:uint = 0; i < len; ++i )
 				{
-					callbackInfo = pendingIQs[ iq.id ];
+					// Static type casting
+					var ext:IExtension = exts[ i ] as IExtension;
+					trace(getTimer() + " - handleIQ. ext: " + ext);
 
-					if ( callbackInfo.func != null )
+					if ( ext != null )
 					{
-						callbackInfo.func( iq );
-					}
-					pendingIQs[ iq.id ] = null;
-					delete pendingIQs[ iq.id ];
-				}
-				else
-				{
-					var exts:Array = iq.getAllExtensions();
-
-					for ( var ns:String in exts )
-					{
-						// Static type casting
-						var ext:IExtension = exts[ ns ] as IExtension;
-
-						if ( ext != null )
-						{
-							var iqEvent:IQEvent = new IQEvent( ext.getNS() );
-							iqEvent.data = ext;
-							iqEvent.iq = iq;
-							dispatchEvent( iqEvent );
-						}
+						var iqEvent:IQEvent = new IQEvent( ext.getNS() );
+						iqEvent.data = ext;
+						iqEvent.iq = iq;
+						dispatchEvent( iqEvent );
 					}
 				}
 			}
+			
 			return iq;
 		}
 
@@ -938,15 +968,12 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handleMessage( node:XMLNode ):Message
+		protected function handleMessage( node:XML ):Message
 		{
+			trace(getTimer() + " - handleMessage. node: " + node.toXMLString());
+			
 			var message:Message = new Message();
-
-			// Populate with data
-			if ( !message.deserialize( node ) )
-			{
-				throw new SerializationException();
-			}
+			message.xml = node;
 
 			// ADDED in error handling for messages
 			if ( message.type == Message.TYPE_ERROR )
@@ -970,23 +997,24 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handleNodeType( node:XMLNode ):void
+		protected function handleNodeType( node:XML ):void
 		{
-			var nodeName:String = node.nodeName.toLowerCase();
+			var nodeName:String = String(node.localName()).toLowerCase();
+			
+			trace(getTimer() + " - handleNodeType. nodeName: " + nodeName);
 
 			switch( nodeName )
 			{
-				case "stream:stream":
-				case "flash:stream":
+				case "stream":
 					expireTagSearch = false;
 					handleStream( node );
 					break;
 
-				case "stream:error":
+				case "error":
 					handleStreamError( node );
 					break;
 
-				case "stream:features":
+				case "features":
 					handleStreamFeatures( node );
 					break;
 
@@ -1018,6 +1046,7 @@ package org.igniterealtime.xiff.core
 					break;
 
 				case "failure":
+					// Authentication failed.
 					// Might be also that the requested compression method is not available.
 					handleAuthentication( node );
 					break;
@@ -1025,12 +1054,12 @@ package org.igniterealtime.xiff.core
 				default:
 					// silently ignore lack of or unknown stanzas
 					// if the app designer wishes to handle raw data they
-					// can on "incomingData".
+					// can do it on "incomingData" event
 
 					// Use case: received null byte, XMLSocket parses empty document
 					// sends empty document
 
-					// I am enabling this for debugging
+					// I am enabling this for debugging. Who?
 					dispatchError( "undefined-condition", "Unknown Error", "modify", 500 );
 					break;
 			}
@@ -1041,7 +1070,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handlePresence( node:XMLNode ):Presence
+		protected function handlePresence( node:XML ):Presence
 		{
 			if ( !presenceQueueTimer )
 			{
@@ -1050,12 +1079,8 @@ package org.igniterealtime.xiff.core
 			}
 
 			var presence:Presence = new Presence();
-
-			// Populate
-			if ( !presence.deserialize( node ) )
-			{
-				throw new SerializationException();
-			}
+			presence.xml = node;
+			
 
 			if ( queuePresences )
 			{
@@ -1079,28 +1104,52 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handleStream( node:XMLNode ):void
+		protected function handleStream( node:XML ):void
 		{
-			sessionID = node.attributes.id;
-			domain = node.attributes.from;
+			sessionID = node.@id;
+			domain = node.@from;
 
-			for each ( var childNode:XMLNode in node.childNodes )
+			for each ( var child:XML in node.children() )
 			{
-				if ( childNode.nodeName == "stream:features" )
+				if ( child.localName() == "features" )
 				{
-					handleStreamFeatures( childNode );
+					handleStreamFeatures( child );
 				}
 			}
 		}
 
 		/**
-		 * @private
+		 * Handle stream error related element.
 		 *
-		 * @param	node
+		 * RFC 3920 (XMPP Core, published October 2004),
+		 * in chapters 4.7. defines Stream Errors:
+		 *
+		 * MUST contain a child element corresponding to one of the defined
+		 * stanza error conditions defined below; this element MUST be
+		 * qualified by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace.
+		 *
+		 * MAY contain a <text/> child containing XML character data that
+		 * describes the error in more detail; this element MUST be qualified
+		 * by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace and SHOULD
+		 * possess an 'xml:lang' attribute specifying the natural language of
+		 * the XML character data.
+		 *
+		 * @param	node Error node
+		 * @see http://xmpp.org/protocols/urn_ietf_params_xml_ns_xmpp-streams/
+		 * @see http://www.ietf.org/rfc/rfc3920.txt
 		 */
-		protected function handleStreamError( node:XMLNode ):void
+		protected function handleStreamError( node:XML ):void
 		{
-			dispatchError( "service-unavailable", "Remote Server Error", "cancel", 502 );
+			trace(getTimer() + " - handleStreamError. node: " + node.toXMLString());
+			var errorCondition:String = "service-unavailable";
+			if (node.children().length() > 0)
+			{
+				// Something from section 4.7.3. Defined Conditions
+				trace(getTimer() + " - handleStreamError. " + node.children()[0].localName());
+				errorCondition = node.children()[0].localName();
+			}
+			// TODO: There could be other types of errors available...
+			dispatchError( errorCondition, "Remote Server Error", "cancel", 502 );
 
 			// Cancel everything by closing connection
 			try
@@ -1120,27 +1169,105 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Handle features that are available in the connected server.
+		 *
+		 * <table>
+		 * <tbody>
+		 * <tr>
+		 * <th>Feature</th>
+		 * <th>XML Element</th>
+		 * <th>Description</th>
+		 * <th>Documentation</th>
+		 * </tr>
+		 * <tr>
+		 * <td>amp</td>
+		 * <td>&lt;amp xmlns='http://jabber.org/features/amp'&gt;</td><td>Support for Advanced Message Processing</td>
+		 * <td><a href="http://www.xmpp.org/extensions/xep-0079.html">XEP-0079: Advanced Message Processing</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>compress</td>
+		 * <td>&lt;compression xmlns='http://jabber.org/features/compress'&gt;</td>
+		 * <td>Support for Stream Compression</td>
+		 * <td><a href="http://www.xmpp.org/extensions/xep-0138.html">XEP-0138: Stream Compression</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>iq-auth</td>
+		 * <td>&lt;auth xmlns='http://jabber.org/features/iq-auth'&gt;</td>
+		 * <td>Support for Non-SASL Authentication</td>
+		 * <td><a href="http://www.xmpp.org/extensions/xep-0078.html">XEP-0078: Non-SASL Authentication</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>iq-register</td>
+		 * <td>&lt;register xmlns='http://jabber.org/features/iq-register'&gt;</td>
+		 * <td>Support for In-Band Registration</td>
+		 * <td><a href="http://www.xmpp.org/extensions/xep-0077.html">XEP-0077: In-Band Registration</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>bind</td>
+		 * <td>&lt;bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'&gt;</td>
+		 * <td>Support for Resource Binding</td>
+		 * <td><a href="http://www.ietf.org/rfc/rfc6120.txt">RFC 6120: XMPP Core</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>mechanisms</td>
+		 * <td>&lt;mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'&gt;</td>
+		 * <td>Support for Simple Authentication and Security Layer (SASL)</td>
+		 * <td><a href="http://www.ietf.org/rfc/rfc6120.txt">RFC 6120: XMPP Core</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>session</td><td>&lt;session xmlns='urn:ietf:params:xml:ns:xmpp-session'&gt;</td>
+		 * <td>Support for IM Session Establishment</td>
+		 * <td><a href="http://www.ietf.org/rfc/rfc6121.txt">RFC 6121: XMPP IM</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>starttls</td>
+		 * <td>&lt;starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'&gt;</td>
+		 * <td>Support for Transport Layer Security (TLS)</td>
+		 * <td><a href="http://www.ietf.org/rfc/rfc6120.txt">RFC 6120: XMPP Core</a></td>
+		 * </tr>
+		 * <tr>
+		 * <td>sm</td>
+		 * <td>&lt;sm xmlns='urn:xmpp:sm:3'&gt;</td><td>Support for Stream Management</td>
+		 * <td><a href="http://www.xmpp.org/extensions/xep-0198.html">XEP-0198: Stream Management</a></td>
+		 * </tr>
+		 * </tbody>
+		 * </table>
 		 *
 		 * @param	node
 		 *
 		 * @see http://xmpp.org/registrar/stream-features.html
 		 */
-		protected function handleStreamFeatures( node:XMLNode ):void
+		protected function handleStreamFeatures( node:XML ):void
 		{
 			if ( !loggedIn )
 			{
-				for each ( var feature:XMLNode in node.childNodes )
+				for each ( var feature:XML in node.children() )
 				{
-					if ( feature.nodeName == "starttls" )
+					var localName:String = feature.localName();
+					trace(getTimer() + " - handleStreamFeatures. feature: " + feature.toXMLString());
+					
+					switch (localName)
+					{
+						case "amp": break;
+						case "compression": break;
+						case "auth": break;
+						case "register": break;
+						case "bind": break;
+						case "mechanisms": break;
+						case "session": break;
+						case "starttls": break;
+						case "sm": break;
+					}
+					
+					if ( localName == "starttls" )
 					{
 						handleStreamTLS( feature );
 					}
-					else if ( feature.nodeName == "mechanisms" )
+					else if ( localName == "mechanisms" )
 					{
 						configureAuthMechanisms( feature );
 					}
-					else if ( feature.nodeName == "compression" )
+					else if ( localName == "compression" )
 					{
 						// zlib is the most common and the one which is required to be implemented.
 						if ( _compress )
@@ -1174,12 +1301,13 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node The feature containing starttls tag.
 		 */
-		protected function handleStreamTLS( node:XMLNode ):void
+		protected function handleStreamTLS( node:XML ):void
 		{
-			if ( node.firstChild && node.firstChild.nodeName == "required" )
+			if ( node.hasOwnProperty("required") )
 			{
 				// No TLS support yet
-				dispatchError( "TLS required", "The server requires TLS, but this feature is not implemented.", "cancel", 501 );
+				// policy-violation might be more proper condition...
+				dispatchError( "tls-required", "The server requires TLS. Please use XMPPTLSConnection.", "cancel", 501 );
 				disconnect();
 				return;
 			}
@@ -1229,7 +1357,7 @@ package org.igniterealtime.xiff.core
 		protected function onSocketConnected( event:Event ):void
 		{
 			active = true;
-			sendXML( openingStreamTag ); // String
+			sendXML( openingStreamTag );
 			var connectionEvent:ConnectionSuccessEvent = new ConnectionSuccessEvent();
 			dispatchEvent( connectionEvent );
 		}
@@ -1265,9 +1393,13 @@ package org.igniterealtime.xiff.core
 			}
 			bytedata.position = 0;
 			var data:String = bytedata.readUTFBytes( bytedata.length );
+			
+			trace(getTimer() + " - parseDataReceived. data: " + data);
 
 			var rawXML:String = incompleteRawXML + data;
 
+			trace(getTimer() + " - parseDataReceived. rawXML: " + rawXML);
+			
 			var rawData:ByteArray = new ByteArray();
 			rawData.writeUTFBytes( rawXML );
 
@@ -1275,61 +1407,65 @@ package org.igniterealtime.xiff.core
 
 			// parseXML is more strict in AS3 so we must check for the presence of flash:stream
 			// the unterminated tag should be in the first string of xml data retured from the server
-			// TODO: Use constants and the current setting against finding the start/end tags of stream.
-			if ( !expireTagSearch )
+			
+			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/RegExp.html
+			var regExpOpen:RegExp = new RegExp( "<" + openingStreamTagSearch );
+			var regExpOpenExec:Object = regExpOpen.exec( rawXML );
+			trace(getTimer() + " - parseDataReceived. regExpOpenExec: " + regExpOpenExec);
+			
+			var regExpClose:RegExp = new RegExp( closingStreamTag );
+			var regExpCloseExec:Object = regExpClose.exec( rawXML );
+			trace(getTimer() + " - parseDataReceived. regExpCloseExec: " + regExpCloseExec);
+			
+			// Create qualified XML if needed.
+			// Anything that is not wrapped to stream:stream will get wrapped to it.
+			if ( regExpOpenExec == null )
 			{
-				var pattern:RegExp = new RegExp( "<flash:stream" );
-				var resultObj:Object = pattern.exec( rawXML );
-
-				if ( resultObj != null ) // stop searching for unterminated node
-				{
-					rawXML = rawXML.concat( "</flash:stream>" );
-					expireTagSearch = true;
-				}
+				rawXML = openingStreamTag + rawXML;
 			}
-
-			if ( !expireTagSearch )
+			if ( regExpCloseExec == null )
 			{
-				var pattern2:RegExp = new RegExp( "<stream:stream" );
-				var resultObj2:Object = pattern2.exec( rawXML );
-
-				if ( resultObj2 != null ) // stop searching for unterminated node
-				{
-					rawXML = rawXML.concat( "</stream:stream>" );
-					expireTagSearch = true;
-				}
+				// What about when the opening tag is the only, and self closing?
+				rawXML = rawXML.concat( closingStreamTag );
 			}
-
-			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = _ignoreWhitespace;
+			
+			var isComplete:Boolean = false;
+			var xmlData:XML;
 
 			//error handling to catch incomplete xml strings that have
 			//been truncated by the socket
 			try
 			{
-				var isComplete:Boolean = true;
-				xmlData.parseXML( rawXML );
+				xmlData = new XML( rawXML );
+				isComplete = true;
 				incompleteRawXML = '';
 			}
 			catch( err:Error )
 			{
+				trace(getTimer() + " - parseDataReceived. err: " + err.message);
+			
 				//concatenate the raw xml to the previous xml
-				isComplete = false;
 				incompleteRawXML += data;
 			}
 
 			if ( isComplete )
 			{
+				// Add default namespace which is not usually included in XML from the server
+				xmlData.setNamespace(XMLStanza.DEFAULT_NS);
+				xmlData.normalize();
+				
+				trace(getTimer() + " - parseDataReceived. isComplete, thus xmlData: " + xmlData.toXMLString());
+			
 				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );
 
-				var len:uint = xmlData.childNodes.length;
+				var len:uint = xmlData.children().length();
 
 				for ( var i:int = 0; i < len; ++i )
 				{
 					// Read the data and send it to the appropriate parser
-					var currentNode:XMLNode = xmlData.childNodes[ i ];
+					var currentNode:XML = xmlData.children()[ i ];
 					handleNodeType( currentNode );
 				}
 			}
@@ -1340,7 +1476,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function restartStream():void
 		{
-			sendXML( openingStreamTag ); // String
+			sendXML( openingStreamTag );
 		}
 
 		/**
@@ -1382,15 +1518,11 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * @private
-		 * Data is untyped because it could be a string or XML.
-		 * TODO: Accept only XML.
 		 *
-		 * @param	data
+		 * @param	data XML that is not always complete for a reason, like sending the closing element
 		 */
-		protected function sendXML( data:* ):void
+		protected function sendXML( data:String ):void
 		{
-			data = data is XML ? XML( data ).toXMLString() : data;
-
 			var bytedata:ByteArray = new ByteArray();
 			bytedata.writeUTFBytes( data );
 
@@ -1439,6 +1571,8 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * The XMPP domain to use with the server.
+		 * User domain. Used as the server unless <code>server</code> is specifically set to something different.
+		 * @exampleText gmail.com
 		 */
 		public function get domain():String
 		{
@@ -1468,7 +1602,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Get the count of the received bytes.
+		 * Get the total count of the received bytes in the current session.
+		 * Mainly useful for tracking network traffic.
 		 */
 		public function get incomingBytes():uint
 		{
@@ -1489,7 +1624,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Get the count of current bytes sent by this connection
+		 * Get the total count of the bytes sent in the current session.
+		 * Mainly useful for tracking network traffic.
 		 */
 		public function get outgoingBytes():uint
 		{
@@ -1531,9 +1667,12 @@ package org.igniterealtime.xiff.core
 		public function set queuePresences( value:Boolean ):void
 		{
 			if ( _queuePresences && !value )
-			{ // if we are disabling queueing, handle all queued presence
+			{
+				// if we are disabling queueing, handle all queued presence
 				if ( presenceQueueTimer )
+				{
 					presenceQueueTimer.stop();
+				}
 
 				flushPresenceQueue( null );
 			}
@@ -1559,6 +1698,8 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * The XMPP server to use for connection.
+		 * Server to connect, could be different of the login/user domain.
+		 * @exampleText talk.google.com
 		 */
 		public function get server():String
 		{
@@ -1582,7 +1723,7 @@ package org.igniterealtime.xiff.core
 		}
 		public function set useAnonymousLogin( value:Boolean ):void
 		{
-			// set only if not connected
+			// Set only if not connected
 			if ( !isActive() )
 			{
 				_useAnonymousLogin = value;
@@ -1625,7 +1766,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * @private
-		 */		
+		 */
 		protected function get authenticationReady():Boolean
 		{
 			// Ready for authentication only after the possible compression

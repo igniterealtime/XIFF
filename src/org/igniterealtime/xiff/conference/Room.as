@@ -683,7 +683,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "kick_occupant_" ) );
-				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
+				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.xml );
 				adminExt.addItem( null, MUC.ROLE_NONE, occupantNick, null, null, reason );
 				iq.addExtension( adminExt );
 				_connection.send( iq );
@@ -831,7 +831,7 @@ package org.igniterealtime.xiff.conference
 			if ( isActive )
 			{
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "voice_" ) );
-				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.getNode() );
+				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.xml );
 				adminExt.addItem( null, voice ? MUC.ROLE_PARTICIPANT : MUC.ROLE_VISITOR, occupantNick );
 				iq.addExtension( adminExt );
 				_connection.send( iq );
@@ -1107,7 +1107,7 @@ package org.igniterealtime.xiff.conference
 							if ( presence.type == Presence.TYPE_UNAVAILABLE && isActive &&
 								isThisUser( presence.from.unescaped ))
 							{
-								//trace("Room: becoming inactive: " + presence.getNode());
+								//trace("Room: becoming inactive: " + presence.xml);
 								setActive( false );
 								if ( userExt.type == MUCUserExtension.TYPE_DESTROY )
 								{
