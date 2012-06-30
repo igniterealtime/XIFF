@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,16 +26,21 @@
 package org.igniterealtime.xiff.data.browse
 {
 	
-	
-	
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
 	 * Class that representes a child resource of a browsed resource.
+	 *
+	 * <p>XEP-0011: Jabber Browsing (obsolete)</p>
+	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class BrowseItem extends XMLStanza implements ISerializable
 	{
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function BrowseItem(parent:XML)
 		{
 			super();

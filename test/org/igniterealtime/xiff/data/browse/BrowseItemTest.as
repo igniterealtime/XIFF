@@ -23,45 +23,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.disco
+package org.igniterealtime.xiff.data.browse
 {
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ISerializable;
-
+	import org.flexunit.asserts.*;
 	
-
-	/**
-	 * Base class for service discovery extensions.
-	 * @see http://xmpp.org/protocols/disco/
-	 * @see http://xmpp.org/extensions/xep-0030.html
-	 */
-	public class DiscoExtension extends Extension implements ISerializable
+	public class BrowseItemTest
 	{
-		public static const NS:String = "http://jabber.org/protocol/disco";
-		public static const ELEMENT_NAME:String = "query";
-
-		/**
-		 * The name of the resource of the service queried if the resource
-		 * doesn't have a JID. For more information, see
-		 * <a href="http://www.jabber.org/registrar/disco-nodes.html">
-		 * http://www.jabber.org/registrar/disco-nodes.html</a>.
-		 */
-		public function DiscoExtension( parent:XML )
+		
+		
+		[Test( description="jid value" )]
+		public function testValueJid():void
 		{
-			super( parent );
+			var testValue:String = "plain@text.jid/FullSand";
+			
+			var ext:BrowseExtension = new BrowseExtension();
+			ext.jid = testValue;
+			
+			assertEquals( testValue, ext.jid );
 		}
-
-		/**
-		 *
-		 */
-		public function get node():String
+		
+		[Test( description="category value" )]
+		public function testValueCategory():void
 		{
-			return xml.@node;
+			var testValue:String = "plain@text.jid/FullSand";
+			
+			var ext:BrowseExtension = new BrowseExtension();
+			ext.category = testValue;
+			
+			assertEquals( testValue, ext.category );
 		}
-		public function set node( value:String ):void
+		
+		[Test( description="XML element name and namespace checking" )]
+		public function testElement():void
 		{
-			xml.@node = value;
+			var elementName:String = "item";
+			
+			var ext:BrowseItem = new BrowseItem();
+			var node:XML = ext.xml;
+			
+			assertEquals( elementName, node.localName() );
 		}
-
+		
 	}
 }
