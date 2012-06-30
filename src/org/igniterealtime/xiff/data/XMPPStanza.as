@@ -52,6 +52,7 @@ package org.igniterealtime.xiff.data
 		
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
+		public static const NAMESPACE_BOSH:String = "urn:xmpp:xbosh";
 		public static const XML_LANG:String = "en";
 				
 		// Are these static variables needed also in AS3?

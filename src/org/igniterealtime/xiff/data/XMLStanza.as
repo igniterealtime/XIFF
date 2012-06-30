@@ -68,6 +68,12 @@ package org.igniterealtime.xiff.data
 		 */
 		public function getField( name:String ):String
 		{
+			if ( xml[name] )
+			{
+				return xml[name];
+			}
+			
+			// Namespaces confuse
 			var list:XMLList = xml.children().(localName() == name);
 			
 			if ( list.length() > 0 )
@@ -75,11 +81,6 @@ package org.igniterealtime.xiff.data
 				return list[0];
 			}
 			
-			// Namespaces confuse
-			if ( xml[name] )
-			{
-				return xml[name];
-			}
 			
 			return null;
 		}
@@ -91,12 +92,10 @@ package org.igniterealtime.xiff.data
 		 */
 		public function setField( name:String, value:String ):void
 		{
-			var list:XMLList = xml.children().(localName() == name);
-			
-			trace("setField. name: " + name + ", value: " + value + ", list: " + list);
-			
 			if ( value == null )
 			{
+				delete xml[name];
+				var list:XMLList = xml.children().(localName() == name);
 				if ( list.length() > 0 )
 				{
 					delete list[0];
@@ -115,15 +114,15 @@ package org.igniterealtime.xiff.data
 		 */
 		public function getAttribute( name:String ):String
 		{
+			if ( xml.@[name] )
+			{
+				return xml.@[name];
+			}
+			// Namespaces confuse
 			var list:XMLList = xml.attribute( name );
 			if ( list.length() > 0 )
 			{
 				return list[0];
-			}
-			// Namespaces confuse
-			if ( xml.@[name] )
-			{
-				return xml.@[name];
 			}
 			
 			return null;
@@ -136,9 +135,10 @@ package org.igniterealtime.xiff.data
 		 */
 		public function setAttribute( name:String, value:String ):void
 		{
-			var list:XMLList = xml.attribute( name);
 			if ( value == null )
 			{
+				delete xml.@[name];
+				var list:XMLList = xml.attribute( name);
 				if ( list.length() > 0 )
 				{
 					delete list[0];

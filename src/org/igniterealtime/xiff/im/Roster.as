@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -104,6 +104,8 @@ package org.igniterealtime.xiff.im
 	 * this class uses an internal data provider to keep track of roster data locally and
 	 * provides a "read-only" form of the Data Provider API for external use. Non-read operations
 	 * are performed using alternative, roster-specific methods.
+	 *
+	 * @see http://www.ietf.org/rfc/rfc3921.txt
 	 */
 	public class Roster extends ArrayCollection implements IRoster
 	{
@@ -190,8 +192,7 @@ package org.igniterealtime.xiff.im
 
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod );
 			var ext:RosterExtension = new RosterExtension( iq.xml );
-			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] :
-						 null );
+			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] : null );
 			iq.addExtension( ext );
 			_connection.send( iq );
 
@@ -212,7 +213,7 @@ package org.igniterealtime.xiff.im
 
 			if ( pendingSubscriptionRequests.hasOwnProperty( iqID ) )
 			{
-				var subscriptionId : UnescapedJID = pendingSubscriptionRequests[ iqID ] as UnescapedJID;
+				var subscriptionId:UnescapedJID = pendingSubscriptionRequests[ iqID ] as UnescapedJID;
 				requestSubscription( subscriptionId );
 				delete( pendingSubscriptionRequests[ iqID ] );
 			}
@@ -772,7 +773,6 @@ package org.igniterealtime.xiff.im
 		{
 			return _connection;
 		}
-
 		public function set connection( value:IXMPPConnection ):void
 		{
 			_connection = value;

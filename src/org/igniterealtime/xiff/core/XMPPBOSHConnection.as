@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,7 +86,7 @@ package org.igniterealtime.xiff.core
 		 * Keys should match URLRequestMethod constants.
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestMethod.html
 		 */
-		private static const headers:Object = {
+		private static const HEADERS:Object = {
 			"POST": [],
 			"GET": [ 'Cache-Control',
 					 'no-store',
@@ -97,23 +97,12 @@ package org.igniterealtime.xiff.core
 
 		private var _boshPath:String = "http-bind/";
 
-		/**
-		 * This attribute specifies the maximum number of requests the connection
-		 * manager is allowed to keep waiting at any one time during the session.
-		 * If the client is not able to use HTTP Pipelining then this SHOULD be set to "1".
-		 */
 		private var _hold:uint = 1;
 
 		private var _maxConcurrentRequests:uint = 2;
 
 		private var _secure:Boolean;
 
-		/**
-		 * This attribute specifies the longest time (in seconds) that the connection
-		 * manager is allowed to wait before responding to any request during the session.
-		 * This enables the client to limit the delay before it discovers any network
-		 * failure, and to prevent its HTTP/TCP connection from expiring due to inactivity.
-		 */
 		private var _wait:uint = 20;
 
 		/**
@@ -173,7 +162,7 @@ package org.igniterealtime.xiff.core
 			var attrs:Object = {
 				"xml:lang": XMPPStanza.XML_LANG,
 				"xmlns": "http://jabber.org/protocol/httpbind",
-				"xmlns:xmpp": "urn:xmpp:xbosh",
+				"xmlns:xmpp": XMPPStanza.NAMESPACE_BOSH,
 				"xmpp:version": XMPPStanza.CLIENT_VERSION,
 				"hold": hold,
 				"rid": nextRID,
@@ -184,7 +173,13 @@ package org.igniterealtime.xiff.core
 			};
 			
 			var result:XML = <{ ELEMENT_NAME }/>;
-			result.attributes = attrs;
+			for (var key:String in attrs)
+			{
+				if (attrs.hasOwnProperty(key))
+				{
+					result.@[ key ] = attrs[ key ];
+				}
+			}
 			
 			sendRequests( result );
 
@@ -217,7 +212,7 @@ package org.igniterealtime.xiff.core
 			pollingEnabled = false;
 
 			var data:XML = createRequest();
-			data.attributes[ "pause" ] = seconds;
+			data.@pause = seconds;
 			sendRequests( data );
 
 			var pauseTimer:Timer = new Timer( (seconds * 1000) - 2000, 1 );
@@ -233,9 +228,9 @@ package org.igniterealtime.xiff.core
 		 */
 		public function processConnectionResponse( responseBody:XML ):void
 		{
-			dispatchEvent( new ConnectionSuccessEvent());
+			dispatchEvent( new ConnectionSuccessEvent() );
 
-			var attr:Object = responseBody.attributes;
+			var attr:XMLList = responseBody.attributes();
 
 			sid = attr.sid;
 			wait = attr.wait;
@@ -276,10 +271,21 @@ package org.igniterealtime.xiff.core
 		override protected function restartStream():void
 		{
 			var data:XML = createRequest();
-			data.attributes[ "xmpp:restart" ] = "true";
-			data.attributes[ "xmlns:xmpp" ] = "urn:xmpp:xbosh";
-			data.attributes[ "xml:lang" ] = "en";
-			data.attributes[ "to" ] = domain;
+			
+			var attrs:Object = {
+				"xmpp:restart": "true",
+				"xmlns:xmpp": XMPPStanza.NAMESPACE_BOSH,
+				"xml:lang": XMPPStanza.XML_LANG,
+				"to": domain
+			};
+			
+			for (var key:String in attrs)
+			{
+				if (attrs.hasOwnProperty(key))
+				{
+					data.@[ key ] = attrs[ key ];
+				}
+			}
 			sendRequests( data );
 			streamRestarted = true;
 		}
@@ -310,7 +316,7 @@ package org.igniterealtime.xiff.core
 		 * @return
 		 */
 		private function createRequest( bodyContent:Array = null ):XML
-		{			
+		{
 			var elem:XML = <{ ELEMENT_NAME }/>;
 			elem.setNamespace( "http://jabber.org/protocol/httpbind" );
 			elem.@rid = nextRID;
@@ -369,13 +375,13 @@ package org.igniterealtime.xiff.core
 				bindConnection();
 			}
 
-			if ( bodyNode.attributes[ "type" ] == "terminate" )
+			if ( bodyNode.@type == "terminate" )
 			{
-				dispatchError( "BOSH Error", bodyNode.attributes[ "condition" ], "", -1 );
+				dispatchError( "BOSH Error", bodyNode.@condition, "", -1 );
 				active = false;
 			}
 
-			if ( bodyNode.attributes[ "sid" ] && !loggedIn )
+			if ( bodyNode.@sid && !loggedIn )
 			{
 				processConnectionResponse( bodyNode );
 
@@ -417,8 +423,7 @@ package org.igniterealtime.xiff.core
 			 * We shouldn't poll if the connection is dead, if we had requests
 			 * to send instead, or if there's already one in progress
 			 */
-			if ( !isActive() || !pollingEnabled || sendQueuedRequests() || requestCount >
-				0 )
+			if ( !isActive() || !pollingEnabled || sendQueuedRequests() || requestCount > 0 )
 			{
 				return;
 			}
@@ -521,7 +526,7 @@ package org.igniterealtime.xiff.core
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
-			req.requestHeaders = headers[ req.method ];
+			req.requestHeaders = HEADERS[ req.method ];
 			req.data = byteData;
 			
 			var loader:URLLoader = new URLLoader();
@@ -569,7 +574,10 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 *
+		 * This attribute specifies the longest time (in seconds) that the connection
+		 * manager is allowed to wait before responding to any request during the session.
+		 * This enables the client to limit the delay before it discovers any network
+		 * failure, and to prevent its HTTP/TCP connection from expiring due to inactivity.
 		 */
 		public function get wait():uint
 		{
@@ -594,7 +602,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 *
+		 * This attribute specifies the maximum number of requests the connection
+		 * manager is allowed to keep waiting at any one time during the session.
+		 * If the client is not able to use HTTP Pipelining then this SHOULD be set to "1".
 		 */
 		public function get hold():uint
 		{
@@ -610,12 +620,12 @@ package org.igniterealtime.xiff.core
 		 */
 		public function get httpServer():String
 		{
-			return ( secure ? "https" : "http" ) + "://" + server + ":" + port +
-				"/" + boshPath;
+			return ( secure ? "https" : "http" ) + "://" +
+				server + ":" + port + "/" + boshPath;
 		}
 
 		/**
-		 *
+		 * Defaults to 2
 		 */
 		public function get maxConcurrentRequests():uint
 		{

@@ -542,7 +542,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function addIQCallbackToPending( id:String, callback:Function, errorCallback:Function ):void
 		{
-			trace(getTimer() + " - addIQCallbackToPending. id: " + id);
 			pendingIQs[ id ] = { func: callback, errorFunc: errorCallback };
 		}
 
@@ -604,13 +603,8 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function bindConnection_response( iq:IQ ):void
 		{
-			trace(getTimer() + " - bindConnection_response. iq: " + iq.toString());
-			
 			var bind:BindExtension = iq.getExtension( "bind" ) as BindExtension;
-			trace(getTimer() + " - bindConnection_response. bind: " + bind.toString());
-			
 			var jid:EscapedJID = bind.jid;
-			trace(getTimer() + " - bindConnection_response. jid: " + jid);
 			
 			if (jid != null)
 			{
@@ -619,6 +613,10 @@ package org.igniterealtime.xiff.core
 				_domain = jid.unescaped.domain;
 				
 				establishSession();
+			}
+			else
+			{
+				dispatchError("bind-failed", "BindExtension came without a JID", null, 401);
 			}
 		}
 
@@ -709,7 +707,6 @@ package org.igniterealtime.xiff.core
 			for each ( var mechanism:XML in mechanisms.children() )
 			{
 				var authName:String = mechanism.toString();
-				trace(getTimer() + " - configureAuthMechanisms. authName: " + authName);
 				
 				AuthClass = SASL_MECHANISMS[ authName ];
 
@@ -912,8 +909,6 @@ package org.igniterealtime.xiff.core
 			var iq:IQ = new IQ( null, null, "temp" );
 			iq.xml = node;
 
-			trace(getTimer() + " - handleIQ. iq: " + iq.toString());
-
 			// If it's an error, handle it
 			var callbackInfo:Object;
 
@@ -948,7 +943,6 @@ package org.igniterealtime.xiff.core
 				{
 					// Static type casting
 					var ext:IExtension = exts[ i ] as IExtension;
-					trace(getTimer() + " - handleIQ. ext: " + ext);
 
 					if ( ext != null )
 					{
@@ -1140,7 +1134,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleStreamError( node:XML ):void
 		{
-			trace(getTimer() + " - handleStreamError. node: " + node.toXMLString());
 			var errorCondition:String = "service-unavailable";
 			if (node.children().length() > 0)
 			{
@@ -1244,7 +1237,6 @@ package org.igniterealtime.xiff.core
 				for each ( var feature:XML in node.children() )
 				{
 					var localName:String = feature.localName();
-					trace(getTimer() + " - handleStreamFeatures. feature: " + feature.toXMLString());
 					
 					switch (localName)
 					{
@@ -1331,7 +1323,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function onSecurityError( event:SecurityErrorEvent ):void
 		{
-			trace( "there was a security error of type: " + event.type + "\nError: " + event.text );
 			dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 		}
 
@@ -1394,11 +1385,7 @@ package org.igniterealtime.xiff.core
 			bytedata.position = 0;
 			var data:String = bytedata.readUTFBytes( bytedata.length );
 			
-			trace(getTimer() + " - parseDataReceived. data: " + data);
-
 			var rawXML:String = incompleteRawXML + data;
-
-			trace(getTimer() + " - parseDataReceived. rawXML: " + rawXML);
 			
 			var rawData:ByteArray = new ByteArray();
 			rawData.writeUTFBytes( rawXML );
@@ -1411,11 +1398,9 @@ package org.igniterealtime.xiff.core
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/RegExp.html
 			var regExpOpen:RegExp = new RegExp( "<" + openingStreamTagSearch );
 			var regExpOpenExec:Object = regExpOpen.exec( rawXML );
-			trace(getTimer() + " - parseDataReceived. regExpOpenExec: " + regExpOpenExec);
 			
 			var regExpClose:RegExp = new RegExp( closingStreamTag );
 			var regExpCloseExec:Object = regExpClose.exec( rawXML );
-			trace(getTimer() + " - parseDataReceived. regExpCloseExec: " + regExpCloseExec);
 			
 			// Create qualified XML if needed.
 			// Anything that is not wrapped to stream:stream will get wrapped to it.
@@ -1454,8 +1439,6 @@ package org.igniterealtime.xiff.core
 				xmlData.setNamespace(XMLStanza.DEFAULT_NS);
 				xmlData.normalize();
 				
-				trace(getTimer() + " - parseDataReceived. isComplete, thus xmlData: " + xmlData.toXMLString());
-			
 				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );

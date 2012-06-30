@@ -371,7 +371,7 @@ package org.igniterealtime.xiff.data
 			var stamp:Date;
 			var list:XMLList = xml.children().(localName() == "delay");
 			var legacy:XMLList = xml.children().(localName() == "x");
-			
+						
 			if (list.length() > 0 && list[0].attribute("stamp").length() > 0)
 			{
 				// Current
@@ -380,12 +380,13 @@ package org.igniterealtime.xiff.data
 				
 				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
 			}
-			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 &&
-				legacy[0].attribute("xmlns") == "jabber:x:delay")
+			else if ((xml.x.length() > 0 && xml.x.@xmlns == "jabber:x:delay") ||
+				(legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 &&
+				legacy[0].attribute("xmlns") == "jabber:x:delay"))
 			{
 				// Legacy
 				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
-				var value:String = legacy[0].attribute("stamp")[0];
+				var value:String = xml.x.@stamp || legacy[0].attribute("stamp")[0];
 				trace("Message used 'x' as defined in XEP-0091.");
 				
 				stamp = DateTimeParser.string2time(value.split("T").pop());

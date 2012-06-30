@@ -36,7 +36,8 @@ package org.igniterealtime.xiff.privatedata
 	import org.igniterealtime.xiff.util.Callback;
 
 	/**
-	 *
+	 * XEP-0049: Private XML Storage
+	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataManager extends EventDispatcher
 	{
