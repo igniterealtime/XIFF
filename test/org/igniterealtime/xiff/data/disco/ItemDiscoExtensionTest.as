@@ -27,16 +27,16 @@ package org.igniterealtime.xiff.data.disco
 {
 	import org.flexunit.asserts.*;
 	
-	public class DiscoExtensionTest
+	public class ItemDiscoExtensionTest
 	{
 		
 		
 		[Test( description="node value" )]
 		public function testValueNode():void
 		{
-			var testValue:String = "http://jabber.org/protocol/commands";
+			var testValue:String = "music";
 			
-			var ext:DiscoExtension = new DiscoExtension();
+			var ext:ItemDiscoExtension = new ItemDiscoExtension();
 			ext.node = testValue;
 			
 			assertEquals( testValue, ext.node );
@@ -45,10 +45,10 @@ package org.igniterealtime.xiff.data.disco
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
 		{
-			var nameSpace:String = "http://jabber.org/protocol/disco";
+			var nameSpace:String = "http://jabber.org/protocol/disco#items";
 			var elementName:String = "query";
 			
-			var ext:DiscoExtension = new DiscoExtension();
+			var ext:ItemDiscoExtension = new ItemDiscoExtension();
 			var node:XML = ext.xml;
 			
 			assertEquals( nameSpace, node.namespace().uri );
@@ -58,11 +58,11 @@ package org.igniterealtime.xiff.data.disco
 		[Test( description="parse from XML" )]
 		public function testParseShowDnd():void
 		{
-			var incoming:XML = <query xmlns='http://jabber.org/protocol/disco#info'
-				node='http://jabber.org/protocol/commands'/>;
-			var testValue:String = "http://jabber.org/protocol/commands";
+			var incoming:XML = <query xmlns='http://jabber.org/protocol/disco#items'
+				node='music'/>;
+			var testValue:String = "music";
 			
-			var ext:BindExtension = new BindExtension();
+			var ext:ItemDiscoExtension = new ItemDiscoExtension();
 			ext.xml = incoming;
 			
 			assertEquals( testValue, ext.node );

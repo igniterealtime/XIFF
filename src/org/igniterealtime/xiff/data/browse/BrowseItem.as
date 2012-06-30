@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.browse
 		 *
 		 * @param	parent
 		 */
-		public function BrowseItem(parent:XML)
+		public function BrowseItem( parent:XML )
 		{
 			super();
 			xml.setLocalName( "item" );

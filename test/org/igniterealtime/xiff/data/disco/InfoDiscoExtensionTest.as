@@ -23,51 +23,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.browse
+package org.igniterealtime.xiff.data.disco
 {
 	import org.flexunit.asserts.*;
 	
-	public class BrowseExtensionTest
+	public class InfoDiscoExtensionTest
 	{
 		
-		
-		[Test( description="items value" )]
-		public function testValueResource():void
+		/*
+		[Test( description="node value" )]
+		public function testValueNode():void
 		{
-			var testValue:BrowseItem = new BrowseItem(<empty/>);
+			var testValue:String = "music";
 			
-			var ext:BrowseExtension = new BrowseExtension();
-			ext.addItem(testValue);
+			var ext:InfoDiscoExtension = new InfoDiscoExtension();
+			ext.node = testValue;
 			
-			assertEquals( [testValue], ext.items );
+			assertEquals( testValue, ext.node );
 		}
+		*/
 		
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
 		{
-			var nameSpace:String = "jabber:iq:browse";
+			var nameSpace:String = "http://jabber.org/protocol/disco#info";
 			var elementName:String = "query";
 			
-			var ext:BrowseExtension = new BrowseExtension();
+			var ext:InfoDiscoExtension = new InfoDiscoExtension();
 			var node:XML = ext.xml;
 			
 			assertEquals( nameSpace, node.namespace().uri );
 			assertEquals( elementName, node.localName() );
 		}
 	
-		/*
 		[Test( description="parse from XML" )]
 		public function testParseShowDnd():void
 		{
-			var incoming:XML = ;
-			var testValue:String = "dnd";
+			var incoming:XML = <query xmlns='http://jabber.org/protocol/disco#info'>
+				<identity
+					category='client'
+					type='pc'
+					name='Gabber'/>
+				<feature var='jabber:iq:time'/>
+				<feature var='jabber:iq:version'/>
+			  </query>;
+			var testValue:int = 2;
 			
-			var ext:BindExtension = new BindExtension();
+			var ext:InfoDiscoExtension = new InfoDiscoExtension();
 			ext.xml = incoming;
 			
-			assertEquals( testValue, ext.show );
+			assertEquals( testValue, ext.features.length );
 		}
-		*/
 		
 	}
 }

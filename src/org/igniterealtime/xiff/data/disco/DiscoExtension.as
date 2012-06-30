@@ -27,7 +27,6 @@ package org.igniterealtime.xiff.data.disco
 {
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ISerializable;
-
 	
 
 	/**

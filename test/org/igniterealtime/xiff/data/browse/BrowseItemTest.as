@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var testValue:String = "plain@text.jid/FullSand";
 			
-			var ext:BrowseExtension = new BrowseExtension();
+			var ext:BrowseItem = new BrowseItem(<empty/>);
 			ext.jid = testValue;
 			
 			assertEquals( testValue, ext.jid );
@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var testValue:String = "plain@text.jid/FullSand";
 			
-			var ext:BrowseExtension = new BrowseExtension();
+			var ext:BrowseItem = new BrowseItem(<empty/>);
 			ext.category = testValue;
 			
 			assertEquals( testValue, ext.category );
@@ -58,7 +58,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var elementName:String = "item";
 			
-			var ext:BrowseItem = new BrowseItem();
+			var ext:BrowseItem = new BrowseItem(<empty/>);
 			var node:XML = ext.xml;
 			
 			assertEquals( elementName, node.localName() );

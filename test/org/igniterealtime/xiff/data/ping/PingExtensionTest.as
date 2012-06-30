@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.data.ping
 			var nameSpace:String = "urn:xmpp:ping";
 			var elementName:String = "ping";
 		
-			var ext:BindExtension = new BindExtension();
+			var ext:PingExtension = new PingExtension();
 			var node:XML = ext.xml;
 			
 			assertEquals( nameSpace, node.namespace().uri );
