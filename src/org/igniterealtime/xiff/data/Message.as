@@ -261,11 +261,11 @@ package org.igniterealtime.xiff.data
 			super.xml = node;
 			
 			
-			// TODO: Remember to handle
-			if (node.hasOwnProperty("x") && node.x.@xmlns == MUCUserExtension.NS)
+			var list:XMLList = node.children().(localName() == "x");
+			if (list.length() > 0 && list[0].@xmlns == MUCUserExtension.NS)
 			{
 				var mucUserExtension:MUCUserExtension = new MUCUserExtension(xml);
-				mucUserExtension.xml = node.x;
+				mucUserExtension.xml = list[0];
 				addExtension(mucUserExtension);
 			}
 		}
@@ -278,7 +278,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get body():String
 		{
-			return getAttribute("body");
+			return getField("body");
 		}
 		public function set body( value:String ):void
 		{
@@ -327,7 +327,8 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get subject():String
 		{
-			return getAttribute("subject");
+			//return xml.subject;
+			return getField("subject");
 		}
 		public function set subject( value:String ):void
 		{
@@ -343,7 +344,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get thread():String
 		{
-			return getAttribute("thread");
+			return getField("thread");
 		}
 		public function set thread( value:String ):void
 		{

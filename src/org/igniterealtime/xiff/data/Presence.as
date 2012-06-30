@@ -171,7 +171,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get show():String
 		{
-			return getAttribute("show");
+			return getField("show");
 		}
 		public function set show( value:String ):void
 		{
@@ -203,7 +203,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get status():String
 		{
-			return getAttribute("status");
+			return getField("status");
 		}
 		public function set status( value:String ):void
 		{

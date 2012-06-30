@@ -189,7 +189,10 @@ package org.igniterealtime.xiff.data
 					
 					trace("xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
 					
-					//nNamespace = nNamespace != null ? nNamespace : CLIENT_NAMESPACE;
+					if (nNamespace.uri == null || nNamespace.uri == "")
+					{
+						nNamespace = new Namespace(null, CLIENT_NAMESPACE);
+					}
 					
 					if ( nName != "error" )
 					{

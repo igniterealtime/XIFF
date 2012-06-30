@@ -69,9 +69,16 @@ package org.igniterealtime.xiff.data
 		public function getField( name:String ):String
 		{
 			var list:XMLList = xml.children().(localName() == name);
+			
 			if ( list.length() > 0 )
 			{
 				return list[0];
+			}
+			
+			// Namespaces confuse
+			if ( xml[name] )
+			{
+				return xml[name];
 			}
 			
 			return null;
@@ -113,6 +120,11 @@ package org.igniterealtime.xiff.data
 			{
 				return list[0];
 			}
+			// Namespaces confuse
+			if ( xml.@[name] )
+			{
+				return xml.@[name];
+			}
 			
 			return null;
 		}
@@ -134,7 +146,7 @@ package org.igniterealtime.xiff.data
 			}
 			else
 			{
-				xml.attribute(name)[0] = value;
+				xml.@[name] = value;
 			}
 		}
 		
