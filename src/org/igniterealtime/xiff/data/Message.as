@@ -278,23 +278,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get body():String
 		{
-			var list:XMLList = xml.children().(localName() == "body");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("body");
 		}
 		public function set body( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.body;
-			}
-			else
-			{
-				xml.body = value;
-			}
+			setField("body", value);
 		}
 		
 		/**
@@ -339,23 +327,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get subject():String
 		{
-			var list:XMLList = xml.children().(localName() == "subject");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("subject");
 		}
 		public function set subject( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.subject;
-			}
-			else
-			{
-				xml.subject = value;
-			}
+			setField("subject", value);
 		}
 	
 		/**
@@ -367,28 +343,18 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get thread():String
 		{
-			var list:XMLList = xml.children().(localName() == "thread");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("thread");
 		}
 		public function set thread( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.thread;
-			}
-			else
-			{
-				xml.thread = value;
-			}
+			setField("thread", value);
 		}
 		
 		/**
 		 * Time of the message in case of a delay. Used only for messages
 		 * which were sent while user was offline.
+		 *
+		 * <p>Can be set only via XML as the value should come from the server.</p>
 		 *
 		 * <p>There are two ways that might be possible coming from the server,
 		 * XEP-0203 or XEP-0091, of which the latter is legacy.</p>

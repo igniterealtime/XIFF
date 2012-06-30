@@ -53,7 +53,7 @@ package org.igniterealtime.xiff.data.im
 			
 			xml.setLocalName(ELEMENT_NAME);
 			
-			if ( exists( parent ) ) 
+			if ( parent != null ) 
 			{
 				parent.appendChild( xml );
 			}

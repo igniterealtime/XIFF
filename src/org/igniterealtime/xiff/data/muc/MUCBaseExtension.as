@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -103,12 +103,16 @@ package org.igniterealtime.xiff.data.muc
 		{
 			var item:MUCItem = new MUCItem(xml);
 	
-			if (exists(affiliation)){ item.affiliation = affiliation; }
-			if (exists(role)) 		{ item.role = role; }
-			if (exists(nick)) 		{ item.nick = nick; }
-			if (exists(jid)) 		{ item.jid = jid; }
-			if (exists(actor)) 		{ item.actor = new EscapedJID(actor); }
-			if (exists(reason)) 	{ item.reason = reason; }
+			item.affiliation = affiliation;
+			item.role = role;
+			item.nick = nick;
+			item.jid = jid;
+			item.reason = reason;
+			
+			if (actor != null)
+			{
+				item.actor = new EscapedJID(actor);
+			}
 			
 			_items.push(item);
 			return item;

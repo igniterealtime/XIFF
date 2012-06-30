@@ -160,19 +160,19 @@ package org.igniterealtime.xiff.data.im
 		{
 			var item:RosterItem = new RosterItem( xml );
 			
-			if ( exists( jid ) )
+			if ( jid != null )
 			{
 				item.jid = jid;
 			}
-			if ( exists( subscription ) )
+			if ( subscription != "" )
 			{
 				item.subscription = subscription;
 			}
-			if ( exists( displayName ) )
+			if ( displayName != "" )
 			{
 				item.name = displayName;
 			}
-			if ( exists( groups ) )
+			if ( groups != null )
 			{
 				for each( var group:String in groups )
 				{

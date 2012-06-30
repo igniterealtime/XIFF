@@ -32,6 +32,12 @@ package org.igniterealtime.xiff.data
 	 */
 	public interface IXMLStanza extends IExtendable
 	{
+		function getField( name:String ):String;
+		function setField( name:String, value:String ):void;
+		
+		function getAttribute( name:String ):String;
+		function setAttribute( name:String, value:String ):void;
+		
 		function toString():String;
 	}
 }

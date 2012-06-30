@@ -5,14 +5,14 @@ package org.igniterealtime.xiff.data.disco
 
 	
 	/**
-	 * 
+	 *
 	 */
 	public class DiscoItem extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "item";
 
 		/**
-		 * 
+		 *
 		 * @param	parent
 		 */
 		public function DiscoItem( parent:XML=null )
@@ -21,7 +21,7 @@ package org.igniterealtime.xiff.data.disco
 
 			xml.setLocalName( ELEMENT_NAME );
 
-			if( exists( parent ) )
+			if( parent != null )
 			{
 				parent.appendChild( xml );
 			}
@@ -33,39 +33,39 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public function get jid():String
 		{
-			return xml.@jid;
+			return getAttribute("jid");
 		}
 		public function set jid( value:String ):void
 		{
-			xml.@jid = value;
+			setAttribute("jid", value);
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 		public function set name( value:String ):void
 		{
-			xml.@name = value;
+			setAttribute("name", value);
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public function get node():String
 		{
-			return xml.@node;
+			return getAttribute("node");
 		}
 		public function set node( value:String ):void
 		{
-			xml.@node = value;
+			setAttribute("node", value);
 		}
 
 	}

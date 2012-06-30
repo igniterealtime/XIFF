@@ -171,13 +171,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get show():String
 		{
-			var list:XMLList = xml.children().(localName() == "show");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			
-			return null;
+			return getAttribute("show");
 		}
 		public function set show( value:String ):void
 		{
@@ -190,49 +184,40 @@ package org.igniterealtime.xiff.data
 				throw new Error("Invalid show value: " + value + " for Presence");
 			}
 			
-			if ( value == null )
-			{
-				delete xml.show;
-			}
-			else
-			{
-				xml.show = value;
-			}
+			setField("show", value);
 		}
 		
 		/**
 		 * The status; usually used for "away messages."
 		 *
+		 * <p>The OPTIONAL status element contains XML character data specifying
+		 * a natural-language description of availability status.  It is
+		 * normally used in conjunction with the show element to provide a
+		 * detailed description of an availability state (e.g., "In a meeting").
+		 * The <status/> element MUST NOT possess any attributes, with the
+		 * exception of the 'xml:lang' attribute.  Multiple instances of the
+		 * <strong>status</strong> element MAY be included but only if each instance possesses
+		 * an 'xml:lang' attribute with a distinct language value.</p>
+		 *
 		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get status():String
 		{
-			var list:XMLList = xml.children().(localName() == "status");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			
-			return null;
+			return getAttribute("status");
 		}
 		public function set status( value:String ):void
 		{
-			if (status == null)
-			{
-				delete xml.status;
-			}
-			else
-			{
-				xml.status = value;
-			}
+			setField("status", value);
 		}
 		
 		/**
 		 * The priority of the presence, usually on a scale of 1-5.
 		 *
 		 * <p>RFC: "The value MUST be an integer between -128 and +127".</p>
+		 * <p>If no priority is provided,
+		 * a server SHOULD consider the priority to be zero.</p>
 		 *
-		 * <p>Use <code>NaN</code> to remove.</p>
+		 * <p>Use <code>NaN</code> or <code>0</code> to remove.</p>
 		 */
 		public function get priority():int
 		{
@@ -246,7 +231,7 @@ package org.igniterealtime.xiff.data
 		}
 		public function set priority( value:int ):void
 		{
-			if (isNaN(value))
+			if (isNaN(value) || value == 0)
 			{
 				delete xml.priority;
 				return;

@@ -39,37 +39,19 @@ package org.igniterealtime.xiff.data.muc
 	{
 		public static const ELEMENT_NAME:String = "item";
 	
-		private var myActorNode:XML;
-		private var myReasonNode:XML;
-	
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function MUCItem(parent:XML = null)
 		{
 			super();
 	
 			xml = <{ ELEMENT_NAME }/>;
 	
-			if (exists(parent))
+			if (parent != null)
 			{
 				parent.appendChild(xml);
-			}
-		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-	
-			for each ( var child:XML in node.children() )
-			{
-				switch( child.localName() )
-				{
-					case "actor":
-						myActorNode = child;
-						break;
-						
-					case "reason":
-						myReasonNode = child;
-						break;
-				}
 			}
 		}
 	
@@ -90,15 +72,11 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get reason():String
 		{
-			return xml.reason.toString();
+			return getField("reason");
 		}
 		public function set reason(value:String):void
 		{
-			xml.reason = value;
-			if ( value == null )
-			{
-				delete xml.reason;
-			}
+			setField("reason", value);
 		}
 	
 		/**
@@ -106,11 +84,11 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get affiliation():String
 		{
-			return xml.@affiliation;
+			return getAttribute("affiliation");
 		}
 		public function set affiliation(value:String):void
 		{
-			xml.@affiliation = value;
+			setAttribute("affiliation", value);
 		}
 	
 		/**
@@ -118,15 +96,16 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get jid():EscapedJID
 		{
-			if (xml.@jid == null)
+			var value:String = getAttribute("jid");
+			if (value == null)
 			{
 				return null;
 			}
-			return new EscapedJID(xml.@jid);
+			return new EscapedJID(value);
 		}
 		public function set jid(value:EscapedJID):void
 		{
-			xml.@jid = value.toString();
+			setAttribute("jid", value.toString());
 		}
 	
 		/**
@@ -135,11 +114,11 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get nick():String
 		{
-			return xml.@nick;
+			return getAttribute("nick");
 		}
 		public function set nick(value:String):void
 		{
-			xml.@nick = value;
+			setAttribute("nick", value);
 		}
 	
 		/**
@@ -147,11 +126,11 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get role():String
 		{
-			return xml.@role;
+			return getAttribute("role");
 		}
 		public function set role(value:String):void
 		{
-			xml.@role = value;
+			setAttribute("role", value);
 		}
 	}
 }

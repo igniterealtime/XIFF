@@ -145,10 +145,10 @@ package org.igniterealtime.xiff.data
 		 * the IIDGenerator interface. The XIFF library comes with a few default
 		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
 		 *
-		 * Setting the ID generator by stanza type is useful if you'd like to use
+		 * <p>Setting the ID generator by stanza type is useful if you'd like to use
 		 * different ID generation schemes for each type. For instance, messages could
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
-		 * IQs could use the shared object ID generation scheme provided by the SOIncrementalGenerator class.
+		 * IQs could use the shared object ID generation scheme provided by the SOIncrementalGenerator class.</p>
 		 *
 		 * @param	generator The ID generator class
 		 * @example	The following sets the ID generator for the Message stanza type to an IncrementalGenerator
@@ -189,7 +189,7 @@ package org.igniterealtime.xiff.data
 					
 					trace("xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
 					
-					//nNamespace = exists( nNamespace ) ? nNamespace : CLIENT_NAMESPACE;
+					//nNamespace = nNamespace != null ? nNamespace : CLIENT_NAMESPACE;
 					
 					if ( nName != "error" )
 					{
@@ -295,31 +295,38 @@ package org.igniterealtime.xiff.data
 		 * </ul>
 		 *
 		 * <p>Use <code>null</code> to remove.</p>
+		 *
+		 * <p>RFC: The 'type' attribute specifies detailed information about the purpose
+		 * or context of the message, presence, or IQ stanza.  The particular
+		 * allowable values for the 'type' attribute vary depending on whether
+		 * the stanza is a message, presence, or IQ; the values for message and
+		 * presence stanzas are specific to instant messaging and presence
+		 * applications and therefore are defined in [XMPP-IM], whereas the
+		 * values for IQ stanzas specify the role of an IQ stanza in a
+		 * structured request-response "conversation" and thus are defined under
+		 * IQ Semantics (Section 9.2.3) below.  The only 'type' value common to
+		 * all three stanzas is "error"; see Stanza Errors (Section 9.3).</p>
 		 */
 		public function get type():String
 		{
-			var list:XMLList = xml.attribute("type");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("type");
 		}
 		public function set type( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.@type;
-			}
-			else
-			{
-				xml.@type = value;
-			}
+			setAttribute("type", value);
 		}
 		
 		/**
 		 * The unique identifier of this stanza. ID generation is accomplished using
 		 * the static <code>generateID</code> method of the particular stanza type.
+		 *
+		 * <p>RFC: The optional 'id' attribute MAY be used by a sending entity for
+		 * internal tracking of stanzas that it sends and receives (especially
+		 * for tracking the request-response interaction inherent in the
+		 * semantics of IQ stanzas).  It is OPTIONAL for the value of the 'id'
+		 * attribute to be unique globally, within a domain, or within a stream.
+		 * The semantics of IQ stanzas impose additional restrictions; see IQ
+		 * Semantics (Section 9.2.3).</p>
 		 *
 		 * <p>Use <code>null</code> to remove.</p>
 		 *
@@ -327,23 +334,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get id():String
 		{
-			var list:XMLList = xml.attribute("id");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("id");
 		}
 		public function set id( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.@id;
-			}
-			else
-			{
-				xml.@id = value;
-			}
+			setAttribute("id", value);
 		}
 		
 		/**
@@ -396,13 +391,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorCondition():String
 		{
-			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			
-			return null;
+			return getAttribute("error");
 		}
 		public function set errorCondition( value:String ):void
 		{

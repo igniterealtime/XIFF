@@ -48,53 +48,10 @@ package org.igniterealtime.xiff.data
 			xml.setLocalName( IExtension(this).getElementName() );
 			xml.setNamespace( IExtension(this).getNS() );
 	
-			if (exists(parent))
+			if (parent != null)
 			{
 				parent.appendChild(xml);
 			}
-		}
-		
-		/**
-		 * Convinience method for getting element value from the XML.
-		 * @param	name
-		 * @return
-		 */
-		public function getField(name:String):String
-		{
-			var list:XMLList = xml.children().(localName() == name);
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			
-			return null;
-		}
-		
-		/**
-		 * Convinience method for setting a value to a element in the XML.
-		 * @param	name
-		 * @param	value
-		 */
-		public function setField(name:String, value:String):void
-		{
-			var list:XMLList = xml.children().(localName() == name);
-			if ( value == null && list.length() > 0)
-			{
-				delete list[0];
-			}
-			else
-			{
-				xml[name] = value;
-			}
-		}
-		
-		/**
-		 * Append this extension to the given parent.
-		 * @param	parent
-		 */
-		public function append( parent:XML ):void
-		{
-			parent.appendChild( xml );
 		}
 	
 		/**

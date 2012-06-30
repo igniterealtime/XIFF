@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.browse
 			super();
 			xml.setLocalName( "item" );
 	
-			if (exists(parent))
+			if (parent != null)
 			{
 				parent.appendChild(xml);
 			}

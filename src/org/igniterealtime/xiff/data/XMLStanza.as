@@ -60,24 +60,83 @@ package org.igniterealtime.xiff.data
 			super();
 			
 		}
-	
+		
 		/**
-		 * A helper method to determine if a value is both not null
-		 * and not undefined.
-		 *
-		 * @param	value The value to check for existance
-		 * @return Whether the value checked is both not null and not undefined
+		 * Convinience method for getting element value from the XML.
+		 * @param	name
+		 * @return
 		 */
-		public static function exists( value:* ):Boolean
+		public function getField( name:String ):String
 		{
-			if ( value != null && value !== undefined )
+			var list:XMLList = xml.children().(localName() == name);
+			if ( list.length() > 0 )
 			{
-				return true;
+				return list[0];
 			}
 			
-			return false;
+			return null;
 		}
 		
+		/**
+		 * Convinience method for setting a value to a element in the XML.
+		 * @param	name
+		 * @param	value
+		 */
+		public function setField( name:String, value:String ):void
+		{
+			var list:XMLList = xml.children().(localName() == name);
+			
+			trace("setField. name: " + name + ", value: " + value + ", list: " + list);
+			
+			if ( value == null )
+			{
+				if ( list.length() > 0 )
+				{
+					delete list[0];
+				}
+			}
+			else
+			{
+				xml[name] = value;
+			}
+		}
+		
+		/**
+		 * Convinience method for getting element value from the XML.
+		 * @param	name
+		 * @return
+		 */
+		public function getAttribute( name:String ):String
+		{
+			var list:XMLList = xml.attribute( name );
+			if ( list.length() > 0 )
+			{
+				return list[0];
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * Convinience method for setting a value to a element in the XML.
+		 * @param	name
+		 * @param	value
+		 */
+		public function setAttribute( name:String, value:String ):void
+		{
+			var list:XMLList = xml.attribute( name);
+			if ( value == null )
+			{
+				if ( list.length() > 0 )
+				{
+					delete list[0];
+				}
+			}
+			else
+			{
+				xml.attribute(name)[0] = value;
+			}
+		}
 		
 		/**
 		 * Converts the base stanza XML to a string.
