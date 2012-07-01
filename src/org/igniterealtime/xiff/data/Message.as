@@ -34,11 +34,6 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	
 	/**
-	 * TODO:
-	 * XEP-0079: Advanced Message Processing, http://xmpp.org/extensions/xep-0079.html
-	 * XEP-0184: Message Delivery Receipts, http://xmpp.org/extensions/xep-0184.html
-	 * XEP-0308: Last Message Correction, http://xmpp.org/extensions/xep-0308.html
-	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
 	public class Message extends XMPPStanza implements IMessage
@@ -365,6 +360,7 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @see http://xmpp.org/extensions/xep-0203.html
 		 * @see http://xmpp.org/extensions/xep-0091.html
+		 * @see http://xmpp.org/extensions/xep-0082.html
 		 */
 		public function get time():Date
 		{

@@ -32,6 +32,8 @@ package org.igniterealtime.xiff.data
 
 	/**
 	 * A class for abstraction and encapsulation of IQ (info-query) data.
+	 *
+	 * @see http://tools.ietf.org/html/rfc3920#section-9.2.3
 	 */
 	public class IQ extends XMPPStanza implements IIQ
 	{

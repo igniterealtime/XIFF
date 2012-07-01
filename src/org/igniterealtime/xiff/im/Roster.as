@@ -105,7 +105,7 @@ package org.igniterealtime.xiff.im
 	 * provides a "read-only" form of the Data Provider API for external use. Non-read operations
 	 * are performed using alternative, roster-specific methods.
 	 *
-	 * @see http://www.ietf.org/rfc/rfc3921.txt
+	 * @see http://tools.ietf.org/html/rfc3921#section-7
 	 */
 	public class Roster extends ArrayCollection implements IRoster
 	{

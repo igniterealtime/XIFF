@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,9 @@ package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
 
+	/**
+	 *
+	 */
 	public class RoomEvent extends Event
 	{
 		public static const ADMIN_ERROR:String = "adminError";
@@ -93,6 +96,12 @@ package org.igniterealtime.xiff.events
 
 		private var _subject:String;
 
+		/**
+		 *
+		 * @param	type
+		 * @param	bubbles
+		 * @param	cancelable
+		 */
 		public function RoomEvent( type:String, bubbles:Boolean = false, cancelable:Boolean = false )
 		{
 			super( type, bubbles, cancelable );
@@ -116,6 +125,8 @@ package org.igniterealtime.xiff.events
 		/**
 		 * Data type can be <code>Message</code>, <code>Array</code>, or <code>Presence</code>
 		 * depending of the context.
+		 *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/Array.html
 		 * @see org.igniterealtime.xiff.data.Message
 		 * @see org.igniterealtime.xiff.data.Presence
 		 */
@@ -128,56 +139,69 @@ package org.igniterealtime.xiff.events
 			_data = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get errorCode():uint
 		{
 			return _errorCode;
 		}
-
 		public function set errorCode( value:uint ):void
 		{
 			_errorCode = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get errorCondition():String
 		{
 			return _errorCondition;
 		}
-
 		public function set errorCondition( value:String ):void
 		{
 			_errorCondition = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get errorMessage():String
 		{
 			return _errorMessage;
 		}
-
 		public function set errorMessage( value:String ):void
 		{
 			_errorMessage = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get errorType():String
 		{
 			return _errorType;
 		}
-
 		public function set errorType( value:String ):void
 		{
 			_errorType = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get from():String
 		{
 			return _from;
 		}
-
 		public function set from( value:String ):void
 		{
 			_from = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get nickname():String
 		{
 			return _nickname;
@@ -187,22 +211,26 @@ package org.igniterealtime.xiff.events
 		{
 			_nickname = value;
 		}
-
+		
+		/**
+		 *
+		 */
 		public function get reason():String
 		{
 			return _reason;
 		}
-
 		public function set reason( value:String ):void
 		{
 			_reason = value;
 		}
 
+		/**
+		 *
+		 */
 		public function get subject():String
 		{
 			return _subject;
 		}
-
 		public function set subject( value:String ):void
 		{
 			_subject = value;

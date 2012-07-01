@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,7 @@ package org.igniterealtime.xiff.util
 		public static function string2date(stamp:String):Date
 		{
 			var date:Date = new Date();
-			date.setUTCFullYear(stamp.substr(0, 4), parseInt(stamp.substr(5, 2)) - 1, stamp.substr(8, 2)); 
+			date.setUTCFullYear(stamp.substr(0, 4), parseInt(stamp.substr(5, 2)) - 1, stamp.substr(8, 2));
 			date.setUTCMinutes(0, 0, 0);
 			return date;
 		}
@@ -72,7 +72,7 @@ package org.igniterealtime.xiff.util
 			value += (time.getUTCSeconds() < 10 ? "0" : "") + time.getUTCSeconds();
 			if (ms)
 			{
-				value += "." + (time.getUTCMilliseconds() < 10 ? "0" : "") 
+				value += "." + (time.getUTCMilliseconds() < 10 ? "0" : "")
 					+ (time.getUTCMilliseconds() < 100 ? "0" : "") + time.getUTCMilliseconds();
 			}
 			return value;
@@ -86,7 +86,7 @@ package org.igniterealtime.xiff.util
 		public static function string2time(stamp:String):Date
 		{
 			var date:Date = new Date();
-			date.setUTCHours(stamp.substr(0, 2), stamp.substr(3, 2), stamp.substr(6, 2), 0); 
+			date.setUTCHours(stamp.substr(0, 2), stamp.substr(3, 2), stamp.substr(6, 2), 0);
 			if (stamp.length > 10)
 			{
 				date.setUTCMilliseconds(parseInt(stamp.substr(10, 3)));
@@ -116,7 +116,7 @@ package org.igniterealtime.xiff.util
 		{
 			var date:Date = string2date(stamp.substring(0, stamp.indexOf("T")));
 			var time:Date = string2time(stamp.substring(stamp.indexOf("T") + 1));
-			date.setUTCHours(time.getUTCHours(), time.getUTCMinutes(), 
+			date.setUTCHours(time.getUTCHours(), time.getUTCMinutes(),
 				time.getUTCSeconds(), time.getUTCMilliseconds());
 			return date;
 		}

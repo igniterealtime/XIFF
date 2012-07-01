@@ -36,6 +36,7 @@ package org.igniterealtime.xiff.data
 	 * The base class for all XMPP stanza data classes.
 	 *
 	 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
+	 * @see http://tools.ietf.org/html/rfc3920#section-9
 	 */
 	public dynamic class XMPPStanza extends XMLStanza implements IXMPPStanza
 	{

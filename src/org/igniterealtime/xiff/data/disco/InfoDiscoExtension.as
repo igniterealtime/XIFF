@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,10 +31,11 @@ package org.igniterealtime.xiff.data.disco
 	
 
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a> for service info discovery.
+	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030: Service Discovery</a>
+	 * for service info discovery.
 	 * Also, take a look at <a href="http://xmpp.org/extensions/xep-0020.html">XEP-0020</a> and
 	 * <a href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</a>.
-	 * 
+	 *
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class InfoDiscoExtension extends DiscoExtension implements IExtension
@@ -45,7 +46,7 @@ package org.igniterealtime.xiff.data.disco
 		private var _features:Array = [];
 
 		/**
-		 * 
+		 *
 		 * @param	parent
 		 */
 		public function InfoDiscoExtension( parent:XML=null )

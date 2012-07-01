@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,6 +41,7 @@ package org.igniterealtime.xiff.data.im
 	 * @param	parent The parent XML
 	 * @see	org.igniterealtime.xiff.data.im.RosterExtension
 	 * @see http://xmpp.org/extensions/xep-0144.html
+	 * @see http://tools.ietf.org/html/rfc3921#section-8
 	 */
 	public class RosterItem extends XMLStanza implements ISerializable
 	{
@@ -53,7 +54,7 @@ package org.igniterealtime.xiff.data.im
 			
 			xml.setLocalName(ELEMENT_NAME);
 			
-			if ( parent != null ) 
+			if ( parent != null )
 			{
 				parent.appendChild( xml );
 			}
@@ -169,6 +170,7 @@ package org.igniterealtime.xiff.data.im
 		 * <li>RosterExtension.SUBSCRIBE_TYPE_REMOVE</li>
 		 * </ul>
 		 *
+		 * @see http://tools.ietf.org/html/rfc3921#section-8.1
 		 */
 		public function get subscription():String
 		{
@@ -203,8 +205,8 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get pending():Boolean
 		{
-		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE && 
-				(subscription == RosterExtension.SUBSCRIBE_TYPE_NONE || 
+		 	if (askType == RosterExtension.ASK_TYPE_SUBSCRIBE &&
+				(subscription == RosterExtension.SUBSCRIBE_TYPE_NONE ||
 				subscription == RosterExtension.SUBSCRIBE_TYPE_FROM))
 			{
 		 		return true;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,11 +33,19 @@ package org.igniterealtime.xiff.auth
 
 	/**
 	 * This class provides SASL authentication using the X-FACEBOOK-PLATFORM mechanism.
+	 *
+	 * <p>Facebook Chat currently supports the following features, related to authentication:</p>
+	 * <ul>
+	 * <li>Facebook Platform authentication using the X-FACEBOOK-PLATFORM SASL authentication mechanism</li>
+	 * <li>Username/password authentication using the DIGEST-MD5 authentication mechanism</li>
+	 * </ul>
+	 *
+	 * @see http://tools.ietf.org/html/rfc3920#section-6
+	 * @see https://developers.facebook.com/docs/chat/
 	 */
 	public class XFacebookPlatform extends SASLAuth
 	{
 		public static const MECHANISM:String = "X-FACEBOOK-PLATFORM";
-
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		public static var fb_app_id:String;
@@ -60,6 +68,28 @@ package org.igniterealtime.xiff.auth
 
 		/**
 		 * Called when a challenge to this authentication is received.
+		 *
+		 * <p>The mechanism starts with a server challenge, in the form of a common HTTP query string:
+		 * an ampersand-separated sequence of equals-sign-delimited key/value pairs.
+		 * The keys and values are UTF-8-encoded and URL-encoded.
+		 * The query string contains two items: method and nonce.</p>
+		 *
+		 * <p>The client's reply should be a similarly-encoded query string prepared as if it were
+		 * going to call a method against the Facebook API. The call should contain the
+		 * following parameters:</p>
+		 * <ul>
+		 * <li>string method: Should be the same as the method specified by the server.</li>
+		 * <li>string api_key: The application key associated with the calling application.</li>
+		 * <li>string access_token: The access_token obtained in the above step.</li>
+		 * <li>float call_id: The request's sequence number.</li>
+		 * <li>string v: This must be set to 1.0 to use this version of the API.</li>
+		 * <li>string format: Optional - Ignored.</li>
+		 * <li>string cnonce: Optional - Client-selected nonce. Ignored.</li>
+		 * <li>string nonce: Should be the same as the nonce specified by the server.</li>
+		 * </ul>
+		 *
+		 * <p>The server will then respond with a success or failure message.
+		 * Note that this needs to be over TLS or you'll get an error.</p>
 		 *
 		 * @param	stage The current stage in the authentication process.
 		 * @param	challenge The XML of the actual authentication challenge.
