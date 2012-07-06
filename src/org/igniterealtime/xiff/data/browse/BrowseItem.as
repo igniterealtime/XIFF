@@ -37,6 +37,8 @@ package org.igniterealtime.xiff.data.browse
 	 */
 	public class BrowseItem extends XMLStanza implements ISerializable
 	{
+		public static const ELEMENT_NAME:String = "item";
+		
 		/**
 		 *
 		 * @param	parent
@@ -44,7 +46,7 @@ package org.igniterealtime.xiff.data.browse
 		public function BrowseItem( parent:XML )
 		{
 			super();
-			xml.setLocalName( "item" );
+			xml.setLocalName( BrowseItem.ELEMENT_NAME );
 	
 			if (parent != null)
 			{

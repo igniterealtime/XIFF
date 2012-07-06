@@ -68,23 +68,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get varName():String
 		{
-			var list:XMLList = xml.attribute("var");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("var");
 		}
 		public function set varName( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.attribute("var");
-			}
-			else
-			{
-				xml.attribute("var")[0] = value;
-			}
+			setAttribute("var", value);
 		}
 
 		/**
@@ -108,23 +96,12 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get type():String
 		{
-			var list:XMLList = xml.attribute("type");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("type");
 		}
 		public function set type( value:String ):void
 		{
-			if ( value == null && xml.attribute("type").length() > 0)
-			{
-				delete xml.attribute("type")[0];
-			}
-			else
-			{
-				xml.@type = value;
-			}
+			// TODO: Check allowed types...
+			setAttribute("type", value);
 		}
 
 		/**
@@ -141,6 +118,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set label( value:String ):void
 		{
+			setAttribute("type", value);
 			if ( value == null && xml.attribute("label").length() > 0)
 			{
 				delete xml.attribute("label")[0];
@@ -157,23 +135,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get desc():String
 		{
-			var list:XMLList = xml.children().(localName() == "desc");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getField("desc");
 		}
 		public function set desc( value:String ):void
 		{
-			if ( value == null && xml.children().(localName() == "desc").length() > 0)
-			{
-				delete xml.children().(localName() == "desc")[0];
-			}
-			else
-			{
-				xml.desc = value;
-			}
+			setField("desc", value);
 		}
 
 		/**
@@ -216,23 +182,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get value():String
 		{
-			var list:XMLList = xml.children().(localName() == "value");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getField("value");
 		}
 		public function set value( value:String ):void
 		{
-			if ( value == null && xml.children().(localName() == "value").length() > 0)
-			{
-				delete xml.children().(localName() == "value")[0];
-			}
-			else
-			{
-				xml.value = value;
-			}
+			setField("value", value);
 		}
 
 		/**

@@ -59,6 +59,10 @@ package org.igniterealtime.xiff.data.im
 	
 		private var _items:Array = [];
 		
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function RosterExtension( parent:XML = null )
 		{
 			super( parent );

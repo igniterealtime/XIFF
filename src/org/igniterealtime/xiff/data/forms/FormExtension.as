@@ -32,7 +32,9 @@ package org.igniterealtime.xiff.data.forms
 	
 
 	/**
-	 * Implements the base functionality shared by all MUC extensions
+	 * Implements the base functionality of XEP-0004: Data Forms,
+	 * shared by all MUC extensions
+	 *
 	 * @see http://xmpp.org/extensions/xep-0004.html
 	 */
 	public class FormExtension extends Extension implements IExtension
@@ -45,11 +47,12 @@ package org.igniterealtime.xiff.data.forms
 
 		private var _reported:FormReported;
 		private var _fields:Array = []; // FormField
-		private var _items:Array = []; // FormItem
 
-		private var instructionsNodes:Array;
-		private var titleNode:XML;
 
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function FormExtension( parent:XML = null )
 		{
 			super( parent );
@@ -78,7 +81,6 @@ package org.igniterealtime.xiff.data.forms
 		{
 			super.xml = node;
 
-			instructionsNodes = [];
 			removeAllFields();
 			removeAllItems();
 
@@ -86,13 +88,6 @@ package org.igniterealtime.xiff.data.forms
 			{
 				switch( c.localName() )
 				{
-					case "instructions":
-						instructionsNodes.push( c );
-						break;
-
-					case "title":
-						titleNode = c;
-						break;
 
 					case "reported":
 						var reportedItem:FormReported = new FormReported();
@@ -106,11 +101,6 @@ package org.igniterealtime.xiff.data.forms
 						_fields.push( field );
 						break;
 
-					case "item":
-						var item:FormItem = new FormItem();
-						item.xml =  c;
-						_items.push( item );
-						break;
 				}
 			}
 		}
@@ -173,14 +163,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllItems():void
 		{
-			for each( var item:FormItem in _items )
+			for each( var item:XML in xml.children().(localName() == FormItem.ELEMENT_NAME) )
 			{
-				for each( var i:* in item )
-				{
-					delete i.xml;
-				}
+				var index:uint = item.parent().childIndex();
+				delete xml.children()[index];
 			}
-			_items = [];
 		}
 
 		/**
@@ -233,7 +220,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get type():String
 		{
-			return xml.@type;
+			return getAttribute("type");
 		}
 		public function set type( value:String ):void
 		{
@@ -296,16 +283,30 @@ package org.igniterealtime.xiff.data.forms
 		 * Interface to array of items.
 		 *
 		 * @return Array containing Arrays of FormItem objects
+		 * @see org.igniterealtime.xiff.data.forms.FormItem
 		 */
 		public function get items():Array
 		{
-			return _items;
+			var items:Array = [];
+			var list:XMLList = xml.children().(localName() == FormItem.ELEMENT_NAME);
+			for each ( var child:XML in list )
+			{
+				var item:FormItem = new FormItem();
+				item.xml = child;
+				items.push( item );
+			}
+			return items;
 		}
 		public function set items( value:Array ):void
 		{
 			removeAllItems();
-
-			_items = value;
+			
+			var len:uint = value.length;
+			for ( var i:uint = 0; i < len; ++i )
+			{
+				var item:FormItem = value[ i ] as FormItem;
+				xml.appendChild( item.xml );
+			}
 		}
 
 	}

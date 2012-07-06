@@ -30,7 +30,7 @@ package org.igniterealtime.xiff.data.disco
 
 	
 	/**
-	 *
+	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class DiscoFeature extends XMLStanza implements ISerializable
 	{

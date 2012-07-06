@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			super();
 	
-			xml = <{ ELEMENT_NAME }/>;
+			xml.setLocalName( ELEMENT_NAME );
 	
 			if (parent != null)
 			{

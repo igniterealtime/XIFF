@@ -31,6 +31,7 @@ package org.igniterealtime.xiff.data.disco
 	
 	/**
 	 *
+	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class DiscoItem extends XMLStanza implements ISerializable
 	{
@@ -52,13 +53,19 @@ package org.igniterealtime.xiff.data.disco
 			}
 		}
 
+		/**
+		 * Does all three properties match the in the given DiscoItem to this one?
+		 *
+		 * @param	other
+		 * @return
+		 */
 		public function equals( other:DiscoItem ):Boolean
 		{
 			return jid == other.jid && name == other.name && node == other.node;
 		}
 
 		/**
-		 *
+		 * Attribute specifying the JID of the item
 		 */
 		public function get jid():String
 		{
@@ -70,7 +77,7 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 *
+		 * A natural-language name for the item
 		 */
 		public function get name():String
 		{
@@ -82,7 +89,9 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 *
+		 * The value of the node attribute may or may not have semantic meaning;
+		 * from the perspective of Service Discovery, a node is merely
+		 * something that is associated with an entity.
 		 */
 		public function get node():String
 		{

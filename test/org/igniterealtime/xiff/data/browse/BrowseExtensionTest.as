@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.data.browse
 		
 		
 		[Test( description="items value" )]
-		public function testValueResource():void
+		public function testValueItems():void
 		{
 			var testValue:BrowseItem = new BrowseItem(<empty/>);
 			
