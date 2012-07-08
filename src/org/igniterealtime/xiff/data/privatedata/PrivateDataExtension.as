@@ -54,16 +54,19 @@ package org.igniterealtime.xiff.data.privatedata
 		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null,
 											 payload:IPrivatePayload = null)
 		{
-			
-			var extension:XML = <{ privateName }/>;
-			if (privateNamespace != null)
-			{
-				extension.setNamespace( privateNamespace );
-			}
-			
 			_query = <{ ELEMENT_NAME }/>;
 			_query.setNamespace( NS );
-			_query.appendChild(extension);
+			
+			if (privateName != null)
+			{
+				var extension:XML = <{ privateName }/>;
+				if (privateNamespace != null)
+				{
+					extension.setNamespace( privateNamespace );
+				}
+				
+				_query.appendChild(extension);
+			}
 			
 			_payloadExt = payload;
 		}
@@ -85,7 +88,16 @@ package org.igniterealtime.xiff.data.privatedata
 		
 		public function get privateNamespace():String
 		{
-			return _query.children()[0].attributes["xmlns"];
+			var list:XMLList = _query.children();
+			if (list.length() > 0)
+			{
+				var ns:Namespace = list[0].namespace();
+				if (ns)
+				{
+					return ns.uri;
+				}
+			}
+			return null;
 		}
 		
 		public function get payload():IPrivatePayload
@@ -98,14 +110,14 @@ package org.igniterealtime.xiff.data.privatedata
 			_query = node;
 			
 			var payloadNode:XML = node.children()[0];
-			var ns:String = payloadNode.attributes["xmlns"];
+			var ns:Namespace = payloadNode.namespace();
 			if (ns == null)
 			{
 				return;
 			}
 			
 			
-			var extClass:Class = ExtensionClassRegistry.lookup(ns);
+			var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
 			if (extClass == null)
 			{
 				return;
