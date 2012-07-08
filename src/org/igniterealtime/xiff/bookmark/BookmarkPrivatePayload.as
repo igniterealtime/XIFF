@@ -27,6 +27,7 @@ package org.igniterealtime.xiff.bookmark
 {
 	
 
+	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -95,8 +96,8 @@ package org.igniterealtime.xiff.bookmark
 			{
 				if ( child.localName() == "conference" )
 				{
-					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark();
-					groupChatBookmark.xml =  child;
+					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark(new EscapedJID("temp@temp.tmp"));
+					groupChatBookmark.xml = child;
 					
 					//don't add it if it's a duplicate
 					if ( _groupChatBookmarks.every( function( testGroupChatBookmark:GroupChatBookmark,

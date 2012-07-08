@@ -30,51 +30,51 @@ package org.igniterealtime.xiff.bookmark
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 
 	/**
 	 * XEP-0048: Bookmarks
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
-	public class GroupChatBookmark extends Extension implements ISerializable
+	public class GroupChatBookmark extends XMLStanza implements ISerializable
 	{
 		// TODO: NS?
 		public static const ELEMENT_NAME:String = "conference";
 		
 
 		/**
+		 * A common use case is bookmarking of multi-user chat rooms.
+		 * A room is bookmarked using the <strong>conference</strong> child element.
 		 *
-		 * @param	name
-		 * @param	jid
-		 * @param	autoJoin
-		 * @param	nickname
-		 * @param	password
+		 * <p>Most of the properties can be set only via constructor or by setting the XML.</p>
+		 *
+		 * @param	jid			REQUIRED
+		 * @param	name		RECOMMENDED
+		 * @param	autoJoin	OPTIONAL
+		 * @param	nickname	OPTIONAL
+		 * @param	password	NOT RECOMMENDED
+		 * @see http://xmpp.org/extensions/xep-0048.html#format-conference
 		 */
-		public function GroupChatBookmark( name:String = null, jid:EscapedJID = null,
+		public function GroupChatBookmark( jid:EscapedJID, name:String = null,
 										   autoJoin:Boolean = false, nickname:String = null,
 										   password:String = null )
 		{
-			if ( !name && !jid )
-			{
-				return;
-			}
-			else if ( !name || !jid )
-			{
-				throw new Error( "Name and jid cannot be null, they must either both be null or an Object" );
-			}
-			
 			xml.setLocalName( ELEMENT_NAME );
-			xml.@name = name;
 			xml.@jid = jid.toString();
 			
+			if ( name != null )
+			{
+				xml.@name = name;
+			}
 			if ( autoJoin )
 			{
 				xml.@autojoin = "true";
 			}
-			if ( nickname )
+			if ( nickname != null )
 			{
 				xml.nick = nickname;
 			}
-			if ( password )
+			if ( password != null )
 			{
 				xml.password = password;
 			}
@@ -90,32 +90,47 @@ package org.igniterealtime.xiff.bookmark
 			return GroupChatBookmark.ELEMENT_NAME;
 		}
 
+		/**
+		 * Whether the client should automatically join the conference room on login.
+		 */
 		public function get autoJoin():Boolean
 		{
 			return xml.@autojoin == "true";
 		}
-
 		public function set autoJoin( value:Boolean ):void
 		{
 			xml.@autojoin = value.toString();
 		}
 		
+		/**
+		 * The JabberID of the chat room.
+		 */
 		public function get jid():EscapedJID
 		{
-			
 			return new EscapedJID( xml.@jid );
 		}
 
+		/**
+		 * A friendly name for the bookmark.
+		 */
 		public function get name():String
 		{
 			return xml.@name;
 		}
 
+		/**
+		 * The user's preferred roomnick for the chatroom.
+		 */
 		public function get nickname():String
 		{
 			return xml.nick.toString();
 		}
 
+		/**
+		 * Unencrypted string for the password needed to enter a password-protected room.
+		 *
+		 * <p>For security reasons, use of this element is NOT RECOMMENDED.</p>
+		 */
 		public function get password():String
 		{
 			return xml.password.toString();
