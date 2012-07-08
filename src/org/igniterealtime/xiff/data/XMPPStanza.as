@@ -527,7 +527,11 @@ package org.igniterealtime.xiff.data
 		{
 			if ( isNaN(value) )
 			{
-				delete xml.error.@code;
+				var list:XMLList = xml.children().(localName() == "error");
+				if ( list.length() > 0 )
+				{
+					delete xml.error.@code;
+				}
 			}
 			else
 			{

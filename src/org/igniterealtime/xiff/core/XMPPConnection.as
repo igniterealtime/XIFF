@@ -767,7 +767,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * dispatchError("bind-failed", "BindExtension came without a JID", null, 401);
+		 * @exampleText dispatchError("bind-failed", "BindExtension came without a JID", null, 401);
 		 *
 		 * @param	condition
 		 * @param	message

@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.bookmark
 		{
 			var testValue:String = "Complete Works of Shakespeare";
 			
-			var bookmark:UrlBookmark = new UrlBookmark(testValue, "");
+			var bookmark:UrlBookmark = new UrlBookmark("http://the-tech.mit.edu/Shakespeare/", testValue);
 			
 			assertEquals( testValue, bookmark.name );
 		}
@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.bookmark
 		{
 			var testValue:String = "http://the-tech.mit.edu/Shakespeare/";
 			
-			var bookmark:UrlBookmark = new UrlBookmark("", testValue);
+			var bookmark:UrlBookmark = new UrlBookmark(testValue, "Complete Works of Shakespeare");
 			
 			assertEquals( testValue, bookmark.url );
 		}
@@ -80,13 +80,11 @@ package org.igniterealtime.xiff.bookmark
 		[Test( description="UrlBookmark parse from XML - name" )]
 		public function testParseName():void
 		{
-			var incoming:XML = <storage xmlns='storage:bookmarks'>
-				  <url name='Complete Works of Shakespeare'
-					   url='http://the-tech.mit.edu/Shakespeare/'/>
-				</storage>;
+			var incoming:XML = <url name='Complete Works of Shakespeare'
+					   url='http://the-tech.mit.edu/Shakespeare/'/>;
 			var testValue:String = "Complete Works of Shakespeare";
 			
-			var bookmark:UrlBookmark = new UrlBookmark();
+			var bookmark:UrlBookmark = new UrlBookmark("temp");
 			bookmark.xml = incoming;
 			
 			assertEquals( testValue, bookmark.name );
@@ -95,13 +93,11 @@ package org.igniterealtime.xiff.bookmark
 		[Test( description="UrlBookmark parse from XML - url" )]
 		public function testParseUrl():void
 		{
-			var incoming:XML = <storage xmlns='storage:bookmarks'>
-				  <url name='Complete Works of Shakespeare'
-					   url='http://the-tech.mit.edu/Shakespeare/'/>
-				</storage>;
+			var incoming:XML = <url name='Complete Works of Shakespeare'
+					   url='http://the-tech.mit.edu/Shakespeare/'/>;
 			var testValue:String = "http://the-tech.mit.edu/Shakespeare/";
 			
-			var bookmark:UrlBookmark = new UrlBookmark();
+			var bookmark:UrlBookmark = new UrlBookmark("temp");
 			bookmark.xml = incoming;
 			
 			assertEquals( testValue, bookmark.url );

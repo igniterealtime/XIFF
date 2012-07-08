@@ -136,7 +136,7 @@ package org.igniterealtime.xiff.data
 		 * @return
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/Array.html#filter%28%29
 		 */
-		public function getExtension( elementName:String ):Extension
+		public function getExtension( elementName:String ):IExtension
 		{
 			var exts:Array = getAllExtensions();
 			trace("getExtension. exts.length: " + exts.length);

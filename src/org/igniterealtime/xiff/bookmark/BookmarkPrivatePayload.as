@@ -33,7 +33,8 @@ package org.igniterealtime.xiff.bookmark
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 
 	/**
-	 *
+	 * XEP-0048: Bookmarks
+	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
 	public class BookmarkPrivatePayload extends XMLStanza implements IPrivatePayload
 	{
@@ -55,8 +56,8 @@ package org.igniterealtime.xiff.bookmark
 												urlBookmarks:Array = null )
 		{
 			
-			xml.setLocalName( getElementName() );
-			xml.setNamespace( getNS() );
+			xml.setLocalName( ELEMENT_NAME );
+			xml.setNamespace( NS );
 			
 			if ( groupChatBookmarks )
 			{
@@ -96,6 +97,7 @@ package org.igniterealtime.xiff.bookmark
 				{
 					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark();
 					groupChatBookmark.xml =  child;
+					
 					//don't add it if it's a duplicate
 					if ( _groupChatBookmarks.every( function( testGroupChatBookmark:GroupChatBookmark,
 															  index:int, array:Array ):Boolean
@@ -106,8 +108,9 @@ package org.igniterealtime.xiff.bookmark
 				}
 				else if ( child.localName() == "url" )
 				{
-					var urlBookmark:UrlBookmark = new UrlBookmark();
+					var urlBookmark:UrlBookmark = new UrlBookmark("temp");
 					urlBookmark.xml =  child;
+					
 					//don't add it if it's a duplicate
 					if ( _urlBookmarks.every( function( testURLBookmark:UrlBookmark,
 														index:int, array:Array ):Boolean
@@ -155,6 +158,11 @@ package org.igniterealtime.xiff.bookmark
 			return removedItem;
 		}
 
+		/**
+		 * List of UrlBookmarks.
+		 *
+		 * @see org.igniterealtime.xiff.bookmark.UrlBookmark
+		 */
 		public function get urlBookmarks():Array
 		{
 			return _urlBookmarks.slice();

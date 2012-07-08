@@ -91,6 +91,27 @@ package org.igniterealtime.xiff.data
 			
 			assertEquals( testValue, stanza.errorCondition );
 		}
+		
+		[Test( description="XML parse - Error code" )]
+		public function testParseErrorCode():void
+		{
+			var incoming:XML = <iq type="error" id="add_user_6" to="flasher@192.168.1.37/xiff">
+				<query xmlns="jabber:iq:roster">
+					<item jid="apina@192.168.1.37" subscription="null" name="apina@192.168.1.37">
+						<group>Buddies</group>
+					</item>
+				</query>
+				<error code="500" type="wait">
+					<internal-server-error xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/>
+				</error>
+			</iq>;
+			var testValue:int = 500;
+			
+			var stanza:XMPPStanza = new XMPPStanza(null, null, null, "ID3", XMPPStanza.ELEMENT_TEMP);
+			stanza.xml = incoming;
+			
+			assertEquals( testValue, stanza.errorCode );
+		}
 
 		[Test( description="XML parse - to" )]
 		public function testParseTo():void
@@ -138,6 +159,22 @@ package org.igniterealtime.xiff.data
 			stanza.xml = incoming;
 			
 			assertEquals( testValue, stanza.id );
+		}
+
+		[Test( description="XML parse - type" )]
+		public function testParseType():void
+		{
+			var incoming:XML = <iq type='error' from='pubsub.shakespeare.lit' to='francisco@denmark.lit/barracks' id='sub1'>
+			  <error type='modify'>
+				<bad-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+			  </error>
+			</iq>;
+			var testValue:String = "error";
+			
+			var stanza:XMPPStanza = new XMPPStanza(null, null, null, "ID3", XMPPStanza.ELEMENT_TEMP);
+			stanza.xml = incoming;
+			
+			assertEquals( testValue, stanza.type );
 		}
 
 

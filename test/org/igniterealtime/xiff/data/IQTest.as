@@ -26,6 +26,7 @@
 package org.igniterealtime.xiff.data
 {
 	import org.flexunit.asserts.assertEquals;
+	import org.igniterealtime.xiff.data.IExtension;
 
 	public class IQTest
 	{
@@ -57,12 +58,14 @@ package org.igniterealtime.xiff.data
 			var incoming:XML = <iq from='juliet@capulet.lit/balcony' to='capulet.lit' id='c2s1' type='get'>
 			  <ping xmlns='urn:xmpp:ping'/>
 			</iq>;
-			var testValue:String = "error";
+			var testValue:String = "urn:xmpp:ping";
 			
 			var iq:IQ = new IQ();
 			iq.xml = incoming;
 			
-			assertEquals( testValue, iq.type );
+			var ping:IExtension = iq.getExtension("ping");
+			
+			assertEquals( testValue, ping.getNS() );
 		}
 		
 		// http://xmpp.org/extensions/xep-0199.html

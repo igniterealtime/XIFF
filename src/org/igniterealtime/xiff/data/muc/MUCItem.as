@@ -34,6 +34,10 @@ package org.igniterealtime.xiff.data.muc
 	/**
 	 * This class is used by the MUCExtension for internal representation of
 	 * information pertaining to occupants in a multi-user conference room.
+	 *
+	 * <p>The information given inside Precense of a given room user</p>
+	 *
+	 * @see http://xmpp.org/extensions/xep-0045.html#associations
 	 */
 	public class MUCItem extends XMLStanza implements ISerializable
 	{
@@ -56,7 +60,10 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
+		 * Optional. JID of the room user or server that made changes to the given item.
+		 * Most likely when kicking someone from a room.
 		 *
+		 * @see http://xmpp.org/extensions/xep-0045.html#kick
 		 */
 		public function get actor():EscapedJID
 		{
@@ -68,7 +75,27 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
+		 * Optional. Nickname of the room user or server that made changes to the given item.
+		 * Most likely when kicking someone from a room.
 		 *
+		 * <p>This property was added to Version 1.25 (2012-02-08) of the specification.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0045.html#kick
+		 */
+		public function get actorNick():String
+		{
+			return xml.actor.@nick;
+		}
+		public function set actorNick(value:String):void
+		{
+			xml.actor.@nick = value;
+		}
+	
+		/**
+		 * Rason given by the actor for the action that was made for the given item.
+		 * Most likely the reson why someone was kicked out from a room.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0045.html#kick
 		 */
 		public function get reason():String
 		{
@@ -80,7 +107,7 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
-		 *
+		 * Can be one of the following: owner, admin, member, outcast, or none.
 		 */
 		public function get affiliation():String
 		{
@@ -105,7 +132,14 @@ package org.igniterealtime.xiff.data.muc
 		}
 		public function set jid(value:EscapedJID):void
 		{
-			setAttribute("jid", value.toString());
+			if (value != null)
+			{
+				setAttribute("jid", value.toString());
+			}
+			else
+			{
+				delete xml.@jid;
+			}
 		}
 	
 		/**
@@ -122,7 +156,8 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
-		 *
+		 * Can be one of the following: moderator, participant,
+		 * visitor, or none.
 		 */
 		public function get role():String
 		{
