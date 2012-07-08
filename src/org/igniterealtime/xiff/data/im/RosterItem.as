@@ -26,8 +26,6 @@
 package org.igniterealtime.xiff.data.im
 {
 	
-	
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -38,7 +36,6 @@ package org.igniterealtime.xiff.data.im
 	 * contact, and this class is used to represent, abstract, and serialize/deserialize
 	 * this data.
 	 *
-	 * @param	parent The parent XML
 	 * @see	org.igniterealtime.xiff.data.im.RosterExtension
 	 * @see http://xmpp.org/extensions/xep-0144.html
 	 * @see http://tools.ietf.org/html/rfc3921#section-8
@@ -47,12 +44,15 @@ package org.igniterealtime.xiff.data.im
 	{
 		public static const ELEMENT_NAME:String = "item";
 		
-		
+		/**
+		 *
+		 * @param	parent The parent XML
+		 */
 		public function RosterItem( parent:XML = null )
 		{
 			super();
 			
-			xml.setLocalName(ELEMENT_NAME);
+			xml.setLocalName( ELEMENT_NAME );
 			
 			if ( parent != null )
 			{
@@ -80,7 +80,7 @@ package org.igniterealtime.xiff.data.im
 		public function get groupNames():Array
 		{
 			var list:Array = [];
-			var groups:XMLList = xml.group;
+			var groups:XMLList = xml.children().(localName() == "group");
 			
 			for each ( var item:XML in groups )
 			{
@@ -94,7 +94,7 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get groupCount():int
 		{
-			return xml.group.length();
+			return xml.children().(localName() == "group").length();
 		}
 		
 		/**
@@ -112,7 +112,7 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function removeGroupByName( groupName:String ):Boolean
 		{
-			var groups:XMLList = xml.group;
+			var groups:XMLList = xml.children().(localName() == "group");
 			var index:int = -1;
 			
 			for each ( var item:XML in groups )
@@ -152,11 +152,11 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 		public function set name( value:String ):void
 		{
-			xml.@name = value;
+			setAttribute("name", value);
 		}
 		
 		/**
@@ -174,11 +174,11 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get subscription():String
 		{
-			return xml.@subscription;
+			return getAttribute("subscription");
 		}
 		public function set subscription( value:String ):void
 		{
-			xml.@subscription = value;
+			setAttribute("subscription", value);
 		}
 		
 		/**
@@ -191,14 +191,14 @@ package org.igniterealtime.xiff.data.im
 		 * </ul>
 		 *
 		 */
-		 public function get askType():String
-		 {
-		 	return xml.@ask;
-		 }
-		 public function set askType( value:String ):void
-		 {
-		 	xml.@ask = value;
-		 }
+		public function get askType():String
+		{
+			return getAttribute("ask");
+		}
+		public function set askType( value:String ):void
+		{
+			setAttribute("ask", value);
+		}
 		
 		/**
 		 * Convenience routine to determine if a roster item is considered "pending" or not.
