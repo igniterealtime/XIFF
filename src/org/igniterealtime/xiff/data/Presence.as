@@ -148,7 +148,7 @@ package org.igniterealtime.xiff.data
 		 */
 		public function Presence( recipient:EscapedJID = null, sender:EscapedJID = null, presenceType:String = null, showVal:String = null, statusVal:String = null, priorityVal:int = 0 )
 		{
-			super( recipient, sender, presenceType, null, "presence" );
+			super( recipient, sender, presenceType, null, XMPPStanza.ELEMENT_PRESENCE );
 			
 			show = showVal;
 			status = statusVal;

@@ -39,6 +39,7 @@ package org.igniterealtime.xiff.data.search
 	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
 	 * getRequiredFieldNames set on this extension.
 	 * Check the result and re-establish the connection with the new account.
+	 *
 	 * @see http://xmpp.org/extensions/xep-0055.html
 	 */
 	public class SearchExtension extends Extension implements IExtension
@@ -47,7 +48,6 @@ package org.igniterealtime.xiff.data.search
 		public static const ELEMENT_NAME:String = "query";
 	
 		private var _fields:Object = {};
-		private var _items:Array = [];
 	
 	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
@@ -85,29 +85,23 @@ package org.igniterealtime.xiff.data.search
 	
 			for each ( var child:XML in node.children() )
 			{
-	
-				switch (child.localName())
+				var local:String = child.localName();
+				if (local != "x" && local != "item")
 				{
-						
-					case "x":
-						if (child.namespace().uri == FormExtension.NS)
-						{
-							var dataFormExt:FormExtension = new FormExtension(xml);
-							dataFormExt.xml = child;
-							addExtension(dataFormExt);
-						}
-						break;
-						
-					case "item":
-						var item:SearchItem = new SearchItem(xml);
-						item.xml = child;
-						_items.push(item);
-						break;
-	
-					default:
-						_fields[child.localName()] = child;
-						break;
+					_fields[child.localName()] = child;
 				}
+				
+				// Refactor this out...
+				if (local == "x")
+				{
+					if (child.namespace().uri == FormExtension.NS)
+					{
+						var dataFormExt:FormExtension = new FormExtension(xml);
+						dataFormExt.xml = child;
+						addExtension(dataFormExt);
+					}
+				}
+				
 			}
 	
 		}
@@ -124,9 +118,22 @@ package org.igniterealtime.xiff.data.search
 			return fields;
 		}
 		
+		/**
+		 * List of SearchItem in this query.
+		 * @return
+		 */
 		public function getAllItems():Array
 		{
-			return _items;
+			var items:Array = [];
+			
+			var list:XMLList = xml.children().(localName() == "item");
+			for each ( var child:XML in list )
+			{
+				var item:SearchItem = new SearchItem();
+				item.xml = child;
+				items.push(item);
+			}
+			return items;
 		}
 	
 		/**

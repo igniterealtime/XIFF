@@ -767,15 +767,15 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * dispatchError("bind-failed", "BindExtension came without a JID", null, 401);
 		 *
 		 * @param	condition
 		 * @param	message
 		 * @param	type
-		 * @param	code
+		 * @param	code Legacy code
 		 * @param	extension
 		 */
-		protected function dispatchError( condition:String, message:String, type:String, code:int, extension:Extension=null ):void
+		protected function dispatchError( condition:String, message:String, type:String, code:int = NaN, extension:Extension=null ):void
 		{
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;

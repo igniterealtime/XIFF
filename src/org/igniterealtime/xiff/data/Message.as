@@ -189,7 +189,7 @@ package org.igniterealtime.xiff.data
 			// Flash gives a warning if superconstructor is not first, hence the inline id check
 			var id:String = (msgID != null) ? msgID : Message.generateID();
 			
-			super( recipient, null, msgType, id, "message" );
+			super( recipient, null, msgType, id, XMPPStanza.ELEMENT_MESSAGE );
 			
 			body = msgBody;
 			htmlBody = msgHTMLBody;

@@ -35,6 +35,13 @@ package org.igniterealtime.xiff.data
 	/**
 	 * The base class for all XMPP stanza data classes.
 	 *
+	 * <p>Three types can exist:</p>
+	 * <ul>
+	 * <li>message</li>
+	 * <li>presence</li>
+	 * <li>iq</li>
+	 * </ul>
+	 *
 	 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
 	 * @see http://tools.ietf.org/html/rfc3920#section-9
 	 */
@@ -55,7 +62,18 @@ package org.igniterealtime.xiff.data
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
 		public static const NAMESPACE_BOSH:String = "urn:xmpp:xbosh";
 		public static const XML_LANG:String = "en";
-				
+		
+		// Three XML element names allowed
+		public static const ELEMENT_MESSAGE:String = "message";
+		public static const ELEMENT_PRESENCE:String = "presence";
+		public static const ELEMENT_IQ:String = "iq";
+		
+		/**
+		 * Internal name in XIFF for incoming data.
+		 * The proper element name should be available after setting the XML.
+		 */
+		public static const ELEMENT_TEMP:String = "temp";
+		
 		// Are these static variables needed also in AS3?
 		private static var staticDependencies:Array = [ IncrementalGenerator, ExtensionContainer ];
 		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
@@ -94,14 +112,23 @@ package org.igniterealtime.xiff.data
 		 * @param	sender		from
 		 * @param	theType		type
 		 * @param	theID		id
-		 * @param	nName
-		 * @see http://www.ietf.org/rfc/rfc3920.txt
+		 * @param	nodeName	One of the four ELEMENT_* constants
+		 *
+		 * @see http://tools.ietf.org/html/rfc3920#section-9
 		 */
-		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nName:String )
+		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nodeName:String )
 		{
 			super();
 			
-			xml.setLocalName( nName );
+			if (nodeName != ELEMENT_IQ &&
+				nodeName != ELEMENT_MESSAGE &&
+				nodeName != ELEMENT_PRESENCE &&
+				nodeName != ELEMENT_TEMP)
+			{
+				throw new Error("nodeName must be one of 'iq', 'message' or 'presence', and in rare cases 'temp'.");
+			}
+			
+			xml.setLocalName( nodeName );
 			to = recipient;
 			from = sender;
 			type = theType;
@@ -352,15 +379,10 @@ package org.igniterealtime.xiff.data
 		 * <p>Use <code>null</code> to remove.</p>
 		 *
 		 * TODO
+		 * @see http://tools.ietf.org/html/rfc3920#section-9.3
 		 */
 		public function get errorMessage():String
 		{
-			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			
 			if ( errorCondition != null )
 			{
 				return xml.error[errorCondition];
@@ -368,6 +390,12 @@ package org.igniterealtime.xiff.data
 			else if (xml.error.length() > 0)
 			{
 				return xml.error;
+			}
+			
+			var list:XMLList = xml.children().(localName() == "error");
+			if ( list.length() > 0 )
+			{
+				return list[0];
 			}
 			return null;
 		}
@@ -377,11 +405,12 @@ package org.igniterealtime.xiff.data
 			
 			if ( errorCondition != null )
 			{
+				// Use the element name
 				xml.error[errorCondition] = value;
 			}
 			else
 			{
-				var attributes:XMLList = xml.error.attributes;
+				var attributes:XMLList = xml.error.attributes();
 				xml.error = value;
 				xml.error.attributes = attributes;
 			}
@@ -392,29 +421,48 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <p>Use <code>null</code> to remove.</p>
 		 *
+		 * <p>Error condition should be in lowercase and not contain any whitespace.</p>
+		 *
+		 * <p>Error element must be qualified by urn:ietf:params:xml:ns:xmpp-stanzas namespace.</p>
+		 *
+		 * @see http://tools.ietf.org/html/rfc3920#section-9.3.3
+		 * @see http://xmpp.org/extensions/xep-0182.html
 		 * @see http://xmpp.org/extensions/xep-0086.html
+		 *
+		 * TODO: Conform spec...
 		 */
 		public function get errorCondition():String
 		{
-			return getAttribute("error");
+			// TODO: Add check for correct namespace...
+			var list:XMLList = xml.children().(localName() == "error");
+			if ( list.length() > 0 && list[0].children().length() > 0)
+			{
+				return list[0].children()[0].localName();
+			}
+			
+			return null;
 		}
 		public function set errorCondition( value:String ):void
 		{
-			// A message might exist, so remove it first
-			var attributes:XMLList = xml.error.attributes;
-			var msg:String = errorMessage;
-			
 			if ( value != null )
 			{
-				xml.error = "";
-				xml.error[value] = msg;
+				var errorNode:XML = <{ value }/>;
+				errorNode.setNamespace("urn:ietf:params:xml:ns:xmpp-stanzas");
+				if (errorMessage != null)
+				{
+					errorNode.appendChild(errorMessage);
+				}
+				
+				// Add existing attributes
+				errorNode.attributes = xml.error.attributes;
+				
+				xml.error = errorNode;
 			}
 			else
 			{
-				xml.error = msg;
+				xml.error = errorMessage;
 			}
 			
-			xml.error.attributes = attributes;
 		}
 		
 		/**
@@ -422,14 +470,24 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <p>Use <code>null</code> to remove.</p>
 		 *
-		 * @see http://xmpp.org/extensions/xep-0086.html
+		 * <p>The value of the <strong>error</strong> element's 'type' attribute
+		 * MUST be one of the following:</p>
+		 * <ul>
+		 * <li>cancel -- do not retry (the error is unrecoverable)</li>
+		 * <li>continue -- proceed (the condition was only a warning)</li>
+		 * <li>modify -- retry after changing the data sent</li>
+		 * <li>auth -- retry after providing credentials</li>
+		 * <li>wait -- retry after waiting (the error is temporary)</li>
+		 * </ul>
+		 *
+		 * @see http://tools.ietf.org/html/rfc3920#section-9.3
 		 */
 		public function get errorType():String
 		{
-			var list:XMLList = xml.children().(localName() == "error" && error.attribute("type").length() > 0);
+			var list:XMLList = xml.children().(localName() == "error");
 			if ( list.length() > 0 )
 			{
-				return list[0].attribute("type")[0];
+				return list[0].@type;
 			}
 			return null;
 		}
@@ -452,14 +510,16 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <p>Use <code>NaN</code> to remove.</p>
 		 *
+		 * <p>See the link for XEP-0086: Error Condition Mappings</p>
+		 *
 		 * @see http://xmpp.org/extensions/xep-0086.html
 		 */
 		public function get errorCode():int
 		{
-			var list:XMLList = xml.children().(localName() == "error" && error.attribute("code").length() > 0);
+			var list:XMLList = xml.children().(localName() == "error");
 			if ( list.length() > 0 )
 			{
-				return parseInt(list[0].attribute("code")[0]);
+				return parseInt(list[0].@code);
 			}
 			return NaN;
 		}

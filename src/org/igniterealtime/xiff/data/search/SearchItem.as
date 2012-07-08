@@ -68,11 +68,11 @@ package org.igniterealtime.xiff.data.search{
 		 */
 		public function get username():String
 		{
-			return getField("jid");
+			return getField("username");
 		}
 		public function set username(value:String):void
 		{
-			setField("jid", value);
+			setField("username", value);
 		}
 	
 		/**

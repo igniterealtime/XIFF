@@ -49,16 +49,10 @@ package org.igniterealtime.xiff.data
 		
 		
 		/**
-		 * Three types can exist:
-		 * - message
-		 * - presence
-		 * - iq
-		 * @see http://xmpp.org/rfcs/rfc3920.html#stanzas
 		 */
 		public function XMLStanza()
 		{
 			super();
-			
 		}
 		
 		/**

@@ -110,7 +110,7 @@ package org.igniterealtime.xiff.data
 		{
 			var id:String = iqID != null ? iqID : IQ.generateID();
 
-			super( recipient, null, iqType, id, "iq" );
+			super( recipient, null, iqType, id, XMPPStanza.ELEMENT_IQ );
 
 			callback = iqCallback;
 			errorCallback = iqErrorCallback;
