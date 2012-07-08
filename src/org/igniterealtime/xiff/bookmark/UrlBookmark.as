@@ -29,39 +29,46 @@ package org.igniterealtime.xiff.bookmark
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
+	/**
+	 * The <strong>url</strong> element is designed for bookmarking web pages,
+	 * i.e., HTTP or HTTPS URLs.
+	 *
+	 * @see http://xmpp.org/extensions/xep-0048.html#format-url
+	 */
 	public class UrlBookmark extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "url";
 		
 		/**
+		 * Bookmark an url.
 		 *
-		 * @param	name
-		 * @param	url
+		 * @param	url REQUIRED
+		 * @param	name RECOMMENDED
 		 */
-		public function UrlBookmark( name:String = null, url:String = null )
+		public function UrlBookmark( url:String, name:String = null )
 		{
-			if ( !name && !url )
-			{
-				return;
-			}
-			else if ( !name || !url )
-			{
-				throw new Error( "Name and url cannot be null, they must either both be null or an Object" );
-			}
-			
 			xml.setLocalName( ELEMENT_NAME );
-			xml.@name = name;
+			if (name != null)
+			{
+				xml.@name = name;
+			}
 			xml.@url = url;
 		}
 
+		/**
+		 * A friendly name for the bookmark.
+		 */
 		public function get name():String
 		{
 			return xml.@name;
 		}
 
+		/**
+		 * The HTTP or HTTPS URL of the web page.
+		 */
 		public function get url():String
 		{
-			return xml.@uri;
+			return xml.@url;
 		}
 	}
 }
