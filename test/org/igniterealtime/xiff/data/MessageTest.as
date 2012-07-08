@@ -289,9 +289,7 @@ package org.igniterealtime.xiff.data
 				type='chat'>
 			  <thread>act2scene2chat1</thread>
 			  <body>
-				I take thee at thy word:
-				Call me but love, and I'll be new baptized;
-				Henceforth I never will be Romeo.
+				I take thee at thy word: Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.
 			  </body>
 			  <active xmlns='http://jabber.org/protocol/chatstates'/>
 			</message>;
@@ -332,9 +330,7 @@ package org.igniterealtime.xiff.data
 				to='juliet@capulet.com'
 				type='chat'>
 			  <body>
-				O blessed, blessed night! I am afeard.
-				Being in night, all this is but a dream,
-				Too flattering-sweet to be substantial.
+				O blessed, blessed night! I am afeard. Being in night, all this is but a dream, Too flattering-sweet to be substantial.
 			  </body>
 			  <delay xmlns='urn:xmpp:delay'
 				 from='capulet.com'
@@ -361,9 +357,7 @@ package org.igniterealtime.xiff.data
 				to='juliet@capulet.com'
 				type='chat'>
 			  <body>
-				O blessed, blessed night! I am afeard.
-				Being in night, all this is but a dream,
-				Too flattering-sweet to be substantial.
+				O blessed, blessed night! I am afeard. Being in night, all this is but a dream, Too flattering-sweet to be substantial.
 			  </body>
 			  <x xmlns='jabber:x:delay'
 				 from='capulet.com'
