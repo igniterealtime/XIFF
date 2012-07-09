@@ -46,7 +46,6 @@ package org.igniterealtime.xiff.data.muc
 		public static const TYPE_INVITE:String = "invite";
 		public static const TYPE_OTHER:String = "other";
 	
-		private var _actionNode:XML;
 		private var _statuses:Array = [];
 	
 		/**
@@ -109,6 +108,11 @@ package org.igniterealtime.xiff.data.muc
 			updateActionNode(TYPE_DECLINE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
 		
+		/**
+		 * Does the given status code exist in the list of statuses saved in this extension.
+		 * @param	code
+		 * @return
+		 */
 		public function hasStatusCode(code:Number):Boolean
 		{
 			for each(var status:MUCStatus in statuses)
@@ -123,20 +127,22 @@ package org.igniterealtime.xiff.data.muc
 			
 		/**
 		 * Internal method that manages the type of node that we will use for invite/destroy/decline messages
+		 *
+		 * @param	type
+		 * @param	attrs
+		 * @param	reason
 		 */
 		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
 			xml[type] = "";
 	
-			_actionNode = <{ type }/>;
 			for (var i:String in attrs)
 			{
 				if (attrs.hasOwnProperty(i))
 				{
-					xml[type].attributes[i] = attrs[i];
+					xml[type].@[i] = attrs[i];
 				}
 			}
-	
 			
 			if (reason == null)
 			{
@@ -153,22 +159,24 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get type():String
 		{
-			if (xml.children().(localName() == TYPE_DECLINE).length() > 0)
+			var list:Array = [
+				TYPE_DECLINE,
+				TYPE_DESTROY,
+				TYPE_INVITE,
+				TYPE_OTHER
+			];
+			
+			var len:uint = list.length;
+			for (var i:uint = 0; i < len; ++i)
 			{
-				return TYPE_DECLINE;
+				var key:String = list[i] as String;
+				if (xml.children().(localName() == key).length() > 0)
+				{
+					return key;
+				}
 			}
-			else if (xml.children().(localName() == TYPE_DESTROY).length() > 0)
-			{
-				return TYPE_DESTROY;
-			}
-			else if (xml.children().(localName() == TYPE_INVITE).length() > 0)
-			{
-				return TYPE_INVITE;
-			}
-			else
-			{
-				return TYPE_OTHER;
-			}
+			
+			return null;
 		}
 	
 		/**
@@ -176,7 +184,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get to():EscapedJID
 		{
-			return new EscapedJID(_actionNode.@to);
+			var list:XMLList = xml.children()[0].attribute("to");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
 	
 		/**
@@ -184,7 +197,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get from():EscapedJID
 		{
-			return new EscapedJID(_actionNode.@from);
+			var list:XMLList = xml.children()[0].attribute("from");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
 	
 		/**
@@ -192,7 +210,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID(_actionNode.@jid);
+			var list:XMLList = xml.children()[0].attribute("jid");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
 	
 	    /**
@@ -200,7 +223,7 @@ package org.igniterealtime.xiff.data.muc
 	     */
 	    public function get reason():String
 	    {
-			return getField("reason");
+			return xml.children().(localName() == type)[0].children().(localName() == "reason");
 	    }
 	
 		/**
@@ -216,7 +239,10 @@ package org.igniterealtime.xiff.data.muc
 		}
 	
 		/**
+		 * List of MUCStatus.
+		 * TODO: As this extension is the parent of status, the code would be easier to find directly...
 		 *
+		 * @see org.igniterealtime.xiff.data.muc.MUCStatus
 		 */
 		public function get statuses():Array
 		{

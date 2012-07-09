@@ -73,6 +73,10 @@ package org.igniterealtime.xiff.bookmark
 			_privateDataManager = privateDataManager;
 		}
 
+		/**
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
+	     */
 		private static function bookmarkManagerStaticConstructor():Boolean
 		{
 			ExtensionClassRegistry.register( BookmarkPrivatePayload );

@@ -64,7 +64,8 @@ package org.igniterealtime.xiff.data.bind
 		}
 		
 		/**
-	     * Registers this extension with the extension registry.
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
 	     */
 	    public static function enable():void
 	    {

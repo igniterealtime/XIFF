@@ -68,11 +68,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get category():String
 		{
-			return xml.@category;
+			return getAttribute("category");
 		}
 		public function set category( value:String ):void
 		{
-			xml.@category = value;
+			setAttribute("category", value);
 		}
 
 		/**
@@ -80,11 +80,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get type():String
 		{
-			return xml.@type;
+			return getAttribute("type");
 		}
 		public function set type( value:String ):void
 		{
-			xml.@type = value;
+			setAttribute("type", value);
 		}
 
 		/**
@@ -92,11 +92,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 		public function set name( value:String ):void
 		{
-			xml.@name = value;
+			setAttribute("name", value);
 		}
 
 		/**
@@ -104,11 +104,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get lang():String
 		{
-			return xml.attributes[ "xml:lang" ];
+			return getAttribute("xml:lang");
 		}
 		public function set lang( value:String ):void
 		{
-			xml.attributes[ "xml:lang" ] = value;
+			setAttribute("xml:lang", value);
 		}
 
 	}

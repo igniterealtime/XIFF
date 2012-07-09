@@ -43,6 +43,10 @@ package org.igniterealtime.xiff.privatedata
 	{
 		private static var privateDataManagerConstructed:Boolean = privateDataManagerStaticConstructor();
 		
+		/**
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
+	     */
 		private static function privateDataManagerStaticConstructor():Boolean
 		{
 			ExtensionClassRegistry.register( PrivateDataExtension );

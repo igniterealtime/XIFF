@@ -56,6 +56,10 @@ package org.igniterealtime.xiff.data.ping
 			return PingExtension.ELEMENT_NAME;
 		}
 		
+		/**
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
+	     */
 		public static function enable():Boolean
 	    {
 	        return ExtensionClassRegistry.register(PingExtension);

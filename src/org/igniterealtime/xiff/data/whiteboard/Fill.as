@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,30 +33,35 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * provides an interface to access the properties providing defaults
 	 * if no properties were defined in the XML.
 	 *
-	*/
+	 */
 	public class Fill implements ISerializable
 	{
 	    private var _xml:XML;
 	
-	    public function Fill() 
-		{ 
-		
+		/**
+		 *
+		 * @param	color
+		 * @param	opacity
+		 */
+	    public function Fill( color:uint = 0, opacity:Number = 100 )
+		{
+			this.color = color;
+			this.opacity = opacity;
 		}
-
 
 		/**
 		 * The XML node that should be used for this stanza's internal XML representation,
-		 * 
+		 *
 		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
-		 * 
+		 *
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
 		 * @see http://www.w3.org/TR/xml/
 		 */
-		public function get xml():XML 
+		public function get xml():XML
 		{
 			return _xml;
 		}
-		public function set xml( elem:XML ):void 
+		public function set xml( elem:XML ):void
 		{
 			var parent:XML = _xml.parent();
 			if (parent != null)
@@ -71,30 +76,30 @@ package org.igniterealtime.xiff.data.whiteboard
 	     * The value of the RGB color.  This is the same color format used by
 	     * MovieClip.lineStyle
 	     *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
 	     */
-		public function get color():uint 
+		public function get color():uint
 		{
-			return 0; 
-	        //new Number("0x" + _xml.attributes["fill"].slice(1));
+	        return parseInt("0x" + String(_xml.@fill).slice(1), 16);
 		}
 		public function set color(value:uint):void
 		{
-				_xml.attributes["fill"] = "#" + value.toString(16);
+				_xml.@fill = "#" + value.toString(16);
 		}
 		
 	    /**
 	     * The opacity of the fill, in percent. 100 is solid, 0 is transparent.
 	     * This property can be used as the alpha parameter of MovieClip.lineStyle
 	     *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
 	     */
-	    public function get opacity():Number 
-		{ 
-	        // new Number(_xml.attributes["fill-opacity"]);
-			return 100; 
-		}
-	    public function set opacity(value:Number):void 
+	    public function get opacity():Number
 		{
-			_xml.attributes["fill-opacity"] = value.toString(); 
+			return parseFloat(_xml.@["fill-opacity"]);
+		}
+	    public function set opacity(value:Number):void
+		{
+			_xml.@["fill-opacity"] = value.toString();
 		}
 	}
 }

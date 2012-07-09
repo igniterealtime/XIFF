@@ -67,11 +67,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get varName():String
 		{
-			return xml.attributes[ "var" ];
+			return getAttribute("var");
 		}
 		public function set varName( value:String ):void
 		{
-			xml.attributes[ "var" ] = value;
+			setAttribute("var", value);
 		}
 
 	}

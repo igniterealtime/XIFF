@@ -74,9 +74,9 @@ package org.igniterealtime.xiff.data.xhtml
 			return XHTMLExtension.ELEMENT_NAME;
 		}
 
-	    /**
-	     * Performs the registration of this extension into the extension registry.
-	     *
+		/**
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
 	     */
 	    public static function enable():void
 	    {

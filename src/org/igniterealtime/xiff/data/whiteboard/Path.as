@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,10 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-	import org.igniterealtime.xiff.data.*;	
+	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.whiteboard.*;
 	
-	 
+	
 	/**
 	 * A message extension for whiteboard exchange. This class is the base class
 	 * for other extension classes such as Path
@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	    private var _xml:XML;
 		
 		/**
-		 * 
+		 *
 		 * @param	parent
 		 */
 		public function Path( parent:XML = null )
@@ -65,7 +65,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function serialize( parent:XML ):Boolean
 		{
-			_xml.attributes['p'] = serializeSegments();
+			_xml.@['p'] = serializeSegments();
 			
 	        parent.appendChild(_xml);
 	
@@ -74,17 +74,17 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 		/**
 		 * The XML node that should be used for this stanza's internal XML representation,
-		 * 
+		 *
 		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
-		 * 
+		 *
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
 		 * @see http://www.w3.org/TR/xml/
 		 */
-		public function get xml():XML 
+		public function get xml():XML
 		{
 			return _xml;
 		}
-		public function set xml( elem:XML ):void 
+		public function set xml( elem:XML ):void
 		{
 			var parent:XML = _xml.parent();
 			if (parent != null)
@@ -95,7 +95,7 @@ package org.igniterealtime.xiff.data.whiteboard
 			_xml = elem;
 			
 			
-			var p:String = elem.attributes['p'];
+			var p:String = elem.@['p'];
 	
 			// Divide and conquer, using commands as delims, joining
 			// the results in prefix order
@@ -132,8 +132,8 @@ package org.igniterealtime.xiff.data.whiteboard
 				if (lastSeg.to.x != seg.from.x && lastSeg.to.y != seg.from.y)
 				{
 					p += 'M' + seg.from.x + ' ' + seg.from.y + 'l';
-				} 
-				else 
+				}
+				else
 				{
 					p += ' ';
 				}
@@ -147,11 +147,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 	    /**
 	     * Adds a start point and end point to this path.  The points will be rounded
-	     * to the nearest integer to save serialization space.  10.0000001 takes 
+	     * to the nearest integer to save serialization space.  10.0000001 takes
 	     * 4 times as much spaces as 10
 	     *
 	     * @param	seg An object containing the properties "from" and "to" which
-	     * are objects with the properties "x" and "y".  An example would 
+	     * are objects with the properties "x" and "y".  An example would
 	     * be { from: { x: 100, y: 200 }, to: { x: 200, y: 300 } }
 	     * @return the segment parameter with the rounded values
 	     * @see	#addPoints
@@ -166,8 +166,8 @@ package org.igniterealtime.xiff.data.whiteboard
 			if (_segments.addItem)
 			{
 				_segments.addItem(seg);
-			} 
-			else 
+			}
+			else
 			{
 				_segments.push(seg);
 			}
@@ -192,16 +192,16 @@ package org.igniterealtime.xiff.data.whiteboard
 		}
 	
 	    /**
-	     * The read-only list of start and end points encoded as an array of objects with the 
+	     * The read-only list of start and end points encoded as an array of objects with the
 	     * format { from: { x: ###, y: ### }, to: { x: ###, y: ### } }
 	     *
 	     * You should not modify this list.  Segments should be added with addSegment
 	     *
 	     * @see	#addSegment
 	     */
-	    public function get segments():Array 
-		{ 
-			return _segments; 
+	    public function get segments():Array
+		{
+			return _segments;
 		}
 		
 	    /**
@@ -210,7 +210,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	     *
 	     * @see	org.igniterealtime.xiff.data.whiteboard.Stroke
 	     */
-	    public function get stroke():Stroke 
+	    public function get stroke():Stroke
 		{
 			return _stroke;
 		}
@@ -221,9 +221,9 @@ package org.igniterealtime.xiff.data.whiteboard
 	     *
 	     * @see	org.igniterealtime.xiff.data.whiteboard.Fill
 	     */
-	    public function get fill():Fill 
-		{ 
-			return _fill; 
+	    public function get fill():Fill
+		{
+			return _fill;
 		}
 
 	
@@ -250,11 +250,14 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 			// Find the next command to split on, so we preserve order
 			var idx:Number = indexOfNextCommand(str);
-			if (idx >= 0) {
+			if (idx >= 0)
+			{
 				var cmd:String = str.charAt(idx);
 				var commands:Array = str.split(cmd);
-				for (var i:int=0; i < commands.length; ++i) {
-					if (commands[i].length > 0) {
+				for (var i:int = 0; i < commands.length; ++i)
+				{
+					if (commands[i].length > 0)
+					{
 						loadCommand(cmd, commands[i]);
 					}
 				}
@@ -269,35 +272,43 @@ package org.igniterealtime.xiff.data.whiteboard
 			var idx:Number = indexOfNextCommand(str);
 			var params:Array;
 	
-			if (idx > 0) {
+			if (idx > 0)
+			{
 				params = str.slice(0, idx).split(' ');
-			} else {
+			}
+			else
+			{
 				params = str.split(' ');
 			}
 	
 			// Handle any parameterless commands here like closepath
 	
 	
-			// We have our parameters, now pull them out 
+			// We have our parameters, now pull them out
 			// depending on the command
 	
-			while (params.length > 0) {
-				if (params[0].length == 0) {
+			while (params.length > 0)
+			{
+				if (params[0].length == 0)
+				{
 					params.shift();
-				} else {
+				}
+				else
+				{
 					var current:Object;
 	
-					switch (cmd) {
+					switch (cmd)
+					{
 						case "M":
 							_lastLocation = {
-								x: Number(params.shift()), 
+								x: Number(params.shift()),
 								y: Number(params.shift())
 							};
 							break;
 	
 						case "L":
 							current = {
-								x: Number(params.shift()), 
+								x: Number(params.shift()),
 								y: Number(params.shift())
 							};
 							addSegment({from: _lastLocation, to: current });
@@ -306,7 +317,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 						case "l":
 							current = {
-								x: _lastLocation.x + Number(params.shift()), 
+								x: _lastLocation.x + Number(params.shift()),
 								y: _lastLocation.y + Number(params.shift())
 							};
 							addSegment({from: _lastLocation, to: current});

@@ -68,6 +68,10 @@ package org.igniterealtime.xiff.data.forms
 			return FormExtension.ELEMENT_NAME;
 		}
 
+		/**
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
+	     */
 		public static function enable():Boolean
 		{
 			ExtensionClassRegistry.register( FormExtension );

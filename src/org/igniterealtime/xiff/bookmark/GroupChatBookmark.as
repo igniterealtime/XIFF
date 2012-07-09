@@ -107,7 +107,12 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID( xml.@jid );
+			var list:XMLList = xml.attribute("jid");
+			if ( list.length() > 0 )
+			{
+				return new EscapedJID(list[0]);
+			}
+			return null;
 		}
 
 		/**

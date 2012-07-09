@@ -145,9 +145,9 @@ package org.igniterealtime.xiff.im
 		}
 
 		/**
-		 *
-		 * @return
-		 */
+	     * Registers this extension with the extension registry for it to be used,
+		 * in case incoming data matches the ELEMENT_NAME and NS.
+	     */
 		private static function RosterStaticConstructor():Boolean
 		{
 			ExtensionClassRegistry.register( RosterExtension );

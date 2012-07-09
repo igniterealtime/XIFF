@@ -151,9 +151,13 @@ package org.igniterealtime.xiff.bookmark
 			for each ( var bookmark:GroupChatBookmark in _groupChatBookmarks )
 			{
 				if ( !bookmark.jid.unescaped.equals( jid, false ))
+				{
 					newBookmarks.push( bookmark );
+				}
 				else
+				{
 					removedItem = bookmark;
+				}
 			}
 			_groupChatBookmarks = newBookmarks;
 			return removedItem;
