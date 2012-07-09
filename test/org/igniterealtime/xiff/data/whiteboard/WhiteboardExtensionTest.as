@@ -23,53 +23,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.browse
+package org.igniterealtime.xiff.data.whiteboard
 {
 	import org.flexunit.asserts.*;
 	
-	public class BrowseExtensionTest
+	public class WhiteboardExtensionTest
 	{
-		
-		
-		[Test( description="items value" )]
-		public function testValueItems():void
-		{
-			var testValue:BrowseItem = new BrowseItem(<empty/>);
-			
-			var ext:BrowseExtension = new BrowseExtension();
-			ext.addItem(testValue);
-			
-			var list:Array = [testValue];
-			
-			assertEquals( list.toString(), ext.items.toString() );
-		}
 		
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
 		{
-			var nameSpace:String = "jabber:iq:browse";
-			var elementName:String = "query";
+			var nameSpace:String = "xiff:wb";
+			var elementName:String = "x";
 			
-			var ext:BrowseExtension = new BrowseExtension();
+			var ext:WhiteboardExtension = new WhiteboardExtension();
 			var node:XML = ext.xml;
 			
 			assertEquals( nameSpace, node.namespace().uri );
 			assertEquals( elementName, node.localName() );
 		}
-	
-		/*
-		[Test( description="parse from XML" )]
-		public function testParseShowDnd():void
-		{
-			var incoming:XML = ;
-			var testValue:String = "dnd";
-			
-			var ext:BindExtension = new BindExtension();
-			ext.xml = incoming;
-			
-			assertEquals( testValue, ext.show );
-		}
-		*/
 		
 	}
 }
