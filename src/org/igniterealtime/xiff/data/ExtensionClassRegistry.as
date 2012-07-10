@@ -31,7 +31,7 @@ package org.igniterealtime.xiff.data
 	 */
 	public class ExtensionClassRegistry
 	{
-		private static var _classes:Array = [];
+		private static var _classes:Object = [];
 		
 		/**
 	     * Registers the given extension with the extension registry for it to be used,
