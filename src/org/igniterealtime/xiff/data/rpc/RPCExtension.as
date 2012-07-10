@@ -42,13 +42,14 @@ package org.igniterealtime.xiff.data.rpc
 	
 		private var _result:Array;
 		private var _fault:Object;
-	
+		
 		/**
 		 *
+		 * @param	parent (Optional) The containing XML for this extension
 		 */
-		public function RPCExtension()
+		public function RPCExtension( parent:XML = null )
 		{
-			
+			super(parent);
 		}
 		
 		/**

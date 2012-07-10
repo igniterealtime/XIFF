@@ -52,8 +52,6 @@ package org.igniterealtime.xiff.data
 		{
 			// Initialize here to make sure that methods are available.
 			_xml = <xmlstanza/>;
-			
-			trace("XMLStanza. constructed. _xml: " + _xml.toXMLString());
 		}
 		
 		/**

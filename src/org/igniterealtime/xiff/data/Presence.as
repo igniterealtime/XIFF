@@ -153,8 +153,6 @@ package org.igniterealtime.xiff.data
 			show = showVal;
 			status = statusVal;
 			priority = priorityVal;
-			
-			trace("Presence constructed. xml: " + xml.toXMLString());
 		}
 		
 		/**

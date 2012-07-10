@@ -46,6 +46,15 @@ package org.igniterealtime.xiff.data.ping
 		
 		public static const NS:String = "urn:xmpp:ping";
 		
+		/**
+		 *
+		 * @param	parent (Optional) The containing XML for this extension
+		 */
+		public function PingExtension( parent:XML = null )
+		{
+			super(parent);
+		}
+		
 		public function getNS():String
 		{
 			return PingExtension.NS;

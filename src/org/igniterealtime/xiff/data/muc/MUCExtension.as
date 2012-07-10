@@ -89,7 +89,7 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get history():Boolean
 		{
-			return xml.children().(localName() == "history") > 0;
+			return xml.children().(localName() == "history").length() > 0;
 		}
 		public function set history( value:Boolean ):void
 		{
@@ -109,7 +109,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get maxchars():int
 		{
-			return parseInt(xml.history.@maxchars);
+			var value:String = getChildAttribute("history", "maxchars");
+			if (value == null)
+			{
+				return NaN;
+			}
+			return parseInt(value);
 		}
 		public function set maxchars( value:int ):void
 		{
@@ -121,7 +126,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get maxstanzas():int
 		{
-			return parseInt(xml.history.@maxstanzas);
+			var value:String = getChildAttribute("history", "maxstanzas");
+			if (value == null)
+			{
+				return NaN;
+			}
+			return parseInt(value);
 		}
 		public function set maxstanzas( value:int ):void
 		{
@@ -133,7 +143,12 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get seconds():Number
 		{
-			return Number(xml.history.@seconds);
+			var value:String = getChildAttribute("history", "seconds");
+			if (value == null)
+			{
+				return NaN;
+			}
+			return parseFloat(value);
 		}
 		public function set seconds( value:Number ):void
 		{
@@ -144,10 +159,11 @@ package org.igniterealtime.xiff.data.muc
 		 * Time base condition to retrieve all messages from a given time formatted in the format described in
 		 * <a href="http://xmpp.org/extensions/xep-0082.html">XEP-0082</a>.
 		 *
+		 * @see http://xmpp.org/extensions/xep-0082.html
 		 */
 		public function get since():String
 		{
-			return xml.history.@since;
+			return getChildAttribute("history", "since");
 		}
 		public function set since( value:String ):void
 		{

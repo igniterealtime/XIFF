@@ -114,8 +114,6 @@ package org.igniterealtime.xiff.data
 
 			callback = iqCallback;
 			errorCallback = iqErrorCallback;
-			
-			trace("IQ constructed. xml: " + xml.toXMLString());
 		}
 
 		/**

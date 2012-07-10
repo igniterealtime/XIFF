@@ -39,6 +39,10 @@ package org.igniterealtime.xiff.data.muc
 	{
 		private var _items:Array = [];
 	
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function MUCBaseExtension( parent:XML = null )
 		{
 			super(parent);
@@ -60,7 +64,7 @@ package org.igniterealtime.xiff.data.muc
 						break;
 	
 					default:
-						var extClass:Class = ExtensionClassRegistry.lookup(child.@xmlns);
+						var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri);
 						if (extClass != null)
 						{
 							var ext:IExtension = new extClass();

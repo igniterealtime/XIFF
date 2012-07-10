@@ -145,6 +145,23 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
+		 * Convinience method for getting child element attribute value from the XML.
+		 * @param	elem
+		 * @param	name
+		 * @return
+		 */
+		public function getChildAttribute( elem:String, name:String ):String
+		{
+			var list:XMLList = xml.children().(localName() == elem);
+			if (list.length() > 0)
+			{
+				return list[0].@[name];
+			}
+			
+			return null;
+		}
+		
+		/**
 		 * Converts the base stanza XML to a string.
 		 *
 		 * @return The base XML in string form, as in <code>toXMLString()</code>

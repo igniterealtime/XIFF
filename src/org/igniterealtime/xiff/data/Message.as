@@ -195,8 +195,6 @@ package org.igniterealtime.xiff.data
 			htmlBody = msgHTMLBody;
 			subject = msgSubject;
 			state = chatState;
-			
-			trace("Message constructed. xml: " + xml.toXMLString());
 		}
 	
 		public static function MessageStaticConstructor():Boolean
@@ -257,7 +255,7 @@ package org.igniterealtime.xiff.data
 			
 			
 			var list:XMLList = node.children().(localName() == "x");
-			if (list.length() > 0 && list[0].@xmlns == MUCUserExtension.NS)
+			if (list.length() > 0 && list[0].namespace().uri == MUCUserExtension.NS)
 			{
 				var mucUserExtension:MUCUserExtension = new MUCUserExtension(xml);
 				mucUserExtension.xml = list[0];
@@ -322,7 +320,6 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get subject():String
 		{
-			//return xml.subject;
 			return getField("subject");
 		}
 		public function set subject( value:String ):void
@@ -376,9 +373,7 @@ package org.igniterealtime.xiff.data
 				
 				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
 			}
-			else if ((xml.x.length() > 0 && xml.x.@xmlns == "jabber:x:delay") ||
-				(legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 &&
-				legacy[0].attribute("xmlns") == "jabber:x:delay"))
+			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 && legacy[0].namespace().uri == "jabber:x:delay")
 			{
 				// Legacy
 				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss

@@ -188,7 +188,7 @@ package org.igniterealtime.xiff.events
 		}
 
 		/**
-		 *
+		 * TODO: EscapedJID ?
 		 */
 		public function get from():String
 		{

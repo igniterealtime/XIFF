@@ -40,8 +40,6 @@ package org.igniterealtime.xiff.data.privatedata
 	{
 		public static const NS:String = "jabber:iq:private";
 		public static const ELEMENT_NAME:String = "query";
-	
-		private var _query:XML;
 		
 		private var _payloadExt:IPrivatePayload;
 		
@@ -54,9 +52,7 @@ package org.igniterealtime.xiff.data.privatedata
 		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null,
 											 payload:IPrivatePayload = null)
 		{
-			_query = <{ ELEMENT_NAME }/>;
-			_query.setNamespace( NS );
-			
+	
 			if (privateName != null)
 			{
 				var extension:XML = <{ privateName }/>;
@@ -65,11 +61,12 @@ package org.igniterealtime.xiff.data.privatedata
 					extension.setNamespace( privateNamespace );
 				}
 				
-				_query.appendChild(extension);
+				xml.appendChild(extension);
 			}
 			
 			_payloadExt = payload;
 		}
+		
 		
 		public function getNS():String
 		{
@@ -81,14 +78,36 @@ package org.igniterealtime.xiff.data.privatedata
 			return PrivateDataExtension.ELEMENT_NAME;
 		}
 		
+		/**
+		 * @exampleText exodus
+		 */
 		public function get privateName():String
 		{
-			return _query.children()[0].localName();
+			var list:XMLList = xml.children();
+			if (list.length() > 0)
+			{
+				return list[0].localName();
+			}
+			
+			return null;
 		}
+		/*
+		public function set privateName( value:String ):void
+		{
+			var list:XMLList = xml.children();
+			if (list.length() > 0)
+			{
+				list[0].setLocalName(value);
+			}
+		}
+		*/
 		
+		/**
+		 * @exampleText exodus:prefs
+		 */
 		public function get privateNamespace():String
 		{
-			var list:XMLList = _query.children();
+			var list:XMLList = xml.children();
 			if (list.length() > 0)
 			{
 				var ns:Namespace = list[0].namespace();
@@ -100,38 +119,47 @@ package org.igniterealtime.xiff.data.privatedata
 			return null;
 		}
 		
+		/**
+		 * @exampleText &gt;defaultnick&lt;Hamlet&gt;/defaultnick&lt;
+		 */
 		public function get payload():IPrivatePayload
 		{
 			return _payloadExt;
 		}
+		public function set payload( value:IPrivatePayload ):void
+		{
+			_payloadExt = value;
+		}
 				
 		override public function set xml( node:XML ):void
 		{
-			_query = node;
+			xml = node;
 			
-			var payloadNode:XML = node.children()[0];
-			var ns:Namespace = payloadNode.namespace();
-			if (ns == null)
+			if (node.children().length() > 0)
 			{
-				return;
-			}
+				var payloadNode:XML = node.children()[0];
+				var ns:Namespace = payloadNode.namespace();
+				if (ns == null)
+				{
+					return;
+				}
 			
-			
-			var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
-			if (extClass == null)
-			{
-				return;
-			}
-			var ext:IPrivatePayload = new extClass();
-			if (ext != null && ext is IPrivatePayload)
-			{
-				ext.xml = payloadNode;
-				_payloadExt = ext;
-				return;
-			}
-			else
-			{
-				return;
+				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
+				if (extClass == null)
+				{
+					return;
+				}
+				var ext:IPrivatePayload = new extClass();
+				if (ext != null && ext is IPrivatePayload)
+				{
+					ext.xml = payloadNode;
+					_payloadExt = ext;
+					return;
+				}
+				else
+				{
+					return;
+				}
 			}
 		}
 	

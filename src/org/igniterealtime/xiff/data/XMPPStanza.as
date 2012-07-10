@@ -133,8 +133,6 @@ package org.igniterealtime.xiff.data
 			from = sender;
 			type = theType;
 			id = theID;
-			
-			trace("XMPPStanza. constructed. xml: " + xml.toXMLString());
 		}
 	
 		private static function XMPPStanzaStaticConstructor():void

@@ -41,6 +41,15 @@ package org.igniterealtime.xiff.data.sharedgroups
 		public static const NS:String = "http://www.jivesoftware.org/protocol/sharedgroup";
 		public static const ELEMENT_NAME:String = "sharedgroup";
 		
+		/**
+		 *
+		 * @param	parent (Optional) The containing XML for this extension
+		 */
+		public function SharedGroupsExtension( parent:XML = null )
+		{
+			super(parent);
+		}
+		
 		public function getNS():String
 		{
 			return SharedGroupsExtension.NS;
