@@ -30,7 +30,6 @@ package org.igniterealtime.xiff.data.muc
 	public class MUCExtensionTest
 	{
 		
-		
 		[Test( description="password value" )]
 		public function testValuePassword():void
 		{
@@ -41,6 +40,75 @@ package org.igniterealtime.xiff.data.muc
 			
 			assertEquals( testValue, ext.password );
 		}
+		
+		[Test( description="history true value" )]
+		public function testValueHistoryTrue():void
+		{
+			var testValue:Boolean = true;
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.history = testValue;
+			
+			assertEquals( testValue, ext.history );
+		}
+		
+		[Test( description="history false value" )]
+		public function testValueHistoryFalse():void
+		{
+			var testValue:Boolean = false;
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.history = testValue;
+			
+			assertEquals( testValue, ext.history );
+		}
+		
+		[Test( description="maxchars value" )]
+		public function testValueMaxchars():void
+		{
+			var testValue:int = 44;
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.maxchars = testValue;
+			
+			assertEquals( testValue, ext.maxchars );
+		}
+		
+		[Test( description="maxstanzas value" )]
+		public function testValueMaxstanzas():void
+		{
+			var testValue:int = 7;
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.maxstanzas = testValue;
+			
+			assertEquals( testValue, ext.maxstanzas );
+		}
+		
+		[Test( description="seconds value" )]
+		public function testValueSeconds():void
+		{
+			var testValue:Number = 7.5;
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.seconds = testValue;
+			
+			assertEquals( testValue, ext.seconds );
+		}
+		
+		
+		[Test( description="since value" )]
+		public function testValueSince():void
+		{
+			var testValue:String = "1969-07-21T02:56:15Z";
+			
+			var ext:MUCExtension = new MUCExtension();
+			ext.since = testValue;
+			
+			assertEquals( testValue, ext.since );
+		}
+		
+		
 		
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
@@ -55,5 +123,7 @@ package org.igniterealtime.xiff.data.muc
 			assertEquals( elementName, node.localName() );
 		}
 	
+		
+		
 	}
 }

@@ -43,15 +43,15 @@ package org.igniterealtime.xiff.data.muc
 			assertEquals( testValue.toString(), ext.actor.toString() );
 		}
 		
-		[Test( description="reason value" )]
-		public function testValueReason():void
+		[Test( description="actorNick value" )]
+		public function testValueActorNick():void
 		{
-			var testValue:String = "secretPassWord01234";
+			var testValue:String = "NikkyNiccy";
 			
 			var ext:MUCItem = new MUCItem();
-			ext.reason = testValue;
+			ext.actorNick = testValue;
 			
-			assertEquals( testValue, ext.reason );
+			assertEquals( testValue, ext.actorNick );
 		}
 		
 		[Test( description="affiliation value" )]
@@ -63,6 +63,28 @@ package org.igniterealtime.xiff.data.muc
 			ext.affiliation = testValue;
 			
 			assertEquals( testValue, ext.affiliation );
+		}
+		
+		[Test( description="reason value" )]
+		public function testValueReason():void
+		{
+			var testValue:String = "secretPassWord01234";
+			
+			var ext:MUCItem = new MUCItem();
+			ext.reason = testValue;
+			
+			assertEquals( testValue, ext.reason );
+		}
+		
+		[Test( description="role value" )]
+		public function testValueRole():void
+		{
+			var testValue:String = "participant";
+			
+			var ext:MUCItem = new MUCItem();
+			ext.role = testValue;
+			
+			assertEquals( testValue, ext.role );
 		}
 		
 		[Test( description="jid value" )]
@@ -85,17 +107,6 @@ package org.igniterealtime.xiff.data.muc
 			ext.nick = testValue;
 			
 			assertEquals( testValue, ext.nick );
-		}
-		
-		[Test( description="role value" )]
-		public function testValueRole():void
-		{
-			var testValue:String = "participant";
-			
-			var ext:MUCItem = new MUCItem();
-			ext.role = testValue;
-			
-			assertEquals( testValue, ext.role );
 		}
 		
 		[Test( description="XML element name checking" )]
@@ -153,6 +164,21 @@ package org.igniterealtime.xiff.data.muc
 			assertEquals( testValue, ext.affiliation );
 		}
 		
+		[Test( description="XML parse - reason" )]
+		public function testParseReason():void
+		{
+			var incoming:XML = <item affiliation='none' role='none'>
+			  <actor nick='Fluellen' jid="flue@llen.tt/rapidRate"/>
+			  <reason>Avaunt, you cullion!</reason>
+			</item>;
+			var testValue:String = "Avaunt, you cullion!";
+			
+			var ext:MUCItem = new MUCItem();
+			ext.xml = incoming;
+			
+			assertEquals( testValue, ext.reason );
+		}
+		
 		[Test( description="XML parse - role" )]
 		public function testParseRole():void
 		{
@@ -165,6 +191,35 @@ package org.igniterealtime.xiff.data.muc
 			ext.xml = incoming;
 			
 			assertEquals( testValue, ext.role );
+		}
+		
+		[Test( description="XML parse - jid" )]
+		public function testParseJid():void
+		{
+			var incoming:XML = <item affiliation='none'
+			  jid='hag66@shakespeare.lit/pda'
+			  role='participant'/>;
+			var testValue:String = "hag66@shakespeare.lit/pda";
+			
+			var ext:MUCItem = new MUCItem();
+			ext.xml = incoming;
+			
+			assertEquals( testValue, ext.jid.toString() );
+		}
+		
+		[Test( description="XML parse - nick" )]
+		public function testParseNick():void
+		{
+			var incoming:XML = <item affiliation='member'
+			  jid='hag66@shakespeare.lit/pda'
+			  nick='oldhag'
+			  role='participant'/>;
+			var testValue:String = "oldhag";
+			
+			var ext:MUCItem = new MUCItem();
+			ext.xml = incoming;
+			
+			assertEquals( testValue, ext.nick );
 		}
 		
 		

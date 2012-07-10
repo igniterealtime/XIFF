@@ -23,58 +23,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.forms
+package org.igniterealtime.xiff.data.xhtml
 {
 	import org.flexunit.asserts.*;
 	
-	public class FormExtensionTest
+	public class XHTMLExtensionTest
 	{
-	
-		
-		[Test( description="title value" )]
-		public function testValueTitle():void
-		{
-			var testValue:String = "Full of Sand";
-			
-			var ext:FormExtension = new FormExtension();
-			ext.title = testValue;
-			
-			assertEquals( testValue, ext.title );
-		}
 		
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
 		{
-			var nameSpace:String = "jabber:x:data";
-			var elementName:String = "x";
+			var nameSpace:String = "http://jabber.org/protocol/xhtml-im";
+			var elementName:String = "html";
 			
-			var ext:FormExtension = new FormExtension();
+			var ext:XHTMLExtension = new XHTMLExtension();
 			var node:XML = ext.xml;
 			
 			assertEquals( nameSpace, node.namespace().uri );
 			assertEquals( elementName, node.localName() );
 		}
-	
-		[Test( description="parse from XML - title" )]
-		public function testParseTitle():void
+		
+		/*
+		[Test( description="parse from XML - body" )]
+		public function testParseBody():void
 		{
-			var incoming:XML = <x xmlns='jabber:x:data' type='form'>
-			  <title>Bot Configuration</title>
-			  <instructions>Fill out this form to configure your new bot!</instructions>
-			  <field type='fixed'><value>Section 4: Invitations</value></field>
-			  <field type='jid-multi'
-					 label='People to invite'
-					 var='invitelist'>
-				<desc>Tell all your friends about your new bot!</desc>
-			  </field>
-			</x>;
-			var testValue:String = "Bot Configuration";
+			var incoming:XML = <html xmlns='http://jabber.org/protocol/xhtml-im'>
+				<body xmlns='http://www.w3.org/1999/xhtml'>
+				  <p style='font-weight:bold'>hi!</p>
+				</body>
+			  </html>;
+			var testValue:String = "<p style='font-weight:bold'>hi!</p>";
 			
-			var ext:FormExtension = new FormExtension();
+			var ext:XHTMLExtension = new XHTMLExtension();
 			ext.xml = incoming;
 			
-			assertEquals( testValue, ext.title );
+			assertEquals( testValue, ext.body );
 		}
-		
+		*/
+
 	}
 }
