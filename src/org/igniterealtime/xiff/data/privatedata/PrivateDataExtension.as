@@ -133,7 +133,7 @@ package org.igniterealtime.xiff.data.privatedata
 				
 		override public function set xml( node:XML ):void
 		{
-			xml = node;
+			super.xml = node;
 			
 			if (node.children().length() > 0)
 			{

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.util
 			_date = new Date();
 			_date.setUTCHours(23, 55, 23, 101);
 			_date.setUTCFullYear(2012, 11, 25);
-		}		
+		}
 		
 		[Test( description="Date as a string" )]
 		public function testDateString():void
@@ -49,12 +49,31 @@ package org.igniterealtime.xiff.util
 			assertEquals( "2012-12-25", dateString );
 		}
 		
+		[Test( description="Date as a legacy string" )]
+		public function testDateLegacyString():void
+		{
+			var dateString:String = DateTimeParser.date2legacyString( _date );
+			assertEquals( "20121225", dateString );
+		}
+		
 		[Test( description="String to Date parsing" )]
 		public function testStringDate():void
 		{
 			var dateString:String = "2012-12-25";
 			var date:Date = DateTimeParser.string2date(dateString);
-			assertEquals( _date.toDateString(), date.toDateString() );
+			assertEquals( _date.fullYearUTC, date.fullYearUTC );
+			assertEquals( _date.monthUTC, date.monthUTC );
+			assertEquals( _date.dateUTC, date.dateUTC );
+		}
+		
+		[Test( description="Legacy String to Date parsing" )]
+		public function testLegacyStringDate():void
+		{
+			var dateString:String = "20121225";
+			var date:Date = DateTimeParser.legacyString2date(dateString);
+			assertEquals( _date.fullYearUTC, date.fullYearUTC );
+			assertEquals( _date.monthUTC, date.monthUTC );
+			assertEquals( _date.dateUTC, date.dateUTC );
 		}
 		
 		[Test( description="Time as a string" )]
@@ -69,7 +88,9 @@ package org.igniterealtime.xiff.util
 		{
 			var timeString:String = "23:55:23";
 			var date:Date = DateTimeParser.string2time(timeString);
-			assertEquals( _date.toTimeString(), date.toTimeString() );
+			assertEquals( _date.hoursUTC, date.hoursUTC );
+			assertEquals( _date.minutesUTC, date.minutesUTC );
+			assertEquals( _date.secondsUTC, date.secondsUTC );
 		}
 		
 		[Test( description="String to Date and Time parsing" )]
@@ -77,6 +98,14 @@ package org.igniterealtime.xiff.util
 		{
 			var timeString:String = "2012-12-25T23:55:23";
 			var date:Date = DateTimeParser.string2dateTime(timeString);
+			assertEquals( _date.toUTCString(), date.toUTCString() );
+		}
+		
+		[Test( description="Legacy String to Date and Time parsing" )]
+		public function testLegacyStringDateTime():void
+		{
+			var timeString:String = "20121225T23:55:23";
+			var date:Date = DateTimeParser.legacyString2dateTime(timeString);
 			assertEquals( _date.toUTCString(), date.toUTCString() );
 		}
 		

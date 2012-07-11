@@ -377,13 +377,10 @@ package org.igniterealtime.xiff.data
 			{
 				// Legacy
 				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
-				var value:String = xml.x.@stamp || legacy[0].attribute("stamp")[0];
+				var value:String = legacy[0].attribute("stamp")[0];
 				trace("Message used 'x' as defined in XEP-0091.");
 				
-				stamp = DateTimeParser.string2time(value.split("T").pop());
-				stamp.setUTCFullYear(value.substr(0, 4));
-				stamp.setUTCMonth(parseInt(value.substr(4, 2)) - 1);
-				stamp.setUTCDate(value.substr(6, 2));
+				stamp = DateTimeParser.legacyString2dateTime(legacy[0].attribute("stamp")[0]);
 			}
 			else
 			{

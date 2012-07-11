@@ -29,12 +29,16 @@ package org.igniterealtime.xiff.util
 	/**
 	 * A set of static functions to parse the time and date values.
 	 * All date related methods are the UTC versions.
+	 *
+	 * <p>Also methods for handling legacy format are available</p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0082.html
+	 * @see http://xmpp.org/extensions/xep-0090.html
 	 */
 	public class DateTimeParser
 	{
 		/**
-		 * Convert a date object to a string, <code>CCYY-MM-DD</code>
+		 * Convert a Date object to a string, <code>CCYY-MM-DD</code>
 		 * @param	date
 		 * @return <code>CCYY-MM-DD</code>
 		 */
@@ -42,6 +46,19 @@ package org.igniterealtime.xiff.util
 		{
 			var value:String = date.getUTCFullYear() + "-";
 			value += (date.getUTCMonth() < 9 ? "0" : "") + (date.getUTCMonth() + 1) + "-";
+			value += (date.getUTCDate() < 10 ? "0" : "") + date.getUTCDate();
+			return value;
+		}
+		
+		/**
+		 * Convert a Date object to a string, <code>CCYYMMDD</code>, using UTC timezone.
+		 * @param	date
+		 * @return <code>CCYYMMDD</code>
+		 */
+		public static function date2legacyString(date:Date):String
+		{
+			var value:String = date.getUTCFullYear().toString();
+			value += (date.getUTCMonth() < 9 ? "0" : "") + (date.getUTCMonth() + 1);
 			value += (date.getUTCDate() < 10 ? "0" : "") + date.getUTCDate();
 			return value;
 		}
@@ -60,7 +77,21 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * Convert a date object to a string <code>hh:mm:ss[.sss][TZD]</code>
+		 * Convert a lecagy string <code>CCYYMMDD</code> to a Date object.
+		 *
+		 * @param	stamp
+		 * @return Date object
+		 */
+		public static function legacyString2date(stamp:String):Date
+		{
+			var date:Date = new Date();
+			date.setUTCFullYear(stamp.substr(0, 4), parseInt(stamp.substr(4, 2)) - 1, stamp.substr(6, 2));
+			date.setUTCMinutes(0, 0, 0);
+			return date;
+		}
+		
+		/**
+		 * Convert a Date object to a string <code>hh:mm:ss[.sss][TZD]</code>
 		 * @param	time
 		 * @param	ms	Include milliseconds in the resulting string
 		 * @return <code>hh:mm:ss[.sss][TZD]</code>
@@ -79,7 +110,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * Convert a string <code>hh:mm:ss[.sss][TZD]</code> to a date object
+		 * Convert a string <code>hh:mm:ss[.sss][TZD]</code> to a Date object
 		 * @param	stamp
 		 * @return Date object
 		 */
@@ -95,7 +126,7 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * Convert a date object to a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
+		 * Convert a Date object to a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
 		 * @param	dateTime
 		 * @param	ms	Include milliseconds in the resulting string
 		 * @return <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code>
@@ -108,13 +139,29 @@ package org.igniterealtime.xiff.util
 		}
 		
 		/**
-		 * Convert a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code> to a date object
+		 * Convert a string <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code> to a Date object
 		 * @param	stamp
 		 * @return Date object
+		 * @see http://xmpp.org/extensions/xep-0082.html
 		 */
 		public static function string2dateTime(stamp:String):Date
 		{
 			var date:Date = string2date(stamp.substring(0, stamp.indexOf("T")));
+			var time:Date = string2time(stamp.substring(stamp.indexOf("T") + 1));
+			date.setUTCHours(time.getUTCHours(), time.getUTCMinutes(),
+				time.getUTCSeconds(), time.getUTCMilliseconds());
+			return date;
+		}
+		
+		/**
+		 * Convert a legacy string <code>CCYYMMDDThh:mm:ss</code> to a Date object
+		 * @param	stamp
+		 * @return Date object
+		 * @see http://xmpp.org/extensions/xep-0090.html
+		 */
+		public static function legacyString2dateTime(stamp:String):Date
+		{
+			var date:Date = legacyString2date(stamp.substring(0, stamp.indexOf("T")));
 			var time:Date = string2time(stamp.substring(stamp.indexOf("T") + 1));
 			date.setUTCHours(time.getUTCHours(), time.getUTCMinutes(),
 				time.getUTCSeconds(), time.getUTCMilliseconds());
