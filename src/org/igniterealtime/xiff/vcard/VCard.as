@@ -662,7 +662,7 @@ package org.igniterealtime.xiff.vcard
 			_loaded = true;
 			dispatchEvent( new VCardEvent( VCardEvent.LOADED, this, true, false ) );
 		}
-
+		
 		/**
 		 * Saves a vCard.
 		 * @param connection
@@ -671,13 +671,48 @@ package org.igniterealtime.xiff.vcard
 		{
 			var id:String = IQ.generateID( "save_vcard_" );
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, id, saveVCard_result );
-			var vcardExt:VCardExtension = new VCardExtension();
-			var vcardExtNode:XML = new XML( vcardExt.xml.toString() );
 
+			var vcardExt:VCardExtension = createExtension();
+
+			iq.addExtension( vcardExt );
+			connection.send( iq );
+		}
+
+		/**
+		 *
+		 * @param resultIQ
+		 */
+		public function saveVCard_result( resultIQ:IQ ):void
+		{
+			var bareJID:String = resultIQ.to.unescaped.bareJID;
+			if ( resultIQ.type == IQ.TYPE_ERROR )
+			{
+				dispatchEvent( new VCardEvent( VCardEvent.SAVE_ERROR, cache[ bareJID ],
+					true, true ) );
+			}
+			else
+			{
+				delete cache[ bareJID ]; // Force profile refresh on next view
+				
+				dispatchEvent( new VCardEvent( VCardEvent.SAVED, this, true, false ) );
+			}
+		}
+		
+		/**
+		 * Create the XML needed to send the VCard within the Extension.
+		 * @return
+		 */
+		public function createExtension():VCardExtension
+		{
+			var vcardExt:VCardExtension = new VCardExtension();
+			var vcardXml:XML = vcardExt.xml;
+		
+			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
+			
 			//FN
 			if ( formattedName )
 			{
-				vcardExtNode.FN = formattedName;
+				vcardXml.FN = formattedName;
 			}
 
 			//N
@@ -710,13 +745,13 @@ package org.igniterealtime.xiff.vcard
 					nameNode.SUFFIX = name.suffix;
 				}
 
-				vcardExtNode.appendChild( nameNode );
+				vcardXml.appendChild( nameNode );
 			}
 
 			//NICKNAME
 			if ( nickname )
 			{
-				vcardExtNode.NICKNAME = nickname;
+				vcardXml.NICKNAME = nickname;
 			}
 
 			//PHOTO
@@ -748,13 +783,13 @@ package org.igniterealtime.xiff.vcard
 					photoNode.appendChild( photoExtNode );
 				}
 
-				vcardExtNode.appendChild( photoNode );
+				vcardXml.appendChild( photoNode );
 			}
 
 			//BDAY
 			if ( birthday )
 			{
-				vcardExtNode.BDAY = DateTimeParser.date2string( birthday );
+				vcardXml.BDAY = DateTimeParser.date2string( birthday );
 			}
 
 			//ADR
@@ -798,7 +833,7 @@ package org.igniterealtime.xiff.vcard
 					workAddressNode.CTRY = workAddress.country;
 				}
 
-				vcardExtNode.appendChild( workAddressNode );
+				vcardXml.appendChild( workAddressNode );
 			}
 
 			if ( homeAddress )
@@ -841,7 +876,7 @@ package org.igniterealtime.xiff.vcard
 					homeAddressNode.CTRY = homeAddress.country;
 				}
 
-				vcardExtNode.appendChild( homeAddressNode );
+				vcardXml.appendChild( homeAddressNode );
 			}
 
 			//LABEL
@@ -850,7 +885,7 @@ package org.igniterealtime.xiff.vcard
 				var workAddressLabelNode:XML = <LABEL/>;
 				workAddressLabelNode.appendChild( <WORK/> );
 				workAddressLabelNode.LINE = workAddressLabel;
-				vcardExtNode.appendChild( workAddressLabelNode );
+				vcardXml.appendChild( workAddressLabelNode );
 			}
 
 			if ( homeAddressLabel )
@@ -858,7 +893,7 @@ package org.igniterealtime.xiff.vcard
 				var homeAddressLabelNode:XML = <LABEL/>;
 				homeAddressLabelNode.appendChild( <HOME/> );
 				homeAddressLabelNode.LINE = homeAddressLabel;
-				vcardExtNode.appendChild( homeAddressLabelNode );
+				vcardXml.appendChild( homeAddressLabelNode );
 			}
 
 			//TEL
@@ -872,7 +907,7 @@ package org.igniterealtime.xiff.vcard
 					var workVoiceNode:XML = phoneNode.copy();
 					workVoiceNode.appendChild( <VOICE/> );
 					workVoiceNode.NUMBER = workTelephone.voice;
-					vcardExtNode.appendChild( workVoiceNode );
+					vcardXml.appendChild( workVoiceNode );
 				}
 
 				if ( workTelephone.fax )
@@ -880,7 +915,7 @@ package org.igniterealtime.xiff.vcard
 					var workFaxNode:XML = phoneNode.copy();
 					workFaxNode.appendChild( <FAX/> );
 					workFaxNode.NUMBER = workTelephone.fax;
-					vcardExtNode.appendChild( workFaxNode );
+					vcardXml.appendChild( workFaxNode );
 				}
 
 				if ( workTelephone.pager )
@@ -888,7 +923,7 @@ package org.igniterealtime.xiff.vcard
 					var workPagerNode:XML = phoneNode.copy();
 					workPagerNode.appendChild( <PAGER/> );
 					workPagerNode.NUMBER = workTelephone.pager;
-					vcardExtNode.appendChild( workPagerNode );
+					vcardXml.appendChild( workPagerNode );
 				}
 
 				if ( workTelephone.msg )
@@ -896,7 +931,7 @@ package org.igniterealtime.xiff.vcard
 					var workMsgNode:XML = phoneNode.copy();
 					workMsgNode.appendChild( <MSG/> );
 					workMsgNode.NUMBER = workTelephone.msg;
-					vcardExtNode.appendChild( workMsgNode );
+					vcardXml.appendChild( workMsgNode );
 				}
 
 				if ( workTelephone.cell )
@@ -904,7 +939,7 @@ package org.igniterealtime.xiff.vcard
 					var workCellNode:XML = phoneNode.copy();
 					workCellNode.appendChild( <CELL/> );
 					workCellNode.NUMBER = workTelephone.cell;
-					vcardExtNode.appendChild( workCellNode );
+					vcardXml.appendChild( workCellNode );
 				}
 
 				if ( workTelephone.video )
@@ -912,7 +947,7 @@ package org.igniterealtime.xiff.vcard
 					var workVideoNode:XML = phoneNode.copy();
 					workVideoNode.appendChild( <VIDEO/> );
 					workVideoNode.NUMBER = workTelephone.video;
-					vcardExtNode.appendChild( workVideoNode );
+					vcardXml.appendChild( workVideoNode );
 				}
 			}
 			if ( homeTelephone )
@@ -924,7 +959,7 @@ package org.igniterealtime.xiff.vcard
 					var homeVoiceNode:XML = phoneNode.copy();
 					homeVoiceNode.appendChild( <VOICE/> );
 					homeVoiceNode.NUMBER = homeTelephone.voice;
-					vcardExtNode.appendChild( homeVoiceNode );
+					vcardXml.appendChild( homeVoiceNode );
 				}
 
 				if ( homeTelephone.fax )
@@ -932,7 +967,7 @@ package org.igniterealtime.xiff.vcard
 					var homeFaxNode:XML = phoneNode.copy();
 					homeFaxNode.appendChild( <FAX/> );
 					homeFaxNode.NUMBER = homeTelephone.fax;
-					vcardExtNode.appendChild( homeFaxNode );
+					vcardXml.appendChild( homeFaxNode );
 				}
 
 				if ( homeTelephone.pager )
@@ -940,7 +975,7 @@ package org.igniterealtime.xiff.vcard
 					var homePagerNode:XML = phoneNode.copy();
 					homePagerNode.appendChild( <PAGER/> );
 					homePagerNode.NUMBER = homeTelephone.pager;
-					vcardExtNode.appendChild( homePagerNode );
+					vcardXml.appendChild( homePagerNode );
 				}
 
 				if ( homeTelephone.msg )
@@ -948,7 +983,7 @@ package org.igniterealtime.xiff.vcard
 					var homeMsgNode:XML = phoneNode.copy();
 					homeMsgNode.appendChild( <MSG/> );
 					homeMsgNode.NUMBER = homeTelephone.msg;
-					vcardExtNode.appendChild( homeMsgNode );
+					vcardXml.appendChild( homeMsgNode );
 				}
 
 				if ( homeTelephone.cell )
@@ -956,7 +991,7 @@ package org.igniterealtime.xiff.vcard
 					var homeCellNode:XML = phoneNode.copy();
 					homeCellNode.appendChild( <CELL/> );
 					homeCellNode.NUMBER = homeTelephone.cell;
-					vcardExtNode.appendChild( homeCellNode );
+					vcardXml.appendChild( homeCellNode );
 				}
 
 				if ( homeTelephone.video )
@@ -964,7 +999,7 @@ package org.igniterealtime.xiff.vcard
 					var homeVideoNode:XML = phoneNode.copy();
 					homeVideoNode.appendChild( <VIDEO/> );
 					homeVideoNode.NUMBER = homeTelephone.video;
-					vcardExtNode.appendChild( homeVideoNode );
+					vcardXml.appendChild( homeVideoNode );
 				}
 			}
 
@@ -975,25 +1010,25 @@ package org.igniterealtime.xiff.vcard
 				emailNode.appendChild( <INTERNET/> );
 				emailNode.appendChild( <PREF/> );
 				emailNode.USERID = email;
-				vcardExtNode.appendChild( emailNode );
+				vcardXml.appendChild( emailNode );
 			}
 
 			//JABBERID
 			if ( jid )
 			{
-				vcardExtNode.JABBERID = jid.toString();
+				vcardXml.JABBERID = jid.toString();
 			}
 
 			//MAILER
 			if ( mailer )
 			{
-				vcardExtNode.MAILER = mailer;
+				vcardXml.MAILER = mailer;
 			}
 
 			//TZ
 			if ( timezone )
 			{
-				vcardExtNode.TZ = DateTimeParser.date2string( timezone );
+				vcardXml.TZ = DateTimeParser.date2string( timezone );
 			}
 
 			//GEO
@@ -1011,19 +1046,19 @@ package org.igniterealtime.xiff.vcard
 					geoNode.LON = geographicalPosition.longitude;
 				}
 
-				vcardExtNode.appendChild( geoNode );
+				vcardXml.appendChild( geoNode );
 			}
 
 			//TITLE
 			if ( title )
 			{
-				vcardExtNode.TITLE = title;
+				vcardXml.TITLE = title;
 			}
 
 			//ROLE
 			if ( role )
 			{
-				vcardExtNode.ROLE = role;
+				vcardXml.ROLE = role;
 			}
 
 			//LOGO
@@ -1055,7 +1090,7 @@ package org.igniterealtime.xiff.vcard
 					logoNode.appendChild( logoExtNode );
 				}
 
-				vcardExtNode.appendChild( logoNode );
+				vcardXml.appendChild( logoNode );
 			}
 
 			//AGENT
@@ -1075,7 +1110,7 @@ package org.igniterealtime.xiff.vcard
 					organizationNode.ORGUNIT = organization.unit;
 				}
 
-				vcardExtNode.appendChild( organizationNode );
+				vcardXml.appendChild( organizationNode );
 			}
 
 			//CATEGORIES
@@ -1083,19 +1118,19 @@ package org.igniterealtime.xiff.vcard
 			//NOTE
 			if ( note )
 			{
-				vcardExtNode.NOTE = note;
+				vcardXml.NOTE = note;
 			}
 
 			//PRODID
 			if ( productID )
 			{
-				vcardExtNode.PRODID = productID;
+				vcardXml.PRODID = productID;
 			}
 
 			//REV
 			if ( revision )
 			{
-				vcardExtNode.REV = DateTimeParser.date2string( revision );
+				vcardXml.REV = DateTimeParser.date2string( revision );
 			}
 
 			//SORT-STRING
@@ -1103,7 +1138,7 @@ package org.igniterealtime.xiff.vcard
 			{
 				var sortStringNode:XML = <SORT-STRING/>;
 				sortStringNode.appendChild( sortString );
-				vcardExtNode.appendChild( sortStringNode );
+				vcardXml.appendChild( sortStringNode );
 			}
 
 			//SOUND
@@ -1137,19 +1172,19 @@ package org.igniterealtime.xiff.vcard
 					soundNode.appendChild( soundExtNode );
 				}
 
-				vcardExtNode.appendChild( soundNode );
+				vcardXml.appendChild( soundNode );
 			}
 
 			//UID
 			if ( uid )
 			{
-				vcardExtNode.UID = uid;
+				vcardXml.UID = uid;
 			}
 
 			//URL
 			if ( url )
 			{
-				vcardExtNode.URL = url;
+				vcardXml.URL = url;
 			}
 
 			//CLASS
@@ -1173,7 +1208,7 @@ package org.igniterealtime.xiff.vcard
 					classNode.appendChild( confidentialNode );
 				}
 
-				vcardExtNode.appendChild( classNode );
+				vcardXml.appendChild( classNode );
 			}
 
 			//KEY
@@ -1181,7 +1216,7 @@ package org.igniterealtime.xiff.vcard
 			//DESC
 			if ( description )
 			{
-				vcardExtNode.DESC = description;
+				vcardXml.DESC = description;
 			}
 
 			//X
@@ -1189,36 +1224,17 @@ package org.igniterealtime.xiff.vcard
 			{
 				for each( var xName:String in extensionNames )
 				{
-					vcardExtNode[ xName ] = _extensions[ xName ];
+					vcardXml[ xName ] = _extensions[ xName ];
 				}
 			}
-
-			vcardExt.xml = vcardExtNode;
-
-			iq.addExtension( vcardExt );
-			connection.send( iq );
+			
+			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
+			
+			vcardExt.xml = vcardXml;
+			
+			return vcardExt;
 		}
-
-		/**
-		 *
-		 * @param resultIQ
-		 */
-		public function saveVCard_result( resultIQ:IQ ):void
-		{
-			var bareJID:String = resultIQ.to.unescaped.bareJID;
-			if ( resultIQ.type == IQ.TYPE_ERROR )
-			{
-				dispatchEvent( new VCardEvent( VCardEvent.SAVE_ERROR, cache[ bareJID ],
-					true, true ) );
-			}
-			else
-			{
-				delete cache[ bareJID ]; // Force profile refresh on next view
-				
-				dispatchEvent( new VCardEvent( VCardEvent.SAVED, this, true, false ) );
-			}
-		}
-
+		
 		/**
 		 * Birthday.
 		 */
@@ -1226,10 +1242,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _birthday;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set birthday( value:Date ):void
 		{
 			_birthday = value;
@@ -1242,10 +1254,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _description;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set description( value:String ):void
 		{
 			_description = value;
@@ -1258,10 +1266,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _email;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set email( value:String ):void
 		{
 			_email = value;
@@ -1282,10 +1286,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _formattedName;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set formattedName( value:String ):void
 		{
 			_formattedName = value;
@@ -1298,10 +1298,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _geographicalPosition;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set geographicalPosition( value:IVCardGeographicalPosition ):void
 		{
 			_geographicalPosition = value;
@@ -1314,10 +1310,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _homeAddress;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set homeAddress( value:IVCardAddress ):void
 		{
 			_homeAddress = value;
@@ -1330,10 +1322,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _homeAddressLabel;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set homeAddressLabel( value:String ):void
 		{
 			_homeAddressLabel = value;
@@ -1346,10 +1334,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _homeTelephone;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set homeTelephone( value:IVCardTelephone ):void
 		{
 			_homeTelephone = value;
@@ -1362,10 +1346,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _jid;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set jid( value:UnescapedJID ):void
 		{
 			_jid = value;
@@ -1386,10 +1366,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _logo;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set logo( value:IVCardPhoto ):void
 		{
 			_logo = value;
@@ -1402,10 +1378,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _mailer;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set mailer( value:String ):void
 		{
 			_mailer = value;
@@ -1418,10 +1390,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _name;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set name( value:IVCardName ):void
 		{
 			_name = value;
@@ -1434,10 +1402,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _nickname;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set nickname( value:String ):void
 		{
 			_nickname = value;
@@ -1450,10 +1414,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _note;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set note( value:String ):void
 		{
 			_note = value;
@@ -1466,10 +1426,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _organization;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set organization( value:IVCardOrganization ):void
 		{
 			_organization = value;
@@ -1482,10 +1438,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _photo;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set photo( value:IVCardPhoto ):void
 		{
 			_photo = value;
@@ -1498,10 +1450,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _privacyClass;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set privacyClass( value:String ):void
 		{
 			_privacyClass = value;
@@ -1514,10 +1462,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _productID;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set productID( value:String ):void
 		{
 			_productID = value;
@@ -1530,10 +1474,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _revision;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set revision( value:Date ):void
 		{
 			_revision = value;
@@ -1546,10 +1486,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _role;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set role( value:String ):void
 		{
 			_role = value;
@@ -1562,10 +1498,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _sortString;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set sortString( value:String ):void
 		{
 			_sortString = value;
@@ -1578,10 +1510,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _sound;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set sound( value:IVCardSound ):void
 		{
 			_sound = value;
@@ -1594,10 +1522,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _timezone;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set timezone( value:Date ):void
 		{
 			_timezone = value;
@@ -1610,10 +1534,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _title;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set title( value:String ):void
 		{
 			_title = value;
@@ -1626,10 +1546,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _uid;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set uid( value:String ):void
 		{
 			_uid = value;
@@ -1642,10 +1558,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _url;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set url( value:String ):void
 		{
 			_url = value;
@@ -1659,10 +1571,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _version;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set version( value:String ):void
 		{
 			_version = value;
@@ -1675,10 +1583,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _workAddress;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set workAddress( value:IVCardAddress ):void
 		{
 			_workAddress = value;
@@ -1691,10 +1595,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _workAddressLabel;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set workAddressLabel( value:String ):void
 		{
 			_workAddressLabel = value;
@@ -1707,10 +1607,6 @@ package org.igniterealtime.xiff.vcard
 		{
 			return _workTelephone;
 		}
-
-		/**
-		 * @private
-		 */
 		public function set workTelephone( value:IVCardTelephone ):void
 		{
 			_workTelephone = value;

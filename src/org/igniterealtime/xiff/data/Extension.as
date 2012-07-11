@@ -66,5 +66,15 @@ package org.igniterealtime.xiff.data
 				delete parent[index];
 			}
 		}
+		
+		/**
+		 * Override in order to take care of the Namespacing.
+		 */
+		override public function set xml( value:XML ):void
+		{
+			super.xml = value;
+			
+			xml.setNamespace( IExtension(this).getNS() );
+		}
 	}
 }
