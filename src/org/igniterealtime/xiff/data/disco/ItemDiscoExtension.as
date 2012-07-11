@@ -39,7 +39,7 @@ package org.igniterealtime.xiff.data.disco
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#items";
 
-		private var _items:Array;
+		private var _items:Array = []; // [] of DiscoItem
 
 		/**
 		 *
@@ -70,28 +70,14 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 * An array of objects that represent the items discovered
+		 * An array of DiscoItems that represent the items discovered.
 		 *
-		 * <p>The objects in the array have the following possible
-		 * attributes:</p>
-		 *
-		 * <ul>
-		 * <li><code>jid</code>: the resource name</li>
-		 * <li><code>node</code>: a path to a resource that can be discovered
-		 * without a JID</li>
-		 * <li><code>name</code>: the friendly name of the jid</li>
-		 * <li><code>action</code>: the kind of action that occurs during
-		 * publication of services it can be either "remove" or "update"</li>
-		 * </ul>
+		 * @see org.igniterealtime.xiff.data.disco.DiscoItem
 		 */
 		public function get items():Array
 		{
 			return _items;
 		}
-
-		/**
-		 *
-		 */
 		public function set items( value:Array ):void
 		{
 			_items = value;
@@ -105,13 +91,11 @@ package org.igniterealtime.xiff.data.disco
 
 			for each( var child:XML in xml.children() )
 			{
-				switch( child.localName() )
+				if ( child.localName() == "item" )
 				{
-					case "item":
-						var item:DiscoItem = new DiscoItem( xml );
-						item.xml = child;
-						_items.push( item );
-						break;
+					var item:DiscoItem = new DiscoItem( xml );
+					item.xml = child;
+					_items.push( item );
 				}
 			}
 		}

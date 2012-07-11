@@ -65,7 +65,9 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 * Attribute specifying the JID of the item
+		 * Attribute specifying the JID of the item.
+		 *
+		 * <p>required</p>
 		 */
 		public function get jid():String
 		{
@@ -77,7 +79,9 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-		 * A natural-language name for the item
+		 * A natural-language name for the item.
+		 *
+		 * <p>optional</p>
 		 */
 		public function get name():String
 		{
@@ -92,6 +96,8 @@ package org.igniterealtime.xiff.data.disco
 		 * The value of the node attribute may or may not have semantic meaning;
 		 * from the perspective of Service Discovery, a node is merely
 		 * something that is associated with an entity.
+		 *
+		 * <p>optional</p>
 		 */
 		public function get node():String
 		{
