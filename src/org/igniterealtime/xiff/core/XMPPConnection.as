@@ -1511,6 +1511,10 @@ package org.igniterealtime.xiff.core
 
 			bytedata.position = 0;
 
+			var event:OutgoingDataEvent = new OutgoingDataEvent();
+			event.data = bytedata;
+			dispatchEvent( event );
+			
 			if ( compressionNegotiated )
 			{
 				bytedata.compress();
@@ -1524,10 +1528,6 @@ package org.igniterealtime.xiff.core
 			}
 
 			_outgoingBytes += bytedata.length;
-
-			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			event.data = bytedata;
-			dispatchEvent( event );
 		}
 
 		/**
