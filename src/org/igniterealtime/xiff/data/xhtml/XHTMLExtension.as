@@ -92,25 +92,11 @@ package org.igniterealtime.xiff.data.xhtml
 		 */
 		public function get body():String
 		{
-			var list:XMLList = xml.children().(localName() == "body");
-			if (list.length() > 0)
-			{
-				XML.prettyPrinting = false;
-				return list[0].toXMLString();
-			}
-			return null;
+			return getField("body");
 		}
 		public function set body(value:String):void
 		{
-			if (value == null)
-			{
-				delete xml.body;
-			}
-			else
-			{
-				var node:XML = new XML(value);
-				xml.body = node;
-			}
+			setField("body", value);
 		}
 	}
 }
