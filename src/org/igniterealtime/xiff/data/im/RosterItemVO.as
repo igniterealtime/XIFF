@@ -41,7 +41,7 @@ package org.igniterealtime.xiff.data.im
 
 		private var _askType:String;
 
-		private var _displayName:String;
+		private var _nickname:String;
 
 		private var _groups:Array = [];
 
@@ -123,15 +123,15 @@ package org.igniterealtime.xiff.data.im
 		/**
 		 *
 		 */
-		public function get displayName():String
+		public function get nickname():String
 		{
-			return _displayName ? _displayName : _jid.node;
+			return _nickname ? _nickname : _jid.node;
 		}
-		public function set displayName( value:String ):void
+		public function set nickname( value:String ):void
 		{
-			var olddisplayname:String = displayName;
-			_displayName = value;
-			dispatchChangeEvent("displayName", displayName, olddisplayname);
+			var oldName:String = nickname;
+			_nickname = value;
+			dispatchChangeEvent("nickname", nickname, oldName);
 		}
 
 		/**
@@ -146,7 +146,7 @@ package org.igniterealtime.xiff.data.im
 			var oldjid:UnescapedJID = _jid;
 			_jid = value;
 			//if we aren't using a custom display name, then settings the jid updates the display name
-			if ( !_displayName )
+			if ( !_nickname )
 			{
 				dispatchChangeEvent("jid", value, oldjid);
 			}

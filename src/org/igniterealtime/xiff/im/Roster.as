@@ -160,7 +160,7 @@ package org.igniterealtime.xiff.im
 		 * reflected in the local client-side copy of the roster.
 		 *
 		 * @param	id The JID of the contact to add
-		 * @param	displayName A friendly name for use when displaying this contact in the roster
+		 * @param	nickname A friendly name for use when displaying this contact in the roster
 		 * @param	groupName (Optional) The name of the group that this contact should be added to. (Used for
 		 * organization in the roster listing.
 		 * @param	requestSubscription (Optional) Determines whether a subscription request should be sent
@@ -170,11 +170,11 @@ package org.igniterealtime.xiff.im
 		 * with the new contact.
 		 * <pre>myRoster.addContact( "homer&#64;springfield.com", "Homer", "Drinking Buddies", true );</pre>
 		 */
-		public function addContact( id:UnescapedJID, displayName:String, groupName:String = null, requestSubscription:Boolean = true ):void
+		public function addContact( id:UnescapedJID, nickname:String, groupName:String = null, requestSubscription:Boolean = true ):void
 		{
-			if ( displayName == null )
+			if ( nickname == null )
 			{
-				displayName = id.toString();
+				nickname = id.toString();
 			}
 
 			var callbackMethod:Function = null;
@@ -192,12 +192,12 @@ package org.igniterealtime.xiff.im
 
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, iqID, callbackMethod );
 			var ext:RosterExtension = new RosterExtension( iq.xml );
-			ext.addItem( id.escaped, null, displayName, groupName ? [ groupName ] : null );
+			ext.addItem( id.escaped, null, nickname, groupName ? [ groupName ] : null );
 			iq.addExtension( ext );
 			_connection.send( iq );
 
 
-			addRosterItem( id, displayName, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
+			addRosterItem( id, nickname, RosterExtension.SHOW_PENDING, RosterExtension.SHOW_PENDING,
 						   [ groupName ], subscription, askType );
 		}
 
@@ -438,7 +438,7 @@ package org.igniterealtime.xiff.im
 		 */
 		public function updateContactGroups( rosterItem:IRosterItemVO, newGroupNames:Array ):void
 		{
-			updateContact( rosterItem, rosterItem.displayName, newGroupNames );
+			updateContact( rosterItem, rosterItem.nickname, newGroupNames );
 		}
 
 		/**
@@ -460,7 +460,7 @@ package org.igniterealtime.xiff.im
 		/**
 		 *
 		 * @param	jid
-		 * @param	displayName
+		 * @param	nickname
 		 * @param	show
 		 * @param	status
 		 * @param	groupNames
@@ -468,7 +468,7 @@ package org.igniterealtime.xiff.im
 		 * @param	askType
 		 * @return
 		 */
-		private function addRosterItem( jid:UnescapedJID, displayName:String, show:String, status:String, groupNames:Array, type:String, askType:String = "none" ):Boolean
+		private function addRosterItem( jid:UnescapedJID, nickname:String, show:String, status:String, groupNames:Array, type:String, askType:String = "none" ):Boolean
 		{
 			if ( !jid )
 			{
@@ -480,9 +480,9 @@ package org.igniterealtime.xiff.im
 			{
 				addItem( rosterItem );
 			}
-			if ( displayName )
+			if ( nickname )
 			{
-				rosterItem.displayName = displayName;
+				rosterItem.nickname = nickname;
 			}
 			rosterItem.subscribeType = type;
 			rosterItem.askType = askType;
@@ -756,7 +756,7 @@ package org.igniterealtime.xiff.im
 
 			if ( name )
 			{
-				item.displayName = name;
+				item.nickname = name;
 			}
 
 			var event:RosterEvent = new RosterEvent( RosterEvent.USER_SUBSCRIPTION_UPDATED );

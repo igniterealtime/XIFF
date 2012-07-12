@@ -488,7 +488,7 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 * Gets the <code>RoomOccupant</code> whose displayName matches the name passed in.
+		 * Gets the <code>RoomOccupant</code> whose nickname matches the name passed in.
 		 *
 		 * @param	name
 		 * @return
@@ -497,7 +497,7 @@ package org.igniterealtime.xiff.conference
 		{
 			for each ( var occ:RoomOccupant in this )
 			{
-				if ( occ.displayName == name )
+				if ( occ.nickname == name )
 				{
 					return occ;
 				}

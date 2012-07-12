@@ -135,9 +135,10 @@ package org.igniterealtime.xiff.data.im
 		}
 		
 		/**
-		 * Gets one item from the roster query, returning the first item found with the JID specified. If none is found, then it returns null.
+		 * Gets one item from the roster query, returning the first item found with the JID specified.
+		 * If none is found, then it returns null.
 		 *
-		 * @return A roster item object with the following attributes: "jid", "subscription", "displayName", and "groups".
+		 * @return A roster item object with the following attributes: "jid", "subscription", "nickname", and "groups".
 		 */
 		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
@@ -157,10 +158,10 @@ package org.igniterealtime.xiff.data.im
 		 *
 		 * @param	jid The JID of the contact to add
 		 * @param	subscription The subscription type of the roster item contact. There are pre-defined static variables for these string options in this class definition.
-		 * @param	displayName The display name or nickname of the contact.
+		 * @param	nickname The display name or nickname of the contact.
 		 * @param	groups An array of strings of the group names that this contact should be placed in.
 		 */
-		public function addItem( jid:EscapedJID=null, subscription:String="", displayName:String="", groups:Array=null ):void
+		public function addItem( jid:EscapedJID=null, subscription:String="", nickname:String="", groups:Array=null ):void
 		{
 			var item:RosterItem = new RosterItem( xml );
 			
@@ -172,9 +173,9 @@ package org.igniterealtime.xiff.data.im
 			{
 				item.subscription = subscription;
 			}
-			if ( displayName != "" )
+			if ( nickname != "" )
 			{
-				item.name = displayName;
+				item.name = nickname;
 			}
 			if ( groups != null )
 			{
