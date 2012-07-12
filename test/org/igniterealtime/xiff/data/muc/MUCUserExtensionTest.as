@@ -26,10 +26,56 @@
 package org.igniterealtime.xiff.data.muc
 {
 	import org.flexunit.asserts.*;
+	import org.igniterealtime.xiff.core.EscapedJID;
 	
 	public class MUCUserExtensionTest
 	{
-				
+		/*
+		[Test( description="to value" )]
+		public function testValueTo():void
+		{
+			var testValue:String = "hecate@shakespeare.lit";
+			
+			var ext:MUCUserExtension = new MUCUserExtension();
+			ext.to = new EscapedJID(testValue);
+			
+			assertEquals( testValue, ext.to.toString() );
+		}
+	
+		[Test( description="from value" )]
+		public function testValueFrom():void
+		{
+			var testValue:String = "crone1@shakespeare.lit/desktop";
+			
+			var ext:MUCUserExtension = new MUCUserExtension();
+			ext.from = new EscapedJID(testValue);
+			
+			assertEquals( testValue, ext.from.toString() );
+		}
+		*/
+	
+		[Test( description="password value" )]
+		public function testValuePassword():void
+		{
+			var testValue:String = "secretPassWord01234";
+			
+			var ext:MUCUserExtension = new MUCUserExtension();
+			ext.password = testValue;
+			
+			assertEquals( testValue, ext.password );
+		}
+		
+		[Test( description="reason value" )]
+		public function testValueReason():void
+		{
+			var testValue:String = "Hey Hecate, this is the place for all good witches!";
+			
+			var ext:MUCUserExtension = new MUCUserExtension();
+			ext.destroy(new EscapedJID("crone1@shakespeare.lit/desktop"), testValue);
+			
+			assertEquals( testValue, ext.reason );
+		}
+		
 		[Test( description="XML element name and namespace checking" )]
 		public function testElement():void
 		{

@@ -57,24 +57,28 @@ package org.igniterealtime.xiff.data
 		
 		/**
 		 * Convinience method for getting element value from the XML.
+		 *
+		 * <p>Might seem over complex, but AS3 seems to handle different kind of
+		 * XML differently, thus shorthands and even methods such as <code>localName()</code>
+		 * do not work as expected.</p>
+		 *
 		 * @param	name
 		 * @return
 		 */
 		public function getField( name:String ):String
 		{
-			if ( xml[name] )
+			if ( xml[name].length() > 0 )
 			{
-				return xml[name];
+				return xml[name][0];
 			}
 			
-			// Namespaces confuse
-			var list:XMLList = xml.children().(localName() == name);
-			
-			if ( list.length() > 0 )
+			for each (var child:XML in xml.children())
 			{
-				return list[0];
+				if (child.localName() == name)
+				{
+					return child.toString();
+				}
 			}
-			
 			
 			return null;
 		}
@@ -98,6 +102,62 @@ package org.igniterealtime.xiff.data
 			else
 			{
 				xml[name] = value;
+			}
+		}
+		
+		/**
+		 * Convinience method for getting child element value from the XML.
+		 *
+		 * <p>Might seem over complex, but AS3 seems to handle different kind of
+		 * XML differently, thus shorthands and even methods such as <code>localName()</code>
+		 * do not work as expected.</p>
+		 *
+		 * @param	elem
+		 * @param	name
+		 * @return
+		 */
+		public function getChildField( elem:String, name:String ):String
+		{
+			if (elem == null || name == null)
+			{
+				return null;
+			}
+			
+			var list:XMLList = xml.children().(localName() == elem);
+			trace("getChildField. list: " + list.toXMLString());
+			if (list.length() > 0 && list[0].children().length() > 0)
+			{
+				for each (var child:XML in list[0].children())
+				{
+					trace("getChildField. child: " + child.toXMLString());
+					if (child.localName() == name)
+					{
+						return child.toString();
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * Convinience method for setting a value for a child element of the XML.
+		 *
+		 * @param	elem
+		 * @param	name
+		 * @param	value
+		 */
+		public function setChildField( elem:String, name:String, value:String ):void
+		{
+			if (elem == null || name == null)
+			{
+				throw new Error("Both 'elem' and 'name' should be set for XMLStanza.setChildField");
+			}
+			
+			var list:XMLList = xml.children().(localName() == elem);
+			if (list.length() > 0)
+			{
+				xml[elem][name] = value;
 			}
 		}
 		
@@ -152,6 +212,11 @@ package org.igniterealtime.xiff.data
 		 */
 		public function getChildAttribute( elem:String, name:String ):String
 		{
+			if (elem == null || name == null)
+			{
+				return null;
+			}
+			
 			var list:XMLList = xml.children().(localName() == elem);
 			if (list.length() > 0)
 			{
@@ -159,6 +224,27 @@ package org.igniterealtime.xiff.data
 			}
 			
 			return null;
+		}
+		
+		/**
+		 * Convinience method for setting an attribute for a child element of the XML.
+		 *
+		 * @param	elem
+		 * @param	name
+		 * @param	value
+		 */
+		public function setChildAttribute( elem:String, name:String, value:String ):void
+		{
+			if (elem == null || name == null)
+			{
+				throw new Error("Both 'elem' and 'name' should be set for XMLStanza.setChildAttribute");
+			}
+			
+			var list:XMLList = xml.children().(localName() == elem);
+			if (list.length() > 0)
+			{
+				xml.children().(localName() == elem)[0].@[name] = value;
+			}
 		}
 		
 		/**

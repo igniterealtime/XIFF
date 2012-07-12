@@ -223,8 +223,16 @@ package org.igniterealtime.xiff.data.muc
 	     */
 	    public function get reason():String
 	    {
-			return xml.children().(localName() == type)[0].children().(localName() == "reason");
+			return getChildField(type, "reason");
 	    }
+		public function set reason(value:String):void
+		{
+			if (type == null)
+			{
+				throw new Error("type needs to be defined for MUCUserExtension");
+			}
+			xml[type].reason = value;
+		}
 	
 		/**
 		 * Property to use if the concerned room is password protected
