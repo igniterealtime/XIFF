@@ -168,7 +168,7 @@ package org.igniterealtime.xiff.data.si
 		}
 		
 		/**
-		 * When <code>range' is sent in the offer, it should have no attributes.
+		 * When <code>range</code> is sent in the offer, it should have no attributes.
 		 * This signifies that the sender can do ranged transfers.
 		 *
 		 * <p>Both <code>rangeOffset</code> and <code>rangeLength</code> attributes are OPTIONAL

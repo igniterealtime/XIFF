@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,13 +29,29 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	
-
+	/**
+	 * In some contexts (e.g., the results of a search request), it may be
+	 * necessary to communicate multiple items. Therefore, a data form of
+	 * type "result" MAY contain two child elements not described in the basic syntax:
+	 * <ol>
+	 * <li>One and only <reported/> element, which can be understood as a "table header"
+	 * describing the data to follow.</li>
+	 * <li>Zero or more <item/> elements, which can be understood as "table cells"
+	 * containing data (if any) that matches the request.</li>
+	 * </ol>
+	 *
+	 * @see http://xmpp.org/extensions/xep-0004.html#protocol-results
+	 */
 	public class FormReported extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "reported";
 
 		private var _fields:Array = [];
 
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function FormReported( parent:XML=null )
 		{
 			super();
@@ -92,7 +108,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		public function set fields( value:Array ):void
 		{

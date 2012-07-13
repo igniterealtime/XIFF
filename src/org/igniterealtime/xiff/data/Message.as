@@ -451,8 +451,6 @@ package org.igniterealtime.xiff.data
 				A client SHOULD ignore <gone/> notifications received from other room occupants.
 			*/
 			
-			trace("state: " + value);
-			
 			if ( value == null )
 			{
 				delete xml[Message.STATE_ACTIVE];

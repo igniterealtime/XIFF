@@ -27,8 +27,7 @@ package org.igniterealtime.xiff.data.forms
 {
 	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
-
-	
+	import org.igniterealtime.xiff.data.forms.enum.*;
 
 	/**
 	 * This class is used by the FormExtension class for managing fields
@@ -100,8 +99,26 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set type( value:String ):void
 		{
-			// TODO: Check allowed types...
-			setAttribute("type", value);
+			var list:Array = [
+				FormFieldType.BOOLEAN,
+				FormFieldType.FIXED,
+				FormFieldType.HIDDEN,
+				FormFieldType.JID_MULTI,
+				FormFieldType.JID_SINGLE,
+				FormFieldType.LIST_MULTI,
+				FormFieldType.LIST_SINGLE,
+				FormFieldType.TEXT_MULTI,
+				FormFieldType.TEXT_PRIVATE,
+				FormFieldType.TEXT_SINGLE
+			];
+			if (value == null || list.indexOf(value) !== -1)
+			{
+				setAttribute("type", value);
+			}
+			else
+			{
+				throw new Error("Not allowed value for FormField.type");
+			}
 		}
 
 		/**
@@ -109,24 +126,11 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get label():String
 		{
-			var list:XMLList = xml.attribute("label");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getAttribute("label");
 		}
 		public function set label( value:String ):void
 		{
-			setAttribute("type", value);
-			if ( value == null && xml.attribute("label").length() > 0)
-			{
-				delete xml.attribute("label")[0];
-			}
-			else
-			{
-				xml.@label = value;
-			}
+			setAttribute("@label", value);
 		}
 
 		/**
@@ -147,7 +151,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get required():Boolean
 		{
-			return xml.children().(localName() == "required").length() > 0;
+			return getField("required") != null;
 		}
 		public function set required( value:Boolean ):void
 		{
@@ -177,7 +181,7 @@ package org.igniterealtime.xiff.data.forms
 		 * <code>FormFieldType.TEXT_PRIVATE</code>
 		 * <code>FormFieldType.TEXT_SINGLE</code>
 		 *
-		 * Suggested values can typically be retrieved in <code>getAllOptions</code>
+		 * <p>Suggested values can typically be retrieved in <code>getAllOptions</code></p>
 		 *
 		 */
 		public function get value():String
@@ -234,7 +238,7 @@ package org.igniterealtime.xiff.data.forms
 		 * <code>FormFieldType.LIST_MULTI</code>
 		 * <code>FormFieldType.LIST_SINGLE</code>
 		 *
-		 * Array of objects with the properties <code>label</code> and <code>value</code>, {label, value}.
+		 * <p>Array of objects with the properties <code>label</code> and <code>value</code>, {label, value}.</p>
 		 */
 		public function get options():Array
 		{

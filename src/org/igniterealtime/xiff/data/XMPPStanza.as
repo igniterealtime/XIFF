@@ -203,9 +203,6 @@ package org.igniterealtime.xiff.data
 			super.xml = elem;
 			
 		
-			trace("xml setter. elem: " + elem.toXMLString());
-			
-
 			// Check for possible IExtensions in the given incoming "elem"
 			for each ( var child:XML in elem.children() )
 			{
