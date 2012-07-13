@@ -105,7 +105,7 @@ package org.igniterealtime.xiff.data.register
 		 */
 		public function get unregister():Boolean
 		{
-			return xml.children().(localName() == "remove").length() > 0;
+			return getField("remove") != null;
 		}
 		public function set unregister(value:Boolean):void
 		{

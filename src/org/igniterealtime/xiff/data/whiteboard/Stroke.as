@@ -35,43 +35,21 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * provides an interface to access the properties
 	 *
 	 */
-	public class Stroke implements ISerializable
+	public class Stroke extends XMLStanza implements ISerializable
 	{
+		// TODO: Not checked via any spec
+		public static const ELEMENT_NAME:String = "stroke";
 	
-	    private var _xml:XML;
-		
 		/**
 		 *
 		 */
 		public function Stroke( color:uint = 0, opacity:Number = 100, thickness:Number = NaN )
 		{
+			xml.setLocalName( Stroke.ELEMENT_NAME );
+			
 			this.color = color;
 			this.opacity = opacity;
 			this.thickness = thickness;
-		}
-	
-
-		/**
-		 * The XML node that should be used for this stanza's internal XML representation,
-		 *
-		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
-		 * @see http://www.w3.org/TR/xml/
-		 */
-		public function get xml():XML
-		{
-			return _xml;
-		}
-		public function set xml( elem:XML ):void
-		{
-			var parent:XML = _xml.parent();
-			if (parent != null)
-			{
-				parent.appendChild(elem);
-			}
-			
-			_xml = elem;
 		}
 	
 	    /**
@@ -84,11 +62,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 		public function get color():uint
 		{
-			return parseInt("0x" + String(_xml.@["stroke"]).slice(1), 16);
+			return parseInt("0x" + String(xml.@["stroke"]).slice(1), 16);
 		}
 		public function set color(value:uint):void
 		{
-			_xml.@["stroke"] = "#" + value.toString(16);
+			xml.@["stroke"] = "#" + value.toString(16);
 		}
 	
 	    /**
@@ -101,11 +79,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 	    public function get thickness():Number
 		{
-			return parseFloat(_xml.@["stroke-width"]);
+			return parseFloat(xml.@["stroke-width"]);
 		}
 	    public function set thickness(value:Number):void
 		{
-			_xml.@["stroke-width"] = value.toString();
+			xml.@["stroke-width"] = value.toString();
 		}
 	
 	    /**
@@ -118,11 +96,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 	    public function get opacity():Number
 		{
-			return parseFloat(_xml.@["stroke-opacity"]);
+			return parseFloat(xml.@["stroke-opacity"]);
 		}
 	    public function set opacity(value:Number):void
 		{
-			_xml.@["stroke-opacity"] = value.toString();
+			xml.@["stroke-opacity"] = value.toString();
 		}
 	}
 }

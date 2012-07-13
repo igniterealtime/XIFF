@@ -26,6 +26,7 @@
 package org.igniterealtime.xiff.data.whiteboard
 {
 	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	
 	/**
@@ -34,9 +35,10 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * if no properties were defined in the XML.
 	 *
 	 */
-	public class Fill implements ISerializable
+	public class Fill extends XMLStanza implements ISerializable
 	{
-	    private var _xml:XML;
+		// TODO: Not checked via any spec
+		public static const ELEMENT_NAME:String = "fill";
 	
 		/**
 		 *
@@ -45,31 +47,10 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 	    public function Fill( color:uint = 0, opacity:Number = 100 )
 		{
+			xml.setLocalName( Fill.ELEMENT_NAME );
+			
 			this.color = color;
 			this.opacity = opacity;
-		}
-
-		/**
-		 * The XML node that should be used for this stanza's internal XML representation,
-		 *
-		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
-		 * @see http://www.w3.org/TR/xml/
-		 */
-		public function get xml():XML
-		{
-			return _xml;
-		}
-		public function set xml( elem:XML ):void
-		{
-			var parent:XML = _xml.parent();
-			if (parent != null)
-			{
-				parent.appendChild(elem);
-			}
-			
-			_xml = elem;
 		}
 	
 	    /**
@@ -80,11 +61,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 		public function get color():uint
 		{
-	        return parseInt("0x" + String(_xml.@fill).slice(1), 16);
+	        return parseInt("0x" + String(xml.@fill).slice(1), 16);
 		}
 		public function set color(value:uint):void
 		{
-				_xml.@fill = "#" + value.toString(16);
+				xml.@fill = "#" + value.toString(16);
 		}
 		
 	    /**
@@ -95,11 +76,11 @@ package org.igniterealtime.xiff.data.whiteboard
 	     */
 	    public function get opacity():Number
 		{
-			return parseFloat(_xml.@["fill-opacity"]);
+			return parseFloat(xml.@["fill-opacity"]);
 		}
 	    public function set opacity(value:Number):void
 		{
-			_xml.@["fill-opacity"] = value.toString();
+			xml.@["fill-opacity"] = value.toString();
 		}
 	}
 }

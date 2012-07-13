@@ -38,6 +38,10 @@ package org.igniterealtime.xiff.data.search{
 	{
 		public static const ELEMENT_NAME:String = "item";
 	
+		/**
+		 *
+		 * @param	parent
+		 */
 		public function SearchItem(parent:XML = null)
 		{
 			super();

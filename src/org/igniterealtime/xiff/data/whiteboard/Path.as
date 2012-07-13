@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * A message extension for whiteboard exchange. This class is the base class
 	 * for other extension classes such as Path
 	 */
-	public class Path implements ISerializable
+	public class Path extends XMLStanza implements ISerializable
 	{
 		public static const ELEMENT_NAME:String = "path";
 	
@@ -43,21 +43,21 @@ package org.igniterealtime.xiff.data.whiteboard
 	
 	    private var _lastLocation:Object;
 		
-	    private var _xml:XML;
-		
 		/**
 		 *
 		 * @param	parent
 		 */
 		public function Path( parent:XML = null )
 		{
-	        _xml = <{ Path.ELEMENT_NAME }/>;
+			xml.setLocalName( Path.ELEMENT_NAME );
 			
 			_stroke = new Stroke();
 			_fill = new Fill();
 		}
 	
 		/**
+		 * TODO: make as set xml
+		 *
 		 * Serializes the Path data to XML for sending.
 		 *
 		 * @param	parent The parent node that this extension should be serialized into
@@ -65,35 +65,16 @@ package org.igniterealtime.xiff.data.whiteboard
 		 */
 		public function serialize( parent:XML ):Boolean
 		{
-			_xml.@['p'] = serializeSegments();
+			xml.@['p'] = serializeSegments();
 			
-	        parent.appendChild(_xml);
+	        parent.appendChild(xml);
 	
 			return true;
 		}
-	
-		/**
-		 * The XML node that should be used for this stanza's internal XML representation,
-		 *
-		 * <p>Simply by setting this will take care of the required parsing and deserialisation.</p>
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/XML.html
-		 * @see http://www.w3.org/TR/xml/
-		 */
-		public function get xml():XML
+
+		override public function set xml( elem:XML ):void
 		{
-			return _xml;
-		}
-		public function set xml( elem:XML ):void
-		{
-			var parent:XML = _xml.parent();
-			if (parent != null)
-			{
-				parent.appendChild(elem);
-			}
-			
-			_xml = elem;
-			
+			super.xml = elem;
 			
 			var p:String = elem.@['p'];
 	

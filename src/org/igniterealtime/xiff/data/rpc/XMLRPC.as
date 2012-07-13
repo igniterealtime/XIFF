@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ package org.igniterealtime.xiff.data.rpc
 	 * @see http://xmpp.org/extensions/xep-0009.html
 	 */
 	public class XMLRPC
-	{	
+	{
 		/**
 		 * Extract and marshall the XML-RPC response to Flash types.
 		 *
@@ -48,12 +48,12 @@ package org.igniterealtime.xiff.data.rpc
 				// methodResponse/fault/value/struct
 				result = extractValue(response..struct);
 				result.isFault = true;
-			} 
-			else 
+			}
+			else
 			{
 				result = [];
 				var params:XML = findNode("params", response);
-				if (params != null) 
+				if (params != null)
 				{
 					for each (var param:XML in params.children())
 					{
@@ -92,7 +92,7 @@ package org.igniterealtime.xiff.data.rpc
 			var result:* = null;
 	
 			switch (value.localName())
-			{ 
+			{
 				case "int":
 				case "i4":
 				case "double":
@@ -148,14 +148,14 @@ package org.igniterealtime.xiff.data.rpc
 			{
 				addText(addNode(value_node, "string"), value);
 	
-			} 
+			}
 			else if (typeof(value) == "number")
 			{
 				if (Math.floor(value) != value)
 				{
 					addText(addNode(value_node, "double"), value);
-				} 
-				else 
+				}
+				else
 				{
 					addText(addNode(value_node, "int"), value.toString());
 				}
@@ -164,8 +164,8 @@ package org.igniterealtime.xiff.data.rpc
 			else if (typeof(value) == "boolean")
 			{
 				addText(addNode(value_node, "boolean"), value == false ? "0" : "1");
-			} 
-			else if (value is Array) 
+			}
+			else if (value is Array)
 			{
 				var data:XML = addNode(addNode(value_node, "array"), "data");
 				for (var i:int = 0; i < value.length; ++i)
@@ -173,17 +173,17 @@ package org.igniterealtime.xiff.data.rpc
 					addValue(data, value[i]);
 				}
 			}
-			else if (typeof(value) == "object") 
+			else if (typeof(value) == "object")
 			{
 				// Special case where type is simple custom type is defined
-				if (value.type != undefined && value.value != undefined) 
+				if (value.type != undefined && value.value != undefined)
 				{
 					addText(addNode(value_node, value.type), value.value);
-				} 
-				else 
+				}
+				else
 				{
 					var struct:XML = addNode(value_node, "struct");
-					for (var attr:String in value) 
+					for (var attr:String in value)
 					{
 						var member:XML = addNode(struct, "member");
 						addText(addNode(member, "name"), attr);
@@ -208,16 +208,24 @@ package org.igniterealtime.xiff.data.rpc
 			return parent.children()[parent.children().length() - 1];
 		}
 	
-		private static function findNode(name:String, xml:XML):XML
+		/**
+		 * Find an element that has the given name within and including the
+		 * candidate XML.
+		 *
+		 * @param	name
+		 * @param	candidate
+		 * @return
+		 */
+		private static function findNode(name:String, candidate:XML):XML
 		{
-			if (xml.localName() == name) 
+			if (candidate.localName() == name)
 			{
-				return xml;
-			} 
+				return candidate;
+			}
 			else
 			{
 				var found:XML = null;
-				for each (var child:XML in xml.children())
+				for each (var child:XML in candidate.children())
 				{
 					found = findNode(name, child);
 					if (found != null)

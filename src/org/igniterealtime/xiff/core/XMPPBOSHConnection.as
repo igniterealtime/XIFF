@@ -66,6 +66,11 @@ package org.igniterealtime.xiff.core
 		public static const BOSH_VERSION:String = "1.6";
 
 		/**
+		 *
+		 */
+		public static const BOSH_NS:String = "http://jabber.org/protocol/httpbind";
+		
+		/**
 		 * The default port as per XMPP specification.
 		 * @default 7070
 		 */
@@ -161,7 +166,7 @@ package org.igniterealtime.xiff.core
 		{
 			var attrs:Object = {
 				"xml:lang": XMPPStanza.XML_LANG,
-				"xmlns": "http://jabber.org/protocol/httpbind",
+				"xmlns": XMPPBOSHConnection.BOSH_NS,
 				"xmlns:xmpp": XMPPStanza.NAMESPACE_BOSH,
 				"xmpp:version": XMPPStanza.CLIENT_VERSION,
 				"hold": hold,
@@ -230,27 +235,25 @@ package org.igniterealtime.xiff.core
 		{
 			dispatchEvent( new ConnectionSuccessEvent() );
 
-			var attr:XMLList = responseBody.attributes();
+			sid = responseBody.@sid;
+			wait = responseBody.@wait;
 
-			sid = attr.sid;
-			wait = attr.wait;
-
-			if ( attr.polling )
+			if ( responseBody.hasOwnProperty("@polling") )
 			{
-				boshPollingInterval = attr.polling;
+				boshPollingInterval = responseBody.@polling;
 			}
-			if ( attr.inactivity )
+			if ( responseBody.hasOwnProperty("@inactivity") )
 			{
-				inactivity = attr.inactivity;
+				inactivity = responseBody.@inactivity;
 			}
-			if ( attr.maxpause )
+			if ( responseBody.hasOwnProperty("@maxpause") )
 			{
-				maxPause = attr.maxpause;
+				maxPause = responseBody.@maxpause;
 				pauseEnabled = true;
 			}
-			if ( attr.requests )
+			if ( responseBody.hasOwnProperty("@requests") )
 			{
-				maxConcurrentRequests = attr.requests;
+				maxConcurrentRequests = responseBody.@requests;
 			}
 
 			trace( "Polling interval: {0}", boshPollingInterval );
@@ -301,8 +304,8 @@ package org.igniterealtime.xiff.core
 		override protected function handleNodeType( node:XML ):void
 		{
 			super.handleNodeType( node );
-
-			var nodeName:String = node.localName().toLowerCase();
+			
+			var nodeName:String = String(node.localName()).toLowerCase();
 
 			if( nodeName == "stream:features" )
 			{
@@ -318,7 +321,7 @@ package org.igniterealtime.xiff.core
 		private function createRequest( bodyContent:Array = null ):XML
 		{
 			var elem:XML = <{ ELEMENT_NAME }/>;
-			elem.setNamespace( "http://jabber.org/protocol/httpbind" );
+			elem.setNamespace( XMPPBOSHConnection.BOSH_NS );
 			elem.@rid = nextRID;
 			elem.@sid = sid;
 			
@@ -353,6 +356,10 @@ package org.igniterealtime.xiff.core
 			pollServer();
 		}
 		
+		/**
+		 * TODO: Compression handling
+		 * @param	event
+		 */
 		private function onRequestComplete( event:Event ):void
 		{
 			var loader:URLLoader = event.target as URLLoader;
@@ -361,7 +368,6 @@ package org.igniterealtime.xiff.core
 			var byteData:ByteArray = loader.data as ByteArray;
 
 			var xmlData:XML = new XML( byteData.readUTFBytes(byteData.length) );
-			//xmlData.ignoreWhite = ignoreWhitespace;
 			
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
@@ -443,7 +449,7 @@ package org.igniterealtime.xiff.core
 		private function processResponse( event:TimerEvent = null ):void
 		{
 			// Read the data and send it to the appropriate parser
-			var currentNode:XML = responseQueue.shift();
+			var currentNode:XML = responseQueue.shift() as XML;
 
 			handleNodeType( currentNode );
 
@@ -488,7 +494,10 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Returns true if any requests were sent
+		 * Returns true if any requests were sent.
+		 *
+		 * TODO: Handle compression
+		 *
 		 * @param	data
 		 * @param	isPoll
 		 * @return
@@ -523,6 +532,12 @@ package org.igniterealtime.xiff.core
 			var byteData:ByteArray = new ByteArray();
 			byteData.writeUTFBytes(data.toString());
 			
+			var event:OutgoingDataEvent = new OutgoingDataEvent();
+			event.data = byteData;
+			dispatchEvent( event );
+			
+			// Compression here if needed ...
+			
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
@@ -535,10 +550,6 @@ package org.igniterealtime.xiff.core
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.load(req);
-			
-			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			event.data = byteData;
-			dispatchEvent( event );
 
 			if ( isPoll )
 			{
