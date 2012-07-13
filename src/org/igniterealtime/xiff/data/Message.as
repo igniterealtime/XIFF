@@ -156,6 +156,12 @@ package org.igniterealtime.xiff.data
 		 */
 		public static const NS_RECEIPT:String = "urn:xmpp:receipts";
 	
+		/**
+		 * The namespace used in the message delivery node.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0224.html
+		 */
+		public static const NS_ATTENTION:String = "urn:xmpp:attention:0";
 		
 		
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
@@ -458,6 +464,34 @@ package org.igniterealtime.xiff.data
 			else
 			{
 				xml[value].@xmlns = Message.NS_STATE;
+			}
+		}
+		
+		/**
+		 * Messages containing an attention extension SHOULD use the headline message
+		 * type to avoid offline storage. In case the <code>attention</code> property is used,
+		 * <code>type</code> is set to "headline" automatically.
+		 *
+		 * <p>However there is no check for the type when removing the attention, by setting it to false.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0224.html
+		 */
+		public function get attention():Boolean
+		{
+			return getField("attention") != null;
+		}
+		public function set attention(value:Boolean):void
+		{
+			if (value)
+			{
+				xml.attention.@xmlns = Message.NS_ATTENTION;
+				
+				// avoid offline storage
+				type = Message.TYPE_HEADLINE;
+			}
+			else
+			{
+				delete xml.attention;
 			}
 		}
 	}

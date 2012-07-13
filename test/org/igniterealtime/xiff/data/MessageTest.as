@@ -169,6 +169,17 @@ package org.igniterealtime.xiff.data
 		*/
 		
 		
+		[Test( description="Message attention" )]
+		public function testValueAttention():void
+		{
+			var testValue:Boolean = true;
+			var message:Message = new Message();
+			message.attention = testValue;
+			
+			assertEquals( testValue, message.attention );
+			assertEquals( "headline", message.type );
+		}
+		
 		
 		
 		
@@ -433,11 +444,16 @@ package org.igniterealtime.xiff.data
 			assertEquals( testValue, message.type );
 		}
 		
-		/*
+		// http://xmpp.org/extensions/xep-0224.html
 		[Test( description="Message parse from XML - type headline" )]
 		public function testParseTypeHeadline():void
 		{
-			var incoming:XML = ;
+			var incoming:XML = <message from='calvin@usrobots.lit/lab'
+					 to='herbie@usrobots.lit/home'
+					 type='headline'>
+			  <attention xmlns='urn:xmpp:attention:0'/>
+			  <body>Why don't you answer, Herbie?</body>
+			</message>;
 			var testValue:String = "headline";
 			
 			var message:Message = new Message();
@@ -446,7 +462,7 @@ package org.igniterealtime.xiff.data
 			assertEquals( testValue, message.type );
 		}
 
-		
+		/*
 		[Test( description="Message parse from XML - type normal" )]
 		public function testParseTypeNormal():void
 		{
@@ -504,5 +520,22 @@ package org.igniterealtime.xiff.data
 			assertEquals( testValue, message.receipt );
 		}
 		*/
+		
+		[Test( description="Message parse from XML - attention" )]
+		public function testParseAttention():void
+		{
+			var incoming:XML = <message from='calvin@usrobots.lit/lab'
+					 to='herbie@usrobots.lit/home'
+					 type='headline'>
+			  <attention xmlns='urn:xmpp:attention:0'/>
+			  <body>Why don't you answer, Herbie?</body>
+			</message>;
+			var testValue:Boolean = true;
+			
+			var message:Message = new Message();
+			message.xml = incoming;
+			
+			assertEquals( testValue, message.attention );
+		}
 	}
 }
