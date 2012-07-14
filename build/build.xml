@@ -42,6 +42,7 @@
 		<compc output="${bin.dir}/${output.name}.swc">
 			<library-path dir="${libs.dir}" append="true">
 				<include name="as3crypto.swc" />
+				<include name="as3zlib.swc" />
 			</library-path>
 			<source-path path-element="${src.dir}" />
 			<namespace uri="${manifest.ns}" manifest="${manifest}" />

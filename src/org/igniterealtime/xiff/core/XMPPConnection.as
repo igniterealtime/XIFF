@@ -38,6 +38,7 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.register.RegisterExtension;
 	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.events.*;
+	import org.igniterealtime.xiff.util.ICompressor;
 
 	/**
 	 * Dispatched when a password change is successful.
@@ -253,6 +254,11 @@ package org.igniterealtime.xiff.core
 		 * @private
 		 */
 		protected var _compress:Boolean = false;
+		
+		/**
+		 * Static class that is used to handle the compression
+		 */
+		protected var _compressor:ICompressor = null;
 
 		/**
 		 * @private
@@ -742,6 +748,7 @@ package org.igniterealtime.xiff.core
 		 * XIFF however only supports <code>zlib</code> and only after the Adler32 checksum is somehow implemented.</p>
 		 *
 		 * <p>Flash Player code named "Dolores" (second half of 2012) might have LZMA ByteArray compression available...</p>
+		 *
 		 * @see http://www.adobe.com/devnet/flashplatform/whitepapers/roadmap.html
 		 * @see http://xmpp.org/registrar/compress.html
 		 */
@@ -1378,9 +1385,9 @@ package org.igniterealtime.xiff.core
 			// Increase the incoming data counter.
 			_incomingBytes += bytedata.length;
 
-			if ( compressionNegotiated )
+			if ( compressionNegotiated && compressor != null )
 			{
-				bytedata.uncompress();
+				bytedata = compressor.uncompress(bytedata);
 			}
 			bytedata.position = 0;
 			var data:String = bytedata.readUTFBytes( bytedata.length );
@@ -1515,10 +1522,9 @@ package org.igniterealtime.xiff.core
 			event.data = bytedata;
 			dispatchEvent( event );
 			
-			if ( compressionNegotiated )
+			if ( compressionNegotiated && compressor != null)
 			{
-				bytedata.compress();
-				bytedata.position = 0; // maybe not needed.
+				bytedata = compressor.compress(bytedata);
 			}
 
 			if ( socket && socket.connected )
@@ -1540,6 +1546,9 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Shall the zlib compression be allowed if the server supports it.
+		 *
+		 * <p><code>compressor</code> needs to be set too.</p>
+		 *
 		 * @see http://xmpp.org/extensions/xep-0138.html
 		 * @default false
 		 */
@@ -1550,6 +1559,22 @@ package org.igniterealtime.xiff.core
 		public function set compress( value:Boolean ):void
 		{
 			_compress = value;
+		}
+		
+		/**
+		 * The class that is to be used for Stream Compression if enabled.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0138.html
+		 * @default null
+		 * @exampleText _connection.compressor = new Zlib();
+		 */
+		public function get compressor():ICompressor
+		{
+			return _compressor;
+		}
+		public function set compressor( value:ICompressor ):void
+		{
+			_compressor = value;
 		}
 
 		/**

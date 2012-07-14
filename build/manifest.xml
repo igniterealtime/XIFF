@@ -132,7 +132,9 @@
 	<component class="org.igniterealtime.xiff.privatedata.PrivateDataManager" />
 	<component class="org.igniterealtime.xiff.util.Callback" />
 	<component class="org.igniterealtime.xiff.util.DateTimeParser" />
+	<component class="org.igniterealtime.xiff.util.ICompressor" />
 	<component class="org.igniterealtime.xiff.util.SHA1" />
+	<component class="org.igniterealtime.xiff.util.Zlib" />
 	<component class="org.igniterealtime.xiff.vcard.IVCard" />
 	<component class="org.igniterealtime.xiff.vcard.IVCardAddress" />
 	<component class="org.igniterealtime.xiff.vcard.IVCardGeographicalPosition" />
