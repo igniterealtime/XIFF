@@ -184,7 +184,7 @@ package org.igniterealtime.xiff.data
 			}
 			
 			_xml = elem;
-			_xml.setNamespace("");
+			_xml.normalize();
 		}
 	}
 }

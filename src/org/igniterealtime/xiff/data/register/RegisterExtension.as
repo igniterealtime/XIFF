@@ -32,9 +32,10 @@ package org.igniterealtime.xiff.data.register
 	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
 	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be a conflict,
 	 * or the fields you will need to fill out.
-	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
+	 *
+	 * <p>Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
 	 * getRequiredFieldNames set on this extension.
-	 * Check the result and re-establish the connection with the new account.
+	 * Check the result and re-establish the connection with the new account.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0077.html
 	 */
@@ -78,19 +79,25 @@ package org.igniterealtime.xiff.data.register
 	
 	
 		/**
-		 * All fields available in this XML, except "key" and "instructions" are required.
-		 * @return
+		 * In order to determine which fields are required for registration with a host,
+		 * an entity SHOULD first send an IQ get to the host. The entity SHOULD NOT attempt
+		 * to guess at the required fields by first sending an IQ set, since the nature
+		 * of the required data is subject to service provisioning.
+		 *
+		 * <p>All fields available in this XML, except "key" and "instructions" are required.</p>
+		 * @return Names of the required fields
 		 */
 		public function getRequiredFieldNames():Array
 		{
 			var fields:Array = [];
+			var reservedNames:Array = ["key", "instructions"];
 			
 			for each (var child:XML in xml.children())
 			{
-				if (child.nodeKind == "element")
+				if (child.nodeKind() == "element")
 				{
 					var name:String = child.localName();
-					if (name != "key" && name != "instructions")
+					if (reservedNames.indexOf(name) === -1)
 					{
 						fields.push(name);
 					}
@@ -101,7 +108,10 @@ package org.igniterealtime.xiff.data.register
 		}
 	
 		/**
-		 *
+		 * The 'jabber:iq:register' namespace also makes it possible for an entity to cancel a
+		 * registration with a host by sending a <strong>remove</strong> element in an IQ set.
+		 * The host MUST determine the identity of the requesting entity based on the 'from'
+		 * address of the IQ get.
 		 */
 		public function get unregister():Boolean
 		{
@@ -120,7 +130,14 @@ package org.igniterealtime.xiff.data.register
 		}
 	
 		/**
-		 * Use <code>null</code> to remove.
+		 * This element is obsolete, but is included here for historical completeness.
+		 *
+		 * <p>The <strong>key</strong> element was used as a "transaction key" in certain
+		 * IQ interactions in order to verify the identity of the sender. In particular,
+		 * it was used by servers (but generally not services) during in-band registration,
+		 * since normally a user does not yet have a 'from' address before registering.</p>
+		 *
+		 * <p>Use <code>null</code> to remove.</p>
 		 */
 		public function get key():String
 		{
@@ -144,7 +161,11 @@ package org.igniterealtime.xiff.data.register
 		}
 	
 		/**
+		 * The 'jabber:iq:register' namespace enables a user to change his or her
+		 * password with a server or service. Once registered, the user can
+		 * change passwords by setting <code>username</code> and <code>password</code>.
 		 *
+		 * @see http://xmpp.org/extensions/xep-0077.html#usecases-changepw
 		 */
 		public function get username():String
 		{
@@ -168,7 +189,11 @@ package org.igniterealtime.xiff.data.register
 		}
 	
 		/**
+		 * The 'jabber:iq:register' namespace enables a user to change his or her
+		 * password with a server or service. Once registered, the user can
+		 * change passwords by setting <code>username</code> and <code>password</code>.
 		 *
+		 * @see http://xmpp.org/extensions/xep-0077.html#usecases-changepw
 		 */
 		public function get password():String
 		{
