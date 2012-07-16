@@ -31,6 +31,7 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
+	import org.igniterealtime.xiff.util.DateTimeParser;
 	
 	/**
 	 * The base class for all XMPP stanza data classes.
@@ -532,6 +533,55 @@ package org.igniterealtime.xiff.data
 			{
 				xml.error.@code = value.toString();
 			}
+		}
+		
+		
+		
+		/**
+		 * Time of the message/presence in case of a delay. Used only for messages
+		 * which were sent while user was offline.
+		 *
+		 * <p>Can be set only via XML as the value should come from the server.</p>
+		 *
+		 * <p>There are two ways that might be possible coming from the server,
+		 * XEP-0203 or XEP-0091, of which the latter is legacy.</p>
+		 *
+		 * <p>XEP-0203: <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
+		 * <p>XEP-0091: <code>CCYYMMDDThh:mm:ss</code></p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0203.html
+		 * @see http://xmpp.org/extensions/xep-0091.html
+		 * @see http://xmpp.org/extensions/xep-0082.html
+		 */
+		protected function get delayedDelivery():Date
+		{
+			var stamp:Date;
+			var list:XMLList = xml.children().(localName() == "delay");
+			var legacy:XMLList = xml.children().(localName() == "x");
+						
+			if (list.length() > 0 && list[0].attribute("stamp").length() > 0)
+			{
+				// Current
+				// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
+				trace("Message used 'delay' as defined in XEP-0203.");
+				
+				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
+			}
+			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 && legacy[0].namespace().uri == "jabber:x:delay")
+			{
+				// Legacy
+				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
+				var value:String = legacy[0].attribute("stamp")[0];
+				trace("Message used 'x' as defined in XEP-0091.");
+				
+				stamp = DateTimeParser.legacyString2dateTime(legacy[0].attribute("stamp")[0]);
+			}
+			else
+			{
+				return null;
+			}
+			
+			return stamp;
 		}
 	}
 }

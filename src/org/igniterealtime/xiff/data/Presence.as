@@ -244,5 +244,25 @@ package org.igniterealtime.xiff.data
 				throw new Error("Invalid priority value: " + value.toString() + " for Presence. Must be between -128 and 127.");
 			}
 		}
+		
+		/**
+		 * Time of the presence in case of a delay. Used only for messages
+		 * which were sent while user was offline.
+		 *
+		 * <p>Can be set only via XML as the value should come from the server.</p>
+		 *
+		 * <p>There are two ways that might be possible coming from the server,
+		 * XEP-0203 or XEP-0091, of which the latter is legacy.</p>
+		 *
+		 * <p>XEP-0203: <code>CCYY-MM-DDThh:mm:ss[.sss]TZD</code></p>
+		 * <p>XEP-0091: <code>CCYYMMDDThh:mm:ss</code></p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0203.html
+		 * @see http://xmpp.org/extensions/xep-0091.html
+		 */
+		public function get time():Date
+		{
+			return delayedDelivery;
+		}
 	}
 }

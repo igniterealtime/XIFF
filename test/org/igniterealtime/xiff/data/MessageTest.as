@@ -38,13 +38,6 @@ package org.igniterealtime.xiff.data
 	 */
 	public class MessageTest
 	{
-		private var _xml:XML;
-		
-		[Before]
-		public function setupMessage():void
-		{
-			_xml = <message/>;
-		}
 		
 		[Test( description="Message body" )]
 		public function testValueBody():void

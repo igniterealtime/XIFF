@@ -127,6 +127,51 @@ package org.igniterealtime.xiff.data
 		
 		
 		
+		
+		/**
+		 * @see http://xmpp.org/extensions/xep-0203.html
+		 */
+		[Test( description="Presence parse from XML - time" )]
+		public function testParseTime():void
+		{
+			var incoming:XML = <presence from='juliet@capulet.com/balcony' to='romeo@montague.net'>
+			  <status>anon!</status>
+			  <show>xa</show>
+			  <priority>1</priority>
+			  <delay xmlns='urn:xmpp:delay'
+				 from='juliet@capulet.com/balcony'
+				 stamp='2002-09-10T23:08:25Z'/>
+			</presence>;
+			var testValue:String = "Tue Sep 10 23:08:25 2002 UTC";
+			
+			var presence:Presence = new Presence();
+			presence.xml = incoming;
+			
+			assertEquals( testValue, presence.time.toUTCString() );
+		}
+		
+		/**
+		 * @see http://xmpp.org/extensions/xep-0091.html
+		 */
+		[Test( description="Presence parse from XML - time (legacy version)" )]
+		public function testParseTimeLegacy():void
+		{
+			var incoming:XML = <presence from='juliet@capulet.com/balcony' to='romeo@montague.net'>
+			  <status>anon!</status>
+			  <show>xa</show>
+			  <priority>1</priority>
+			  <x xmlns='jabber:x:delay'
+				 from='juliet@capulet.com/balcony'
+				 stamp='20020910T23:08:25'/>
+			</presence>;
+			var testValue:String = "Tue Sep 10 23:08:25 2002 UTC";
+
+			var presence:Presence = new Presence();
+			presence.xml = incoming;
+			
+			assertEquals( testValue, presence.time.toUTCString() );
+		}
+		
 
 
 	}

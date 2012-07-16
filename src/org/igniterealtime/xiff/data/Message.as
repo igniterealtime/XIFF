@@ -30,7 +30,6 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
-	import org.igniterealtime.xiff.util.DateTimeParser;
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	
 	/**
@@ -363,37 +362,10 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @see http://xmpp.org/extensions/xep-0203.html
 		 * @see http://xmpp.org/extensions/xep-0091.html
-		 * @see http://xmpp.org/extensions/xep-0082.html
 		 */
 		public function get time():Date
 		{
-			var stamp:Date;
-			var list:XMLList = xml.children().(localName() == "delay");
-			var legacy:XMLList = xml.children().(localName() == "x");
-						
-			if (list.length() > 0 && list[0].attribute("stamp").length() > 0)
-			{
-				// Current
-				// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
-				trace("Message used 'delay' as defined in XEP-0203.");
-				
-				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
-			}
-			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 && legacy[0].namespace().uri == "jabber:x:delay")
-			{
-				// Legacy
-				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
-				var value:String = legacy[0].attribute("stamp")[0];
-				trace("Message used 'x' as defined in XEP-0091.");
-				
-				stamp = DateTimeParser.legacyString2dateTime(legacy[0].attribute("stamp")[0]);
-			}
-			else
-			{
-				return null;
-			}
-			
-			return stamp;
+			return delayedDelivery;
 		}
 		
 		/**
