@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.bookmark
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMPPStanza;
 	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
 	import org.igniterealtime.xiff.events.BookmarkChangedEvent;
@@ -166,7 +166,7 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 
-		private function _addBookmark( bookmark:ISerializable ):void
+		private function _addBookmark( bookmark:INodeProxy ):void
 		{
 			var groupChats:Array = _bookmarks.groupChatBookmarks;
 			var urls:Array = _bookmarks.urlBookmarks;
@@ -195,7 +195,7 @@ package org.igniterealtime.xiff.bookmark
 			dispatchEvent( new BookmarkRetrievedEvent());
 		}
 
-		private function _processBookmarksAdd( bookmark:ISerializable, bookmarksIq:XMPPStanza ):void
+		private function _processBookmarksAdd( bookmark:INodeProxy, bookmarksIq:XMPPStanza ):void
 		{
 			_processBookmarks( bookmarksIq );
 			_addBookmark( bookmark );

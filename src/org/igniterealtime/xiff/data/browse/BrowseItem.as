@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.browse
 {
 	
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.browse
 	 * <p>XEP-0011: Jabber Browsing (obsolete)</p>
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
-	public class BrowseItem extends XMLStanza implements ISerializable
+	public class BrowseItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
 		

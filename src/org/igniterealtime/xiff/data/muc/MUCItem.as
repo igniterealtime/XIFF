@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.muc
 	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
@@ -39,7 +39,7 @@ package org.igniterealtime.xiff.data.muc
 	 *
 	 * @see http://xmpp.org/extensions/xep-0045.html#associations
 	 */
-	public class MUCItem extends XMLStanza implements ISerializable
+	public class MUCItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
 	

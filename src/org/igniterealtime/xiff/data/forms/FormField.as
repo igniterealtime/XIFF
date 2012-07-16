@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.forms
 {
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	import org.igniterealtime.xiff.data.forms.enum.*;
 
@@ -39,7 +39,7 @@ package org.igniterealtime.xiff.data.forms
 	 * @see	http://xmpp.org/extensions/xep-0004.html
 	 * @param	parent The parent XML
 	 */
-	public class FormField extends XMLStanza implements ISerializable
+	public class FormField extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "field";
 

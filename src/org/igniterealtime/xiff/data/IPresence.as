@@ -25,6 +25,9 @@
  */
 package org.igniterealtime.xiff.data
 {
+	/**
+	 * Interface for Presence
+	 */
 	public interface IPresence extends IXMPPStanza
 	{
 		function get show():String;

@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	
@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.data.disco
 	 *
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
-	public class DiscoItem extends XMLStanza implements ISerializable
+	public class DiscoItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
 

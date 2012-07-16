@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.whiteboard
 {
 	
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	
@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * provides an interface to access the properties
 	 *
 	 */
-	public class Stroke extends XMLStanza implements ISerializable
+	public class Stroke extends XMLStanza implements INodeProxy
 	{
 		// TODO: Not checked via any spec
 		public static const ELEMENT_NAME:String = "stroke";

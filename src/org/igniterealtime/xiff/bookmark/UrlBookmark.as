@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.bookmark
 {
 	
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	/**
@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.bookmark
 	 *
 	 * @see http://xmpp.org/extensions/xep-0048.html#format-url
 	 */
-	public class UrlBookmark extends XMLStanza implements ISerializable
+	public class UrlBookmark extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "url";
 		

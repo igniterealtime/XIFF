@@ -25,8 +25,6 @@
  */
 package org.igniterealtime.xiff.data
 {
-
-	
 	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	

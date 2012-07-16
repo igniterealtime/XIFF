@@ -33,6 +33,8 @@ package org.igniterealtime.xiff.data
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	
 	/**
+	 * Message, nuff said.
+	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
 	 */
 	public class Message extends XMPPStanza implements IMessage

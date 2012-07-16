@@ -29,14 +29,14 @@ package org.igniterealtime.xiff.bookmark
 
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	/**
 	 * XEP-0048: Bookmarks
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
-	public class GroupChatBookmark extends XMLStanza implements ISerializable
+	public class GroupChatBookmark extends XMLStanza implements INodeProxy
 	{
 		// TODO: NS?
 		public static const ELEMENT_NAME:String = "conference";

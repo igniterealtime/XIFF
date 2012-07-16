@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2012 Igniterealtime Community Contributors
- *   
+ *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
  *     Juga Paazmaya <olavic@gmail.com>
@@ -9,14 +9,14 @@
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
  *     Michael McCarthy <mikeycmccarthy@gmail.com>
- * 
- * 
+ *
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,9 +30,9 @@ package org.igniterealtime.xiff.data
 	/**
 	 * What is this?
 	 */
-	public class AbstractExtension extends Extension implements ISerializable
+	public class AbstractExtension extends Extension implements INodeProxy
 	{
-		public function AbstractExtension( parent:XML = null ) 
+		public function AbstractExtension( parent:XML = null )
 		{
 			super(parent);
 		}
@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.data
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
-			for each(var extNode:XML in node.children()) 
+			for each(var extNode:XML in node.children())
 			{
 				var ns:Namespace = extNode.namespace();
 				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
@@ -53,9 +53,9 @@ package org.igniterealtime.xiff.data
 				{
 					continue;
 				}
-				if (ext is ISerializable)
+				if (ext is INodeProxy)
 				{
-					ISerializable(ext).xml = extNode;
+					INodeProxy(ext).xml = extNode;
 				}
 				addExtension(ext);
 			}

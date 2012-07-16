@@ -29,6 +29,8 @@ package org.igniterealtime.xiff.data
 	/**
 	 * An interface for objects that abstract XML data by providing accessors
 	 * to the original XML data stored within.
+	 *
+	 * <p>Most XMPP stanzas that will interact with the library should implement this interface.</p>
 	 */
 	public interface INodeProxy
 	{

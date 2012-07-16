@@ -26,7 +26,6 @@
 package org.igniterealtime.xiff.data
 {
 	
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;

@@ -99,7 +99,7 @@ package org.igniterealtime.xiff.data.rpc
 		/**
 		 * Interface method, returning the namespace for this extension
 		 *
-		 * @see	org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.INodeProxy
 		 */
 		override public function set xml( node:XML ):void
 		{

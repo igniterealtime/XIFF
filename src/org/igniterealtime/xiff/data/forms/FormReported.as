@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data.forms
 {
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	
@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.forms
 	 *
 	 * @see http://xmpp.org/extensions/xep-0004.html#protocol-results
 	 */
-	public class FormReported extends XMLStanza implements ISerializable
+	public class FormReported extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "reported";
 

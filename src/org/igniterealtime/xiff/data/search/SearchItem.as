@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.search{
 	
 	import org.igniterealtime.xiff.data.XMLStanza;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	
 	
 	/**
@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data.search{
 	 * information pertaining to items matching the search query.
 	 *
 	 */
-	public class SearchItem extends XMLStanza implements ISerializable
+	public class SearchItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
 	

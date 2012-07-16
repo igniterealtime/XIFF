@@ -468,8 +468,8 @@ package org.igniterealtime.xiff.core
 		 * Sends data to the server. If the data to send cannot be serialized properly,
 		 * this method throws a <code>SerializeException</code>.
 		 *
-		 * @param	data The data to send. This must be an instance of a class that implements the ISerializable interface.
-		 * @see	org.igniterealtime.xiff.data.ISerializable
+		 * @param	data The data to send. This must be an instance of a class that implements the INodeProxy interface.
+		 * @see	org.igniterealtime.xiff.data.INodeProxy
 		 * @example	The following example sends a basic chat message to the user with the
 		 * JID "sideshowbob&#64;springfieldpenitentiary.gov".<br />
 		 * <code>var message:Message = new Message( "sideshowbob&#64;springfieldpenitentiary.gov", null, "Hi Bob.",
@@ -1565,6 +1565,7 @@ package org.igniterealtime.xiff.core
 		 * The class that is to be used for Stream Compression if enabled.
 		 *
 		 * @see http://xmpp.org/extensions/xep-0138.html
+		 * @see org.igniterealtime.xiff.util.Zlib
 		 * @default null
 		 * @exampleText _connection.compressor = new Zlib();
 		 */

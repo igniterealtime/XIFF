@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	 * A message extension for whiteboard exchange. This class is the base class
 	 * for other extension classes such as Path
 	 */
-	public class Path extends XMLStanza implements ISerializable
+	public class Path extends XMLStanza
 	{
 		public static const ELEMENT_NAME:String = "path";
 	

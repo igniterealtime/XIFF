@@ -49,6 +49,7 @@ package org.igniterealtime.xiff.data
 		
 		
 		/**
+		 * XMPP is based on communication with XML stanzas
 		 */
 		public function XMLStanza()
 		{

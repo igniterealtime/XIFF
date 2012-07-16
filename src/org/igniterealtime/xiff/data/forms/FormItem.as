@@ -25,12 +25,12 @@
  */
 package org.igniterealtime.xiff.data.forms
 {
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	
 
-	public class FormItem extends XMLStanza implements ISerializable
+	public class FormItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
 

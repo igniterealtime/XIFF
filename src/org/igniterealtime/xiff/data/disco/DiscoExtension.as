@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.disco
 {
 	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	
 
 	/**
@@ -34,7 +34,7 @@ package org.igniterealtime.xiff.data.disco
 	 * @see http://xmpp.org/protocols/disco/
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
-	public class DiscoExtension extends Extension implements ISerializable
+	public class DiscoExtension extends Extension implements INodeProxy
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco";
 		public static const ELEMENT_NAME:String = "query";

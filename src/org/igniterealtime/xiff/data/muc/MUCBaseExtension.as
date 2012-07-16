@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.data.muc
 	 * @see http://xmpp.org/extensions/xep-0045.html
 	 * @param	parent (Optional) The containing XML for this extension
 	 */
-	public class MUCBaseExtension extends Extension implements IExtendable, ISerializable
+	public class MUCBaseExtension extends Extension implements IExtendable, INodeProxy
 	{
 		private var _items:Array = [];
 	
@@ -70,9 +70,9 @@ package org.igniterealtime.xiff.data.muc
 							var ext:IExtension = new extClass();
 							if (ext != null)
 							{
-								if (ext is ISerializable)
+								if (ext is INodeProxy)
 								{
-									ISerializable(ext).xml = child;
+									INodeProxy(ext).xml = child;
 								}
 								addExtension(ext);
 							}

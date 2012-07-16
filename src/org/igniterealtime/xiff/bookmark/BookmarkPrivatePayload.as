@@ -29,7 +29,6 @@ package org.igniterealtime.xiff.bookmark
 
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.data.ISerializable;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 

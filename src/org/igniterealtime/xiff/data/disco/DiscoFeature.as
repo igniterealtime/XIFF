@@ -25,14 +25,14 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import org.igniterealtime.xiff.data.ISerializable;
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	
 	/**
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
-	public class DiscoFeature extends XMLStanza implements ISerializable
+	public class DiscoFeature extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "feature";
 

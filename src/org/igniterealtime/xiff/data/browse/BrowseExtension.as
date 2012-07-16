@@ -103,9 +103,9 @@ package org.igniterealtime.xiff.data.browse
 		}
 	
 		/**
-		 * ISerializable implementation which saves this extension to XML
+		 * INodeProxy implementation which saves this extension to XML
 		 *
-		 * @see	org.igniterealtime.xiff.data.ISerializable
+		 * @see	org.igniterealtime.xiff.data.INodeProxy
 		 */
 		override public function set xml( node:XML ):void
 		{
