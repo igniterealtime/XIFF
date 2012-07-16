@@ -31,6 +31,17 @@ package org.igniterealtime.xiff.data.vcard
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
+	 * XEP-0054: vcard-temp
+	 *
+	 * <p>The basic functionality is for a user to store and retrieve an XML
+	 * representation of his or her vCard using the data storage capabilities
+	 * native to all existing Jabber server implementations. This is done
+	 * by by sending an <strong>iq</strong> of type "set" (storage) or "get"
+	 * (retrieval) to one's Jabber server containing a <strong>vCard</strong>
+	 * child scoped by the 'vcard-temp' namespace, with the <strong>vCard</strong>
+	 * element containing the actual vCard-XML elements as defined by the
+	 * vCard-XML DTD. Other users may then view one's vCard information.</p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0054.html
 	 */
 	public class VCardExtension extends Extension implements IExtension

@@ -27,7 +27,9 @@ package org.igniterealtime.xiff.data.rpc
 {
 	/**
 	 * Implements client side XML marshalling of methods and parameters into XMLRPC.
+	 *
 	 * @see http://xmpp.org/extensions/xep-0009.html
+	 * @see http://www.xmlrpc.com/spec
 	 */
 	public class XMLRPC
 	{

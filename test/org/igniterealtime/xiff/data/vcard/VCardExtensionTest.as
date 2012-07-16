@@ -23,43 +23,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.sharedgroups
+package org.igniterealtime.xiff.data.vcard
 {
+	import org.flexunit.asserts.*;
 	
-	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.IExtension;
-	
-	/**
-	 * Similar idea to XEP-0140 (http://xmpp.org/extensions/xep-0140.html) which was
-	 * retracted in favor of XEP-0144 (http://xmpp.org/extensions/xep-0144.html).
-	 *
-	 * @see http://xmpp.org/extensions/xep-0144.html
-	 * @see http://xmpp.org/extensions/xep-0140.html
-	 */
-	public class SharedGroupsExtension extends Extension implements IExtension
+	public class VCardExtensionTest
 	{
-		public static const NS:String = "http://www.jivesoftware.org/protocol/sharedgroup";
-		public static const ELEMENT_NAME:String = "sharedgroup";
 		
-		/**
-		 *
-		 * @param	parent (Optional) The containing XML for this extension
-		 */
-		public function SharedGroupsExtension( parent:XML = null )
+		
+		
+		
+		[Test( description="XML element name and namespace checking" )]
+		public function testElement():void
 		{
-			super(parent);
+			var nameSpace:String = "vcard-temp";
+			var elementName:String = "vCard";
+			
+			var ext:VCardExtension = new VCardExtension();
+			var node:XML = ext.xml;
+			
+			assertEquals( nameSpace, node.namespace().uri );
+			assertEquals( elementName, node.localName() );
 		}
 		
-		public function getNS():String
-		{
-			return SharedGroupsExtension.NS;
-		}
 		
-		public function getElementName():String
-		{
-			return SharedGroupsExtension.ELEMENT_NAME;
-		}
-		
+
 	}
 }
