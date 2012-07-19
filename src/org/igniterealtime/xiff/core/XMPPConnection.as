@@ -782,7 +782,7 @@ package org.igniterealtime.xiff.core
 		 * @param	code Legacy code
 		 * @param	extension
 		 */
-		protected function dispatchError( condition:String, message:String, type:String, code:int = NaN, extension:Extension=null ):void
+		protected function dispatchError( condition:String, message:String, type:String, code:int = 0, extension:Extension=null ):void
 		{
 			var event:XIFFErrorEvent = new XIFFErrorEvent();
 			event.errorCondition = condition;
