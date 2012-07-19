@@ -447,6 +447,71 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
+		 * XEP-0184: Message Delivery Receipts
+		 *
+		 * <p>This XMPP protocol extension for message delivery receipts,
+		 * whereby the sender of a message can request notification that the
+		 * message has been delivered to a client controlled by the intended
+		 * recipient.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0184.html
+		 */
+		public function get receipt():String
+		{
+			var list:Array = [
+				Message.RECEIPT_REQUEST,
+				Message.RECEIPT_RECEIVED
+			];
+			var len:uint = list.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				var value:String = list[i];
+				if (xml.children().(localName() == value).length() > 0)
+				{
+					return value;
+				}
+			}
+			return null;
+		}
+		public function set receipt( value:String ):void
+		{
+			if (value != Message.RECEIPT_REQUEST
+				&& value != Message.RECEIPT_RECEIVED
+				&& value != null)
+			{
+				throw new Error("Invalid receipt value: " + value + " for DeliveryReceipt");
+			}
+
+			if ( value == null )
+			{
+				delete xml[Message.RECEIPT_REQUEST];
+				delete xml[Message.RECEIPT_RECEIVED];
+			}
+			else
+			{
+				xml[value].@xmlns = Message.NS_RECEIPT;
+			}
+		}
+		
+		/**
+		 * Message ID of the message that had receipt request.
+		 * Can be set only when the 'receipt' is Message.RECEIPT_RECEIVED.
+		 *
+		 * <p>While sending 'received', this property must be set to
+		 * the message id that contained the 'request'.</p>
+		 *
+		 * @see http://xmpp.org/extensions/xep-0184.html
+		 */
+		public function get receiptId():String
+		{
+			return getChildAttribute(Message.RECEIPT_RECEIVED, "id");
+		}
+		public function set receiptId( value:String ):void
+		{
+			setChildAttribute(Message.RECEIPT_RECEIVED, "id", value);
+		}
+		
+		/**
 		 * Messages containing an attention extension SHOULD use the headline message
 		 * type to avoid offline storage. In case the <code>attention</code> property is used,
 		 * <code>type</code> is set to "headline" automatically.
