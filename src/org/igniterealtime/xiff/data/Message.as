@@ -545,19 +545,19 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @see http://xmpp.org/extensions/xep-0308.html
 		 */
-		public function get correction():String
+		public function get correction():Boolean
 		{
-			return getField("replace");
+			return getField("replace") != null;
 		}
-		public function set correction( value:String ):void
+		public function set correction( value:Boolean ):void
 		{
 			if (value)
 			{
-				xml.replace.@xmlns = Message.NS_CORRECTION;
+				xml["replace"].setNamespace( Message.NS_CORRECTION );
 			}
 			else
 			{
-				delete xml.replace;
+				delete xml["replace"];
 			}
 		}
 

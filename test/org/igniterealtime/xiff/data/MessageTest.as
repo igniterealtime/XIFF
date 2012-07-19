@@ -475,37 +475,54 @@ package org.igniterealtime.xiff.data
 		[Test( description="Message parse from XML - receipt request" )]
 		public function testParseReceiptRequest():void
 		{
-                        var incoming:XML = <message
-                            from='northumberland@shakespeare.lit/westminster'
-                            id='richard2-4.1.247'
-                            to='kingrichard@royalty.england.lit/throne'>
-                          <body>My lord, dispatch; read o'er these articles.</body>
-                          <request xmlns='urn:xmpp:receipts'/>
-                        </message>;
-			var testValue:String = "receipt";
+			var incoming:XML = <message
+				from='northumberland@shakespeare.lit/westminster'
+				id='richard2-4.1.247'
+				to='kingrichard@royalty.england.lit/throne'>
+			  <body>My lord, dispatch; read o'er these articles.</body>
+			  <request xmlns='urn:xmpp:receipts'/>
+			</message>;
+			var testValue:String = "request";
 			
 			var message:Message = new Message();
 			message.xml = incoming;
 			
 			assertEquals( testValue, message.receipt );
-                }
+        }
 
-                [Test( description="Message parse from XML - receipt received" )]
+		[Test( description="Message parse from XML - receipt received" )]
 		public function testParseReceiptReceived():void
 		{
-                        var incoming:XML = <message
-                            from='kingrichard@royalty.england.lit/throne'
-                            id='bi29sg183b4v'
-                            to='northumberland@shakespeare.lit/westminster'>
-                          <received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>
-                        </message>;
+			var incoming:XML = <message
+				from='kingrichard@royalty.england.lit/throne'
+				id='bi29sg183b4v'
+				to='northumberland@shakespeare.lit/westminster'>
+			  <received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>
+			</message>;
 			var testValue:String = "received";
 			
 			var message:Message = new Message();
 			message.xml = incoming;
 			
 			assertEquals( testValue, message.receipt );
-                }
+        }
+
+		[Test( description="Message parse from XML - receiptId" )]
+		public function testParseReceiptReceivedId():void
+		{
+			var incoming:XML = <message
+				from='kingrichard@royalty.england.lit/throne'
+				id='bi29sg183b4v'
+				to='northumberland@shakespeare.lit/westminster'>
+			  <received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>
+			</message>;
+			var testValue:String = "richard2-4.1.247";
+			
+			var message:Message = new Message();
+			message.xml = incoming;
+			
+			assertEquals( testValue, message.receiptId );
+        }
 		
 		[Test( description="Message parse from XML - attention" )]
 		public function testParseAttention():void
@@ -522,6 +539,36 @@ package org.igniterealtime.xiff.data
 			message.xml = incoming;
 			
 			assertEquals( testValue, message.attention );
+		}
+		
+		[Test( description="Message parse from XML - correction" )]
+		public function testParseCorrection():void
+		{
+			var incoming:XML = <message to='juliet@capulet.net/balcony' id='good1'>
+			  <body>But soft, what light through yonder window breaks?</body>
+			  <replace id='bad1' xmlns='urn:xmpp:message-correct:0'/>
+			</message>;
+			var testValue:Boolean = true;
+			
+			var message:Message = new Message();
+			message.xml = incoming;
+			
+			assertEquals( testValue, message.correction );
+		}
+		
+		[Test( description="Message parse from XML - correctionId" )]
+		public function testParseCorrectionId():void
+		{
+			var incoming:XML = <message to='juliet@capulet.net/balcony' id='good1'>
+			  <body>But soft, what light through yonder window breaks?</body>
+			  <replace id='bad1' xmlns='urn:xmpp:message-correct:0'/>
+			</message>;
+			var testValue:String = "bad1";
+			
+			var message:Message = new Message();
+			message.xml = incoming;
+			
+			assertEquals( testValue, message.correctionId );
 		}
 	}
 }
