@@ -471,48 +471,41 @@ package org.igniterealtime.xiff.data
 
 
 		
-		/**
-		 * @see http://xmpp.org/extensions/xep-0184.html
-		 *
+                // http://xmpp.org/extensions/xep-0184.html
 		[Test( description="Message parse from XML - receipt request" )]
 		public function testParseReceiptRequest():void
 		{
-			var incoming:XML = <message
-				from='northumberland@shakespeare.lit/westminster'
-				id='richard2-4.1.247'
-				to='kingrichard@royalty.england.lit/throne'>
-			  <body>My lord, dispatch; read o'er these articles.</body>
-			  <request xmlns='urn:xmpp:receipts'/>
-			</message>;
+                        var incoming:XML = <message
+                            from='northumberland@shakespeare.lit/westminster'
+                            id='richard2-4.1.247'
+                            to='kingrichard@royalty.england.lit/throne'>
+                          <body>My lord, dispatch; read o'er these articles.</body>
+                          <request xmlns='urn:xmpp:receipts'/>
+                        </message>;
 			var testValue:String = "receipt";
 			
 			var message:Message = new Message();
 			message.xml = incoming;
 			
 			assertEquals( testValue, message.receipt );
-		}
-		*/
-		
-		/**
-		 * @see http://xmpp.org/extensions/xep-0184.html
-		 *
-		[Test( description="Message parse from XML - receipt request" )]
+                }
+
+                [Test( description="Message parse from XML - receipt received" )]
 		public function testParseReceiptReceived():void
 		{
-			var incoming:XML = <message
-				from='kingrichard@royalty.england.lit/throne'
-				id='bi29sg183b4v'
-				to='northumberland@shakespeare.lit/westminster'>
-			  <received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>
-			</message>;
+                        var incoming:XML = <message
+                            from='kingrichard@royalty.england.lit/throne'
+                            id='bi29sg183b4v'
+                            to='northumberland@shakespeare.lit/westminster'>
+                          <received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>
+                        </message>;
 			var testValue:String = "received";
 			
 			var message:Message = new Message();
 			message.xml = incoming;
 			
 			assertEquals( testValue, message.receipt );
-		}
-		*/
+                }
 		
 		[Test( description="Message parse from XML - attention" )]
 		public function testParseAttention():void
