@@ -164,6 +164,13 @@ package org.igniterealtime.xiff.data
 		 */
 		public static const NS_ATTENTION:String = "urn:xmpp:attention:0";
 		
+		/**
+		 * The namespace used in the XEP-0308: Last Message Correction.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0308.html
+		 */
+		public static const NS_CORRECTION:String = "urn:xmpp:message-correct:0";
+
 		
 		private static var isMessageStaticCalled:Boolean = MessageStaticConstructor();
 		private static var staticConstructorDependency:Array = [ XMPPStanza, XHTMLExtension, ExtensionClassRegistry ];
@@ -465,6 +472,42 @@ package org.igniterealtime.xiff.data
 			{
 				delete xml.attention;
 			}
+		}
+		
+		/**
+		 * When sending a message, people often introduce typing errors and send a follow-up message to correct them.
+		 * This property allows the sending client to flag the second message as correcting the first.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0308.html
+		 */
+		public function get correction():String
+		{
+			return getField("replace");
+		}
+		public function set correction( value:String ):void
+		{
+			if (value)
+			{
+				xml.replace.@xmlns = Message.NS_CORRECTION;
+			}
+			else
+			{
+				delete xml.replace;
+			}
+		}
+
+		/**
+		 * Message ID of the message that is to be corrected.
+		 *
+		 * @see http://xmpp.org/extensions/xep-0308.html
+		 */
+		public function get correctionId():String
+		{
+			return getChildAttribute("replace", "id");
+		}
+		public function set correctionId( value:String ):void
+		{
+			setChildAttribute("replace", "id", value);
 		}
 	}
 }
