@@ -69,7 +69,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 */
 		public static const BOSH_NS:String = "http://jabber.org/protocol/httpbind";
-		
+
 		/**
 		 * The default port as per XMPP specification.
 		 * @default 7070
@@ -86,7 +86,7 @@ package org.igniterealtime.xiff.core
 		 * BOSH body element name
 		 */
 		public static const ELEMENT_NAME:String = "body";
-		
+
 		/**
 		 * Keys should match URLRequestMethod constants.
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestMethod.html
@@ -113,42 +113,42 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Polling interval, in seconds
 		 */
-		private var boshPollingInterval:uint = 10;
+		private var _boshPollingInterval:uint = 10;
 
 		/**
 		 * Inactivity time, in seconds
 		 */
-		private var inactivity:uint;
+		private var _inactivity:uint;
 
-		private var isDisconnecting:Boolean = false;
+		private var _isDisconnecting:Boolean = false;
 
-		private var lastPollTime:Date = null;
+		private var _lastPollTime:Date = null;
 
 		/**
 		 * Maximum pausing time, in seconds
 		 */
-		private var maxPause:uint;
+		private var _maxPause:uint;
 
-		private var pauseEnabled:Boolean = false;
+		private var _pauseEnabled:Boolean = false;
 
-		private var pollingEnabled:Boolean = false;
+		private var _pollingEnabled:Boolean = false;
 
-		private var requestCount:int = 0;
+		private var _requestCount:int = 0;
 
-		private var requestQueue:Array = [];
+		private var _requestQueue:Array = [];
 
-		private var responseQueue:Array = [];
+		private var _responseQueue:Array = [];
 
-		private var responseTimer:Timer;
+		private var _responseTimer:Timer;
 
 		/**
 		 * Optional, positive integer.
 		 */
-		private var rid:uint;
+		private var _rid:uint;
 
-		private var sid:String;
+		private var _sid:String;
 
-		private var streamRestarted:Boolean;
+		private var _streamRestarted:Boolean;
 
 		/**
 		 *
@@ -158,8 +158,8 @@ package org.igniterealtime.xiff.core
 		{
 			super();
 			this.secure = secure;
-			responseTimer = new Timer( 0.0, 1 );
-			responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
+			_responseTimer = new Timer( 0.0, 1 );
+			_responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
 		}
 
 		override public function connect( streamType:uint = 0 ):Boolean
@@ -176,7 +176,7 @@ package org.igniterealtime.xiff.core
 				"ver": BOSH_VERSION,
 				"to": domain
 			};
-			
+
 			var result:XML = <{ ELEMENT_NAME }/>;
 			for (var key:String in attrs)
 			{
@@ -185,7 +185,7 @@ package org.igniterealtime.xiff.core
 					result.@[ key ] = attrs[ key ];
 				}
 			}
-			
+
 			sendRequests( result );
 
 			return true;
@@ -200,7 +200,7 @@ package org.igniterealtime.xiff.core
 				sendRequests( data );
 				active = false;
 				loggedIn = false;
-				dispatchEvent( new DisconnectionEvent());
+				dispatchEvent( new DisconnectionEvent() );
 			}
 		}
 
@@ -211,10 +211,12 @@ package org.igniterealtime.xiff.core
 		{
 			trace( "Pausing session for {0} seconds", seconds );
 
-			if ( !pauseEnabled || seconds > maxPause || seconds <= boshPollingInterval )
+			if ( !_pauseEnabled || seconds > _maxPause || seconds <= _boshPollingInterval )
+			{
 				return false;
+			}
 
-			pollingEnabled = false;
+			_pollingEnabled = false;
 
 			var data:XML = createRequest();
 			data.@pause = seconds;
@@ -235,31 +237,31 @@ package org.igniterealtime.xiff.core
 		{
 			dispatchEvent( new ConnectionSuccessEvent() );
 
-			sid = responseBody.@sid;
+			_sid = responseBody.@sid;
 			wait = responseBody.@wait;
 
 			if ( responseBody.hasOwnProperty("@polling") )
 			{
-				boshPollingInterval = responseBody.@polling;
+				_boshPollingInterval = responseBody.@polling;
 			}
 			if ( responseBody.hasOwnProperty("@inactivity") )
 			{
-				inactivity = responseBody.@inactivity;
+				_inactivity = responseBody.@inactivity;
 			}
 			if ( responseBody.hasOwnProperty("@maxpause") )
 			{
-				maxPause = responseBody.@maxpause;
-				pauseEnabled = true;
+				_maxPause = responseBody.@maxpause;
+				_pauseEnabled = true;
 			}
 			if ( responseBody.hasOwnProperty("@requests") )
 			{
 				maxConcurrentRequests = responseBody.@requests;
 			}
 
-			trace( "Polling interval: {0}", boshPollingInterval );
-			trace( "Inactivity timeout: {0}", inactivity );
+			trace( "Polling interval: {0}", _boshPollingInterval );
+			trace( "inactivity timeout: {0}", _inactivity );
 			trace( "Max requests: {0}", maxConcurrentRequests );
-			trace( "Max pause: {0}", maxPause );
+			trace( "Max pause: {0}", _maxPause );
 
 			active = true;
 
@@ -274,14 +276,14 @@ package org.igniterealtime.xiff.core
 		override protected function restartStream():void
 		{
 			var data:XML = createRequest();
-			
+
 			var attrs:Object = {
 				"xmpp:restart": "true",
 				"xmlns:xmpp": XMPPStanza.NAMESPACE_BOSH,
 				"xml:lang": XMPPStanza.XML_LANG,
 				"to": domain
 			};
-			
+
 			for (var key:String in attrs)
 			{
 				if (attrs.hasOwnProperty(key))
@@ -290,26 +292,26 @@ package org.igniterealtime.xiff.core
 				}
 			}
 			sendRequests( data );
-			streamRestarted = true;
+						_streamRestarted = true;
 		}
 
 		override protected function sendXML( someData:String ):void
 		{
 			var thisData:XML;
 			thisData = someData as XML;
-			
+
 			sendQueuedRequests( thisData );
 		}
 
 		override protected function handleNodeType( node:XML ):void
 		{
 			super.handleNodeType( node );
-			
+
 			var nodeName:String = String(node.localName()).toLowerCase();
 
 			if( nodeName == "stream:features" )
 			{
-				streamRestarted = false; //avoid triggering the old server workaround
+				_streamRestarted = false; //avoid triggering the old server workaround
 			}
 		}
 
@@ -323,8 +325,8 @@ package org.igniterealtime.xiff.core
 			var elem:XML = <{ ELEMENT_NAME }/>;
 			elem.setNamespace( XMPPBOSHConnection.BOSH_NS );
 			elem.@rid = nextRID;
-			elem.@sid = sid;
-			
+			elem.@sid = _sid;
+
 			if ( bodyContent )
 			{
 				for each ( var content:XML in bodyContent )
@@ -342,7 +344,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function handleLogin( event:LoginEvent ):void
 		{
-			pollingEnabled = true;
+			_pollingEnabled = true;
 			pollServer();
 		}
 
@@ -352,10 +354,10 @@ package org.igniterealtime.xiff.core
 		 */
 		private function handlePauseTimeout( event:TimerEvent ):void
 		{
-			pollingEnabled = true;
+			_pollingEnabled = true;
 			pollServer();
 		}
-		
+
 		/**
 		 * TODO: Compression handling
 		 * @param	event
@@ -363,21 +365,21 @@ package org.igniterealtime.xiff.core
 		private function onRequestComplete( event:Event ):void
 		{
 			var loader:URLLoader = event.target as URLLoader;
-			
-			requestCount--;
+
+			_requestCount--;
 			var byteData:ByteArray = loader.data as ByteArray;
 
 			var xmlData:XML = new XML( byteData.readUTFBytes(byteData.length) );
-			
+
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
 			dispatchEvent( incomingEvent );
-			
+
 			var bodyNode:XML = xmlData.children()[0];
 
-			if ( streamRestarted && bodyNode.children().length() == 0)
+			if ( _streamRestarted && bodyNode.children().length() == 0)
 			{
-				streamRestarted = false;
+								_streamRestarted = false;
 				bindConnection();
 			}
 
@@ -401,20 +403,20 @@ package org.igniterealtime.xiff.core
 				}
 				if ( !featuresFound )
 				{
-					pollingEnabled = true;
+					_pollingEnabled = true;
 					pollServer();
 				}
 			}
 
 			for each ( var childNode:XML in bodyNode.children() )
 			{
-				responseQueue.push( childNode );
+				_responseQueue.push( childNode );
 			}
 
 			resetResponseProcessor();
 			// if there are no nodes in the response queue, then the response processor won't run and we won't send a poll to the server.
 			// so, do it manually here.
-			if ( responseQueue.length == 0 )
+			if ( _responseQueue.length == 0 )
 			{
 				pollServer();
 			}
@@ -429,7 +431,7 @@ package org.igniterealtime.xiff.core
 			 * We shouldn't poll if the connection is dead, if we had requests
 			 * to send instead, or if there's already one in progress
 			 */
-			if ( !isActive() || !pollingEnabled || sendQueuedRequests() || requestCount > 0 )
+			if ( !isActive() || !_pollingEnabled || sendQueuedRequests() || _requestCount > 0 )
 			{
 				return;
 			}
@@ -449,14 +451,14 @@ package org.igniterealtime.xiff.core
 		private function processResponse( event:TimerEvent = null ):void
 		{
 			// Read the data and send it to the appropriate parser
-			var currentNode:XML = responseQueue.shift() as XML;
+			var currentNode:XML = _responseQueue.shift() as XML;
 
 			handleNodeType( currentNode );
 
 			resetResponseProcessor();
 
 			//if we have no outstanding requests, then we're free to send a poll at the next opportunity
-			if ( requestCount == 0 && !sendQueuedRequests())
+			if ( _requestCount == 0 && !sendQueuedRequests())
 			{
 				pollServer();
 			}
@@ -467,10 +469,10 @@ package org.igniterealtime.xiff.core
 		 */
 		private function resetResponseProcessor():void
 		{
-			if ( responseQueue.length > 0 )
+			if ( _responseQueue.length > 0 )
 			{
-				responseTimer.reset();
-				responseTimer.start();
+				_responseTimer.reset();
+				_responseTimer.start();
 			}
 		}
 
@@ -483,9 +485,9 @@ package org.igniterealtime.xiff.core
 		{
 			if ( body )
 			{
-				requestQueue.push( body );
+				_requestQueue.push( body );
 			}
-			else if ( requestQueue.length == 0 )
+			else if ( _requestQueue.length == 0 )
 			{
 				return false;
 			}
@@ -504,12 +506,12 @@ package org.igniterealtime.xiff.core
 		 */
 		private function sendRequests( data:XML = null, isPoll:Boolean = false ):Boolean
 		{
-			if ( requestCount >= maxConcurrentRequests )
+			if ( _requestCount >= maxConcurrentRequests )
 			{
 				return false;
 			}
 
-			requestCount++;
+			_requestCount++;
 
 			if ( !data )
 			{
@@ -520,10 +522,10 @@ package org.igniterealtime.xiff.core
 				else
 				{
 					var requests:Array = [];
-					var len:uint = Math.min( 10, requestQueue.length ); // ten or less
+					var len:uint = Math.min( 10, _requestQueue.length ); // ten or less
 					for ( var i:uint = 0; i < len; ++i )
 					{
-						requests.push( requestQueue.shift() );
+						requests.push( _requestQueue.shift() );
 					}
 					data = createRequest( requests );
 				}
@@ -531,19 +533,19 @@ package org.igniterealtime.xiff.core
 
 			var byteData:ByteArray = new ByteArray();
 			byteData.writeUTFBytes(data.toString());
-			
+
 			var event:OutgoingDataEvent = new OutgoingDataEvent();
 			event.data = byteData;
 			dispatchEvent( event );
-			
+
 			// Compression here if needed ...
-			
+
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
 			req.requestHeaders = HEADERS[ req.method ];
 			req.data = byteData;
-			
+
 			var loader:URLLoader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.addEventListener(Event.COMPLETE, onRequestComplete);
@@ -553,7 +555,7 @@ package org.igniterealtime.xiff.core
 
 			if ( isPoll )
 			{
-				lastPollTime = new Date();
+				_lastPollTime = new Date();
 				trace( "Polling" );
 			}
 
@@ -577,11 +579,11 @@ package org.igniterealtime.xiff.core
 		 */
 		private function get nextRID():uint
 		{
-			if ( !rid )
+			if ( !_rid )
 			{
-				rid = Math.floor( Math.random() * 1000000 + 10 );
+				_rid = Math.floor( Math.random() * 1000000 + 10 );
 			}
-			return ++rid;
+			return ++_rid;
 		}
 
 		/**

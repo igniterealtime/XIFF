@@ -34,6 +34,7 @@ package org.igniterealtime.xiff.data.privatedata
 	
 	/**
 	 * XEP-0049: Private XML Storage
+         *
 	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataExtension extends Extension implements IExtension
@@ -144,7 +145,7 @@ package org.igniterealtime.xiff.data.privatedata
 					return;
 				}
 			
-				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
+                                var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, payloadNode.localName());
 				if (extClass == null)
 				{
 					return;

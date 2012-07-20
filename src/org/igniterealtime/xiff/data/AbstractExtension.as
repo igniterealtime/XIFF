@@ -43,7 +43,7 @@ package org.igniterealtime.xiff.data
 			for each(var extNode:XML in node.children())
 			{
 				var ns:Namespace = extNode.namespace();
-				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri);
+                                var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, extNode.localName());
 				if (extClass == null)
 				{
 					continue;

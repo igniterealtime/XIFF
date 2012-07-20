@@ -45,7 +45,7 @@ package org.igniterealtime.xiff.conference
 
 
 	/**
-	 * Manages the dispatching of events during invitations.  Add event
+         * Manages the dispatching of events during invitations. Add event
 	 * listeners to an instance of this class to monitor invite and decline
 	 * events.
 	 *
@@ -125,6 +125,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( _connection != null )
 			{
+                                // Make sure that the listener is set only once
 				_connection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
 			}
 			_connection = value;

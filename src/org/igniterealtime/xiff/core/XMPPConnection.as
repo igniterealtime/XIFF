@@ -34,7 +34,10 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
 	import org.igniterealtime.xiff.data.bind.BindExtension;
 	import org.igniterealtime.xiff.data.ping.PingExtension;
+	import org.igniterealtime.xiff.data.register.RegisterExtension;
+	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.session.SessionExtension;
+	import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.util.ICompressor;
 
@@ -334,8 +337,8 @@ package org.igniterealtime.xiff.core
 				BindExtension,
 				SessionExtension,
 				PingExtension,
-				//RegisterExtension,
-				//FormExtension,
+				RegisterExtension,
+				FormExtension
 			);
 		}
 
@@ -1026,7 +1029,7 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @see http://xmpp.org/extensions/xep-0030.html
 		 */
-		protected serviceDiscoveryResponce(to:EscapedJID, id:String):void
+		protected function serviceDiscoveryResponce(to:EscapedJID, id:String):void
 		{
 			var iq:IQ = new IQ(to, IQ.TYPE_RESULT, id);
 			// now get NS from each enabled extension...
@@ -1623,7 +1626,7 @@ package org.igniterealtime.xiff.core
 		 * request or connection, if needed.
 		 * <p>Then use the sendXML method when sending XML.</p>
 		 */
-		protected sendDataToServer( data:ByteArray ):void
+		protected function sendDataToServer( data:ByteArray ):void
 		{
 			if ( socket && socket.connected )
 			{

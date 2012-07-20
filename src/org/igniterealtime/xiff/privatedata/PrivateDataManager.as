@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.privatedata
 {
 	import flash.events.EventDispatcher;
 	
-	import org.igniterealtime.xiff.core.XMPPConnection;
+        import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
@@ -37,6 +37,7 @@ package org.igniterealtime.xiff.privatedata
 
 	/**
 	 * XEP-0049: Private XML Storage
+         *
 	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataManager extends EventDispatcher
@@ -53,13 +54,13 @@ package org.igniterealtime.xiff.privatedata
 			return true;
 		}
 		
-		private var _connection:XMPPConnection;
+                private var _connection:IXMPPConnection;
 		
 		/**
 		 *
 		 * @param	connection
 		 */
-		public function PrivateDataManager(connection:XMPPConnection)
+                public function PrivateDataManager(connection:IXMPPConnection)
 		{
 			_connection = connection;
 		}

@@ -49,10 +49,6 @@ package org.igniterealtime.xiff.core
 
 		private var _pending:Object = {};
 
-		private static var _staticDepends:Array = [ ItemDiscoExtension, InfoDiscoExtension,
-													BrowseExtension, ExtensionClassRegistry ];
-
-		private static var _isEventEnabled:Boolean = BrowserStaticConstructor();
 
 		/**
 		 * Creates a new Browser object.
@@ -62,21 +58,9 @@ package org.igniterealtime.xiff.core
 		public function Browser( aConnection:IXMPPConnection )
 		{
 			connection = aConnection;
-		}
 
-		/**
-		 * @private
-		 *
-		 * Actionscript does not provide static constructors, but this is a
-		 * way to get aroudn that.
-		 */
-		private static function BrowserStaticConstructor():Boolean
-		{
-			ItemDiscoExtension.enable();
-			InfoDiscoExtension.enable();
-			BrowseExtension.enable();
-			return true;
-		}
+                        // Enable extensions needed for this class?
+                }
 
 		/**
 		 *

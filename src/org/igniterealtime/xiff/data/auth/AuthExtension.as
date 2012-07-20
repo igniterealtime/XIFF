@@ -25,15 +25,16 @@
  */
 package org.igniterealtime.xiff.data.auth
 {
-	
-	
+
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.util.SHA1;
 	//import com.hurlant.crypto.hash.SHA1;
 	
 	/**
-	 * Implements <a href="http://xmpp.org/extensions/xep-0078.html">XEP-0078</a>
-	 * for non SASL authentication.
+         * XEP-0078: Non-SASL Authentication
+         *
+         * <p><strong>OBSOLETE</strong></p>
+         *
 	 * @see	http://xmpp.org/extensions/xep-0078.html
 	 */
 	public class AuthExtension extends Extension implements IExtension
@@ -67,16 +68,7 @@ package org.igniterealtime.xiff.data.auth
 		public function getElementName():String
 		{
 			return AuthExtension.ELEMENT_NAME;
-		}
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(AuthExtension);
-	    }
+                }
 	
 		/**
 		 * Computes the SHA1 digest of the password and session ID for use when

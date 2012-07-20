@@ -25,25 +25,24 @@
  */
 package org.igniterealtime.xiff.data.browse
 {
-	
-	
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Implements jabber:iq:browse namespace.  Use this extension to request the items
+         * XEP-0011: Jabber Browsing
+         *
+         * <p>Implements jabber:iq:browse namespace.  Use this extension to request the items
 	 * of an agent or service such as the rooms of a conference server or the members of
-	 * a room.
-	 * OBSOLETE
+         * a room.</p>
+         *
+         * <p><strong>OBSOLETE</strong></p>
+         *
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class BrowseExtension extends BrowseItem implements IExtension
 	{
 		public static const NS:String = "jabber:iq:browse";
 		public static const ELEMENT_NAME:String = "query";
-	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
-	
+
 		private var _items:Array = [];
 	
 		/**
@@ -77,16 +76,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			return BrowseExtension.ELEMENT_NAME;
 		}
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(BrowseExtension);
-	    }
-	
+
 		/**
 		 * If you are generating a browse response to a browse request, then
 		 * fill out the items list with this method.

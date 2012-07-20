@@ -25,20 +25,23 @@
  */
 package org.igniterealtime.xiff.data.browse
 {
-	
+
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	
+
 	/**
+		 * XEP-0011: Jabber Browsing
+		 *
 	 * Class that representes a child resource of a browsed resource.
-	 *
-	 * <p>XEP-0011: Jabber Browsing (obsolete)</p>
+		 *
+		 * <p><strong>OBSOLETE</strong></p>
+		 *
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class BrowseItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
-		
+
 		/**
 		 *
 		 * @param	parent
@@ -47,14 +50,14 @@ package org.igniterealtime.xiff.data.browse
 		{
 			super();
 			xml.setLocalName( BrowseItem.ELEMENT_NAME );
-	
+
 			if (parent != null)
 			{
 				parent.appendChild(xml);
 			}
-	
+
 		}
-	
+
 		/**
 		 * Add new features that are supported if you are responding to a
 		 * browse request
@@ -63,10 +66,10 @@ package org.igniterealtime.xiff.data.browse
 		{
 			var node:XML = <ns>{ value }</ns>;
 			xml.appendChild(node);
-			
+
 			return node;
 		}
-	
+
 		/**
 		 * The full JabberID of the entity described
 		 */
@@ -78,7 +81,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			xml.@jid = value;
 		}
-	
+
 		/**
 		 * One of the categories from the list above, or a
 		 * non-standard category prefixed with the string "x-".
@@ -93,7 +96,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			xml.@category = value;
 		}
-	
+
 		/**
 		 * A friendly name that may be used in a user interface
 		 */
@@ -105,7 +108,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			xml.@name = value;
 		}
-	
+
 		/**
 		 * One of the official types from the specified category,
 		 * or a non-standard type prefixed with the string "x-".
@@ -114,13 +117,13 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get type():String
 		{
-			return xml.@type;
+			return getAttribute("type");
 		}
 		public function set type(value:String):void
 		{
-			xml.@type = value;
+			setAttribute("type", value);
 		}
-	
+
 		/**
 		 * A string containing the version of the node, equivalent
 		 * to the response provided to a query in the 'jabber:iq:version'
@@ -129,36 +132,36 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get version():String
 		{
-			return xml.@version;
+			return getAttribute("version");
 		}
 		public function set version(value:String):void
 		{
-			xml.@version = value;
+			setAttribute("version", value);
 		}
-	
-	 	/**
+
+		/**
 		 * On top of the browsing framework, a simple form of "feature
 		 * advertisement" can be built. This enables any entity to advertise
 		 * whichfeatures it supports, based on the namespaces associated with
-		 * those features. The <ns/> element is allowed as a subelement of the
+		 * those features. The <strong>ns</strong> element is allowed as a subelement of the
 		 * item. This element contains a single namespace that the entity
-		 * supports, and multiple <ns/> elements can be included in any item.
-		 * For a connectedclient this might be <ns>jabber:iq:oob</ns>, or for a
-		 * service<ns>jabber:iq:search</ns>. This list of namespaces should be
+		 * supports, and multiple <strong>ns</strong> elements can be included in any item.
+		 * For a connected client this might be &gt;ns&lt;jabber:iq:oob&lt;/ns&gt;, or for a
+		 * service &gt;ns&lt;jabber:iq:search&lt;/ns&gt;. This list of namespaces should be
 		 * used to present available options for a user or to automatically
 		 * locate functionality for an application.
 		 *
 		 * <p>The children of a browse result may proactively contain a few
-		 * <ns/> elements (such as the result of the service request to the home
+		 * <strong>ns</strong> elements (such as the result of the service request to the home
 		 * server), which advertises the features that the particular service
-		 * supports. Thislist may not be complete (it is only for first-pass
+		 * supports. This list may not be complete (it is only for first-pass
 		 * filtering by simpler clients), and the JID should be browsed if a
 		 * complete list is required.</p>
 		 */
 		public function get namespaces():Array
 		{
 			var res:Array = [];
-	
+
 			for each (var child:XML in xml.children())
 			{
 				if (child.localName() == "ns")

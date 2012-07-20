@@ -65,7 +65,7 @@ package org.igniterealtime.xiff.events
 		 *
 		 * @default
 		 */
-		private var _errorCode:int;
+				private var _errorCode:int = 0;
 
 		/**
 		 *
@@ -186,7 +186,7 @@ package org.igniterealtime.xiff.events
 		 * stream error.</li>
 		 *
 		 * <li><strong>policy-violation</strong> - the entity has violated some local service
-		 * policy; the server MAY choose to specify the policy in the <text/>
+		 * policy; the server MAY choose to specify the policy in the <strong>text</strong>
 		 * element or an application-specific condition element.</li>
 		 *
 		 * <li><strong>remote-connection-failed</strong> - the server is unable to properly
@@ -226,7 +226,7 @@ package org.igniterealtime.xiff.events
 		 * <li><strong>unsupported-version</strong> - the value of the 'version' attribute
 		 * provided by the initiating entity in the stream header specifies a
 		 * version of XMPP that is not supported by the server; the server
-		 * MAY specify the version(s) it supports in the <text/> element.</li>
+		 * MAY specify the version(s) it supports in the <strong>text</strong> element.</li>
 		 *
 		 * <li><strong>xml-not-well-formed</strong> - the initiating entity has sent XML that
 		 * is not well-formed as defined by [XML].</li>

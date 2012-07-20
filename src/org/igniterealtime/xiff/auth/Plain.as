@@ -27,8 +27,8 @@ package org.igniterealtime.xiff.auth
 {
 	import com.hurlant.util.Base64;
 
-	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.core.XMPPConnection;
+    import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 
 	/**
 	 * This class provides SASL authentication using the PLAIN mechanism.
@@ -41,16 +41,15 @@ package org.igniterealtime.xiff.auth
 	public class Plain extends SASLAuth
 	{
 		public static const MECHANISM:String = "PLAIN";
-
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * Creates a new Plain authentication object.
-		 *
-		 * @param	connection A reference to the XMPPConnection instance in use.
 		 */
-		public function Plain( connection:XMPPConnection )
+		public function Plain( connection:IXMPPConnection )
 		{
+			this.connection = connection;
+			
 			//should probably use the escaped form, but flex/as handles \\ weirdly for unknown reasons
 			var jid:UnescapedJID = connection.jid;
 			var authContent:String = jid.bareJID;

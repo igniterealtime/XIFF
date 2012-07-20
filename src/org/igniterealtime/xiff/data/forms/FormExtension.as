@@ -25,15 +25,15 @@
  */
 package org.igniterealtime.xiff.data.forms
 {
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
-
 	
 
 	/**
-	 * Implements the base functionality of XEP-0004: Data Forms,
-	 * shared by all MUC extensions
+         * XEP-0004: Data Forms
+         *
+         * <p>Implements the base functionality of XEP-0004: Data Forms,
+         * shared by all MUC extensions.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0004.html
 	 */
@@ -41,9 +41,6 @@ package org.igniterealtime.xiff.data.forms
 	{
 		public static const NS:String = "jabber:x:data";
 		public static const ELEMENT_NAME:String = "x";
-
-		//private static var isStaticConstructed:Boolean = enable();
-		//private static var staticDependencies:Array = [ ExtensionClassRegistry ];
 
 		private var _reported:FormReported;
 		private var _fields:Array = []; // FormField
@@ -66,17 +63,7 @@ package org.igniterealtime.xiff.data.forms
 		public function getElementName():String
 		{
 			return FormExtension.ELEMENT_NAME;
-		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		public static function enable():Boolean
-		{
-			ExtensionClassRegistry.register( FormExtension );
-			return true;
-		}
+                }
 
 		/**
 		 * TODO: clean up...

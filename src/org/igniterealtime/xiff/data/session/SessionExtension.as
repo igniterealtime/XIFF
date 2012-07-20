@@ -25,19 +25,19 @@
  */
 package org.igniterealtime.xiff.data.session
 {
-	
-	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * Most instant messaging and presence applications based on XMPP are
+         * Session Establishment
+         *
+         * <p>Most instant messaging and presence applications based on XMPP are
 	 * implemented via a client-server architecture that requires a client
 	 * to establish a session on a server in order to engage in the expected
 	 * instant messaging and presence activities.  However, there are
 	 * several pre-conditions that MUST be met before a client can establish
-	 * an instant messaging and presence session.
+         * an instant messaging and presence session.</p>
 	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-3
 	 */
@@ -64,16 +64,7 @@ package org.igniterealtime.xiff.data.session
 		public function getElementName():String
 		{
 			return SessionExtension.ELEMENT_NAME;
-		}
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(SessionExtension);
-	    }
+                }
 		
 		
 	}

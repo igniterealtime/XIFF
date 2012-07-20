@@ -29,12 +29,14 @@ package org.igniterealtime.xiff.data.register
 	import org.igniterealtime.xiff.data.*;
 	
 	/**
-	 * Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
+         * XEP-0077: In-Band Registration
+         *
+         * <p>Implements jabber:iq:register namespace.  Use this to create new accounts on the jabber server.
 	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be a conflict,
-	 * or the fields you will need to fill out.
+         * or the fields you will need to fill out.</p>
 	 *
 	 * <p>Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
-	 * getRequiredFieldNames set on this extension.
+         * 'getRequiredFieldNames()' set on this extension.
 	 * Check the result and re-establish the connection with the new account.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0077.html
@@ -43,9 +45,7 @@ package org.igniterealtime.xiff.data.register
 	{
 		public static const NS:String = "jabber:iq:register";
 		public static const ELEMENT_NAME:String = "query";
-	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
-		
+
 		private var _fields:Object = {};
 	
 	
@@ -66,17 +66,7 @@ package org.igniterealtime.xiff.data.register
 		public function getElementName():String
 		{
 			return RegisterExtension.ELEMENT_NAME;
-		}
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(RegisterExtension);
-	    }
-	
+                }
 	
 		/**
 		 * In order to determine which fields are required for registration with a host,

@@ -27,11 +27,12 @@ package org.igniterealtime.xiff.data
 {
 	
 	/**
-	 * This is a static class that contains class constructors for all extensions that could come from the network.
+	 * This is a static class that contains class constructors for all
+	 * extensions that could come from the network.
 	 */
 	public class ExtensionClassRegistry
 	{
-		private static var _classes:Object = [];
+        private static var _classes:Object = {};
 		
 		/**
 	     * Registers the given extension with the extension registry for it to be used,
@@ -39,22 +40,63 @@ package org.igniterealtime.xiff.data
 	     */
 		public static function register( extensionClass:Class ):Boolean
 		{
-			//trace ("ExtensionClassRegistry.register(" + extensionClass + ")");
-			
 			var extensionInstance:IExtension = new extensionClass();
 			
 			//if (extensionInstance instanceof IExtension) {
 			if (extensionInstance is IExtension)
 			{
-				_classes[extensionInstance.getNS()] = extensionClass;
+				var key:String = extensionInstance.getNS() + ":" + extensionInstance.getElementName();
+				trace ("ExtensionClassRegistry.register. key: " + key);
+				_classes[ key ] = extensionClass;
+				return true;
+			}
+			return false;
+		}
+
+		/**
+		 * Remove the given extension from the registery.
+		 */
+		public static function remove( extensionClass:Class ):Boolean
+		{
+			var extensionInstance:IExtension = new extensionClass();
+
+			//if (extensionInstance instanceof IExtension) {
+			if (extensionInstance is IExtension)
+			{
+				var key:String = extensionInstance.getNS() + ":" + extensionInstance.getElementName();
+				trace ("ExtensionClassRegistry.remove. key: " + key);
+				delete _classes[ key ];
 				return true;
 			}
 			return false;
 		}
 		
-		public static function lookup( ns:String ):Class
+		/**
+		 * Find the extension with the given NS and ELEMENT_NAME if availale in the registery.
+		 */
+		public static function lookup( ns:String, elementName:String ):Class
 		{
-			return _classes[ ns ];
+			var key:String = ns + ":" + elementName;
+			return _classes[ key ] as Class;
+		}
+
+		/**
+		 * Get a list of namespaces of the currently enabled extensions.
+		 */
+		public static function getNamespaces():Array
+		{
+			var list:Array = [];
+			for (var key:String in _classes)
+			{
+				if (_classes.hasOwnProperty(key))
+				{
+					var namespace:String = key.substr(0, key.lastIndexOf(":") - 1);
+					trace("getNamespaces. namespace: " + namespace + ", key: " + key);
+					list.push(namespace);
+				}
+			}
+
+			return list;
 		}
 	}
 }

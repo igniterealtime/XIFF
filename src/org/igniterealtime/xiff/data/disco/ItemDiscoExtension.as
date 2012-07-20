@@ -25,10 +25,8 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 
-	
 
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030</a>
@@ -58,16 +56,7 @@ package org.igniterealtime.xiff.data.disco
 		public function getNS():String
 		{
 			return ItemDiscoExtension.NS;
-		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		public static function enable():void
-		{
-			ExtensionClassRegistry.register( ItemDiscoExtension );
-		}
+                }
 
 		/**
 		 * An array of DiscoItems that represent the items discovered.

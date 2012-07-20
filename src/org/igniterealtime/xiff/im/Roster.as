@@ -110,11 +110,6 @@ package org.igniterealtime.xiff.im
 	public class Roster extends ArrayCollection implements IRoster
 	{
 
-		private static var rosterStaticConstructed:Boolean = RosterStaticConstructor();
-
-		private static const staticConstructorDependencies:Array = [ ExtensionClassRegistry,
-																	 RosterExtension ];
-
 		private var _connection:IXMPPConnection;
 
 		/**
@@ -130,7 +125,7 @@ package org.igniterealtime.xiff.im
 		/**
 		 * List of <code>UnescapedJID</code> which are pending for subscription.
 		 */
-		private var pendingSubscriptionRequests : Dictionary = new Dictionary();
+                private var _pendingSubscriptionRequests : Dictionary = new Dictionary();
 
 		/**
 		 *
@@ -142,17 +137,7 @@ package org.igniterealtime.xiff.im
 			{
 				connection = aConnection;
 			}
-		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		private static function RosterStaticConstructor():Boolean
-		{
-			ExtensionClassRegistry.register( RosterExtension );
-			return true;
-		}
+                }
 
 		/**
 		 * Adds a contact to the roster. Remember: All roster data is managed on the server-side,
@@ -185,7 +170,7 @@ package org.igniterealtime.xiff.im
 			if ( requestSubscription == true )
 			{
 				callbackMethod = addContact_result;
-				pendingSubscriptionRequests[ iqID.toString() ] = id;
+                                _pendingSubscriptionRequests[ iqID.toString() ] = id;
 				subscription = RosterExtension.SUBSCRIBE_TYPE_TO;
 				askType = RosterExtension.ASK_TYPE_SUBSCRIBE;
 			}
@@ -211,11 +196,11 @@ package org.igniterealtime.xiff.im
 
 			var iqID : String = resultIQ.id.toString();
 
-			if ( pendingSubscriptionRequests.hasOwnProperty( iqID ) )
+                        if ( _pendingSubscriptionRequests.hasOwnProperty( iqID ) )
 			{
-				var subscriptionId:UnescapedJID = pendingSubscriptionRequests[ iqID ] as UnescapedJID;
+                                var subscriptionId:UnescapedJID = _pendingSubscriptionRequests[ iqID ] as UnescapedJID;
 				requestSubscription( subscriptionId );
-				delete( pendingSubscriptionRequests[ iqID ] );
+                                delete( _pendingSubscriptionRequests[ iqID ] );
 			}
 		}
 

@@ -25,12 +25,13 @@
  */
 package org.igniterealtime.xiff.data.xhtml
 {
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-	 * This class provides an extension for XHTML body text in messages.
+         * XEP-0071: XHTML-IM
+         *
+         * <p>This class provides an extension for XHTML body text in messages.</p>
 	 * <p>html --> http://jabber.org/protocol/xhtml-im</p>
 	 * <p>body --> http://www.w3.org/1999/xhtml</p>
 	 *
@@ -40,8 +41,6 @@ package org.igniterealtime.xiff.data.xhtml
 	{
 		public static const NS:String = "http://jabber.org/protocol/xhtml-im";
 		public static const ELEMENT_NAME:String = "html";
-
-	    private static var staticDepends:Class = ExtensionClassRegistry;
 
 		/**
 		 *
@@ -73,15 +72,6 @@ package org.igniterealtime.xiff.data.xhtml
 		{
 			return XHTMLExtension.ELEMENT_NAME;
 		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(XHTMLExtension);
-	    }
 
 		/**
 		 * The XHTML body text. Valid XHTML is REQUIRED. Because XMPP operates using

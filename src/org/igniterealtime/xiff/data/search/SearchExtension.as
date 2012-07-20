@@ -27,18 +27,22 @@ package org.igniterealtime.xiff.data.search
 {
 	
 	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	
 	/**
-	 * Implements jabber:iq:search namespace.  Use this to perform user searches.
-	 * Send an empty IQ.TYPE_GET packet with this extension and the return will either be
-	 * a conflict, or the fields you will need to fill out.
-	 * Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
-	 * getRequiredFieldNames set on this extension.
-	 * Check the result and re-establish the connection with the new account.
+         * XEP-0055: Jabber Search
+         *
+         * <p>Implements jabber:iq:search namespace. Use this to perform user searches.</p>
+         *
+         * <p>Send an empty IQ.TYPE_GET packet with this extension and the return will either be
+         * a conflict, or the fields you will need to fill out.</p>
+         *
+         * <p>Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
+         * getRequiredFieldNames set on this extension.</p>
+         *
+         * <p>Check the result and re-establish the connection with the new account.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0055.html
 	 */
@@ -48,8 +52,6 @@ package org.igniterealtime.xiff.data.search
 		public static const ELEMENT_NAME:String = "query";
 	
 		private var _fields:Object = {};
-	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
 	
 		/**
 		 *
@@ -68,17 +70,7 @@ package org.igniterealtime.xiff.data.search
 		public function getElementName():String
 		{
 			return SearchExtension.ELEMENT_NAME;
-		}
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(SearchExtension);
-	    }
-		
+                }
 	
 		override public function set xml( node:XML ):void
 		{

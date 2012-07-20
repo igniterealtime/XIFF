@@ -26,8 +26,7 @@
 package org.igniterealtime.xiff.auth
 {
 	import com.hurlant.util.Base64;
-
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 
 	/**
 	 * This class provides SASL authentication using the EXTERNAL mechanism.
@@ -38,16 +37,16 @@ package org.igniterealtime.xiff.auth
 	public class External extends SASLAuth
 	{
 		public static const MECHANISM:String = "EXTERNAL";
-
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
+		
 		/**
 		 * Creates a new External authentication object.
-		 *
-		 * @param	connection A reference to the XMPPConnection instance in use.
 		 */
-		public function External( connection:XMPPConnection )
+		public function External( connection:IXMPPConnection )
 		{
+			this.connection = connection;
+			
 			var authContent:String = connection.jid.node;
 
 			authContent = Base64.encode(authContent);

@@ -25,23 +25,19 @@
  */
 package org.igniterealtime.xiff.data.im
 {
-	
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
 	 * that is sent or received with the "jabber:iq:roster" namespace.
-	 *
-	 * @param	theRoot The extension root
-	 * @param	theNode The extension node
+         *
+         * @see http://xmpp.org/rfcs/rfc3921.html#roster
 	 */
 	public class RosterExtension extends Extension implements IExtension
 	{
-		public static const NS:String = "jabber:iq:roster";
+                public static const NS:String = "jabber:iq:roster";
 		public static const ELEMENT_NAME:String = "query";
 		
 		public static const SUBSCRIBE_TYPE_NONE:String = "none";
@@ -54,8 +50,6 @@ package org.igniterealtime.xiff.data.im
 		public static const ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
 		public static const SHOW_UNAVAILABLE:String = "unavailable";
 		public static const SHOW_PENDING:String = "Pending";
-		
-	    private static var staticDepends:Array = [ExtensionClassRegistry];
 	
 		private var _items:Array = [];
 		
@@ -88,17 +82,7 @@ package org.igniterealtime.xiff.data.im
 		public function getElementName():String
 		{
 			return RosterExtension.ELEMENT_NAME;
-		}
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(RosterExtension);
-	    }
-	
+                }
 		
 		/**
 		 * Deserializes the RosterExtension data.

@@ -34,18 +34,18 @@ package org.igniterealtime.xiff.data.id
 	{
 		private static const SO_COOKIE_NAME:String = "SOIncrementalGenerator";
 
-		private var so:SharedObject;
+                private var _so:SharedObject;
 
 		public function SOIncrementalGenerator( id:String, prefix:String=null )
 		{
 			super( prefix );
 			var soName:String = SO_COOKIE_NAME + ( id ? "_" + id : "" );
-			so = SharedObject.getLocal(soName);
-			if (so.data.counter == undefined)
+                        _so = SharedObject.getLocal(soName);
+                        if (_so.data.counter == undefined)
 			{
-				so.data.counter = 0;
+                                _so.data.counter = 0;
 			}
-			counter = so.data.counter;
+                        counter = _so.data.counter;
 		}
 
 		/**
@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.data.id
 		override public function generateID():String
 		{
 			var id:String = super.generateID();
-			so.data.counter = counter;
+                        _so.data.counter = counter;
 			return id;
 		}
 	}

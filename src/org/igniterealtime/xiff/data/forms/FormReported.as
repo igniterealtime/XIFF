@@ -28,15 +28,15 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
-	
+
 	/**
 	 * In some contexts (e.g., the results of a search request), it may be
 	 * necessary to communicate multiple items. Therefore, a data form of
 	 * type "result" MAY contain two child elements not described in the basic syntax:
 	 * <ol>
-	 * <li>One and only <reported/> element, which can be understood as a "table header"
+	 * <li>One and only <strong>reported</strong> element, which can be understood as a "table header"
 	 * describing the data to follow.</li>
-	 * <li>Zero or more <item/> elements, which can be understood as "table cells"
+	 * <li>Zero or more <strong>item</strong> elements, which can be understood as "table cells"
 	 * containing data (if any) that matches the request.</li>
 	 * </ol>
 	 *

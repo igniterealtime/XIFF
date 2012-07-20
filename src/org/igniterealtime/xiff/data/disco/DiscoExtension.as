@@ -30,20 +30,22 @@ package org.igniterealtime.xiff.data.disco
 	
 
 	/**
-	 * Base class for service discovery extensions.
+         * XEP-0030: Service Discovery
+         *
+         * <p>Base class for service discovery extensions.</p>
+         *
 	 * @see http://xmpp.org/protocols/disco/
 	 * @see http://xmpp.org/extensions/xep-0030.html
 	 */
 	public class DiscoExtension extends Extension implements INodeProxy
-	{
-		public static const NS:String = "http://jabber.org/protocol/disco";
+        {
 		public static const ELEMENT_NAME:String = "query";
 
 		/**
 		 * The name of the resource of the service queried if the resource
-		 * doesn't have a JID. For more information, see
-		 * <a href="http://www.jabber.org/registrar/disco-nodes.html">
-		 * http://www.jabber.org/registrar/disco-nodes.html</a>.
+                 * doesn't have a JID.
+                 *
+                 * @see http://www.jabber.org/registrar/disco-nodes.html
 		 */
 		public function DiscoExtension( parent:XML )
 		{
@@ -55,11 +57,11 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get node():String
 		{
-			return xml.@node;
+                        return getAttribute("node");
 		}
 		public function set node( value:String ):void
 		{
-			xml.@node = value;
+                        setAttribute("node", value);
 		}
 
 	}

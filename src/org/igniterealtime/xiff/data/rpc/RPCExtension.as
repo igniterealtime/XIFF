@@ -25,8 +25,7 @@
  */
 package org.igniterealtime.xiff.data.rpc
 {
-	
-	
+
 	import org.igniterealtime.xiff.data.*;
 	
 	/**
@@ -41,8 +40,7 @@ package org.igniterealtime.xiff.data.rpc
 	{
 		public static const NS:String = "jabber:iq:rpc";
 		public static const ELEMENT_NAME:String = "query";
-	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+
 	
 		private var _result:Array;
 		private var _fault:Object;
@@ -89,16 +87,7 @@ package org.igniterealtime.xiff.data.rpc
 		public function getElementName():String
 		{
 			return RPCExtension.ELEMENT_NAME;
-		}
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(RPCExtension);
-	    }
+                }
 	
 		/**
 		 * Interface method, returning the namespace for this extension

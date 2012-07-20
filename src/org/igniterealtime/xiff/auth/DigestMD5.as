@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.auth
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
 
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 
 	/**
 	 * This class provides SASL authentication using the DIGEST-MD5 mechanism, a HTTP Digest
@@ -45,17 +45,14 @@ package org.igniterealtime.xiff.auth
 	public class DigestMD5 extends SASLAuth
 	{
 		public static const MECHANISM:String = "DIGEST-MD5";
-
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
-
-		private var connection:XMPPConnection;
 
 		/**
 		* Creates a new External authentication object.
 		*
 		* @param	connection A reference to the XMPPConnection instance in use.
 		*/
-		public function DigestMD5( connection:XMPPConnection )
+		public function DigestMD5( connection:IXMPPConnection )
 		{
 			this.connection = connection;
 

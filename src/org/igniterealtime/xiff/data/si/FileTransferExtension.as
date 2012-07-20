@@ -26,8 +26,7 @@
 package org.igniterealtime.xiff.data.si
 {
 	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;;
 	import org.igniterealtime.xiff.util.DateTimeParser;
 	
@@ -67,16 +66,7 @@ package org.igniterealtime.xiff.data.si
 		public function getElementName():String
 		{
 			return FileTransferExtension.ELEMENT_NAME;
-		}
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(FileTransferExtension);
-	    }
+                }
 		
 		/**
 		 * The size, in bytes, of the data to be sent.

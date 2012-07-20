@@ -64,7 +64,7 @@ package org.igniterealtime.xiff.data.muc
 						break;
 	
 					default:
-						var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri);
+                                                var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri, child.localName());
 						if (extClass != null)
 						{
 							var ext:IExtension = new extClass();

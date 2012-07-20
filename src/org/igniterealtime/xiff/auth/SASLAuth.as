@@ -25,6 +25,8 @@
  */
 package org.igniterealtime.xiff.auth
 {
+	import org.igniterealtime.xiff.core.IXMPPConnection;
+
 	/**
 	 * This is a base class for use with Simple Authentication and Security Layer
 	 * (SASL) mechanisms. Sub-class this class when creating new SASL mechanisms.
@@ -49,6 +51,11 @@ package org.igniterealtime.xiff.auth
 		 * The current response stage.
 		 */
 		protected var stage:int;
+		
+		/**
+		 * Connection that is used to authenticate, if any
+		 */
+		protected var connection:IXMPPConnection;
 
 		public function SASLAuth()
 		{

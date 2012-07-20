@@ -39,8 +39,7 @@ package org.igniterealtime.xiff.data.whiteboard
 	{
 		public static const ELEMENT_NAME:String = "x";
 		public static const NS:String = "xiff:wb";
-	
-	    private static var staticDepends:Class = ExtensionClassRegistry;
+
 		
 		/**
 		 *
@@ -71,17 +70,7 @@ package org.igniterealtime.xiff.data.whiteboard
 		public function getElementName():String
 		{
 			return WhiteboardExtension.ELEMENT_NAME;
-		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(WhiteboardExtension);
-	    }
-		
+                }
 		
 	    /**
 	     * The paths available in this whiteboard message

@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.auth
 {
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 
 	/**
 	 * This class provides SASL authentication using the ANONYMOUS mechanism.
@@ -37,7 +37,6 @@ package org.igniterealtime.xiff.auth
 	public class Anonymous extends SASLAuth
 	{
 		public static const MECHANISM:String = "ANONYMOUS";
-
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
@@ -45,8 +44,10 @@ package org.igniterealtime.xiff.auth
 		 *
 		 * @param	connection A reference to the XMPPConnection instance to use.
 		 */
-		public function Anonymous( connection:XMPPConnection )
+		public function Anonymous( connection:IXMPPConnection )
 		{
+			this.connection = connection;
+			
 			req.setNamespace( Anonymous.NS );
 			req.@mechanism = Anonymous.MECHANISM;
 

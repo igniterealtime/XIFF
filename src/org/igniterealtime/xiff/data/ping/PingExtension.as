@@ -25,10 +25,7 @@
  */
 package org.igniterealtime.xiff.data.ping
 {
-	
-	
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
@@ -42,8 +39,7 @@ package org.igniterealtime.xiff.data.ping
 	 */
 	public class PingExtension extends Extension implements IExtension
 	{
-		public static const ELEMENT_NAME:String = "ping";
-		
+                public static const ELEMENT_NAME:String = "ping";
 		public static const NS:String = "urn:xmpp:ping";
 		
 		/**
@@ -63,15 +59,6 @@ package org.igniterealtime.xiff.data.ping
 		public function getElementName():String
 		{
 			return PingExtension.ELEMENT_NAME;
-		}
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		public static function enable():Boolean
-	    {
-	        return ExtensionClassRegistry.register(PingExtension);
-	    }
+                }
 	}
 }

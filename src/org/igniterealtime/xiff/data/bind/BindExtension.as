@@ -25,15 +25,16 @@
  */
 package org.igniterealtime.xiff.data.bind
 {
-	
-	
 	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
+        import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
+         * XEP-0193: Proposed Resource Binding Improvements
+         *
+         * <p><strong>OBSOLETE</strong></p>
+         *
 	 * @see http://xmpp.org/extensions/xep-0193.html
 	 */
 	public class BindExtension extends Extension implements IExtension
@@ -61,17 +62,7 @@ package org.igniterealtime.xiff.data.bind
 		public function getElementName():String
 		{
 			return BindExtension.ELEMENT_NAME;
-		}
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register(BindExtension);
-	    }
-	
+                }
 		
 		/**
 		 * JID. Not sure if the setter should be available...

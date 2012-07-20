@@ -25,10 +25,8 @@
  */
 package org.igniterealtime.xiff.data.disco
 {
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 
-	
 
 	/**
 	 * Implements <a href="http://xmpp.org/extensions/xep-0030.html">XEP-0030: Service Discovery</a>
@@ -42,8 +40,8 @@ package org.igniterealtime.xiff.data.disco
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#info";
 
-		private var _identities:Array = [];
-		private var _features:Array = [];
+                private var _identities:Array = []; // list of DiscoIdentity
+                private var _features:Array = []; // list of DiscoFeature
 
 		/**
 		 *
@@ -65,26 +63,17 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		public static function enable():void
-		{
-			ExtensionClassRegistry.register( InfoDiscoExtension );
-		}
-
-		/**
-		 * An array of objects that represent the identities of a resource discovered. For more information on
-		 * categories, see <a href="http://www.jabber.org/registrar/disco-categories.html">
-		 * http://www.jabber.org/registrar/disco-categories.html</a>
+                 * An array of objects that represent the identities of a resource discovered.
 		 *
-		 * The objects in the array have the following possible attributes:
+                 * <p>The DiscoIdentity objects in the array have the following possible attributes:</p>
 		 * <ul>
 		 * <li><code>category</code> - a category of the kind of identity</li>
 		 * <li><code>type</code> - a path to a resource that can be discovered without a JID</li>
 		 * <li><code>name</code> - the friendly name of the identity</li>
 		 * </ul>
 		 *
+                 * @see http://www.jabber.org/registrar/disco-categories.html
+                 * @see org.igniterealtime.xiff.data.disco.DiscoIdentity
 		 */
 		public function get identities():Array
 		{
@@ -97,6 +86,8 @@ package org.igniterealtime.xiff.data.disco
 
 		/**
 		 * An array of namespaces this service supports for feature negotiation.
+                 *
+                 * @see org.igniterealtime.xiff.data.disco.DiscoFeature
 		 */
 		public function get features():Array
 		{
@@ -121,7 +112,7 @@ package org.igniterealtime.xiff.data.disco
 				{
 					case "identity":
 						var identity:DiscoIdentity = new DiscoIdentity( xml );
-						identity..xml = child;
+                                                identity.xml = child;
 						_identities.push( identity );
 						break;
 
@@ -146,6 +137,11 @@ package org.igniterealtime.xiff.data.disco
 			return feature;
 		}
 
+                /**
+                 * Add features as a list of namespace strings.
+                 *
+                 * @return List of DiscoFeature elements created
+                 */
 		public function addFeatures( varNames:Array ):Array
 		{
 			var features:Array = [];

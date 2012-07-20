@@ -33,7 +33,7 @@ package org.igniterealtime.xiff.vcard
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.core.XMPPConnection;
+        import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.IIQ;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
@@ -110,7 +110,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-		private var extensionNames:Array = [];
+                private var _extensionNames:Array = [];
 
 		/**
 		 * @private
@@ -367,7 +367,7 @@ package org.igniterealtime.xiff.vcard
 				return;
 			}
 			var req:Object = requestQueue.pop();
-			var connection:XMPPConnection = req.connection;
+                        var connection:IXMPPConnection = req.connection;
 			var vCard:VCard = req.card;
 			var jid:UnescapedJID = vCard.jid;
 
@@ -653,7 +653,7 @@ package org.igniterealtime.xiff.vcard
 
 					default:
 						trace( "handleVCard. Private extension: " + child.name() );
-						extensionNames.push( child.localName() );
+                                                _extensionNames.push( child.localName() );
 						extensions[ child.localName() ] = child.text().toString();
 						break;
 				}
@@ -1220,9 +1220,9 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			//X
-			if ( extensionNames.length > 0 )
+                        if ( _extensionNames.length > 0 )
 			{
-				for each( var xName:String in extensionNames )
+                                for each( var xName:String in _extensionNames )
 				{
 					vcardXml[ xName ] = _extensions[ xName ];
 				}

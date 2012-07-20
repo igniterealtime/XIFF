@@ -252,9 +252,6 @@ package org.igniterealtime.xiff.conference
 		public static const ROLE_PARTICIPANT:String = MUC.ROLE_PARTICIPANT;
 		public static const ROLE_VISITOR:String = MUC.ROLE_VISITOR;
 
-		private static var roomStaticConstructed:Boolean = RoomStaticConstructor();
-
-		private static var staticConstructorDependencies:Array = [ FormExtension, MUC ];
 
 		private var _active:Boolean;
 
@@ -262,9 +259,7 @@ package org.igniterealtime.xiff.conference
 
 		private var _anonymous:Boolean = true;
 
-		private var _connection:IXMPPConnection;
-
-		//private var _fileRepo:RoomFileRepository;
+                private var _connection:IXMPPConnection;
 
 		private var _nickname:String;
 
@@ -276,13 +271,13 @@ package org.igniterealtime.xiff.conference
 
 		private var _subject:String;
 
-		private var myIsReserved:Boolean;
+                private var _isReserved:Boolean;
 
 		// Used to store nicknames in pending status, awaiting change approval from server
-		private var pendingNickname:String;
+                private var _pendingNickname:String;
 
-		private var affiliationExtension:MUCBaseExtension;
-		private var affiliationArgs:Array = [];
+                private var _affiliationExtension:MUCBaseExtension; // TODO: How about using Interface here?
+                private var _affiliationArgs:Array = [];
 
 		/**
 		 *
@@ -295,15 +290,11 @@ package org.igniterealtime.xiff.conference
 			{
 				connection = aConnection;
 			}
-			affiliationExtension = new MUCAdminExtension();
-		}
+                        _affiliationExtension = new MUCAdminExtension();
 
-		private static function RoomStaticConstructor():Boolean
-		{
-			MUC.enable();
-			FormExtension.enable();
 
-			return true;
+                        // TODO: make sure this is the most convinient way...
+                        connection.enableExtensions(MUC, FormExtension);
 		}
 
 		/**
@@ -529,16 +520,16 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function grant( affiliation:String, jids:Array ):void
 		{
-			affiliationArgs = arguments;
+                        _affiliationArgs = arguments;
 
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, null, grant_response, grant_error );
 
 			for each ( var jid:UnescapedJID in jids )
 			{
-				affiliationExtension.addItem( affiliation, null, null, jid.escaped, null, null );
+                                _affiliationExtension.addItem( affiliation, null, null, jid.escaped, null, null );
 			}
 
-			iq.addExtension( affiliationExtension as IExtension );
+                        iq.addExtension( _affiliationExtension as IExtension );
 			_connection.send( iq );
 		}
 
@@ -656,7 +647,7 @@ package org.igniterealtime.xiff.conference
 				return false;
 			}
 
-			myIsReserved = createReserved;
+                        _isReserved = createReserved;
 
 			var joinPresence:Presence = new Presence( userJID.escaped );
 			joinPresence.addExtension( mucExtension );
@@ -925,14 +916,14 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function grant_error( iq:IQ ):void
 		{
-			if( affiliationExtension is MUCAdminExtension && affiliationArgs.length > 0 )
+                        if( _affiliationExtension is MUCAdminExtension && _affiliationArgs.length > 0 )
 			{
-				affiliationExtension = new MUCOwnerExtension();
-				grant.apply( null, affiliationArgs );
+                                _affiliationExtension = new MUCOwnerExtension();
+                                grant.apply( null, _affiliationArgs );
 			}
 			else
 			{
-				affiliationArgs = [];
+                                _affiliationArgs = [];
 
 				admin_error( iq );
 			}
@@ -943,7 +934,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function grant_response( iq:IQ ):void
 		{
-			affiliationArgs = [];
+                        _affiliationArgs = [];
 			
 			var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATION_CHANGE_COMPLETE );
 			dispatchEvent( event );
@@ -1078,10 +1069,10 @@ package org.igniterealtime.xiff.conference
 						else if ( isThisRoom( presence.from.unescaped ))
 						{
 							// If the presence has our pending nickname, nickname change went through
-							if ( presence.from.resource == pendingNickname )
+                                                        if ( presence.from.resource == _pendingNickname )
 							{
-								_nickname = pendingNickname;
-								pendingNickname = null;
+                                                                _nickname = _pendingNickname;
+                                                                _pendingNickname = null;
 							}
 
 							userExt = presence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
@@ -1099,7 +1090,7 @@ package org.igniterealtime.xiff.conference
 										break;
 										
 									case 201:
-										unlockRoom( myIsReserved );
+                                                                                unlockRoom( _isReserved );
 										break;
 								}
 							}
@@ -1369,9 +1360,6 @@ package org.igniterealtime.xiff.conference
 			_connection.addEventListener( MessageEvent.MESSAGE, handleEvent, false, 0, true );
 			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false, 0, true );
 			_connection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent, false, 0, true );
-
-			//String baserepo = "http://"+_connection.server+":9090/webdav/rooms/"+conferenceServer.replace("."+_connection.server,"")+"/"+roomName+"/";
-			//_fileRepo = new RoomFileRepository( baserepo );
 		}
 
 		/**
@@ -1407,7 +1395,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-				pendingNickname = value;
+                                _pendingNickname = value;
 				var presence:Presence = new Presence( new EscapedJID( userJID + "/" + value ) );
 				_connection.send( presence );
 			}

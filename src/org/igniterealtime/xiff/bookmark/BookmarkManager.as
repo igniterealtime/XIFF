@@ -57,9 +57,7 @@ package org.igniterealtime.xiff.bookmark
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
 	public class BookmarkManager extends EventDispatcher
-	{
-		private static var bookmarkManagerConstructed:Boolean = bookmarkManagerStaticConstructor();
-
+        {
 		private var _bookmarks:BookmarkPrivatePayload;
 
 		private var _privateDataManager:PrivateDataManager;
@@ -71,16 +69,6 @@ package org.igniterealtime.xiff.bookmark
 		public function BookmarkManager( privateDataManager:PrivateDataManager )
 		{
 			_privateDataManager = privateDataManager;
-		}
-
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		private static function bookmarkManagerStaticConstructor():Boolean
-		{
-			ExtensionClassRegistry.register( BookmarkPrivatePayload );
-			return true;
 		}
 
 		/**
