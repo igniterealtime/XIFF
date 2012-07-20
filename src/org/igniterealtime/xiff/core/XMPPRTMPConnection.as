@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.core
 
 	/**
 	 * A child of <code>XMPPConnection</code>, this class makes use of the
-	 * Flash RTMP connection instead of the XMLSocket</code>.
+	 * Flash RTMP connection instead of the <code>Socket</code>.
 	 *
 	 * @see org.jivesoftware.xiff.core.XMPPConnection
 	 */
@@ -66,17 +66,18 @@ package org.igniterealtime.xiff.core
 			configureRedfire();
 		}
 
-		private function configureRedfire():void {
-
+		private function configureRedfire():void
+		{
 			NetConnection.defaultObjectEncoding = flash.net.ObjectEncoding.AMF0;
 			netConnection = new NetConnection();
 			netConnection.client = this;
 			netConnection.addEventListener( NetStatusEvent.NET_STATUS , netStatus );
 			netConnection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-			}
+		}
 
 
-		private function netStatus (evt:NetStatusEvent ):void {
+		private function netStatus (evt:NetStatusEvent ):void
+		{
 
 			switch(evt.info.code) {
 
@@ -119,23 +120,26 @@ package org.igniterealtime.xiff.core
 			}
 		}
 
-		private function asyncErrorHandler(event:AsyncErrorEvent):void {
-				//trace("AsyncErrorEvent: " + event);
-			}
-
-		private function securityErrorHandler(event:SecurityErrorEvent):void {
-					//trace("securityErrorHandler: " + event);
-			}
-
-
-		overwrite protected sendDataToServer( data:ByteArray ):void
+		private function asyncErrorHandler(event:AsyncErrorEvent):void
 		{
-			netConnection.call("xmppSend", null, data.readUTFBytes());
+			//trace("AsyncErrorEvent: " + event);
+		}
+
+		private function securityErrorHandler(event:SecurityErrorEvent):void
+		{
+			//trace("securityErrorHandler: " + event);
+		}
+
+
+		override protected function sendDataToServer( data:ByteArray ):void
+		{
+			netConnection.call("xmppSend", null, data.readUTFBytes(data.length));
 		}
 
 		override public function disconnect():void
 		{
-			if( isActive() ) {
+			if ( isActive() )
+			{
 				netConnection.close();
 				active = false;
 				loggedIn = false;
