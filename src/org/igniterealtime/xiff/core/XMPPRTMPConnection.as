@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 Igniterealtime Community Contributors
+ * Copyright (C) 2003-2012 Igniterealtime Community Contributors
  *
  *     Daniel Henninger
  *     Derrick Grigg <dgrigg@rogers.com>
@@ -8,6 +8,7 @@
  *     Sean Treadway <seant@oncotype.dk>
  *     Sean Voisen <sean@voisen.org>
  *     Mark Walters <mark@yourpalmark.com>
+ *     Michael McCarthy <mikeycmccarthy@gmail.com>
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +23,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-	
+
 package org.igniterealtime.xiff.core
 {
 	import flash.errors.IOError;
@@ -33,7 +34,6 @@ package org.igniterealtime.xiff.core
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 
-	import flash.events.SecurityErrorEvent;
 	import flash.xml.XMLDocument;
 	import flash.xml.XMLNode;
 
@@ -41,10 +41,10 @@ package org.igniterealtime.xiff.core
 	import flash.net.Responder;
 	import flash.net.NetStream;
 	import flash.utils.ByteArray;
-	
+
 	import org.igniterealtime.xiff.events.*;
-		
-	
+
+
 	/**
 	 * A child of <code>XMPPConnection</code>, this class makes use of the
 	 * Flash RTMP connection instead of the XMLSocket</code>.
@@ -56,54 +56,54 @@ package org.igniterealtime.xiff.core
 
 		public var netConnection:NetConnection = null;
 		private var xmppUrl:String = "rtmp:/xmpp";
-		
-				
+
+
 		public function XMPPRTMPConnection(xmppUrl:String = "rtmp:/xmpp")
 		{
 			super();
 			this.xmppUrl = xmppUrl;
-			
+
 			configureRedfire();
 		}
-		
+
 		private function configureRedfire():void {
-		
+
 			NetConnection.defaultObjectEncoding = flash.net.ObjectEncoding.AMF0;
 			netConnection = new NetConnection();
 			netConnection.client = this;
 			netConnection.addEventListener( NetStatusEvent.NET_STATUS , netStatus );
 			netConnection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-	    	}
-	
+			}
+
 
 		private function netStatus (evt:NetStatusEvent ):void {
 
 			switch(evt.info.code) {
-				
+
 				case "NetConnection.Connect.Success":
 					active = true;
 					dispatchEvent( new ConnectionSuccessEvent() );
-					
+
 					var myResult:Responder = new Responder(this.onResult);
 					netConnection.call("xmppConnect", myResult, username, password, resource);
-					
+
 					break;
-		
+
 				case "NetConnection.Connect.Failed":
 					dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
 					break;
-					
+
 				case "NetConnection.Connect.Closed":
 					var event2:DisconnectionEvent = new DisconnectionEvent();
 					dispatchEvent( event2 );
 					break;
-		
+
 				case "NetConnection.Connect.Rejected":
 					dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 					break;
-					
+
 				default:
-					
+
 			}
 		}
 
@@ -118,43 +118,21 @@ package org.igniterealtime.xiff.core
 				dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 			}
 		}
-					
+
 		private function asyncErrorHandler(event:AsyncErrorEvent):void {
-           		//trace("AsyncErrorEvent: " + event);
-        	}
-		
-		private function securityErrorHandler(event:SecurityErrorEvent):void {
-            		//trace("securityErrorHandler: " + event);
-        	}
-
-	
-	    	override protected function sendXML( someData:* ):void
-		{
-			var xmlData:String;
-			
-			if (someData is XML)
-			{
-				xmlData =  (someData as XML).toXMLString();
-
-			} else if (someData is String) {
-
-				xmlData =  someData;
-			
-			} else {
-			
-				xmlData = someData.toString();
+				//trace("AsyncErrorEvent: " + event);
 			}
 
-			netConnection.call("xmppSend", null, xmlData);
-				
-			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			var byteData:ByteArray = new ByteArray();
-			byteData.writeUTFBytes(xmlData);
-			event.data = byteData;
-				
-			dispatchEvent( event );
+		private function securityErrorHandler(event:SecurityErrorEvent):void {
+					//trace("securityErrorHandler: " + event);
+			}
+
+
+		overwrite protected sendDataToServer( data:ByteArray ):void
+		{
+			netConnection.call("xmppSend", null, data.readUTFBytes());
 		}
-		
+
 		override public function disconnect():void
 		{
 			if( isActive() ) {
@@ -165,7 +143,7 @@ package org.igniterealtime.xiff.core
 				dispatchEvent(event);
 			}
 		}
-		
+
 		override public function connect( streamType:uint=0  ):Boolean
 		{
 			active = false;
@@ -177,7 +155,7 @@ package org.igniterealtime.xiff.core
 
 		override public function sendKeepAlive():void
 		{
-		
+
 		}
 
 		override protected function restartStream():void
@@ -185,41 +163,15 @@ package org.igniterealtime.xiff.core
 			disconnect();
 			connect();
 		}
-			
-			
-		public function xmppRecieve(rawXML:String):*
-		{
-			var xmlData:XMLDocument = new XMLDocument();
-			xmlData.ignoreWhite = ignoreWhitespace;
-			var isComplete:Boolean = true;
 
-			if ("<?xml version='1.0' encoding='UTF-8'?>" == rawXML.substring(0, 38))
-			{
-				rawXML = rawXML.substring(38) + "</stream:stream>";
-			}
-						
-			try {
-				xmlData.parseXML( rawXML );
-			}
-			catch(err:Error){
-				isComplete = false;
-			}
-			
-			
-			if (isComplete)
-			{
-				var event:IncomingDataEvent = new IncomingDataEvent();
-				var byteData:ByteArray = new ByteArray();
-				byteData.writeUTFBytes(rawXML);
-				event.data = byteData;
-				dispatchEvent( event );
-				
-				for (var i:int = 0; i<xmlData.childNodes.length; i++)
-				{
-					var currentNode:XMLNode = xmlData.childNodes[i];
-					handleNodeType( currentNode );
-				}
-			}
+		/**
+		 * Is the name of this method locked in the server side?
+		 */
+		public function xmppRecieve(rawXML:String):void
+		{
+			var data:ByteArray = new ByteArray();
+			data.writeUTFBytes(rawXML);
+			parseDataReceived(data);
 		}
 	}
 }
