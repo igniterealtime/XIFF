@@ -65,7 +65,7 @@
 			<arg line="-doc-namespaces ${manifest.ns}" />
 			<arg line="-output ${docs.dir}" />
 			<arg line="-templates-path ${flex.asdoc.templates}" />
-			<!-- Flex SDK 4.1 onwards <arg line="-package-description-file=${docs.descriptions}" /> -->
+			<arg line="-package-description-file=${docs.descriptions}" />
 		</exec>
 	</target>
 	
@@ -86,7 +86,7 @@
 				haltonfailure="false"
 				verbose="true"
 				localTrusted="true"
-				command="/Applications/Safari.app/Contents/MacOS/Safari">
+				command="${runner.bin}">
 			<source dir="${src.dir}"/>
 			<testSource dir="${test.dir}">
 				<include name="**/*Test.as"/>
