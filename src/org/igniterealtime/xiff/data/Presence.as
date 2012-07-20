@@ -25,9 +25,9 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
+
 	import org.igniterealtime.xiff.core.EscapedJID;
-	
+
 	/**
 	 * This class provides encapsulation for manipulation of presence data for sending and receiving.
 	 *
@@ -118,7 +118,7 @@ package org.igniterealtime.xiff.data
 		 * The entity or resource is away for an extended period (xa = "eXtended Away").
 		 */
 		public static const SHOW_XA:String = "xa";
-	
+
 		/**
 		 * According to Google Talk developers via their presentation [somewhere few years ago],
 		 * most of the XMPP related traffic in their service is made by Presence.
@@ -147,12 +147,12 @@ package org.igniterealtime.xiff.data
 		public function Presence( recipient:EscapedJID = null, sender:EscapedJID = null, presenceType:String = null, showVal:String = null, statusVal:String = null, priorityVal:int = 0 )
 		{
 			super( recipient, sender, presenceType, null, XMPPStanza.ELEMENT_PRESENCE );
-			
+
 			show = showVal;
 			status = statusVal;
 			priority = priorityVal;
 		}
-		
+
 		/**
 		 * The show value; away, online, etc. There are predefined static variables in the Presence
 		 * class for this:
@@ -179,10 +179,10 @@ package org.igniterealtime.xiff.data
 			{
 				throw new Error("Invalid show value: " + value + " for Presence");
 			}
-			
+
 			setField("show", value);
 		}
-		
+
 		/**
 		 * The status; usually used for "away messages."
 		 *
@@ -190,7 +190,7 @@ package org.igniterealtime.xiff.data
 		 * a natural-language description of availability status.  It is
 		 * normally used in conjunction with the show element to provide a
 		 * detailed description of an availability state (e.g., "In a meeting").
-		 * The <status/> element MUST NOT possess any attributes, with the
+		 * The <strong>status</strong> element MUST NOT possess any attributes, with the
 		 * exception of the 'xml:lang' attribute.  Multiple instances of the
 		 * <strong>status</strong> element MAY be included but only if each instance possesses
 		 * an 'xml:lang' attribute with a distinct language value.</p>
@@ -205,7 +205,7 @@ package org.igniterealtime.xiff.data
 		{
 			setField("status", value);
 		}
-		
+
 		/**
 		 * The priority of the presence, usually on a scale of 1-5.
 		 *
@@ -222,7 +222,7 @@ package org.igniterealtime.xiff.data
 			{
 				return parseInt(list[0]);
 			}
-				
+
 			return NaN;
 		}
 		public function set priority( value:int ):void
@@ -232,7 +232,7 @@ package org.igniterealtime.xiff.data
 				delete xml.priority;
 				return;
 			}
-			
+
 			if ( -129 < value && value < 128)
 			{
 				xml.priority = value.toString();
@@ -242,7 +242,7 @@ package org.igniterealtime.xiff.data
 				throw new Error("Invalid priority value: " + value.toString() + " for Presence. Must be between -128 and 127.");
 			}
 		}
-		
+
 		/**
 		 * Time of the presence in case of a delay. Used only for messages
 		 * which were sent while user was offline.

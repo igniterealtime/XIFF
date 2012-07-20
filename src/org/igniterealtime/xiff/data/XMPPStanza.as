@@ -25,13 +25,13 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
+
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.id.IIDGenerator;
 	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
 	import org.igniterealtime.xiff.namespaces.xiff_internal;
 	import org.igniterealtime.xiff.util.DateTimeParser;
-	
+
 	/**
 	 * The base class for all XMPP stanza data classes.
 	 *
@@ -48,39 +48,35 @@ package org.igniterealtime.xiff.data
 	public dynamic class XMPPStanza extends XMLStanza implements IXMPPStanza
 	{
 		public static const CLIENT_NAMESPACE:String = "jabber:client";
-		
+
 		/**
 		 * The version of XMPP specified in RFC 3920 is "1.0"; in particular, this
 		 * encapsulates the stream-related protocols (Use of TLS (Section 5),
 		 * Use of SASL (Section 6), and Stream Errors (Section 4.7)), as well as
-		 * the semantics of the three defined XML stanza types (<message/>,
-		 * <presence/>, and <iq/>).
+		 * the semantics of the three defined XML stanza types (<strong>message</strong>,
+		 * <strong>presence</strong>, and <strong>iq</strong>).
 		 */
 		public static const CLIENT_VERSION:String = "1.0";
-		
+
 		public static const NAMESPACE_FLASH:String = "http://www.jabber.com/streams/flash";
 		public static const NAMESPACE_STREAM:String = "http://etherx.jabber.org/streams";
 		public static const NAMESPACE_BOSH:String = "urn:xmpp:xbosh";
 		public static const XML_LANG:String = "en";
-		
+
 		// Three XML element names allowed
 		public static const ELEMENT_MESSAGE:String = "message";
 		public static const ELEMENT_PRESENCE:String = "presence";
 		public static const ELEMENT_IQ:String = "iq";
-		
+
 		/**
 		 * Internal name in XIFF for incoming data.
 		 * The proper element name should be available after setting the XML.
 		 */
 		public static const ELEMENT_TEMP:String = "temp";
-		
-		// Are these static variables needed also in AS3?
-		private static var staticDependencies:Array = [ IncrementalGenerator, ExtensionContainer ];
-		private static var isStaticConstructed:* = XMPPStanzaStaticConstructor();
-		
+
 		private static var _idGenerator:IIDGenerator = new IncrementalGenerator();
-		
-		
+
+
 		/**
 		 * The following four first attributes are common to message, presence, and IQ stanzas.
 		 * The fifth, xml:lang, is not included here.
@@ -99,7 +95,7 @@ package org.igniterealtime.xiff.data
 		 * applications is provided in [XMPP-IM].</p>
 		 *
 		 * <pre>
-         *           |  initiating to receiving  |  receiving to initiating
+		 *           |  initiating to receiving  |  receiving to initiating
 		 *  ---------+---------------------------+-----------------------
 		 *  to       |  hostname of receiver     |  silently ignored
 		 *  from     |  silently ignored         |  hostname of receiver
@@ -119,7 +115,7 @@ package org.igniterealtime.xiff.data
 		public function XMPPStanza( recipient:EscapedJID, sender:EscapedJID, theType:String, theID:String, nodeName:String )
 		{
 			super();
-			
+
 			if (nodeName != ELEMENT_IQ &&
 				nodeName != ELEMENT_MESSAGE &&
 				nodeName != ELEMENT_PRESENCE &&
@@ -127,19 +123,14 @@ package org.igniterealtime.xiff.data
 			{
 				throw new Error("nodeName must be one of 'iq', 'message' or 'presence', and in rare cases 'temp'.");
 			}
-			
+
 			xml.setLocalName( nodeName );
 			to = recipient;
 			from = sender;
 			type = theType;
 			id = theID;
 		}
-	
-		private static function XMPPStanzaStaticConstructor():void
-		{
-			//ExtensionContainer.decorate(XMPPStanza.prototype);
-		}
-	
+
 		/**
 		 * Generates a unique ID for the stanza. ID generation is handled using
 		 * a variety of mechanisms, but the default for the library uses the IncrementalGenerator.
@@ -151,7 +142,7 @@ package org.igniterealtime.xiff.data
 		{
 			return XMPPStanza.xiff_internal::generateID( _idGenerator, prefix );
 		}
-	
+
 		xiff_internal static function generateID( generator:IIDGenerator, prefix:String=null ):String
 		{
 			var previousPrefix:String = generator.prefix;
@@ -166,11 +157,13 @@ package org.igniterealtime.xiff.data
 			}
 			return id;
 		}
-	
+
 		/**
-	 	 * The ID generator for this stanza type. ID generators must implement
+		 * The ID generator for this stanza type.
+		 *
+		 * <p>ID generators must implement
 		 * the IIDGenerator interface. The XIFF library comes with a few default
-		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).
+		 * ID generators that have already been implemented (see org.igniterealtime.xiff.data.id.*).</p>
 		 *
 		 * <p>Setting the ID generator by stanza type is useful if you'd like to use
 		 * different ID generation schemes for each type. For instance, messages could
@@ -181,12 +174,13 @@ package org.igniterealtime.xiff.data
 		 * @example	The following sets the ID generator for the Message stanza type to an IncrementalGenerator
 		 * found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
 		 * <pre>Message.idGenerator = new IncrementalGenerator();</pre>
+		 * @see org.igniterealtime.xiff.data.id.IIDGenerator
 		 */
 		public static function get idGenerator():IIDGenerator
 		{
 			return _idGenerator;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -194,15 +188,15 @@ package org.igniterealtime.xiff.data
 		{
 			_idGenerator = value;
 		}
-		
+
 		/**
 		 * In addition to saving the XML, check for possible Extensions that are registered for listening this XML data.
 		 */
 		override public function set xml( elem:XML ):void
 		{
 			super.xml = elem;
-			
-		
+
+
 			// Check for possible IExtensions in the given incoming "elem"
 			for each ( var child:XML in elem.children() )
 			{
@@ -210,30 +204,30 @@ package org.igniterealtime.xiff.data
 				{
 					var nName:String = child.localName();
 					var nNamespace:Namespace = child.namespace(); // Should this request only the unprefixed namespace?
-					
+
 					trace("xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
-					
+
 					if (nNamespace.uri == null || nNamespace.uri == "")
 					{
 						nNamespace = new Namespace(null, CLIENT_NAMESPACE);
 					}
-					
+
 					if ( nName != "error" )
 					{
 						// Check registered extensions that can be used with the given xml data
-						var ExtClass:Class = ExtensionClassRegistry.lookup(nNamespace.uri);
-						if (ExtClass != null)
+						var extClass:Class = ExtensionClassRegistry.lookup(nNamespace.uri, nName);
+						if (extClass != null)
 						{
-							var ext:IExtension = new ExtClass() as IExtension;
+							var ext:IExtension = new extClass() as IExtension;
 							ext.xml = child;
 							addExtension(ext);
 						}
 					}
 				}
-				
+
 			} // for each ...
 		}
-		
+
 		/**
 		 * The JID of the recipient.
 		 *
@@ -241,10 +235,10 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get to():EscapedJID
 		{
-			var list:XMLList = xml.attribute("to");
-			if ( list.length() > 0 )
+			var value:String = getAttribute("to");
+			if ( value != null )
 			{
-				return new EscapedJID(list[0]);
+				return new EscapedJID(value);
 			}
 			return null;
 		}
@@ -259,7 +253,7 @@ package org.igniterealtime.xiff.data
 				xml.@to = value.toString();
 			}
 		}
-		
+
 		/**
 		 * The JID of the sender. Most, if not all, server implementations follow the specifications
 		 * that prevent this from being falsified. Thus, under normal circumstances, you don't
@@ -269,10 +263,10 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get from():EscapedJID
 		{
-			var list:XMLList = xml.attribute("from");
-			if ( list.length() > 0 )
+			var value:String = getAttribute("from");
+			if ( value != null )
 			{
-				return new EscapedJID(list[0]);
+				return new EscapedJID(value);
 			}
 			return null;
 		}
@@ -287,11 +281,12 @@ package org.igniterealtime.xiff.data
 				xml.@from = value.toString();
 			}
 		}
-		
+
 		/**
 		 * The stanza type. There are MANY types available, depending on what kind of stanza this is.
-		 * The XIFF Library defines the types for IQ, Presence, and Message in each respective class
-		 * as static string variables. Below is a listing of each:
+		 *
+		 * <p>The XIFF Library defines the types for IQ, Presence, and Message in each respective class
+		 * as static string variables. Below is a listing of each:</p>
 		 *
 		 * <b>IQ</b>
 		 * <ul>
@@ -333,6 +328,8 @@ package org.igniterealtime.xiff.data
 		 * structured request-response "conversation" and thus are defined under
 		 * IQ Semantics (Section 9.2.3) below.  The only 'type' value common to
 		 * all three stanzas is "error"; see Stanza Errors (Section 9.3).</p>
+		 *
+		 * @see http://tools.ietf.org/html/rfc3920#section-9.2.3
 		 */
 		public function get type():String
 		{
@@ -342,7 +339,7 @@ package org.igniterealtime.xiff.data
 		{
 			setAttribute("type", value);
 		}
-		
+
 		/**
 		 * The unique identifier of this stanza. ID generation is accomplished using
 		 * the static <code>generateID</code> method of the particular stanza type.
@@ -367,7 +364,7 @@ package org.igniterealtime.xiff.data
 		{
 			setAttribute("id", value);
 		}
-		
+
 		/**
 		 * The error message, assuming this stanza contains error information.
 		 *
@@ -382,22 +379,12 @@ package org.igniterealtime.xiff.data
 			{
 				return xml.error[errorCondition];
 			}
-			else if (xml.error.length() > 0)
-			{
-				return xml.error;
-			}
-			
-			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 )
-			{
-				return list[0];
-			}
-			return null;
+			return getField("error");
 		}
 		public function set errorMessage( value:String ):void
 		{
 			value = value != null ? value : "";
-			
+
 			if ( errorCondition != null )
 			{
 				// Use the element name
@@ -407,10 +394,10 @@ package org.igniterealtime.xiff.data
 			{
 				var attributes:XMLList = xml.error.attributes();
 				xml.error = value;
-				xml.error.attributes = attributes;
+				xml.error.attributes = attributes; // sure?
 			}
 		}
-		
+
 		/**
 		 * The error condition, assuming this stanza contains error information.
 		 *
@@ -424,7 +411,7 @@ package org.igniterealtime.xiff.data
 		 * @see http://xmpp.org/extensions/xep-0182.html
 		 * @see http://xmpp.org/extensions/xep-0086.html
 		 *
-		 * TODO: Conform spec...
+		 * TODO: Conform spec... find examples
 		 */
 		public function get errorCondition():String
 		{
@@ -434,7 +421,7 @@ package org.igniterealtime.xiff.data
 			{
 				return list[0].children()[0].localName();
 			}
-			
+
 			return null;
 		}
 		public function set errorCondition( value:String ):void
@@ -447,19 +434,19 @@ package org.igniterealtime.xiff.data
 				{
 					errorNode.appendChild(errorMessage);
 				}
-				
+
 				// Add existing attributes
 				errorNode.attributes = xml.error.attributes;
-				
+
 				xml.error = errorNode;
 			}
 			else
 			{
-				xml.error = errorMessage;
+				setField("error", errorMessage);
 			}
-			
+
 		}
-		
+
 		/**
 		 * The error type, assuming this stanza contains error information.
 		 *
@@ -479,25 +466,13 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorType():String
 		{
-			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 )
-			{
-				return list[0].@type;
-			}
-			return null;
+			return getChildAttribute("error", "type");
 		}
 		public function set errorType( value:String ):void
 		{
-			if ( value == null )
-			{
-				delete xml.error.@type;
-			}
-			else
-			{
-				xml.error.@type = value;
-			}
+			setChildAttribute("error", "type", value);
 		}
-		
+
 		/**
 		 * The error code, assuming this stanza contains error information. Error codes are
 		 * deprecated in standard XMPP, but they are commonly used by older Jabber servers
@@ -511,10 +486,10 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorCode():int
 		{
-			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 )
+			var code:String = getChildAttribute("error", "code");
+			if ( code != null )
 			{
-				return parseInt(list[0].@code);
+				return parseInt(code);
 			}
 			return NaN;
 		}
@@ -522,20 +497,14 @@ package org.igniterealtime.xiff.data
 		{
 			if ( isNaN(value) )
 			{
-				var list:XMLList = xml.children().(localName() == "error");
-				if ( list.length() > 0 )
-				{
-					delete xml.error.@code;
-				}
+				setChildAttribute("error", "code", null);
 			}
 			else
 			{
-				xml.error.@code = value.toString();
+				setChildAttribute("error", "code", value.toString());
 			}
 		}
-		
-		
-		
+
 		/**
 		 * Time of the message/presence in case of a delay. Used only for messages
 		 * which were sent while user was offline.
@@ -557,13 +526,13 @@ package org.igniterealtime.xiff.data
 			var stamp:Date;
 			var list:XMLList = xml.children().(localName() == "delay");
 			var legacy:XMLList = xml.children().(localName() == "x");
-						
+
 			if (list.length() > 0 && list[0].attribute("stamp").length() > 0)
 			{
 				// Current
 				// XEP-0203: Delayed Delivery - CCYY-MM-DDThh:mm:ssZ
 				trace("Message used 'delay' as defined in XEP-0203.");
-				
+
 				stamp = DateTimeParser.string2dateTime(list[0].attribute("stamp")[0]);
 			}
 			else if (legacy.length() > 0 && legacy[0].attribute("stamp").length() > 0 && legacy[0].namespace().uri == "jabber:x:delay")
@@ -572,14 +541,14 @@ package org.igniterealtime.xiff.data
 				// XEP-0091: Legacy Delayed Delivery - CCYYMMDDThh:mm:ss
 				var value:String = legacy[0].attribute("stamp")[0];
 				trace("Message used 'x' as defined in XEP-0091.");
-				
+
 				stamp = DateTimeParser.legacyString2dateTime(legacy[0].attribute("stamp")[0]);
 			}
 			else
 			{
 				return null;
 			}
-			
+
 			return stamp;
 		}
 	}
