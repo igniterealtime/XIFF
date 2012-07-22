@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.util
 	public class Zlib implements ICompressor
 	{
 		/**
-		 * Uncompress the given ByteArray.
+		 * Uncompress (inflate) the given ByteArray.
 		 *
 		 * @param	data
 		 * @return Uncompressed data
@@ -47,6 +47,8 @@ package org.igniterealtime.xiff.util
 		{
 			data.position = 0;
 			var uncompressed:ByteArray = new ByteArray();
+			var outBytesLength:int = data.length * 2;
+			
 			var err:int;
 			var i:int = 0;
 			var j:int = 0;
@@ -63,22 +65,46 @@ package org.igniterealtime.xiff.util
 			stream.next_out = uncompressed;
 			stream.next_out_index = 0;
 			
+			stream.avail_out = outBytesLength;
+			stream.total_in = 0;
+			
+			
 			err = stream.inflateInit();
 			checkError(stream, err, "inflateInit");
 
 			var outcount:int = 0;
-			while (stream.total_out < data.length && stream.total_in < data.length)
+			while (true)
 			{
-				stream.avail_in = stream.avail_out = 1; /* force small buffers */
+				// force small buffers
+				stream.avail_in = 1;
+				stream.avail_out = 1;
+				
 				err = stream.inflate(JZlib.Z_NO_FLUSH);
-				if (err == JZlib.Z_STREAM_END)
+				switch (err)
 				{
-					trace("Zlib.uncompress. inflation stream ended");
-					break;
+					case JZlib.Z_STREAM_END:
+						// completed decompression, lets copy data and get out
+						trace("Zlib.uncompress. inflation stream ended");
+						break;
+					case JZlib.Z_BUF_ERROR:
+						stream.next_out_index = 0;
+						stream.avail_out = outBytesLength;
+						break;
+					default:
+						// unknown error
+						if (err != JZlib.Z_OK)
+						{
+							if (stream.msg == null) {
+								trace("Unknown error. Error code : " + err);
+							}
+							else {
+								trace("Unknown error. Error code : " + err + " and message : " + stream.msg);
+							}
+						}
 				}
 				
 				outcount++;
-				trace("Zlib.uncompress. outcount: " + outcount + ", stream.total_out: " + stream.total_out);
+				//trace("Zlib.uncompress. outcount: " + outcount + ", stream.total_out: " + stream.total_out);
 
 				if (!checkError(stream, err, "inflate"))
 				{
@@ -90,56 +116,15 @@ package org.igniterealtime.xiff.util
 			checkError(stream, err, "inflateEnd");
 			
 			
-			// Checking ... is this needed?
-			data.position = 0;
-			for (i = 0; i < data.length; i++)
-			{
-				if (data.readByte() == 0)
-				{
-					break;
-				}
-			}
-			
-			uncompressed.position = 0;
-			for (j = 0; j < uncompressed.length; j++)
-			{
-				if (uncompressed.readByte() == 0)
-				{
-					break;
-				}
-			}
-			
-			if (i == j)
-			{
-				uncompressed.position = 0;
-				data.position = 0;
-				for (i = 0; i < j; i++)
-				{
-					if (data.readByte() != uncompressed.readByte())
-					{
-						break;
-					}
-				}
-				if (i == j)
-				{
-					trace("inflate(): " + String(uncompressed));
-					//return;
-				}
-			}
-			else
-			{
-				trace("bad inflate");
-			}
-			
-			
 			trace("Zlib.uncompress. uncompressed.length: " + uncompressed.length);
 			trace("Zlib.uncompress. uncompressed: " + uncompressed.toString());
-			
+
+			uncompressed.position = 0;
 			return uncompressed;
 		}
 		
 		/**
-		 * Compress the given ByteArray. Will add Adler32 checksum to the end of the data.
+		 * Compress (deflate) the given ByteArray.
 		 *
 		 * @param	data
 		 * @return Compressed data
@@ -172,7 +157,10 @@ package org.igniterealtime.xiff.util
 			var comprLen:int = 40000;
 			while (stream.total_in != data.length && stream.total_out < comprLen)
 			{
-				stream.avail_in = stream.avail_out = 1; // force small buffers
+				// force small buffers
+				stream.avail_in = 1;
+				stream.avail_out = 1;
+				
 				err = stream.deflate(JZlib.Z_NO_FLUSH);
 				checkError(stream, err, "deflate");
 			}
@@ -197,7 +185,8 @@ package org.igniterealtime.xiff.util
 			
 			trace("Zlib.compress. compressed.length: " + compressed.length);
 			trace("Zlib.compress. compressed: " + compressed.toString());
-			
+
+			compressed.position = 0;
 			return compressed;
 		}
 		
