@@ -90,7 +90,7 @@ package org.igniterealtime.xiff.data
 			{
 				if (_classes.hasOwnProperty(key))
 				{
-					var namespace:String = key.substr(0, key.lastIndexOf(":") - 1);
+					var namespace:String = key.substr(0, key.lastIndexOf(":"));
 					trace("getNamespaces. namespace: " + namespace + ", key: " + key);
 					list.push(namespace);
 				}
