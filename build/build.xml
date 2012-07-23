@@ -93,7 +93,6 @@
 			</testSource>
 			<library dir="${libs.dir}"/>
 		</flexunit>
-		<echo>Ran FlexUnit Test Runner SWF</echo>
 
 		<!-- Generate readable JUnit-style reports -->
 		<junitreport todir="${report.dir}">
