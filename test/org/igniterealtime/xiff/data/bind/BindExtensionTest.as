@@ -31,17 +31,6 @@ package org.igniterealtime.xiff.data.bind
 	public class BindExtensionTest
 	{
 		
-		[Test( description="JID value" )]
-		public function testValueJid():void
-		{
-			var testValue:EscapedJID = new EscapedJID("whoami@sahara.desert/FullSand");
-			
-			var ext:BindExtension = new BindExtension();
-			ext.jid = testValue;
-			
-			assertEquals( testValue.toString(), ext.jid.toString() );
-		}
-		
 		[Test( description="resource value" )]
 		public function testValueResource():void
 		{
@@ -64,6 +53,22 @@ package org.igniterealtime.xiff.data.bind
 			
 			assertEquals( nameSpace, node.namespace().uri );
 			assertEquals( elementName, node.localName() );
+		}
+		
+		[Test( description="XML parse - jid" )]
+		public function testParseJid():void
+		{
+			var incoming:XML = <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
+				 <jid>
+				   juliet@im.example.com/4db06f06-1ea4-11dc-aca3-000bcd821bfb
+				 </jid>
+			   </bind>;
+			var testValue:String = "juliet@im.example.com/4db06f06-1ea4-11dc-aca3-000bcd821bfb";
+			
+			var ext:BindExtension = new BindExtension();
+			ext.xml = incoming;
+			
+			assertEquals( testValue, ext.jid.toString() );
 		}
 		
 	}
