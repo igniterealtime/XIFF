@@ -67,11 +67,16 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get actor():EscapedJID
 		{
-			return new EscapedJID(xml.actor.@jid);
+			var value:String = getChildAttribute("actor", "jid");
+			if ( value != null )
+			{
+				return new EscapedJID(value);
+			}
+			return null;
 		}
 		public function set actor(value:EscapedJID):void
 		{
-			xml.actor.@jid = value.toString();
+			setChildAttribute("actor", "jid", value != null ? value.toString() : null);
 		}
 
 		/**
@@ -124,22 +129,15 @@ package org.igniterealtime.xiff.data.muc
 		public function get jid():EscapedJID
 		{
 			var value:String = getAttribute("jid");
-			if (value == null)
+			if ( value != null )
 			{
-				return null;
+				return new EscapedJID(value);
 			}
-			return new EscapedJID(value);
+			return null;
 		}
 		public function set jid(value:EscapedJID):void
 		{
-			if (value != null)
-			{
-				setAttribute("jid", value.toString());
-			}
-			else
-			{
-				delete xml.@jid;
-			}
+			setAttribute("jid", value != null ? value.toString() : null);
 		}
 
 		/**

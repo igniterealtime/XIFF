@@ -244,14 +244,7 @@ package org.igniterealtime.xiff.data
 		}
 		public function set to( value:EscapedJID ):void
 		{
-			if ( value == null )
-			{
-				delete xml.@to;
-			}
-			else
-			{
-				xml.@to = value.toString();
-			}
+			setAttribute("to", value != null ? value.toString() : null);
 		}
 
 		/**
@@ -272,14 +265,7 @@ package org.igniterealtime.xiff.data
 		}
 		public function set from( value:EscapedJID ):void
 		{
-			if ( value == null )
-			{
-				delete xml.@from;
-			}
-			else
-			{
-				xml.@from = value.toString();
-			}
+			setAttribute("from", value != null ? value.toString() : null);
 		}
 
 		/**
@@ -394,7 +380,7 @@ package org.igniterealtime.xiff.data
 			{
 				var attributes:XMLList = xml.error.attributes();
 				xml.error = value;
-				xml.error.attributes = attributes; // sure?
+				xml.error.attributes = attributes; // TODO: sure?
 			}
 		}
 

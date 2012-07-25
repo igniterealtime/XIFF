@@ -139,11 +139,16 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get jid():EscapedJID
 		{
-			return new EscapedJID(xml.@jid);
+			var value:String = getAttribute("jid");
+			if ( value != null )
+			{
+				return new EscapedJID(value);
+			}
+			return null;
 		}
 		public function set jid( value:EscapedJID ):void
 		{
-			xml.@jid = value.toString();
+			setAttribute("jid", value != null ? value.toString() : null);
 		}
 		
 		/**
