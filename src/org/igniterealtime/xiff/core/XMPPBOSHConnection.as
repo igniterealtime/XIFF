@@ -379,7 +379,7 @@ package org.igniterealtime.xiff.core
 
 			if ( _streamRestarted && bodyNode.children().length() == 0)
 			{
-								_streamRestarted = false;
+				_streamRestarted = false;
 				bindConnection();
 			}
 

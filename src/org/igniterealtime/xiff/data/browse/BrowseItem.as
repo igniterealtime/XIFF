@@ -75,11 +75,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get jid():String
 		{
-			return xml.@jid;
+			return getAttribute("jid");
 		}
 		public function set jid(value:String):void
 		{
-			xml.@jid = value;
+			setAttribute("jid", value);
 		}
 
 		/**
@@ -90,11 +90,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get category():String
 		{
-			return xml.@category;
+			return getAttribute("category");
 		}
 		public function set category(value:String):void
 		{
-			xml.@category = value;
+			setAttribute("category", value);
 		}
 
 		/**
@@ -102,11 +102,11 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 		public function set name(value:String):void
 		{
-			xml.@name = value;
+			setAttribute("name", value);
 		}
 
 		/**

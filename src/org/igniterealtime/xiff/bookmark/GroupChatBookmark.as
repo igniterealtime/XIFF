@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-	
+
 
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
@@ -40,7 +40,7 @@ package org.igniterealtime.xiff.bookmark
 	{
 		// TODO: NS?
 		public static const ELEMENT_NAME:String = "conference";
-		
+
 
 		/**
 		 * A common use case is bookmarking of multi-user chat rooms.
@@ -61,7 +61,7 @@ package org.igniterealtime.xiff.bookmark
 		{
 			xml.setLocalName( ELEMENT_NAME );
 			xml.@jid = jid.toString();
-			
+
 			if ( name != null )
 			{
 				xml.@name = name;
@@ -79,12 +79,12 @@ package org.igniterealtime.xiff.bookmark
 				xml.password = password;
 			}
 		}
-		
+
 		public function getNS():String
 		{
 			return ""; // GroupChatBookmark.NS;
 		}
-		
+
 		public function getElementName():String
 		{
 			return GroupChatBookmark.ELEMENT_NAME;
@@ -101,7 +101,7 @@ package org.igniterealtime.xiff.bookmark
 		{
 			xml.@autojoin = value.toString();
 		}
-		
+
 		/**
 		 * The JabberID of the chat room.
 		 */
@@ -120,7 +120,7 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 
 		/**
@@ -128,7 +128,7 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get nickname():String
 		{
-			return xml.nick.toString();
+			return getField("nick");
 		}
 
 		/**
@@ -138,7 +138,7 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get password():String
 		{
-			return xml.password.toString();
+			return getField("password");
 		}
 
 	}

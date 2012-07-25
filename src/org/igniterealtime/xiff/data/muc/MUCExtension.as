@@ -25,12 +25,12 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	
-	
+
+
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.INodeProxy;
-	
+
 	/**
 	 * Implements the base MUC protocol schema from <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045</a> for multi-user chat.
 	 *
@@ -43,8 +43,8 @@ package org.igniterealtime.xiff.data.muc
 	{
 		public static const NS:String = "http://jabber.org/protocol/muc";
 		public static const ELEMENT_NAME:String = "x";
-	
-	
+
+
 		/**
 		 *
 		 * @param	parent (Optional) The containing XML for this extension
@@ -53,23 +53,23 @@ package org.igniterealtime.xiff.data.muc
 		{
 			super(parent);
 		}
-	
+
 		public function getNS():String
 		{
 			return MUCExtension.NS;
 		}
-	
+
 		public function getElementName():String
 		{
 			return MUCExtension.ELEMENT_NAME;
 		}
 
-		
+
 		public function addChildNode( childNode:XML ):void
 		{
 			xml.appendChild(childNode);
 		}
-	
+
 		/**
 		 * If a room is password protected, add this extension and set the password.
 		 * Use <code>null</code> to remove.
@@ -82,7 +82,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			setField("password", value);
 		}
-	
+
 		/**
 		 * This is property allows a user to retrieve a server defined collection of previous messages.
 		 * Set this property to "true" to retrieve a history of the dicussions.
@@ -102,7 +102,7 @@ package org.igniterealtime.xiff.data.muc
 				xml.history = "";
 			}
 		}
-	
+
 		/**
 		 * Size based condition to evaluate by the server for the maximum
 		 * characters to return during history retrieval
@@ -112,15 +112,15 @@ package org.igniterealtime.xiff.data.muc
 			var value:String = getChildAttribute("history", "maxchars");
 			if (value == null)
 			{
-				return NaN;
+				return NaN; // TODO
 			}
 			return parseInt(value);
 		}
 		public function set maxchars( value:int ):void
 		{
-			xml.history.@maxchars = value.toString();
+			setChildAttribute("history", "maxchars", value.toString());
 		}
-	
+
 		/**
 		 * Protocol based condition for the number of stanzas to return during history retrieval
 		 */
@@ -129,15 +129,15 @@ package org.igniterealtime.xiff.data.muc
 			var value:String = getChildAttribute("history", "maxstanzas");
 			if (value == null)
 			{
-				return NaN;
+				return NaN; // TODO
 			}
 			return parseInt(value);
 		}
 		public function set maxstanzas( value:int ):void
 		{
-			xml.history.@maxstanzas = value.toString();
+			setChildAttribute("history", "maxstanzas", value.toString());
 		}
-	
+
 		/**
 		 * Time based condition to retrive all messages for the last N seconds.
 		 */
@@ -152,9 +152,9 @@ package org.igniterealtime.xiff.data.muc
 		}
 		public function set seconds( value:Number ):void
 		{
-			xml.history.@seconds = value.toString();
+			setChildAttribute("history", "seconds", value.toString());
 		}
-	
+
 		/**
 		 * Time base condition to retrieve all messages from a given time formatted in the format described in
 		 * <a href="http://xmpp.org/extensions/xep-0082.html">XEP-0082</a>.
@@ -167,7 +167,7 @@ package org.igniterealtime.xiff.data.muc
 		}
 		public function set since( value:String ):void
 		{
-			xml.history.@since = value;
+			setChildAttribute("history", "since", value);
 		}
 	}
 }

@@ -29,11 +29,11 @@ package org.igniterealtime.xiff.vcard
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
-	
+
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.core.UnescapedJID;
-        import org.igniterealtime.xiff.core.IXMPPConnection;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.IIQ;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.vcard.VCardExtension;
@@ -64,7 +64,7 @@ package org.igniterealtime.xiff.vcard
 	/**
 	 * VCard updates in 2010:
 	 *
-	 * New vCard data classes to encompass similar properties:
+	 * <p>New vCard data classes to encompass similar properties:</p>
 	 * <ul>
 	 * <li>VCardAddress (country, extendedAddress, locality, poBox, postalCode, region, street)</li>
 	 * <li>VCardGeographicalPosition (latitude, longitude)</li>
@@ -110,7 +110,7 @@ package org.igniterealtime.xiff.vcard
 		/**
 		 * @private
 		 */
-                private var _extensionNames:Array = [];
+		private var _extensionNames:Array = [];
 
 		/**
 		 * @private
@@ -367,7 +367,7 @@ package org.igniterealtime.xiff.vcard
 				return;
 			}
 			var req:Object = requestQueue.pop();
-                        var connection:IXMPPConnection = req.connection;
+			var connection:IXMPPConnection = req.connection;
 			var vCard:VCard = req.card;
 			var jid:UnescapedJID = vCard.jid;
 
@@ -653,7 +653,7 @@ package org.igniterealtime.xiff.vcard
 
 					default:
 						trace( "handleVCard. Private extension: " + child.name() );
-                                                _extensionNames.push( child.localName() );
+						_extensionNames.push( child.localName() );
 						extensions[ child.localName() ] = child.text().toString();
 						break;
 				}
@@ -662,7 +662,7 @@ package org.igniterealtime.xiff.vcard
 			_loaded = true;
 			dispatchEvent( new VCardEvent( VCardEvent.LOADED, this, true, false ) );
 		}
-		
+
 		/**
 		 * Saves a vCard.
 		 * @param connection
@@ -693,11 +693,11 @@ package org.igniterealtime.xiff.vcard
 			else
 			{
 				delete cache[ bareJID ]; // Force profile refresh on next view
-				
+
 				dispatchEvent( new VCardEvent( VCardEvent.SAVED, this, true, false ) );
 			}
 		}
-		
+
 		/**
 		 * Create the XML needed to send the VCard within the Extension.
 		 * @return
@@ -706,9 +706,9 @@ package org.igniterealtime.xiff.vcard
 		{
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardXml:XML = vcardExt.xml;
-		
+
 			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
-			
+
 			//FN
 			if ( formattedName )
 			{
@@ -1220,21 +1220,21 @@ package org.igniterealtime.xiff.vcard
 			}
 
 			//X
-                        if ( _extensionNames.length > 0 )
+						if ( _extensionNames.length > 0 )
 			{
-                                for each( var xName:String in _extensionNames )
+								for each( var xName:String in _extensionNames )
 				{
 					vcardXml[ xName ] = _extensions[ xName ];
 				}
 			}
-			
+
 			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
-			
+
 			vcardExt.xml = vcardXml;
-			
+
 			return vcardExt;
 		}
-		
+
 		/**
 		 * Birthday.
 		 */

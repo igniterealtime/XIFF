@@ -25,11 +25,11 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	
-	
+
+
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.IExtension;
-	
+
 	/**
 	 * Implements the base MUC user protocol schema from
 	 * <a href="http://www.xmpp.org/extensions/xep-0045.html">XEP-0045</a> for multi-user chat.
@@ -40,14 +40,14 @@ package org.igniterealtime.xiff.data.muc
 	{
 		public static const NS:String = "http://jabber.org/protocol/muc#user";
 		public static const ELEMENT_NAME:String = "x";
-	
+
 		public static const TYPE_DECLINE:String = "decline";
 		public static const TYPE_DESTROY:String = "destroy";
 		public static const TYPE_INVITE:String = "invite";
 		public static const TYPE_OTHER:String = "other";
-	
+
 		private var _statuses:Array = [];
-	
+
 		/**
 		 *
 		 * @param	parent (Optional) The containing XML for this extension
@@ -56,34 +56,34 @@ package org.igniterealtime.xiff.data.muc
 		{
 			super(parent);
 		}
-	
+
 		public function getNS():String
 		{
 			return MUCUserExtension.NS;
 		}
-	
+
 		public function getElementName():String
 		{
 			return MUCUserExtension.ELEMENT_NAME;
 		}
-	
+
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
-	
+
 			for each( var child:XML in node.children() )
 			{
 				switch( child.localName() )
 				{
-						
+
 					case "status":
 						_statuses.push(new MUCStatus(child, this));
 						break;
-						
+
 				}
 			}
 		}
-	
+
 		/**
 		 * Use this extension to invite another user
 		 */
@@ -91,7 +91,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			updateActionNode(TYPE_INVITE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
-	
+
 		/**
 		 * Use this extension to destroy a room
 		 */
@@ -99,7 +99,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			updateActionNode(TYPE_DESTROY, {jid: room.toString()}, reason);
 		}
-	
+
 		/**
 		 * Use this extension to decline an invitation
 		 */
@@ -107,7 +107,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			updateActionNode(TYPE_DECLINE, {to:to.toString(), from:from ? from.toString() : null}, reason);
 		}
-		
+
 		/**
 		 * Does the given status code exist in the list of statuses saved in this extension.
 		 * @param	code
@@ -124,7 +124,7 @@ package org.igniterealtime.xiff.data.muc
 			}
 			return false;
 		}
-			
+
 		/**
 		 * Internal method that manages the type of node that we will use for invite/destroy/decline messages
 		 *
@@ -135,7 +135,7 @@ package org.igniterealtime.xiff.data.muc
 		private function updateActionNode(type:String, attrs:Object, reason:String) : void
 		{
 			xml[type] = "";
-	
+
 			for (var i:String in attrs)
 			{
 				if (attrs.hasOwnProperty(i))
@@ -143,7 +143,7 @@ package org.igniterealtime.xiff.data.muc
 					xml[type].@[i] = attrs[i];
 				}
 			}
-			
+
 			if (reason == null)
 			{
 				delete xml[type].reason;
@@ -153,7 +153,7 @@ package org.igniterealtime.xiff.data.muc
 				xml[type].reason = reason;
 			}
 		}
-	
+
 		/**
 		 * The type of user extension this is
 		 */
@@ -165,7 +165,7 @@ package org.igniterealtime.xiff.data.muc
 				TYPE_INVITE,
 				TYPE_OTHER
 			];
-			
+
 			var len:uint = list.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
@@ -175,10 +175,10 @@ package org.igniterealtime.xiff.data.muc
 					return key;
 				}
 			}
-			
+
 			return null;
 		}
-	
+
 		/**
 		 * The to property for invite and decline action types
 		 */
@@ -191,7 +191,7 @@ package org.igniterealtime.xiff.data.muc
 			}
 			return null;
 		}
-	
+
 		/**
 		 * The from property for invite and decline action types
 		 */
@@ -204,27 +204,27 @@ package org.igniterealtime.xiff.data.muc
 			}
 			return null;
 		}
-	
+
 		/**
 		 * The jid property for destroy the action type
 		 */
 		public function get jid():EscapedJID
 		{
-			var list:XMLList = xml.children()[0].attribute("jid");
-			if ( list.length() > 0 )
+			var value:String = getChildAttribute(TYPE_DESTROY, "jid");
+			if ( value != null )
 			{
-				return new EscapedJID(list[0]);
+				return new EscapedJID(value);
 			}
 			return null;
 		}
-	
-	    /**
-	     * The reason for the invite/decline/destroy
-	     */
-	    public function get reason():String
-	    {
+
+		/**
+		 * The reason for the invite/decline/destroy
+		 */
+		public function get reason():String
+		{
 			return getChildField(type, "reason");
-	    }
+		}
 		public function set reason(value:String):void
 		{
 			if (type == null)
@@ -233,7 +233,7 @@ package org.igniterealtime.xiff.data.muc
 			}
 			xml[type].reason = value;
 		}
-	
+
 		/**
 		 * Property to use if the concerned room is password protected
 		 */
@@ -245,7 +245,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			setField("password", value);
 		}
-	
+
 		/**
 		 * List of MUCStatus.
 		 * TODO: As this extension is the parent of status, the code would be easier to find directly...

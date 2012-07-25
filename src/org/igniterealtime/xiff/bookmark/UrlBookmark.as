@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-	
+
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 
@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.bookmark
 	public class UrlBookmark extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "url";
-		
+
 		/**
 		 * Bookmark an url.
 		 *
@@ -60,7 +60,7 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get name():String
 		{
-			return xml.@name;
+			return getAttribute("name");
 		}
 
 		/**
@@ -68,7 +68,7 @@ package org.igniterealtime.xiff.bookmark
 		 */
 		public function get url():String
 		{
-			return xml.@url;
+			return getAttribute("url");
 		}
 	}
 }

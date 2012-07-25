@@ -25,12 +25,12 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	
-	
+
+
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	
+
 	/**
 	 * This class is used by the MUCExtension for internal representation of
 	 * information pertaining to occupants in a multi-user conference room.
@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.data.muc
 	public class MUCItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
-	
+
 		/**
 		 *
 		 * @param	parent
@@ -50,15 +50,15 @@ package org.igniterealtime.xiff.data.muc
 		public function MUCItem(parent:XML = null)
 		{
 			super();
-	
+
 			xml.setLocalName( ELEMENT_NAME );
-	
+
 			if (parent != null)
 			{
 				parent.appendChild(xml);
 			}
 		}
-	
+
 		/**
 		 * Optional. JID of the room user or server that made changes to the given item.
 		 * Most likely when kicking someone from a room.
@@ -73,7 +73,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			xml.actor.@jid = value.toString();
 		}
-	
+
 		/**
 		 * Optional. Nickname of the room user or server that made changes to the given item.
 		 * Most likely when kicking someone from a room.
@@ -84,13 +84,13 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get actorNick():String
 		{
-			return xml.actor.@nick;
+			return getChildAttribute("actor", "nick");
 		}
 		public function set actorNick(value:String):void
 		{
-			xml.actor.@nick = value;
+			setChildAttribute("actor", "nick", value);
 		}
-	
+
 		/**
 		 * Rason given by the actor for the action that was made for the given item.
 		 * Most likely the reson why someone was kicked out from a room.
@@ -105,7 +105,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			setField("reason", value);
 		}
-	
+
 		/**
 		 * Can be one of the following: owner, admin, member, outcast, or none.
 		 */
@@ -117,7 +117,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			setAttribute("affiliation", value);
 		}
-	
+
 		/**
 		 *
 		 */
@@ -141,7 +141,7 @@ package org.igniterealtime.xiff.data.muc
 				delete xml.@jid;
 			}
 		}
-	
+
 		/**
 		 * The nickname of the conference occupant.
 		 *
@@ -154,7 +154,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			setAttribute("nick", value);
 		}
-	
+
 		/**
 		 * Can be one of the following: moderator, participant,
 		 * visitor, or none.

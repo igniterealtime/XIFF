@@ -34,9 +34,6 @@ package org.igniterealtime.xiff.core
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 
-	import flash.xml.XMLDocument;
-	import flash.xml.XMLNode;
-
 	import flash.net.NetConnection;
 	import flash.net.Responder;
 	import flash.net.NetStream;

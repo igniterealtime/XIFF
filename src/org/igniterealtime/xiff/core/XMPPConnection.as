@@ -364,8 +364,8 @@ package org.igniterealtime.xiff.core
 			var len:uint = exts.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-					var success:Boolean = ExtensionClassRegistry.register(exts[ i ]);
-					trace("enableExtensions. i: " + i + ", success: " + success);
+				var success:Boolean = ExtensionClassRegistry.register(exts[ i ]);
+				trace("enableExtensions. i: " + i + ", success: " + success);
 			}
 		}
 
@@ -378,11 +378,10 @@ package org.igniterealtime.xiff.core
 			var len:uint = exts.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-					var success:Boolean = ExtensionClassRegistry.remove(exts[ i ]);
-					trace("disableExtensions. i: " + i + ", success: " + success);
+				var success:Boolean = ExtensionClassRegistry.remove(exts[ i ]);
+				trace("disableExtensions. i: " + i + ", success: " + success);
 			}
 		}
-
 
 		/**
 		 * Remove a SASL mechanism.
@@ -418,14 +417,14 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	newPassword The new password
 		 */
-				public function changePassword( newPassword:String ):void
+		public function changePassword( newPassword:String ):void
 		{
 			var passwordIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
 									  IQ.generateID( "pswd_change_" ), changePassword_response );
 			var ext:RegisterExtension = new RegisterExtension( passwordIQ.xml );
 
 			ext.username = jid.escaped.bareJID;
-						ext.password = newPassword;
+			ext.password = newPassword;
 
 			passwordIQ.addExtension( ext );
 			send( passwordIQ );

@@ -520,7 +520,8 @@ package org.igniterealtime.xiff.data
 		{
 			if (value)
 			{
-				xml.attention.@xmlns = Message.NS_ATTENTION;
+				xml.attention = "";
+				xml.attention.setNamespace( Message.NS_ATTENTION );
 
 				// avoid offline storage
 				type = Message.TYPE_HEADLINE;

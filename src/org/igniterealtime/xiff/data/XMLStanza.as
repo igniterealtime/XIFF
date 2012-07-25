@@ -230,6 +230,8 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Convinience method for setting an attribute for a child element of the XML.
 		 *
+		 * <p>In case the child element does not exist, it will be created.</p>
+		 *
 		 * @param	elem
 		 * @param	name
 		 * @param	value
@@ -245,6 +247,11 @@ package org.igniterealtime.xiff.data
 			if (list.length() > 0)
 			{
 				xml.children().(localName() == elem)[0].@[name] = value;
+			}
+			else
+			{
+				xml[elem] = "";
+				xml[elem].@[name] = value;
 			}
 		}
 		

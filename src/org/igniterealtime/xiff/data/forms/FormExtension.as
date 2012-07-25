@@ -25,15 +25,16 @@
  */
 package org.igniterealtime.xiff.data.forms
 {
-        import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
-	
+	import org.igniterealtime.xiff.data.forms.enum.FormType;
+
 
 	/**
-         * XEP-0004: Data Forms
-         *
-         * <p>Implements the base functionality of XEP-0004: Data Forms,
-         * shared by all MUC extensions.</p>
+	 * XEP-0004: Data Forms
+	 *
+	 * <p>Implements the base functionality of XEP-0004: Data Forms,
+	 * shared by all MUC extensions.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0004.html
 	 */
@@ -44,7 +45,6 @@ package org.igniterealtime.xiff.data.forms
 
 		private var _reported:FormReported;
 		private var _fields:Array = []; // FormField
-
 
 		/**
 		 *
@@ -63,7 +63,7 @@ package org.igniterealtime.xiff.data.forms
 		public function getElementName():String
 		{
 			return FormExtension.ELEMENT_NAME;
-                }
+		}
 
 		/**
 		 * TODO: clean up...
@@ -105,7 +105,7 @@ package org.igniterealtime.xiff.data.forms
 		{
 			for each( var field:FormField in _fields )
 			{
-				if( field.varName == value )
+				if ( field.varName == value )
 				{
 					return field;
 				}
@@ -192,7 +192,7 @@ package org.igniterealtime.xiff.data.forms
 		public function set instructions( value:Array ):void
 		{
 			delete xml.instructions;
-			
+
 			for each (var i:String in value)
 			{
 				var option:XML = <instructions>{ i }</instructions>;
@@ -215,9 +215,17 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set type( value:String ):void
 		{
-			// TODO ensure it is in the enumeration of "cancel", "form", "result", "submit"
 			// TODO Change the behavior of the serialization depending on the type
-			xml.@type = value;
+
+			if (value != FormType.FORM
+				&& value != FormType.SUBMIT
+				&& value != FormType.CANCEL
+				&& value != FormType.RESULT
+				&& value != null)
+			{
+				throw new Error("Invalid type value: " + value + " for FormExtension");
+			}
+			setAttribute("type", value);
 		}
 
 		/**
@@ -291,7 +299,7 @@ package org.igniterealtime.xiff.data.forms
 		public function set items( value:Array ):void
 		{
 			removeAllItems();
-			
+
 			var len:uint = value.length;
 			for ( var i:uint = 0; i < len; ++i )
 			{
