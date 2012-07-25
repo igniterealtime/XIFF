@@ -1,301 +1,309 @@
 <?xml version="1.0"?>
 <overviews>
 	<packages>
-                <package name="org.igniterealtime.xiff">
+        <package name="org.igniterealtime.xiff">
 			<shortDescription>
                         <![CDATA[  ]]>
 			</shortDescription>
 			<description>
                         <![CDATA[  ]]>
 			</description>
-                </package>
-                <package name="org.igniterealtime.xiff.auth">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.bookmark">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.collections">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.collections.events">
-                        <shortDescription>
-                        <![CDATA[ XIFF Events ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.conference">
-                        <shortDescription>
-                        <![CDATA[ MUC related ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.core">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data">
-                        <shortDescription>
-                        <![CDATA[ XML things, such as XMPP Stanzas, Extensions, etc.. ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.auth">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.bind">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.browse">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.disco">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.forms">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.forms.enum">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.id">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.im">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.muc">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.ping">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.privatedata">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.register">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.rpc">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.search">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.session">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.sharedgroups">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.si">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.vcard">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.version">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.whiteboard">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.data.xhtml">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.events">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.exception">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.filter">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.im">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.namespaces">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.privatedata">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.util">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
-                <package name="org.igniterealtime.xiff.vcard">
-                        <shortDescription>
-                        <![CDATA[  ]]>
-                        </shortDescription>
-                        <description>
-                        <![CDATA[  ]]>
-                        </description>
-                </package>
+		</package>
+		<package name="org.igniterealtime.xiff.auth">
+				<shortDescription>
+				<![CDATA[ Authentication ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.bookmark">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.collections">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.collections.events">
+				<shortDescription>
+				<![CDATA[ XIFF Events ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.conference">
+				<shortDescription>
+				<![CDATA[ MUC related ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.core">
+				<shortDescription>
+				<![CDATA[ Connections ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data">
+				<shortDescription>
+				<![CDATA[ XML things, such as XMPP Stanzas, Extensions, etc.. ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.auth">
+				<shortDescription>
+				<![CDATA[ SASL Authentication types ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.bind">
+				<shortDescription>
+				<![CDATA[ Binding Resource identifier for the connection ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.browse">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.disco">
+				<shortDescription>
+				<![CDATA[ Service Discovery ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.forms">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.forms.enum">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.id">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.im">
+				<shortDescription>
+				<![CDATA[ Instant Messaging ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.message">
+				<shortDescription>
+				<![CDATA[ Message related XEP extensions ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.muc">
+				<shortDescription>
+				<![CDATA[ Multi User Chat ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.ping">
+				<shortDescription>
+				<![CDATA[ Keeping the connnection alive with ping ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.privatedata">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.register">
+				<shortDescription>
+				<![CDATA[ User registration ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.rpc">
+				<shortDescription>
+				<![CDATA[ XML-RPC ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.search">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.session">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.sharedgroups">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.si">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.vcard">
+				<shortDescription>
+				<![CDATA[ vCard ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.version">
+				<shortDescription>
+				<![CDATA[ Software Version of the Client ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.whiteboard">
+				<shortDescription>
+				<![CDATA[ XIFF Whiteboard ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.data.xhtml">
+				<shortDescription>
+				<![CDATA[ XHTML in Message. TODO: Move to 'message' group since only used for ... ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.events">
+				<shortDescription>
+				<![CDATA[ XIFF Events ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.exception">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.filter">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.im">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.namespaces">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.privatedata">
+				<shortDescription>
+				<![CDATA[  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.util">
+				<shortDescription>
+				<![CDATA[ Utilities that are not available natively, such as Base64 and Zlib ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.vcard">
+				<shortDescription>
+				<![CDATA[ vCard data structure  ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
 	</packages>
 </overviews>

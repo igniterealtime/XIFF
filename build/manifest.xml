@@ -30,6 +30,7 @@
 	<component class="org.igniterealtime.xiff.core.UnescapedJID" />
 	<component class="org.igniterealtime.xiff.core.XMPPBOSHConnection" />
 	<component class="org.igniterealtime.xiff.core.XMPPConnection" />
+	<component class="org.igniterealtime.xiff.core.XMPPRTMPConnection" />
 	<component class="org.igniterealtime.xiff.core.XMPPTLSConnection" />
 	<component class="org.igniterealtime.xiff.data.AbstractExtension" />
 	<component class="org.igniterealtime.xiff.data.Extension" />
@@ -42,7 +43,6 @@
 	<component class="org.igniterealtime.xiff.data.INodeProxy" />
 	<component class="org.igniterealtime.xiff.data.IPresence" />
 	<component class="org.igniterealtime.xiff.data.IQ" />
-	<component class="org.igniterealtime.xiff.data.ISerializable" />
 	<component class="org.igniterealtime.xiff.data.IXMLStanza" />
 	<component class="org.igniterealtime.xiff.data.IXMPPStanza" />
 	<component class="org.igniterealtime.xiff.data.Message" />
@@ -76,6 +76,11 @@
 	<component class="org.igniterealtime.xiff.data.im.RosterGroup" />
 	<component class="org.igniterealtime.xiff.data.im.RosterItem" />
 	<component class="org.igniterealtime.xiff.data.im.RosterItemVO" />
+	<component class="org.igniterealtime.xiff.data.message.ArchiveAutomaticExtension" />
+	<component class="org.igniterealtime.xiff.data.message.ArchiveChatCollection" />
+	<component class="org.igniterealtime.xiff.data.message.ArchiveExtension" />
+	<component class="org.igniterealtime.xiff.data.message.ArchiveManualExtension" />
+	<component class="org.igniterealtime.xiff.data.message.ArchivePreferenceExtension" />
 	<component class="org.igniterealtime.xiff.data.muc.IMUCExtension" />
 	<component class="org.igniterealtime.xiff.data.muc.MUC" />
 	<component class="org.igniterealtime.xiff.data.muc.MUCAdminExtension" />
@@ -96,6 +101,7 @@
 	<component class="org.igniterealtime.xiff.data.sharedgroups.SharedGroupsExtension" />
 	<component class="org.igniterealtime.xiff.data.si.FileTransferExtension" />
 	<component class="org.igniterealtime.xiff.data.vcard.VCardExtension" />
+	<component class="org.igniterealtime.xiff.data.version.SoftwareVersionExtension" />
 	<component class="org.igniterealtime.xiff.data.whiteboard.Fill" />
 	<component class="org.igniterealtime.xiff.data.whiteboard.Path" />
 	<component class="org.igniterealtime.xiff.data.whiteboard.Stroke" />
