@@ -32,11 +32,16 @@ package org.igniterealtime.xiff.data
 	 */
 	public class ExtensionClassRegistry
 	{
-        private static var _classes:Object = {};
+		/**
+		 * Array of the Extension classes.
+		 */
+        private static var _classes:Array = [];
 		
 		/**
 	     * Registers the given extension with the extension registry for it to be used,
 		 * in case incoming data matches its ELEMENT_NAME and NS.
+		 *
+		 * @return In case the Extension was already added or it was not proper type, returns false.
 	     */
 		public static function register( extensionClass:Class ):Boolean
 		{
@@ -45,10 +50,11 @@ package org.igniterealtime.xiff.data
 			//if (extensionInstance instanceof IExtension) {
 			if (extensionInstance is IExtension)
 			{
-				var key:String = extensionInstance.getNS() + ":" + extensionInstance.getElementName();
-				trace ("ExtensionClassRegistry.register. key: " + key);
-				_classes[ key ] = extensionClass;
-				return true;
+				if (_classes.indexOf(extensionClass) === -1)
+				{
+					_classes.push(extensionClass);
+					return true;
+				}
 			}
 			return false;
 		}
@@ -63,21 +69,43 @@ package org.igniterealtime.xiff.data
 			//if (extensionInstance instanceof IExtension) {
 			if (extensionInstance is IExtension)
 			{
-				var key:String = extensionInstance.getNS() + ":" + extensionInstance.getElementName();
-				trace ("ExtensionClassRegistry.remove. key: " + key);
-				delete _classes[ key ];
-				return true;
+				var index:int = _classes.indexOf(extensionClass);
+				if (index !== -1)
+				{
+					_classes.splice(index, 1);
+					return true;
+				}
 			}
 			return false;
 		}
 		
 		/**
 		 * Find the extension with the given NS and ELEMENT_NAME if availale in the registery.
+		 *
+		 * @param	ns
+		 * @param	elementName Optional ELEMENT_NAME, used if there are several extensions with the same NS
+		 * @return
 		 */
-		public static function lookup( ns:String, elementName:String ):Class
+		public static function lookup( ns:String, elementName:String = null ):Class
 		{
-			var key:String = ns + ":" + elementName;
-			return _classes[ key ] as Class;
+			var len:uint = _classes.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				var candidateClass:Class = _classes[ i ] as Class;
+				var candidateInstance:IExtension = new candidateClass() as IExtension;
+				if (ns == candidateInstance.getNS())
+				{
+					if (elementName == null)
+					{
+						return candidateClass;
+					}
+					else if (elementName != null && elementName == candidateInstance.getElementName())
+					{
+						return candidateClass;
+					}
+				}
+			}
+			return null;
 		}
 
 		/**
@@ -86,14 +114,12 @@ package org.igniterealtime.xiff.data
 		public static function getNamespaces():Array
 		{
 			var list:Array = [];
-			for (var key:String in _classes)
+			var len:uint = _classes.length;
+			for (var i:uint = 0; i < len; ++i)
 			{
-				if (_classes.hasOwnProperty(key))
-				{
-					var namespace:String = key.substr(0, key.lastIndexOf(":"));
-					trace("getNamespaces. namespace: " + namespace + ", key: " + key);
-					list.push(namespace);
-				}
+				var candidateClass:Class = _classes[ i ] as Class;
+				var candidateInstance:IExtension = new candidateClass() as IExtension;
+				list.push(candidateInstance.getNS());
 			}
 
 			return list;

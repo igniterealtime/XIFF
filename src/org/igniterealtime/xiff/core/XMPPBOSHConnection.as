@@ -135,7 +135,7 @@ package org.igniterealtime.xiff.core
 
 		private var _requestCount:int = 0;
 
-		private var _requestQueue:Array = [];
+		private var _requestQueue:Array = []; // XML
 
 		private var _responseQueue:Array = [];
 
@@ -162,7 +162,7 @@ package org.igniterealtime.xiff.core
 			_responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
 		}
 
-		override public function connect( streamType:uint = 0 ):Boolean
+		override public function connect( streamType:uint = 0 ):void
 		{
 			var attrs:Object = {
 				"xml:lang": XMPPStanza.XML_LANG,
@@ -187,8 +187,6 @@ package org.igniterealtime.xiff.core
 			}
 
 			sendRequests( result );
-
-			return true;
 		}
 
 		override public function disconnect():void
@@ -295,12 +293,9 @@ package org.igniterealtime.xiff.core
 						_streamRestarted = true;
 		}
 
-		override protected function sendXML( someData:String ):void
+		override protected function sendXML( data:String ):void
 		{
-			var thisData:XML;
-			thisData = someData as XML;
-
-			sendQueuedRequests( thisData );
+			sendQueuedRequests( data );
 		}
 
 		override protected function handleNodeType( node:XML ):void
@@ -481,10 +476,11 @@ package org.igniterealtime.xiff.core
 		 * @param	body
 		 * @return
 		 */
-		private function sendQueuedRequests( body:XML = null ):Boolean
+		private function sendQueuedRequests( data:String = null ):Boolean
 		{
-			if ( body )
+			if ( data )
 			{
+				var body:XML = new XML(data);
 				_requestQueue.push( body );
 			}
 			else if ( _requestQueue.length == 0 )

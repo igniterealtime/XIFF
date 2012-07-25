@@ -59,11 +59,12 @@ package org.igniterealtime.xiff.core
 		{
 			super();
 			this.xmppUrl = xmppUrl;
-
-			configureRedfire();
 		}
 
-		private function configureRedfire():void
+		/**
+		 * Called from <code>XMPPConnection()</code> constructor.
+		 */
+		override protected function createConnection():void
 		{
 			NetConnection.defaultObjectEncoding = flash.net.ObjectEncoding.AMF0;
 			netConnection = new NetConnection();
@@ -145,13 +146,12 @@ package org.igniterealtime.xiff.core
 			}
 		}
 
-		override public function connect( streamType:uint=0  ):Boolean
+		override public function connect( streamType:uint=0  ):void
 		{
 			active = false;
 			loggedIn = false;
 
 			netConnection.connect(xmppUrl);
-			return true;
 		}
 
 		override public function sendKeepAlive():void

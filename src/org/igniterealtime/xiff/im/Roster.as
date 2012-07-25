@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.im
 		/**
 		 * List of <code>UnescapedJID</code> which are pending for subscription.
 		 */
-                private var _pendingSubscriptionRequests : Dictionary = new Dictionary();
+        private var _pendingSubscriptionRequests : Dictionary = new Dictionary();
 
 		/**
 		 *
@@ -137,7 +137,7 @@ package org.igniterealtime.xiff.im
 			{
 				connection = aConnection;
 			}
-                }
+        }
 
 		/**
 		 * Adds a contact to the roster. Remember: All roster data is managed on the server-side,
@@ -165,7 +165,7 @@ package org.igniterealtime.xiff.im
 			var callbackMethod:Function = null;
 			var subscription:String = RosterExtension.SUBSCRIBE_TYPE_NONE;
 			var askType:String = RosterExtension.ASK_TYPE_NONE;
-			var iqID : String = IQ.generateID( "add_user_" );
+			var iqID:String = IQ.generateID( "add_user_" );
 
 			if ( requestSubscription == true )
 			{
@@ -194,13 +194,13 @@ package org.igniterealtime.xiff.im
 		{
 			// Contact was added, request subscription
 
-			var iqID : String = resultIQ.id.toString();
+			var iqID:String = resultIQ.id.toString();
 
-                        if ( _pendingSubscriptionRequests.hasOwnProperty( iqID ) )
+            if ( _pendingSubscriptionRequests.hasOwnProperty( iqID ) )
 			{
-                                var subscriptionId:UnescapedJID = _pendingSubscriptionRequests[ iqID ] as UnescapedJID;
+                var subscriptionId:UnescapedJID = _pendingSubscriptionRequests[ iqID ] as UnescapedJID;
 				requestSubscription( subscriptionId );
-                                delete( _pendingSubscriptionRequests[ iqID ] );
+                delete( _pendingSubscriptionRequests[ iqID ] );
 			}
 		}
 
@@ -210,11 +210,11 @@ package org.igniterealtime.xiff.im
 		 * if a user already has a granted presence subscription, you can use this method to revoke that
 		 * subscription.
 		 *
-		 * @param	tojid The JID of the user or service that you are denying subscription
+		 * @param	to The JID of the user or service that you are denying subscription
 		 */
-		public function denySubscription( tojid:UnescapedJID ):void
+		public function denySubscription( to:UnescapedJID ):void
 		{
-			var presence:Presence = new Presence( tojid.escaped, null, Presence.TYPE_UNSUBSCRIBED );
+			var presence:Presence = new Presence( to.escaped, null, Presence.TYPE_UNSUBSCRIBED );
 			_connection.send( presence );
 		}
 
@@ -226,8 +226,7 @@ package org.igniterealtime.xiff.im
 		 */
 		public function fetchRoster():void
 		{
-			var iq:IQ = new IQ( null, IQ.TYPE_GET, IQ.generateID( "roster_" ),
-									fetchRoster_result );
+			var iq:IQ = new IQ( null, IQ.TYPE_GET, IQ.generateID( "roster_" ), fetchRoster_result );
 			iq.addExtension( new RosterExtension( iq.xml ) );
 			_connection.send( iq );
 		}
@@ -514,8 +513,7 @@ package org.igniterealtime.xiff.im
 						for each ( var item:*in items )
 						{
 							var jid:UnescapedJID = new UnescapedJID( item.jid );
-							var rosterItemVO:RosterItemVO = RosterItemVO.get( jid,
-																			  true );
+							var rosterItemVO:RosterItemVO = RosterItemVO.get( jid, true );
 							var rosterEvent:RosterEvent;
 
 							if ( contains( rosterItemVO ) )
@@ -608,7 +606,9 @@ package org.igniterealtime.xiff.im
 
 						var unavailableItem:RosterItemVO = RosterItemVO.get( aPresence.from.unescaped, false );
 						if ( !unavailableItem )
+						{
 							break;
+						}
 						updateRosterItemPresence( unavailableItem, aPresence );
 
 						break;
@@ -621,10 +621,14 @@ package org.igniterealtime.xiff.im
 						// Change the item on the roster
 						var availableItem:RosterItemVO;
 						if ( aPresence.from )
+						{
 							availableItem = RosterItemVO.get( aPresence.from.unescaped, false );
+						}
 
 						if ( !availableItem )
+						{
 							break;
+						}
 						updateRosterItemPresence( availableItem, aPresence );
 
 						break;
@@ -657,7 +661,9 @@ package org.igniterealtime.xiff.im
 			{
 				//if there's no group by this name already, we need to make one
 				if ( !getGroup( name ) )
+				{
 					_groups[ name ] = new RosterGroup( name );
+				}
 			}
 			for each ( var group:RosterGroup in _groups )
 			{
@@ -685,8 +691,7 @@ package org.igniterealtime.xiff.im
 			var iq:IQ = new IQ( null, IQ.TYPE_SET, IQ.generateID( "update_contact_" ) );
 			var ext:RosterExtension = new RosterExtension( iq.xml );
 
-			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName,
-						 groupNames );
+			ext.addItem( rosterItem.jid.escaped, rosterItem.subscribeType, newName, groupNames );
 			iq.addExtension( ext );
 			_connection.send( iq );
 		}

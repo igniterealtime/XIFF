@@ -211,7 +211,9 @@ package org.igniterealtime.xiff.data.im
 		public function get status():String
 		{
 			if ( !online )
+			{
 				return "Offline";
+			}
 			return _status ? _status : "Available";
 		}
 		public function set status( value:String ):void

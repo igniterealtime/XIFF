@@ -60,6 +60,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Constructor.
+		 * <p>The connection socket created in XMPPConnection is used until the server responds as "proceed".</p>
 		 */
 		public function XMPPTLSConnection()
 		{
@@ -69,7 +70,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @inheritDoc
 		 */
-		override public function connect( streamType:uint=0 ):Boolean
+		override public function connect( streamType:uint=0 ):void
 		{
 			if ( tlsEnabled )
 			{
@@ -82,7 +83,7 @@ package org.igniterealtime.xiff.core
 				removeSocketEventListeners();
 			}
 
-			return super.connect( streamType );
+			super.connect( streamType );
 		}
 
 		/**

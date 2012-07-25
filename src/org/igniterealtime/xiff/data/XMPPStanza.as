@@ -205,7 +205,7 @@ package org.igniterealtime.xiff.data
 					var nName:String = child.localName();
 					var nNamespace:Namespace = child.namespace(); // Should this request only the unprefixed namespace?
 
-					trace("xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
+					trace("XMPPStanza. xml setter. nName: " + nName + ", nNamespace: " + nNamespace);
 
 					if (nNamespace.uri == null || nNamespace.uri == "")
 					{

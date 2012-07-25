@@ -340,6 +340,8 @@ package org.igniterealtime.xiff.core
 				RegisterExtension,
 				FormExtension
 			);
+			
+			createConnection();
 		}
 
 		/**
@@ -443,12 +445,9 @@ package org.igniterealtime.xiff.core
 		 * a Flash client instead of the standard &lt;stream:stream&gt;.
 		 *
 		 * @param	streamType Any of the STREAM_TYPE_.. constants.
-		 *
-		 * @return A boolean indicating whether the server was found.
 		 */
-		public function connect( streamType:uint=0 ):Boolean
+		public function connect( streamType:uint=0 ):void
 		{
-			createSocket();
 			this.streamType = streamType;
 
 			active = false;
@@ -457,7 +456,6 @@ package org.igniterealtime.xiff.core
 			chooseStreamTags( streamType );
 
 			socket.connect( server, port );
-			return true;
 		}
 
 		/**
@@ -593,6 +591,23 @@ package org.igniterealtime.xiff.core
 
 			regIQ.addExtension( ext );
 			send( regIQ );
+		}
+
+		/**
+		 * Set up the connection and listeners related to this class.
+		 * This method should be overridden in any class that would extend this one
+		 * and provide alternative way for connectiong, such as BOSH or TLSSocket.
+		 *
+		 * @see flash.net.Socket
+		 */
+		protected function createConnection():void
+		{
+			socket = new Socket();
+			socket.addEventListener( Event.CLOSE, onSocketClosed );
+			socket.addEventListener( Event.CONNECT, onSocketConnected );
+			socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
 		}
 
 		/**
@@ -803,7 +818,7 @@ package org.igniterealtime.xiff.core
 		 * <p>Supported types in XMPP are <code>zlib</code> and <code>lzw</code>.</p>
 		 * <p>XIFF however only supports <code>zlib</code> and only after the Adler32 checksum is somehow implemented.</p>
 		 *
-		 * <p>Flash Player code named "Dolores" (second half of 2012) might have LZMA ByteArray compression available...</p>
+		 * <p>Flash Player 11.4, code named "Dolores" (second half of 2012) will have LZMA ByteArray compression available...</p>
 		 *
 		 * @see http://www.adobe.com/devnet/flashplatform/whitepapers/roadmap.html
 		 * @see http://xmpp.org/registrar/compress.html
@@ -812,21 +827,6 @@ package org.igniterealtime.xiff.core
 		{
 			var ask:String = "<compress xmlns='http://jabber.org/protocol/compress'><method>" + method + "</method></compress>";
 			sendXML( ask );
-		}
-
-		/**
-		 * @private
-		 *
-		 * @see flash.net.Socket
-		 */
-		protected function createSocket():void
-		{
-			socket = new Socket();
-			socket.addEventListener( Event.CLOSE, onSocketClosed );
-			socket.addEventListener( Event.CONNECT, onSocketConnected );
-			socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
-			socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
-			socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
 		}
 
 		/**

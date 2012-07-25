@@ -36,7 +36,7 @@ package org.igniterealtime.xiff.core
 	{
 		function changePassword( newPassword:String ):void;
 
-		function connect( streamType:uint=0 ):Boolean;
+		function connect( streamType:uint=0 ):void;
 
 		function disconnect():void;
 

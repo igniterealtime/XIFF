@@ -26,18 +26,18 @@
 package org.igniterealtime.xiff.data.im
 {
 	import org.igniterealtime.xiff.core.EscapedJID;
-        import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
 	 * that is sent or received with the "jabber:iq:roster" namespace.
-         *
-         * @see http://xmpp.org/rfcs/rfc3921.html#roster
+	 *
+	 * @see http://xmpp.org/rfcs/rfc3921.html#roster
 	 */
 	public class RosterExtension extends Extension implements IExtension
 	{
-                public static const NS:String = "jabber:iq:roster";
+		public static const NS:String = "jabber:iq:roster";
 		public static const ELEMENT_NAME:String = "query";
 		
 		public static const SUBSCRIBE_TYPE_NONE:String = "none";
@@ -51,7 +51,7 @@ package org.igniterealtime.xiff.data.im
 		public static const SHOW_UNAVAILABLE:String = "unavailable";
 		public static const SHOW_PENDING:String = "Pending";
 	
-		private var _items:Array = [];
+		private var _items:Array = []; // RosterItem
 		
 		/**
 		 *
@@ -82,7 +82,7 @@ package org.igniterealtime.xiff.data.im
 		public function getElementName():String
 		{
 			return RosterExtension.ELEMENT_NAME;
-                }
+		}
 		
 		/**
 		 * Deserializes the RosterExtension data.
@@ -90,12 +90,13 @@ package org.igniterealtime.xiff.data.im
 		 * @param	node The XML node associated this data
 		 * @return An indicator as to whether deserialization was successful
 		 */
-		override public function set xml( node:XML ):void
+		override public function set xml( value:XML ):void
 		{
-			super.xml = node;
-			removeAllItems();
+			super.xml = value;
 			
-			for each ( var child:XML in node.children() )
+			trace("RosterExtension. xml setter: " + value.toXMLString());
+			
+			for each ( var child:XML in value.children() )
 			{
 				switch( child.localName() )
 				{
@@ -141,7 +142,8 @@ package org.igniterealtime.xiff.data.im
 		 * Adds a single roster item to the extension payload.
 		 *
 		 * @param	jid The JID of the contact to add
-		 * @param	subscription The subscription type of the roster item contact. There are pre-defined static variables for these string options in this class definition.
+		 * @param	subscription The subscription type of the roster item contact.
+		 * 			There are pre-defined static variables for these string options in this class definition.
 		 * @param	nickname The display name or nickname of the contact.
 		 * @param	groups An array of strings of the group names that this contact should be placed in.
 		 */
@@ -175,13 +177,12 @@ package org.igniterealtime.xiff.data.im
 		
 		/**
 		 * Removes all items from the roster data.
-		 *
 		 */
 		public function removeAllItems():void
 		{
-			for ( var i:String in _items )
+			while ( xml.children().(localName() == "item").length() > 0 )
 			{
-				//_items[i].setNode( null );
+				delete xml.children().(localName() == "item")[0];
 			}
 			
 			_items = [];

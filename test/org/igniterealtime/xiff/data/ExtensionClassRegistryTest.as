@@ -23,42 +23,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.igniterealtime.xiff.data.im
+package org.igniterealtime.xiff.data
 {
-	
-	import org.flexunit.asserts.*;
-	
-	public class RosterExtensionTest
+	import org.flexunit.asserts.assertEquals;
+        import org.igniterealtime.xiff.data.*;
+        import org.igniterealtime.xiff.data.session.*;
+        import org.igniterealtime.xiff.data.disco.*;
+
+        public class ExtensionClassRegistryTest
 	{
-		
-		
-		
-		[Test( description="XML element name and namespace checking" )]
-		public function testElement():void
-		{
-			var nameSpace:String = "jabber:iq:roster";
-			var elementName:String = "query";
+                [Test( description="Registery getNamespaces" )]
+                public function testGetNamespaces():void
+                {
+                        var testValue:Array = [
+                          InfoDiscoExtension.NS,
+                          SessionExtension.NS
+                        ];
+
+                        ExtensionClassRegistry.register(InfoDiscoExtension);
+                        ExtensionClassRegistry.register(SessionExtension);
 			
-			var ext:RosterExtension = new RosterExtension();
-			var node:XML = ext.xml;
-			
-			assertEquals( nameSpace, node.namespace().uri );
-			assertEquals( elementName, node.localName() );
+                        assertEquals( testValue.toString(), ExtensionClassRegistry.getNamespaces().toString() );
 		}
-		
-		[Test( description="XML parse - getAllItems length" )]
-		public function testParseGetAllItemsLength():void
-		{
-			var incoming:XML = <query xmlns='jabber:iq:roster' ver='ver7'>
-				 <item jid='nurse@example.com'/>
-				 <item jid='romeo@example.net'/>
-			   </query>;
-			var testValue:uint = 2;
-			
-			var ext:RosterExtension = new RosterExtension();
-			ext.xml = incoming;
-			
-			assertEquals( testValue, ext.getAllItems().length );
-		}
+
 	}
 }
