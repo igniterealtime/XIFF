@@ -545,7 +545,6 @@ package org.igniterealtime.xiff.core
 				}
 
 				sendXML( data.toString() );
-
 			}
 		}
 
@@ -1336,32 +1335,31 @@ package org.igniterealtime.xiff.core
 
 					switch (localName)
 					{
-						case "amp": break;
-						case "compression": break;
-						case "auth": break;
-						case "register": break;
-						case "bind": break;
-						case "mechanisms": break;
-						case "session": break;
-						case "starttls": break;
-						case "sm": break;
-					}
-
-					if ( localName == "starttls" )
-					{
-						handleStreamTLS( feature );
-					}
-					else if ( localName == "mechanisms" )
-					{
-						configureAuthMechanisms( feature );
-					}
-					else if ( localName == "compression" )
-					{
-						// zlib is the most common and the one which is required to be implemented.
-						if ( _compress )
-						{
-							configureStreamCompression();
-						}
+						case "amp":
+							break;
+						case "compression":
+							// zlib is the most common and the one which is required to be implemented.
+							if ( _compress )
+							{
+								configureStreamCompression();
+							}
+							break;
+						case "auth":
+							break;
+						case "register":
+							break;
+						case "bind":
+							break;
+						case "mechanisms":
+							configureAuthMechanisms( feature );
+							break;
+						case "session":
+							break;
+						case "starttls":
+							handleStreamTLS( feature );
+							break;
+						case "sm":
+							break;
 					}
 				}
 
@@ -1463,9 +1461,11 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
 		 * Parses the data which the socket just received.
 		 * Used to simplify the overrides from classes extending this one.
+		 *
+		 * <p>Dispatches the <code>IncomingDataEvent</code>. Also takes care
+		 * of increasing the incoming bytes statistic.</p>
 		 *
 		 * @param	bytedata
 		 */
@@ -1479,12 +1479,44 @@ package org.igniterealtime.xiff.core
 				bytedata = compressor.uncompress(bytedata);
 			}
 			bytedata.position = 0;
+
+			var xmlData:XML = checkIncomingData(bytedata);
+
+			if ( xmlData != null )
+			{
+				var rawData:ByteArray = new ByteArray();
+				rawData.writeUTFBytes( xmlData.toXMLString() );
+				
+				// Add default namespace which is not usually included in XML from the server
+				xmlData.setNamespace( XMLStanza.DEFAULT_NS );
+				xmlData.normalize();
+				
+				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
+				incomingEvent.data = rawData;
+				dispatchEvent( incomingEvent );
+
+				var len:uint = xmlData.children().length();
+
+				for ( var i:int = 0; i < len; ++i )
+				{
+					// Read the data and send it to the appropriate parser
+					var currentNode:XML = xmlData.children()[ i ];
+					handleNodeType( currentNode );
+				}
+			}
+		}
+		
+		/**
+		 * Check if the incoming data is complete once added to any existing
+		 * incoming data.
+		 *
+		 * @param	data
+		 * @return XML that is complete, or just null in case it is not complete
+		 */
+		protected function checkIncomingData( bytedata:ByteArray ):XML
+		{
 			var data:String = bytedata.readUTFBytes( bytedata.length );
-
 			var rawXML:String = incompleteRawXML + data;
-
-			var rawData:ByteArray = new ByteArray();
-			rawData.writeUTFBytes( rawXML );
 
 			// data coming in could also be parts of base64 encoded stuff.
 
@@ -1513,8 +1545,8 @@ package org.igniterealtime.xiff.core
 			var isComplete:Boolean = false;
 			var xmlData:XML;
 
-			//error handling to catch incomplete xml strings that have
-			//been truncated by the socket
+			// Error handling to catch incomplete xml strings that have
+			// been truncated by the socket
 			try
 			{
 				xmlData = new XML( rawXML );
@@ -1525,29 +1557,15 @@ package org.igniterealtime.xiff.core
 			{
 				trace(getTimer() + " - parseDataReceived. err: " + err.message);
 
-				//concatenate the raw xml to the previous xml
+				// Concatenate the raw xml to the previous xml
 				incompleteRawXML += data;
 			}
-
-			if ( isComplete )
+			
+			if (isComplete)
 			{
-				// Add default namespace which is not usually included in XML from the server
-				xmlData.setNamespace(XMLStanza.DEFAULT_NS);
-				xmlData.normalize();
-
-				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
-				incomingEvent.data = rawData;
-				dispatchEvent( incomingEvent );
-
-				var len:uint = xmlData.children().length();
-
-				for ( var i:int = 0; i < len; ++i )
-				{
-					// Read the data and send it to the appropriate parser
-					var currentNode:XML = xmlData.children()[ i ];
-					handleNodeType( currentNode );
-				}
+				return xmlData;
 			}
+			return null;
 		}
 
 		/**
@@ -1594,14 +1612,26 @@ package org.igniterealtime.xiff.core
 				dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
 			}
 		}
+		/**
+		 * Pass through to <code>sendData</code> which takes care of the common
+		 * data handling between all connection classes.
+		 *
+		 * @param	data
+		 */
+		protected function sendXML( data:String ):void
+		{
+			sendData(data);
+		}
 
 		/**
 		 * Dispatches <code>OutgoingDataEvent</code>, handles possible Stream Compression and
 		 * calls <code>sendDataToServer</code>.
 		 *
+		 * <p>Also takes care of increasing the outgoing bytes statistic.</p>
+		 *
 		 * @param	data XML that is not always complete for a reason, like sending the closing element
 		 */
-		protected function sendXML( data:String ):void
+		protected function sendData( data:String ):void
 		{
 			var bytedata:ByteArray = new ByteArray();
 			bytedata.writeUTFBytes( data );

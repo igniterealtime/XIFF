@@ -35,7 +35,9 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.events.*;
 
 	/**
-	 * Bidirectional-streams Over Synchronous HTTP (BOSH)
+	 * XEP-0124: Bidirectional-streams Over Synchronous HTTP (BOSH) and
+	 * XEP-0206: XMPP Over BOSH.
+	 *
 	 * <p>Using BOSH do not prevent your application from respecting
 	 * Adobe Flash Player policy file issues. HTTP requests to your
 	 * server must be authorized with a crossdomain.xml file
@@ -151,6 +153,11 @@ package org.igniterealtime.xiff.core
 		private var _streamRestarted:Boolean;
 
 		/**
+		 * TLS compression (as defined in RFC 3920) and Stream Compression (as defined
+		 * in Stream Compression [XEP-0138]) are NOT RECOMMENDED since compression
+		 * SHOULD be negotiated at the HTTP layer using the 'accept' attribute
+		 * of the BOSH session creation response. TLS compression and Stream
+		 * Compression SHOULD NOT be used at the same time as HTTP content encoding.
 		 *
 		 * @param	secure	Determines which port is used
 		 */
@@ -162,6 +169,11 @@ package org.igniterealtime.xiff.core
 			_responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
 		}
 
+		/**
+		 *
+		 * @param	streamType Not used
+		 * @see http://xmpp.org/extensions/xep-0206.html#initiate
+		 */
 		override public function connect( streamType:uint = 0 ):void
 		{
 			var attrs:Object = {
@@ -186,18 +198,13 @@ package org.igniterealtime.xiff.core
 					result.@[ key ] = attrs[ key ];
 				}
 			}
-
-			trace("connect. result: " + result.toXMLString());
-			/*
-			<body xmpp:version="1.0" rid="734183" secure="false" xmlns:xmpp="urn:xmpp:xbosh"
-				hold="1" xml:lang="en" to="192.168.1.37" ver="1.6" wait="20"
-				xmlns="http://jabber.org/protocol/httpbind"/>
-			*/
-
 			
 			sendRequests( result );
 		}
 
+		/**
+		 * @see http://xmpp.org/extensions/xep-0124.html#terminate
+		 */
 		override public function disconnect():void
 		{
 			if ( active )
@@ -239,30 +246,31 @@ package org.igniterealtime.xiff.core
 		/**
 		 *
 		 * @param	responseBody
+		 * @see http://xmpp.org/extensions/xep-0206.html#create
 		 */
 		public function processConnectionResponse( responseBody:XML ):void
 		{
 			dispatchEvent( new ConnectionSuccessEvent() );
 
 			_sid = responseBody.@sid;
-			wait = responseBody.@wait;
+			wait = parseInt(responseBody.@wait);
 
 			if ( responseBody.hasOwnProperty("@polling") )
 			{
-				_boshPollingInterval = responseBody.@polling;
+				_boshPollingInterval = parseInt(responseBody.@polling);
 			}
 			if ( responseBody.hasOwnProperty("@inactivity") )
 			{
-				_inactivity = responseBody.@inactivity;
+				_inactivity = parseInt(responseBody.@inactivity);
 			}
 			if ( responseBody.hasOwnProperty("@maxpause") )
 			{
-				_maxPause = responseBody.@maxpause;
+				_maxPause = parseInt(responseBody.@maxpause);
 				_pauseEnabled = true;
 			}
 			if ( responseBody.hasOwnProperty("@requests") )
 			{
-				maxConcurrentRequests = responseBody.@requests;
+				maxConcurrentRequests = parseInt(responseBody.@requests);
 			}
 
 			trace( "Polling interval: {0}", _boshPollingInterval );
@@ -280,6 +288,11 @@ package org.igniterealtime.xiff.core
 		{
 		}
 
+		/**
+		 * Upon receiving the <strong>success</strong> element, the client
+		 * MUST then ask the connection manager to restart the stream by
+		 * sending a "restart request".
+		 */
 		override protected function restartStream():void
 		{
 			var data:XML = createRequest();
@@ -308,16 +321,20 @@ package org.igniterealtime.xiff.core
 
 			var nodeName:String = String(node.localName()).toLowerCase();
 
-			if( nodeName == "stream:features" )
+			if ( nodeName == "features" )
 			{
 				_streamRestarted = false; //avoid triggering the old server workaround
 			}
 		}
 
 		/**
-		 * Helper method for creating XML which contains the data to be sent to server
+		 * Helper method for creating XML which contains the data to be sent to server.
+		 *
+		 * <p>Also called as "Body wrapper element".</p>
+		 *
 		 * @param	bodyContent
 		 * @return
+		 * @see http://xmpp.org/extensions/xep-0124.html#wrapper
 		 */
 		private function createRequest( bodyContent:Array = null ):XML
 		{
@@ -360,7 +377,23 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * TODO: Compression handling
+		 * <p>If the BOSH <strong>body</strong> wrapper is not empty, then it SHOULD
+		 * contain one of the following:</p>
+		 *
+		 * <ul>
+		 * <li>A complete <stream:features/> element (in which case the BOSH <strong>body</strong>
+		 * element MUST include the namespace xmlns:stream='http://etherx.jabber.org/streams').</li>
+		 * <li>A complete element used for SASL negotiation and qualified by the
+		 * 'urn:ietf:params:xml:ns:xmpp-sasl' namespace.</li>
+		 * <li>One or more complete <strong>message</strong>, <strong>presence</strong>, and/or
+		 * <strong>iq</strong> elements qualified by the 'jabber:client' namespace.</li>
+		 * <li>A <stream:error/> element (in which case the BOSH <strong>body</strong> element
+		 * MUST include the namespace xmlns:stream='http://etherx.jabber.org/streams' and it MUST
+		 * feature the 'remote-stream-error' terminal error condition), preceded by zero or more
+		 * complete <strong>message</strong>, <strong>presence</strong>, and/or <strong>iq</strong>
+		 * elements qualified by the 'jabber:client' namespace.</li>
+		 * </ul>
+		 *
 		 * @param	event
 		 */
 		private function onRequestComplete( event:Event ):void
@@ -369,6 +402,9 @@ package org.igniterealtime.xiff.core
 
 			_requestCount--;
 			var byteData:ByteArray = loader.data as ByteArray;
+			
+			_incomingBytes += byteData.length;
+			
 			var strData:String = byteData.readUTFBytes(byteData.length);
 			trace("onRequestComplete. strData: " + strData);
 
@@ -378,28 +414,27 @@ package org.igniterealtime.xiff.core
 			incomingEvent.data = byteData;
 			dispatchEvent( incomingEvent );
 
-			var bodyNode:XML = xmlData.children()[0];
-
-			if ( _streamRestarted && bodyNode.children().length() == 0)
+			if ( _streamRestarted && xmlData.children().length() == 0)
 			{
 				_streamRestarted = false;
 				bindConnection();
 			}
 
-			if ( bodyNode.@type == "terminate" )
+			if ( xmlData.@type == "terminate" )
 			{
-				dispatchError( "BOSH Error", bodyNode.@condition, "", -1 );
+				dispatchError( "BOSH Error", xmlData.@condition, "", -1 );
 				active = false;
 			}
 
-			if ( bodyNode.hasOwnProperty("@sid") && !loggedIn )
+			// http://xmpp.org/extensions/xep-0206.html#create
+			if ( xmlData.hasOwnProperty("@sid") && !loggedIn )
 			{
-				processConnectionResponse( bodyNode );
+				processConnectionResponse( xmlData );
 
 				var featuresFound:Boolean = false;
-				for each ( var child:XML in bodyNode.children() )
+				for each ( var child:XML in xmlData.children() )
 				{
-					if ( child.localName() == "stream:features" )
+					if ( child.localName() == "features" )
 					{
 						featuresFound = true;
 					}
@@ -411,7 +446,7 @@ package org.igniterealtime.xiff.core
 				}
 			}
 
-			for each ( var childNode:XML in bodyNode.children() )
+			for each ( var childNode:XML in xmlData.children() )
 			{
 				_responseQueue.push( childNode );
 			}
@@ -486,7 +521,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function sendQueuedRequests( data:String = null ):Boolean
 		{
-			if ( data )
+			if ( data != null )
 			{
 				var body:XML = new XML(data);
 				_requestQueue.push( body );
@@ -497,6 +532,16 @@ package org.igniterealtime.xiff.core
 			}
 
 			return sendRequests();
+		}
+		
+		/**
+		 * Pass through to <code>sendRequests</code> method for having the
+		 * <code>body</code> wrapper around the given data.
+		 * @param	data
+		 */
+		override protected function sendXML( data:String ):void
+		{
+			sendQueuedRequests( data );
 		}
 
 		/**
@@ -510,7 +555,6 @@ package org.igniterealtime.xiff.core
 		 */
 		private function sendRequests( data:XML = null, isPoll:Boolean = false ):Boolean
 		{
-			trace("sendRequests. _requestCount: " + _requestCount + ", maxConcurrentRequests: " + maxConcurrentRequests);
 			if ( _requestCount >= maxConcurrentRequests )
 			{
 				return false;
@@ -538,8 +582,8 @@ package org.igniterealtime.xiff.core
 			trace("sendRequests. data: " + data.toXMLString());
 
 			
-			// Dispatch OutgoingDataEvent, calls sendDataToServer and handles possible compression
-			sendXML(data.toXMLString());
+			// Dispatch OutgoingDataEvent, calls sendDataToServer.
+			sendData(data.toXMLString());
 			
 			
 			if ( isPoll )
@@ -552,13 +596,18 @@ package org.igniterealtime.xiff.core
 		
 		/**
 		 * Connection to the server in BOSH is a simple URLRequest.
-		 * @param	data
+		 *
+		 * <p>BOSH requires all incoming and outgoing data to be wrapped in
+		 * <code>body</code> element. That should be taken care of before possible
+		 * Stream Compression.</p>
+		 *
+		 * @param	data ByteArray that might be compressed if enabled
 		 */
 		override protected function sendDataToServer( data:ByteArray ):void
 		{
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
-			req.contentType = "text/xml";
+			req.contentType = "text/xml"; // How about while compressed data?
 			req.requestHeaders = HEADERS[ req.method ];
 			req.data = data;
 
@@ -567,7 +616,15 @@ package org.igniterealtime.xiff.core
 			loader.addEventListener(Event.COMPLETE, onRequestComplete);
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, onHTTPStatus);
 			loader.load(req);
+		}
+		
+		private function onHTTPStatus(event:HTTPStatusEvent):void
+		{
+			trace("onHTTPStatus. " + event.toString());
+			trace("onHTTPStatus. status: " + event.status);
+			
 		}
 
 		/**
