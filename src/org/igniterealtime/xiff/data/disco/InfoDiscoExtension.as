@@ -121,6 +121,13 @@ package org.igniterealtime.xiff.data.disco
 						feature.xml = child;
 						_features.push( feature );
 						break;
+						
+					case "x":
+						// TODO: Extended Room information...
+						// http://xmpp.org/extensions/xep-0045.html#disco-roominfo
+						var extended:DiscoExtendedInfo = new DiscoExtendedInfo( xml );
+						extended.xml = child;
+						break;
 				}
 			}
 		}
