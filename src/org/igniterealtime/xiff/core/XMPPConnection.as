@@ -34,19 +34,12 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
 	import org.igniterealtime.xiff.data.bind.BindExtension;
 	import org.igniterealtime.xiff.data.ping.PingExtension;
-	import org.igniterealtime.xiff.data.register.RegisterExtension;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.util.ICompressor;
 
-	/**
-	 * Dispatched when a password change is successful.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.ChangePasswordSuccessEvent.PASSWORD_SUCCESS
-	 */
-	[Event( name="changePasswordSuccess", type="org.igniterealtime.xiff.events.ChangePasswordSuccessEvent" )]
 	/**
 	 * Dispatched when the connection is successfully made to the server.
 	 *
@@ -95,12 +88,6 @@ package org.igniterealtime.xiff.core
 	 * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
 	 */
 	[Event( name="presence", type="org.igniterealtime.xiff.events.PresenceEvent" )]
-	/**
-	 * Dispatched on when new user account registration is successful.
-	 *
-	 * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
-	 */
-	[Event( name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent" )]
 
 	/**
 	 * This class is used to connect to and manage data coming from an XMPP server.
@@ -222,7 +209,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-				protected var presenceQueue:Array = [];
+		protected var presenceQueue:Array = [];
 
 		/**
 		 * @private
@@ -337,7 +324,6 @@ package org.igniterealtime.xiff.core
 				BindExtension,
 				SessionExtension,
 				PingExtension,
-				RegisterExtension,
 				FormExtension
 			);
 			
@@ -412,27 +398,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Changes the user's account password on the server. If the password change is successful,
-		 * the class will broadcast a <code>ChangePasswordSuccessEvent.PASSWORD_SUCCESS</code> event.
-		 *
-		 * TODO: Make an extension...
-		 *
-		 * @param	newPassword The new password
-		 */
-		public function changePassword( newPassword:String ):void
-		{
-			var passwordIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
-									  IQ.generateID( "pswd_change_" ), changePassword_response );
-			var ext:RegisterExtension = new RegisterExtension( passwordIQ.xml );
-
-			ext.username = jid.escaped.bareJID;
-			ext.password = newPassword;
-
-			passwordIQ.addExtension( ext );
-			send( passwordIQ );
-		}
-
-		/**
 		 * Connects to the server. Use one of the STREAM_TYPE_.. constants.
 		 * Possible options are:
 		 * <ul>
@@ -479,20 +444,6 @@ package org.igniterealtime.xiff.core
 				var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
 				dispatchEvent( disconnectionEvent );
 			}
-		}
-
-		/**
-		 * Issues a request for the information that must be submitted for registration with the server.
-		 * When the data returns, a <code>RegistrationFieldsEvent.REG_FIELDS</code> event is dispatched
-		 * containing the requested data.
-		 */
-		public function getRegistrationFields():void
-		{
-			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_GET,
-								   IQ.generateID( "reg_info_" ), getRegistrationFields_response );
-			regIQ.addExtension( new RegisterExtension( regIQ.xml ) );
-
-			send( regIQ );
 		}
 
 		/**
@@ -561,35 +512,6 @@ package org.igniterealtime.xiff.core
 			var iq:IQ = new IQ( new EscapedJID( server ), IQ.TYPE_GET, null, sendKeepAlive_response, sendKeepAlive_error );
 			iq.addExtension( new PingExtension() );
 			send( iq );
-		}
-
-		/**
-		 * Registers a new account with the server, sending the registration data as specified in the fieldMap@paramter.
-		 *
-		 * @param	fieldMap An object map containing the data to use for registration. The map should be composed of
-		 * attribute:value pairs for each registration data item.
-		 * @param	key (Optional) If a key was passed in the "data" field of the "registrationFields" event,
-		 * that key must also be passed here.
-		 * required field needed for registration.
-		 */
-		public function sendRegistrationFields( fieldMap:Object, key:String ):void
-		{
-			var regIQ:IQ = new IQ( new EscapedJID( domain ), IQ.TYPE_SET,
-								   IQ.generateID( "reg_attempt_" ), sendRegistrationFields_response );
-			var ext:RegisterExtension = new RegisterExtension( regIQ.xml );
-
-			for ( var i:String in fieldMap )
-			{
-				ext.setField( i, fieldMap[ i ] );
-			}
-
-			if ( key != null )
-			{
-				ext.key = key;
-			}
-
-			regIQ.addExtension( ext );
-			send( regIQ );
 		}
 
 		/**
@@ -703,25 +625,6 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function bindConnection_error( iq:IQ ):void
 		{
-		}
-
-		/**
-		 * @private
-		 *
-		 * @param	iq
-		 */
-		protected function changePassword_response( iq:IQ ):void
-		{
-			if ( iq.type == IQ.TYPE_RESULT )
-			{
-				var event:ChangePasswordSuccessEvent = new ChangePasswordSuccessEvent();
-				dispatchEvent( event );
-			}
-			else
-			{
-				// We weren't expecting this
-				dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
-			}
 		}
 
 		/**
@@ -899,30 +802,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
-		 *
-		 * @param	iq
-		 */
-		protected function getRegistrationFields_response( iq:IQ ):void
-		{
-			try
-			{
-				var ext:RegisterExtension = iq.getAllExtensionsByNS( RegisterExtension.NS )[ 0 ];
-				var fields:Array = ext.getRequiredFieldNames(); //TODO: Phase this out
-
-				var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
-				event.fields = fields;
-				event.data = ext;
-
-				dispatchEvent( event );
-			}
-			catch( err:Error )
-			{
-				trace( err.getStackTrace() );
-			}
-		}
-
-		/**
 		 * Upon receiving a success indication within the SASL negotiation, the
 		 * client MUST send a new stream header to the server, to which the
 		 * server MUST respond with a stream header as well as a list of
@@ -1071,10 +950,19 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
 		 * Calls a appropriate parser base on the nodeName.
 		 *
+		 * <p>The XMPP RFCs define an ordering for the features defined therein, namely:</p>
+		 * <ol>
+		 * <li>TLS</li>
+		 * <li>In-band registration, if registration needed</li>
+		 * <li>SASL</li>
+		 * <li>Stream compression, if used</li>
+		 * <li>Resource binding</li>
+		 * </ol>
+		 *
 		 * @param	node
+		 * @see http://xmpp.org/extensions/xep-0170.html
 		 */
 		protected function handleNodeType( node:XML ):void
 		{
@@ -1372,7 +1260,7 @@ package org.igniterealtime.xiff.core
 					}
 					else
 					{
-						getRegistrationFields();
+						// How to inform the user of the need for in-band registration?
 					}
 				}
 			}
@@ -1594,24 +1482,6 @@ package org.igniterealtime.xiff.core
 			}
 		}
 
-		/**
-		 * @private
-		 *
-		 * @param	iq
-		 */
-		protected function sendRegistrationFields_response( iq:IQ ):void
-		{
-			if ( iq.type == IQ.TYPE_RESULT )
-			{
-				var event:RegistrationSuccessEvent = new RegistrationSuccessEvent();
-				dispatchEvent( event );
-			}
-			else
-			{
-				// We weren't expecting this
-				dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
-			}
-		}
 		/**
 		 * Pass through to <code>sendData</code> which takes care of the common
 		 * data handling between all connection classes.

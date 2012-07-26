@@ -34,13 +34,9 @@ package org.igniterealtime.xiff.core
 	 */
 	public interface IXMPPConnection extends IEventDispatcher
 	{
-		function changePassword( newPassword:String ):void;
-
 		function connect( streamType:uint=0 ):void;
 
 		function disconnect():void;
-
-		function getRegistrationFields():void;
 
 		function isActive():Boolean;
 
@@ -53,8 +49,6 @@ package org.igniterealtime.xiff.core
 		function send( data:IXMPPStanza ):void;
 
 		function sendKeepAlive():void;
-
-		function sendRegistrationFields( fieldMap:Object, key:String ):void;
 
 		function get compress():Boolean;
 		function set compress( value:Boolean ):void;
