@@ -290,11 +290,7 @@ package org.igniterealtime.xiff.conference
 			{
 				connection = aConnection;
 			}
-                        _affiliationExtension = new MUCAdminExtension();
-
-
-                        // TODO: make sure this is the most convinient way...
-                        connection.enableExtensions(MUC, FormExtension);
+			_affiliationExtension = new MUCAdminExtension();
 		}
 
 		/**
@@ -1360,6 +1356,14 @@ package org.igniterealtime.xiff.conference
 			_connection.addEventListener( MessageEvent.MESSAGE, handleEvent, false, 0, true );
 			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent, false, 0, true );
 			_connection.addEventListener( DisconnectionEvent.DISCONNECT, handleEvent, false, 0, true );
+			
+			_connection.enableExtensions(
+				FormExtension,
+				MUCExtension,
+				MUCUserExtension,
+				MUCOwnerExtension,
+				MUCAdminExtension
+			);
 		}
 
 		/**
@@ -1395,7 +1399,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( isActive )
 			{
-                                _pendingNickname = value;
+                _pendingNickname = value;
 				var presence:Presence = new Presence( new EscapedJID( userJID + "/" + value ) );
 				_connection.send( presence );
 			}
@@ -1419,7 +1423,14 @@ package org.igniterealtime.xiff.conference
 
 		/**
 		 * Gets the user's role in the conference room.
-		 * Possible roles are "visitor", "participant", "moderator" or no defined role.
+		 *
+		 * <p>Possible roles are "visitor", "participant", "moderator" or no defined role.</p>
+		 * <ul>
+		 * <li>ROLE_MODERATOR</li>
+		 * <li>ROLE_NONE</li>
+		 * <li>ROLE_PARTICIPANT</li>
+		 * <li>ROLE_VISITOR</li>
+		 * </ul>
 		 */
 		public function get role():String
 		{

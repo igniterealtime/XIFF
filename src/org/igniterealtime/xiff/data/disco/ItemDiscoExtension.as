@@ -37,8 +37,6 @@ package org.igniterealtime.xiff.data.disco
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#items";
 
-		private var _items:Array = []; // [] of DiscoItem
-
 		/**
 		 *
 		 * @param	parent
@@ -56,7 +54,7 @@ package org.igniterealtime.xiff.data.disco
 		public function getNS():String
 		{
 			return ItemDiscoExtension.NS;
-                }
+        }
 
 		/**
 		 * An array of DiscoItems that represent the items discovered.
@@ -65,30 +63,38 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get items():Array
 		{
-			return _items;
-		}
-		public function set items( value:Array ):void
-		{
-			_items = value;
-		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-			_items = [];
-
+			var items:Array = [];
 			for each( var child:XML in xml.children() )
 			{
 				if ( child.localName() == "item" )
 				{
-					var item:DiscoItem = new DiscoItem( xml );
+					var item:DiscoItem = new DiscoItem();
 					item.xml = child;
-					_items.push( item );
+					items.push( item );
 				}
 			}
+			return items;
 		}
-
+		public function set items( value:Array ):void
+		{
+			while (xml.children().(localName() == "item").length() > 0)
+			{
+				delete xml.children().(localName() == "item")[0];
+			}
+			
+			if (value == null)
+			{
+				return;
+			}
+			
+			var len:uint = value.length;
+			for (var i:uint = 0; i < len; ++i)
+			{
+				var item:DiscoItem = value[i] as DiscoItem;
+				xml.appendChild( item.xml );
+			}
+		}
+		
 		/**
 		 *
 		 * @param	item
@@ -96,7 +102,7 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function addItem( item:DiscoItem ):DiscoItem
 		{
-			_items.push( item );
+			xml.appendChild( item.xml );
 			return item;
 		}
 

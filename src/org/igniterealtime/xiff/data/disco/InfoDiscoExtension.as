@@ -40,8 +40,8 @@ package org.igniterealtime.xiff.data.disco
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#info";
 
-                private var _identities:Array = []; // list of DiscoIdentity
-                private var _features:Array = []; // list of DiscoFeature
+		private var _identities:Array = []; // list of DiscoIdentity
+		private var _features:Array = []; // list of DiscoFeature
 
 		/**
 		 *
@@ -63,17 +63,17 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-                 * An array of objects that represent the identities of a resource discovered.
+         * An array of objects that represent the identities of a resource discovered.
 		 *
-                 * <p>The DiscoIdentity objects in the array have the following possible attributes:</p>
+         * <p>The DiscoIdentity objects in the array have the following possible attributes:</p>
 		 * <ul>
 		 * <li><code>category</code> - a category of the kind of identity</li>
 		 * <li><code>type</code> - a path to a resource that can be discovered without a JID</li>
 		 * <li><code>name</code> - the friendly name of the identity</li>
 		 * </ul>
 		 *
-                 * @see http://www.jabber.org/registrar/disco-categories.html
-                 * @see org.igniterealtime.xiff.data.disco.DiscoIdentity
+		 * @see http://www.jabber.org/registrar/disco-categories.html
+		 * @see org.igniterealtime.xiff.data.disco.DiscoIdentity
 		 */
 		public function get identities():Array
 		{
@@ -86,8 +86,8 @@ package org.igniterealtime.xiff.data.disco
 
 		/**
 		 * An array of namespaces this service supports for feature negotiation.
-                 *
-                 * @see org.igniterealtime.xiff.data.disco.DiscoFeature
+		 *
+		 * @see org.igniterealtime.xiff.data.disco.DiscoFeature
 		 */
 		public function get features():Array
 		{
@@ -112,7 +112,7 @@ package org.igniterealtime.xiff.data.disco
 				{
 					case "identity":
 						var identity:DiscoIdentity = new DiscoIdentity( xml );
-                                                identity.xml = child;
+                        identity.xml = child;
 						_identities.push( identity );
 						break;
 
@@ -137,11 +137,11 @@ package org.igniterealtime.xiff.data.disco
 			return feature;
 		}
 
-                /**
-                 * Add features as a list of namespace strings.
-                 *
-                 * @return List of DiscoFeature elements created
-                 */
+		/**
+		 * Add features as a list of namespace strings.
+		 *
+		 * @return List of DiscoFeature elements created
+		 */
 		public function addFeatures( varNames:Array ):Array
 		{
 			var features:Array = [];

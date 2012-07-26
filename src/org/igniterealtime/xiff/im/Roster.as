@@ -765,10 +765,18 @@ package org.igniterealtime.xiff.im
 		}
 		public function set connection( value:IXMPPConnection ):void
 		{
+			if ( _connection != null )
+			{
+				_connection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
+				_connection.removeEventListener( LoginEvent.LOGIN, handleEvent );
+				_connection.removeEventListener( RosterExtension.NS, handleEvent );
+			}
+			
 			_connection = value;
 			_connection.addEventListener( PresenceEvent.PRESENCE, handleEvent );
 			_connection.addEventListener( LoginEvent.LOGIN, handleEvent );
 			_connection.addEventListener( RosterExtension.NS, handleEvent );
+			_connection.enableExtensions( RosterExtension );
 		}
 	}
 }

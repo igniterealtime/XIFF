@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.data.disco
 
 			xml.setLocalName( ELEMENT_NAME );
 
-			if( parent != null )
+			if ( parent != null )
 			{
 				parent.appendChild( xml );
 			}

@@ -30,8 +30,10 @@ package org.igniterealtime.xiff.data.muc
 	
 	/**
 	 * This class contains a series of static constants that are used throughout the
-	 * multi-user conferencing extensions. The constants include the following for
-	 * conference room affiliations:
+	 * multi-user conferencing extensions.
+	 *
+	 * <p>The constants include the following for
+	 * conference room affiliations:</p>
 	 * <ul>
 	 * <li>AFFILIATION_ADMIN</li>
 	 * <li>AFFILIATION_MEMBER</li>
@@ -40,13 +42,19 @@ package org.igniterealtime.xiff.data.muc
 	 * <li>AFFILIATION_OWNER</li>
 	 * </ul>
 	 *
-	 * And the following constants for room roles:
+	 * <p>And the following constants for room roles:</p>
 	 * <ul>
 	 * <li>ROLE_MODERATOR</li>
 	 * <li>ROLE_NONE</li>
 	 * <li>ROLE_PARTICIPANT</li>
 	 * <li>ROLE_VISITOR</li>
 	 * </ul>
+	 *
+	 * <p>Support for the owner affiliation is REQUIRED. Support for the admin, member,
+	 * and outcast affiliations is RECOMMENDED. (The "None" affiliation is
+	 * the absence of an affiliation.)</p>
+	 *
+	 * @see http://www.xmpp.org/extensions/xep-0045.html
 	 */
 	public class MUC
 	{
@@ -60,25 +68,5 @@ package org.igniterealtime.xiff.data.muc
 		public static const ROLE_NONE:String = "none";
 		public static const ROLE_PARTICIPANT:String = "participant";
 		public static const ROLE_VISITOR:String = "visitor";
-	
-		private static var staticDependencies:Array = [
-			ExtensionClassRegistry,
-			MUCExtension,
-			MUCUserExtension,
-			MUCOwnerExtension,
-			MUCAdminExtension
-		];
-	
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-	    public static function enable():void
-	    {
-	        ExtensionClassRegistry.register( MUCExtension );
-	        ExtensionClassRegistry.register( MUCUserExtension );
-	        ExtensionClassRegistry.register( MUCOwnerExtension );
-	        ExtensionClassRegistry.register( MUCAdminExtension );
-	    }
 	}
 }

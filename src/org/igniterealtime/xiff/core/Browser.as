@@ -58,9 +58,7 @@ package org.igniterealtime.xiff.core
 		public function Browser( aConnection:IXMPPConnection )
 		{
 			connection = aConnection;
-
-                        // Enable extensions needed for this class?
-                }
+        }
 
 		/**
 		 *
@@ -69,11 +67,13 @@ package org.igniterealtime.xiff.core
 		 * @param	callback
 		 * @param	errorCallback
 		 * @return org.igniterealtime.xiff.data.IQ
+		 * @see http://xmpp.org/extensions/xep-0030.html#info-nodes
 		 */
 		public function getNodeInfo( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:InfoDiscoExtension = new InfoDiscoExtension( iq.xml );
+			ext.node = node;
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
@@ -88,11 +88,13 @@ package org.igniterealtime.xiff.core
 		 * @param	callback
 		 * @param	errorCallback
 		 * @return org.igniterealtime.xiff.data.IQ
+		 * @see http://xmpp.org/extensions/xep-0030.html#items-nodes
 		 */
 		public function getNodeItems( service:EscapedJID, node:String, callback:Function, errorCallback:Function = null ):IIQ
 		{
 			var iq:IQ = new IQ( service, IQ.TYPE_GET );
 			var ext:ItemDiscoExtension = new ItemDiscoExtension( iq.xml );
+			ext.node = node;
 			iq.callback = callback;
 			iq.errorCallback = errorCallback;
 			iq.addExtension( ext );
@@ -105,10 +107,17 @@ package org.igniterealtime.xiff.core
 		 * the callback specified will be called and passed a single parameter containing
 		 * a reference to an <code>IQ</code> containing the query results.
 		 *
+		 * <pre>
+		 * <iq to="192.168.1.37" type="get" id="iq_4">
+		 *  <query xmlns="http://jabber.org/protocol/disco#info"/>
+		 * </iq>
+		 * </pre>
+		 *
 		 * @param	server The server to query for available service information
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 * @return org.igniterealtime.xiff.data.IQ
+		 * @see http://xmpp.org/extensions/xep-0030.html#info
 		 */
 		public function getServiceInfo( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
@@ -125,10 +134,17 @@ package org.igniterealtime.xiff.core
 		 * as available transports and user directories. On successful query, the callback specified in the will be
 		 * called and passed a single parameter containing the query results.
 		 *
+		 * <pre>
+		 * <iq to="192.168.1.37" type="get" id="iq_3">
+		 *	<query xmlns="http://jabber.org/protocol/disco#items"/>
+		 * </iq>
+		 * </pre>
+		 *
 		 * @param	server The server to query for service items
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 * @return org.igniterealtime.xiff.data.IQ
+		 * @see http://xmpp.org/extensions/xep-0030.html#items
 		 */
 		public function getServiceItems( server:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
@@ -141,13 +157,14 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Use the <code>BrowseExtension</code> (jabber:iq:browse namespace) to query a
-		 * resource for supported features and children.
+		 * Use the <strong>OBSOLETE</strong> <code>BrowseExtension</code> (jabber:iq:browse namespace)
+		 * to query a resource for supported features and children.
 		 *
 		 * @param	id The full JabberID to query for service items
 		 * @param	callback The callback function to call when results are retrieved
 		 * @param	errorCallback The callback function to call when errors are received
 		 * @return org.igniterealtime.xiff.data.IQ
+		 * @see http://xmpp.org/extensions/xep-0011.html
 		 */
 		public function browseItem( id:EscapedJID, callback:Function, errorCallback:Function = null ):IIQ
 		{
@@ -170,6 +187,11 @@ package org.igniterealtime.xiff.core
 		public function set connection( value:IXMPPConnection ):void
 		{
 			_connection = value;
+			_connection.enableExtensions(
+				ItemDiscoExtension,
+				InfoDiscoExtension,
+				BrowseExtension
+			);
 		}
 	}
 

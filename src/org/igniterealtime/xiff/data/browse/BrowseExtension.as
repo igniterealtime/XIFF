@@ -28,14 +28,14 @@ package org.igniterealtime.xiff.data.browse
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-         * XEP-0011: Jabber Browsing
-         *
-         * <p>Implements jabber:iq:browse namespace.  Use this extension to request the items
+	 * XEP-0011: Jabber Browsing
+	 *
+	 * <p>Implements jabber:iq:browse namespace.  Use this extension to request the items
 	 * of an agent or service such as the rooms of a conference server or the members of
-         * a room.</p>
-         *
-         * <p><strong>OBSOLETE</strong></p>
-         *
+	 * a room.</p>
+	 *
+	 * <p><strong>OBSOLETE</strong></p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class BrowseExtension extends BrowseItem implements IExtension
