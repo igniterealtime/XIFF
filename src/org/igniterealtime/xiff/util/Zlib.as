@@ -47,6 +47,7 @@ package org.igniterealtime.xiff.util
 		{
 			data.position = 0;
 			var uncompressed:ByteArray = new ByteArray();
+			var chunk:ByteArray = new ByteArray();
 			var outBytesLength:int = data.length * 2;
 			
 			var err:int;
@@ -62,7 +63,7 @@ package org.igniterealtime.xiff.util
 			stream.next_in = data;
 			stream.next_in_index = 0;
 			
-			stream.next_out = uncompressed;
+			stream.next_out = chunk;
 			stream.next_out_index = 0;
 			
 			stream.avail_out = outBytesLength;
@@ -72,13 +73,13 @@ package org.igniterealtime.xiff.util
 			err = stream.inflateInit();
 			checkError(stream, err, "inflateInit");
 
-			var outcount:int = 0;
 			while (true)
 			{
 				// force small buffers
 				stream.avail_in = 1;
 				stream.avail_out = 1;
 				
+				//err = stream.inflate(JZlib.Z_SYNC_FLUSH);
 				err = stream.inflate(JZlib.Z_NO_FLUSH);
 				switch (err)
 				{
@@ -87,6 +88,7 @@ package org.igniterealtime.xiff.util
 						trace("Zlib.uncompress. inflation stream ended");
 						break;
 					case JZlib.Z_BUF_ERROR:
+						emptyByteArrayIntoByteArray(chunk, uncompressed);
 						stream.next_out_index = 0;
 						stream.avail_out = outBytesLength;
 						break;
@@ -94,18 +96,24 @@ package org.igniterealtime.xiff.util
 						// unknown error
 						if (err != JZlib.Z_OK)
 						{
-							if (stream.msg == null) {
-								trace("Unknown error. Error code : " + err);
+							if (stream.msg == null)
+							{
+								trace("Zlib.uncompress. Unknown error. Error code : " + err);
 							}
-							else {
-								trace("Unknown error. Error code : " + err + " and message : " + stream.msg);
+							else
+							{
+								trace("Zlib.uncompress. Unknown error. Error code : " + err + " and message : " + stream.msg);
 							}
 						}
 				}
+				stream.avail_in = 1;
 				
-				outcount++;
-				//trace("Zlib.uncompress. outcount: " + outcount + ", stream.total_out: " + stream.total_out);
-
+				if (stream.total_in >= data.length)
+				{
+					emptyByteArrayIntoByteArray(chunk, uncompressed);
+					break;
+				}
+				
 				if (!checkError(stream, err, "inflate"))
 				{
 					break;
@@ -134,11 +142,12 @@ package org.igniterealtime.xiff.util
 			data.position = 0;
 			var compressed:ByteArray = new ByteArray();
 			var err:int;
-			var i:int = 0;
-			var j:int = 0;
 			
 			trace("Zlib.compress. data.length: " + data.length);
 			trace("Zlib.compress. data: " + data.toString());
+			
+			// How is this number build?
+			var outLen:int = Math.round(data.length * 1.001) + 1 + 12;
 			
 			var stream:ZStream = new ZStream();
 
@@ -147,41 +156,35 @@ package org.igniterealtime.xiff.util
 			
 			stream.next_in = data;
 			stream.next_in_index = 0;
+			stream.avail_in = data.length;
 			
 			stream.next_out = compressed;
 			stream.next_out_index = 0;
+			stream.avail_out = outLen;
 			
 			
-			// ----
 			
-			var comprLen:int = 40000;
-			while (stream.total_in != data.length && stream.total_out < comprLen)
+			
+			
+			err = stream.deflate(JZlib.Z_SYNC_FLUSH);
+			
+			if (err != JZlib.Z_OK)
 			{
-				// force small buffers
-				stream.avail_in = 1;
-				stream.avail_out = 1;
-				
-				err = stream.deflate(JZlib.Z_NO_FLUSH);
-				checkError(stream, err, "deflate");
+				compressed = null;
+				trace("Zlib.compress. Compression failed with return value : " + err);
 			}
 			
-			while (true)
+			
+			// TODO: we need this, but why? zlib must be missing something
+			
+			if (compressed.length > 2)
 			{
-				stream.avail_out = 1;
-				err = stream.deflate(JZlib.Z_FINISH);
-				if (err == JZlib.Z_STREAM_END)
-				{
-					break;
-				}
-
-				compressed.position = 0;
-				
-				checkError(stream, err, "deflate");
+				compressed.position = compressed.length - 2;
+				compressed.writeByte(0xFF);
+				compressed.writeByte(0xFF);
 			}
 			
-			err = stream.deflateEnd();
-			checkError(stream, err, "deflateEnd");
-	
+			
 			
 			trace("Zlib.compress. compressed.length: " + compressed.length);
 			trace("Zlib.compress. compressed: " + compressed.toString());
@@ -210,6 +213,15 @@ package org.igniterealtime.xiff.util
 				return false;
 			}
 			return true;
+		}
+		
+		private function emptyByteArrayIntoByteArray(chunk:ByteArray, target:ByteArray):void
+		{
+			for (var j:uint = 0; j < chunk.length; j++)
+			{
+				target.writeByte(chunk.readByte());
+			}
+			chunk.clear();
 		}
 	}
 }
