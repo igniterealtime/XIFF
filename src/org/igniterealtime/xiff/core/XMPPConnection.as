@@ -1035,6 +1035,7 @@ package org.igniterealtime.xiff.core
 			var names:Array = ExtensionClassRegistry.getNamespaces();
 			var ext:InfoDiscoExtension = new InfoDiscoExtension();
 			ext.addFeatures(names);
+			send(iq);
 
 			// Two kind of error might be needed to send:
 			//  item-not-found or service-unavailable
@@ -1595,7 +1596,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Dispatches <code>OutgoingDataEvent</code>, handles possible Stream Compression and
+		 * calls <code>sendDataToServer</code>.
 		 *
 		 * @param	data XML that is not always complete for a reason, like sending the closing element
 		 */
@@ -1643,7 +1645,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-				 * Shall the Stream Compression be allowed if the server supports it.
+		 * Shall the Stream Compression be allowed if the server supports it.
 		 *
 		 * <p><code>compressor</code> needs to be set too.</p>
 		 *
@@ -1723,7 +1725,7 @@ package org.igniterealtime.xiff.core
 		public function get outgoingBytes():uint
 		{
 			return _outgoingBytes;
-				}
+		}
 
 		/**
 		 * The password to use when logging in.
@@ -1837,7 +1839,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
 		 * Specifies whether the socket is connected.
 		 */
 		protected function get active():Boolean
@@ -1858,7 +1859,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Connection is ready to authenticate
 		 */
 		protected function get authenticationReady():Boolean
 		{

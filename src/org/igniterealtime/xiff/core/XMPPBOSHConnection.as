@@ -166,7 +166,6 @@ package org.igniterealtime.xiff.core
 		{
 			var attrs:Object = {
 				"xml:lang": XMPPStanza.XML_LANG,
-				"xmlns": XMPPBOSHConnection.BOSH_NS,
 				"xmlns:xmpp": XMPPStanza.NAMESPACE_BOSH,
 				"xmpp:version": XMPPStanza.CLIENT_VERSION,
 				"hold": hold,
@@ -178,6 +177,8 @@ package org.igniterealtime.xiff.core
 			};
 
 			var result:XML = <{ ELEMENT_NAME }/>;
+			result.setNamespace(XMPPBOSHConnection.BOSH_NS);
+			
 			for (var key:String in attrs)
 			{
 				if (attrs.hasOwnProperty(key))
@@ -186,6 +187,14 @@ package org.igniterealtime.xiff.core
 				}
 			}
 
+			trace("connect. result: " + result.toXMLString());
+			/*
+			<body xmpp:version="1.0" rid="734183" secure="false" xmlns:xmpp="urn:xmpp:xbosh"
+				hold="1" xml:lang="en" to="192.168.1.37" ver="1.6" wait="20"
+				xmlns="http://jabber.org/protocol/httpbind"/>
+			*/
+
+			
 			sendRequests( result );
 		}
 
@@ -290,12 +299,7 @@ package org.igniterealtime.xiff.core
 				}
 			}
 			sendRequests( data );
-						_streamRestarted = true;
-		}
-
-		override protected function sendXML( data:String ):void
-		{
-			sendQueuedRequests( data );
+			_streamRestarted = true;
 		}
 
 		override protected function handleNodeType( node:XML ):void
@@ -311,7 +315,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 *
+		 * Helper method for creating XML which contains the data to be sent to server
 		 * @param	bodyContent
 		 * @return
 		 */
@@ -324,9 +328,11 @@ package org.igniterealtime.xiff.core
 
 			if ( bodyContent )
 			{
-				for each ( var content:XML in bodyContent )
+				var len:uint = bodyContent.length;
+				for (var i:uint = 0; i < len; ++i)
 				{
-					elem.appendChild( new XML(content.toString()) );
+					var content:XML = bodyContent[i] as XML;
+					elem.appendChild( content );
 				}
 			}
 
@@ -363,8 +369,10 @@ package org.igniterealtime.xiff.core
 
 			_requestCount--;
 			var byteData:ByteArray = loader.data as ByteArray;
+			var strData:String = byteData.readUTFBytes(byteData.length);
+			trace("onRequestComplete. strData: " + strData);
 
-			var xmlData:XML = new XML( byteData.readUTFBytes(byteData.length) );
+			var xmlData:XML = new XML( strData );
 
 			var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 			incomingEvent.data = byteData;
@@ -384,7 +392,7 @@ package org.igniterealtime.xiff.core
 				active = false;
 			}
 
-			if ( bodyNode.@sid && !loggedIn )
+			if ( bodyNode.hasOwnProperty("@sid") && !loggedIn )
 			{
 				processConnectionResponse( bodyNode );
 
@@ -502,6 +510,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function sendRequests( data:XML = null, isPoll:Boolean = false ):Boolean
 		{
+			trace("sendRequests. _requestCount: " + _requestCount + ", maxConcurrentRequests: " + maxConcurrentRequests);
 			if ( _requestCount >= maxConcurrentRequests )
 			{
 				return false;
@@ -509,7 +518,7 @@ package org.igniterealtime.xiff.core
 
 			_requestCount++;
 
-			if ( !data )
+			if ( data == null )
 			{
 				if ( isPoll )
 				{
@@ -526,21 +535,32 @@ package org.igniterealtime.xiff.core
 					data = createRequest( requests );
 				}
 			}
+			trace("sendRequests. data: " + data.toXMLString());
 
-			var byteData:ByteArray = new ByteArray();
-			byteData.writeUTFBytes(data.toString());
-
-			var event:OutgoingDataEvent = new OutgoingDataEvent();
-			event.data = byteData;
-			dispatchEvent( event );
-
-			// Compression here if needed ...
-
+			
+			// Dispatch OutgoingDataEvent, calls sendDataToServer and handles possible compression
+			sendXML(data.toXMLString());
+			
+			
+			if ( isPoll )
+			{
+				_lastPollTime = new Date();
+				trace( "Polling" );
+			}
+			return true;
+		}
+		
+		/**
+		 * Connection to the server in BOSH is a simple URLRequest.
+		 * @param	data
+		 */
+		override protected function sendDataToServer( data:ByteArray ):void
+		{
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml";
 			req.requestHeaders = HEADERS[ req.method ];
-			req.data = byteData;
+			req.data = data;
 
 			var loader:URLLoader = new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -548,18 +568,11 @@ package org.igniterealtime.xiff.core
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			loader.load(req);
-
-			if ( isPoll )
-			{
-				_lastPollTime = new Date();
-				trace( "Polling" );
-			}
-
-			return true;
 		}
 
 		/**
-		 *
+		 * Local part of the address in which the server responds.
+		 * @default http-bind/
 		 */
 		public function get boshPath():String
 		{
@@ -571,7 +584,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 *
+		 * Request ID
 		 */
 		private function get nextRID():uint
 		{
