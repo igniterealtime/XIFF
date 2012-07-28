@@ -29,6 +29,7 @@ package org.igniterealtime.xiff.core
 	
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.data.*;
+	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.register.RegisterExtension;
 	
 	/**
@@ -43,6 +44,12 @@ package org.igniterealtime.xiff.core
 	 * @eventType org.igniterealtime.xiff.events.RegistrationSuccessEvent.REGISTRATION_SUCCESS
 	 */
 	[Event( name="registrationSuccess", type="org.igniterealtime.xiff.events.RegistrationSuccessEvent" )]
+	/**
+	 * Dispatched on when new user account registration is successful.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.RegistrationFieldsEvent.REG_FIELDS
+	 */
+	[Event( name="registrationFields", type="org.igniterealtime.xiff.events.RegistrationFieldsEvent" )]
 	
 	/**
 	 * Manager for XEP-0077: In-Band Registration
@@ -77,7 +84,6 @@ package org.igniterealtime.xiff.core
 			var passwordIQ:IQ = new IQ( new EscapedJID( _connection.domain ), IQ.TYPE_SET,
 				IQ.generateID( "pswd_change_" ), changePassword_response );
 			var ext:RegisterExtension = new RegisterExtension( passwordIQ.xml );
-
 			ext.username = _connection.jid.escaped.bareJID;
 			ext.password = newPassword;
 
@@ -126,6 +132,8 @@ package org.igniterealtime.xiff.core
 		protected function getRegistrationFields_response( iq:IQ ):void
 		{
 			var ext:RegisterExtension = iq.getAllExtensionsByNS( RegisterExtension.NS )[ 0 ];
+			
+			trace("getRegistrationFields_response. iq: " + iq);
 
 			var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
 			event.fields = ext.getRequiredFieldNames();
@@ -195,7 +203,8 @@ package org.igniterealtime.xiff.core
 		{
 			_connection = value;
 			_connection.enableExtensions(
-				RegisterExtension
+				RegisterExtension,
+				FormExtension
 			);
 		}
 	}
