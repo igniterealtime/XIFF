@@ -115,15 +115,13 @@ package org.igniterealtime.xiff.data.search
 		/**
 		 * List of SearchItem in this query.
 		 *
-		 * TODO: Rename to getter, items. Add setter
-		 *
 		 * @return
 		 */
-		public function getAllItems():Array
+		public function get items():Array
 		{
 			var items:Array = [];
 
-			var list:XMLList = xml.children().(localName() == "item");
+			var list:XMLList = xml.children().(localName() == SearchItem.ELEMENT_NAME);
 			for each ( var child:XML in list )
 			{
 				var item:SearchItem = new SearchItem();
@@ -131,6 +129,20 @@ package org.igniterealtime.xiff.data.search
 				items.push(item);
 			}
 			return items;
+		}
+		public function set fields( value:Array ):void
+		{
+			removeFields(SearchItem.ELEMENT_NAME);
+
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var item:SearchItem = value[i] as SearchItem;
+					xml.appendChild( item.xml );
+				}
+			}
 		}
 
 		/**

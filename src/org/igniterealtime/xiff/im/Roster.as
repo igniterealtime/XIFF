@@ -243,19 +243,11 @@ package org.igniterealtime.xiff.im
 			{
 				for each ( var ext:RosterExtension in resultIQ.getAllExtensionsByNS( RosterExtension.NS ) )
 				{
-					for each ( var item:*in ext.getAllItems() )
+					for each ( var item:RosterItem in ext.items )
 					{
-						//var classInfo:XML = flash.utils.describeType(item);
-						if ( !item is XMLStanza )
-						{
-							continue;
-						}
-
-						var askType:String = item.askType != null ? item.askType.toLowerCase() :
-							RosterExtension.ASK_TYPE_NONE;
-						addRosterItem( new UnescapedJID( item.jid ), item.name, RosterExtension.SHOW_UNAVAILABLE,
-									   "Offline", item.groupNames, item.subscription.toLowerCase(),
-									   askType );
+						var askType:String = item.askType != null ? item.askType.toLowerCase() : RosterExtension.ASK_TYPE_NONE;
+						addRosterItem( item.jid.unescaped, item.name, RosterExtension.SHOW_UNAVAILABLE,
+									   "Offline", item.groupNames, item.subscription.toLowerCase(), askType );
 					}
 				}
 
@@ -509,10 +501,10 @@ package org.igniterealtime.xiff.im
 					{
 						var ext:RosterExtension = ( eventObj.iq as IQ ).getAllExtensionsByNS( RosterExtension.NS )[ 0 ] as
 							RosterExtension;
-						var items:Array = ext.getAllItems();
-						for each ( var item:*in items )
+						var items:Array = ext.items;
+						for each ( var item:RosterItem in items )
 						{
-							var jid:UnescapedJID = new UnescapedJID( item.jid );
+							var jid:UnescapedJID = item.jid.unescaped;
 							var rosterItemVO:RosterItemVO = RosterItemVO.get( jid, true );
 							var rosterEvent:RosterEvent;
 

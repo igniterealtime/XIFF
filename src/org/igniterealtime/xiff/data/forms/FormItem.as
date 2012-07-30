@@ -29,7 +29,10 @@ package org.igniterealtime.xiff.data.forms
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 
-
+	/**
+	 *
+	 * @see http://xmpp.org/extensions/xep-0004.html
+	 */
 	public class FormItem extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "item";
@@ -70,9 +73,9 @@ package org.igniterealtime.xiff.data.forms
 			{
 				if ( child.localName() == FormField.ELEMENT_NAME )
 				{
-					var field:FormField = new FormField();
-					field.xml = child;
-					list.push( field );
+					var item:FormField = new FormField();
+					item.xml = child;
+					list.push( item );
 				}
 			}
 			return list;
@@ -86,8 +89,8 @@ package org.igniterealtime.xiff.data.forms
 				var len:uint = value.length;
 				for (var i:uint = 0; i < len; ++i)
 				{
-					var field:FormField = value[i] as FormField;
-					xml.appendChild( field.xml );
+					var item:FormField = value[i] as FormField;
+					xml.appendChild( item.xml );
 				}
 			}
 		}

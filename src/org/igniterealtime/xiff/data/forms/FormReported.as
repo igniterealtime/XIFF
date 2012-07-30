@@ -46,8 +46,6 @@ package org.igniterealtime.xiff.data.forms
 	{
 		public static const ELEMENT_NAME:String = "reported";
 
-		private var _fields:Array = [];
-
 		/**
 		 *
 		 * @param	parent
@@ -64,37 +62,15 @@ package org.igniterealtime.xiff.data.forms
 			}
 		}
 
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-			for each( var c:XML in node.children() )
-			{
-				switch( c.localName() )
-				{
-					case "field":
-						var field:FormField = new FormField();
-						field.xml =  c;
-						_fields.push( field );
-						break;
-				}
-			}
-		}
-
 		/**
 		 * Use this method to remove all fields.
 		 */
 		public function removeAllFields():void
 		{
-			for each( var field:FormField in _fields )
+			while (xml.children().(localName() == FormField.ELEMENT_NAME).length() > 0)
 			{
-				for each( var f:* in field )
-				{
-					delete f.xml;
-				}
+				delete xml.children().(localName() == FormField.ELEMENT_NAME)[0];
 			}
-			_fields = [];
 		}
 
 		/**
@@ -104,17 +80,31 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get fields():Array
 		{
-			return _fields;
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == FormField.ELEMENT_NAME )
+				{
+					var field:FormField = new FormField();
+					field.xml = child;
+					list.push( field );
+				}
+			}
+			return list;
 		}
-
-		/**
-		 *
-		 */
 		public function set fields( value:Array ):void
 		{
 			removeAllFields();
 
-			_fields = value;
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var field:FormField = value[i] as FormField;
+					xml.appendChild( field.xml );
+				}
+			}
 		}
 
 	}

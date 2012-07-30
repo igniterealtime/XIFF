@@ -87,7 +87,7 @@ package org.igniterealtime.xiff.data.rpc
 		public function getElementName():String
 		{
 			return RPCExtension.ELEMENT_NAME;
-                }
+        }
 	
 		/**
 		 * Interface method, returning the namespace for this extension

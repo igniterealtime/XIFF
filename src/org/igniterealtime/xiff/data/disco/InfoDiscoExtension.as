@@ -40,10 +40,8 @@ package org.igniterealtime.xiff.data.disco
 	{
 		public static const NS:String = "http://jabber.org/protocol/disco#info";
 
-		private var _identities:Array = []; // list of DiscoIdentity
-		private var _features:Array = []; // list of DiscoFeature
-
 		/**
+		 * In case you enable the FormExtension, you might get the extended disco information...
 		 *
 		 * @param	parent
 		 */
@@ -77,11 +75,34 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get identities():Array
 		{
-			return _identities;
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == DiscoIdentity.ELEMENT_NAME )
+				{
+					var identity:DiscoIdentity = new DiscoIdentity();
+					identity.xml = child;
+					list.push( identity );
+				}
+			}
+			return list;
 		}
 		public function set identities( value:Array ):void
 		{
-			_identities = value;
+			while (xml.children().(localName() == DiscoIdentity.ELEMENT_NAME).length() > 0)
+			{
+				delete xml.children().(localName() == DiscoIdentity.ELEMENT_NAME)[0];
+			}
+			
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var item:DiscoIdentity = value[i] as DiscoIdentity;
+					xml.appendChild( item.xml );
+				}
+			}
 		}
 
 		/**
@@ -91,56 +112,55 @@ package org.igniterealtime.xiff.data.disco
 		 */
 		public function get features():Array
 		{
-			return _features;
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == DiscoFeature.ELEMENT_NAME )
+				{
+					var identity:DiscoFeature = new DiscoFeature();
+					identity.xml = child;
+					list.push( identity );
+				}
+			}
+			return list;
 		}
 		public function set features( value:Array ):void
 		{
-			_features = value;
-		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-			
-
-			_identities = [];
-			_features = [];
-
-			for each( var child:XML in xml.children() )
+			while (xml.children().(localName() == DiscoFeature.ELEMENT_NAME).length() > 0)
 			{
-				switch( child.localName() )
+				delete xml.children().(localName() == DiscoFeature.ELEMENT_NAME)[0];
+			}
+			
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
 				{
-					case "identity":
-						var identity:DiscoIdentity = new DiscoIdentity( xml );
-                        identity.xml = child;
-						_identities.push( identity );
-						break;
-
-					case "feature":
-						var feature:DiscoFeature = new DiscoFeature( xml );
-						feature.xml = child;
-						_features.push( feature );
-						break;
-						
-					case "x":
-						// TODO: Extended Room information...
-						// http://xmpp.org/extensions/xep-0045.html#disco-roominfo
-						var extended:DiscoExtendedInfo = new DiscoExtendedInfo( xml );
-						extended.xml = child;
-						break;
+					var item:DiscoFeature = value[i] as DiscoFeature;
+					xml.appendChild( item.xml );
 				}
 			}
 		}
 
+		/**
+		 *
+		 * @param	identity
+		 * @return
+		 */
 		public function addIdentity( identity:DiscoIdentity ):DiscoIdentity
 		{
-			_identities.push( identity );
+			xml.appendChild( identity.xml );
 			return identity;
 		}
 
+		/**
+		 *
+		 * @param	feature
+		 * @return
+		 */
 		public function addFeature( feature:DiscoFeature ):DiscoFeature
 		{
-			_features.push( feature );
+			xml.appendChild( feature.xml );
 			return feature;
 		}
 
@@ -156,9 +176,9 @@ package org.igniterealtime.xiff.data.disco
 			{
 				var feature:DiscoFeature = new DiscoFeature();
 				feature.varName = varName;
+				xml.appendChild( feature.xml );
 				features.push( feature );
 			}
-			_features = _features.concat( features );
 			return features;
 		}
 

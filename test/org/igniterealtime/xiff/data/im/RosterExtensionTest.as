@@ -58,7 +58,7 @@ package org.igniterealtime.xiff.data.im
 			var ext:RosterExtension = new RosterExtension();
 			ext.xml = incoming;
 			
-			assertEquals( testValue, ext.getAllItems().length );
+			assertEquals( testValue, ext.items.length );
 		}
 	}
 }

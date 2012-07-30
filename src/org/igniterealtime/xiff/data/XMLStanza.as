@@ -256,6 +256,17 @@ package org.igniterealtime.xiff.data
 		}
 		
 		/**
+		 * Helper method for removing all child elements that have the given name.
+		 */
+		public function removeFields( name:String ):void
+		{
+			while ( xml.children().(localName() == name).length() > 0 )
+			{
+				delete xml.children().(localName() == name)[0];
+			}
+		}
+		
+		/**
 		 * Converts the base stanza XML to a string.
 		 *
 		 * @return The base XML in string form, as in <code>toXMLString()</code>

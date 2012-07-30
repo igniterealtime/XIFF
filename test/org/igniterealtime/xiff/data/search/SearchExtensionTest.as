@@ -78,7 +78,7 @@ package org.igniterealtime.xiff.data.search
 			var ext:SearchExtension = new SearchExtension();
 			ext.xml = incoming;
 			
-			assertEquals( testValue, ext.getAllItems().length );
+			assertEquals( testValue, ext.items.length );
 		}
 		
 		

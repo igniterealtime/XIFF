@@ -37,7 +37,6 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCBaseExtension extends Extension implements IExtendable, INodeProxy
 	{
-		private var _items:Array = [];
 
 		/**
 		 *
@@ -46,50 +45,6 @@ package org.igniterealtime.xiff.data.muc
 		public function MUCBaseExtension( parent:XML = null )
 		{
 			super(parent);
-		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-			removeAllItems();
-
-			for each( var child:XML in node.children() )
-			{
-				switch( child.localName() )
-				{
-					case MUCItem.ELEMENT_NAME:
-						var item:MUCItem = new MUCItem(xml);
-						item.xml = child;
-						_items.push(item);
-						break;
-
-					default:
-						var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri, child.localName());
-						if (extClass != null)
-						{
-							var ext:IExtension = new extClass();
-							if (ext != null)
-							{
-								if (ext is INodeProxy)
-								{
-									INodeProxy(ext).xml = child;
-								}
-								addExtension(ext);
-							}
-						}
-						break;
-				}
-			}
-		}
-
-		/**
-		 * Item interface to MUCItems if they are contained in this extension
-		 *
-		 * @return Array of MUCItem objects
-		 */
-		public function getAllItems():Array
-		{
-			return _items;
 		}
 
 		/**
@@ -118,7 +73,6 @@ package org.igniterealtime.xiff.data.muc
 				item.actor = new EscapedJID(actor);
 			}
 
-			_items.push(item);
 			return item;
 		}
 
@@ -128,18 +82,41 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function removeAllItems():void
 		{
-			var len:uint = _items.length;
-			for (var i:uint = 0; i < len; ++i)
+			removeFields(MUCItem.ELEMENT_NAME);
+		}
+
+		/**
+		 * Item interface to MUCItems if they are contained in this extension
+		 *
+		 * @return Array of MUCItem objects
+		 */
+		public function get items():Array
+		{
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
 			{
-				var item:MUCItem = _items[i] as MUCItem;
-				var parent:XML = item.xml.parent();
-				if (parent != null)
+				if ( child.localName() == MUCItem.ELEMENT_NAME )
 				{
-					var index:int = parent.(child() == item.xml).childIndex();
-					delete parent.children()[index];
+					var item:MUCItem = new MUCItem();
+					item.xml = child;
+					list.push( item );
 				}
 			}
-			_items = [];
+			return list;
+		}
+		public function set items( value:Array ):void
+		{
+			removeAllItems();
+
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var item:MUCItem = value[i] as MUCItem;
+					xml.appendChild( item.xml );
+				}
+			}
 		}
 	}
 }

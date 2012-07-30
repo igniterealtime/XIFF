@@ -36,14 +36,15 @@ package org.igniterealtime.xiff.data.forms
 	 * <p>Implements the base functionality of XEP-0004: Data Forms,
 	 * shared by all MUC extensions.</p>
 	 *
+	 * <p>Also used by XEP-0128: Service Discovery Extensions</p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0004.html
+	 * @see http://xmpp.org/extensions/xep-0128.html
 	 */
 	public class FormExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:x:data";
 		public static const ELEMENT_NAME:String = "x";
-
-		private var _fields:Array = []; // FormField
 
 		/**
 		 *
@@ -65,41 +66,15 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * TODO: clean up...
-		 */
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-			removeAllFields();
-			removeAllItems();
-
-			for each( var c:XML in node.children() )
-			{
-				switch( c.localName() )
-				{
-
-
-					case "field":
-						var field:FormField = new FormField();
-						field.xml =  c;
-						_fields.push( field );
-						break;
-
-				}
-			}
-		}
-
-		/**
 		 *
-		 * @param	value the name of the form field to retrieve
+		 * @param	varName The varName of the form field to retrieve
 		 * @return	FormField the matching form field
 		 */
-		public function getFormField( value:String ):FormField
+		public function getFormField( varName:String ):FormField
 		{
-			for each( var field:FormField in _fields )
+			for each( var field:FormField in fields )
 			{
-				if ( field.varName == value )
+				if ( field.varName == varName )
 				{
 					return field;
 				}
@@ -119,13 +94,15 @@ package org.igniterealtime.xiff.data.forms
 		{
 			removeAllFields();
 
+			var list:Array = [];
 			for( var varName:String in fieldMap )
 			{
 				var field:FormField = new FormField();
 				field.varName = varName;
 				field.values = fieldMap[ varName ];
-				_fields.push( field );
+				list.push( field );
 			}
+			fields = list;
 		}
 
 		/**
@@ -133,14 +110,10 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllFields():void
 		{
-			for each( var field:FormField in _fields )
+			while (xml.children().(localName() == FormField.ELEMENT_NAME).length() > 0)
 			{
-				for each( var f:* in field )
-				{
-					delete f.xml;
-				}
+				delete xml.children().(localName() == FormField.ELEMENT_NAME)[0];
 			}
-			_fields = [];
 		}
 
 		/**
@@ -148,10 +121,9 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function removeAllItems():void
 		{
-			for each( var item:XML in xml.children().(localName() == FormItem.ELEMENT_NAME) )
+			while (xml.children().(localName() == FormItem.ELEMENT_NAME).length() > 0)
 			{
-				var index:uint = item.parent().childIndex();
-				delete xml.children()[index];
+				delete xml.children().(localName() == FormItem.ELEMENT_NAME)[0];
 			}
 		}
 
@@ -231,14 +203,19 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get formType():String
 		{
-			// Most likely at the start of the array
-			for each( var field:FormField in _fields )
+			for each( var child:XML in xml.children() )
 			{
-				if ( field.varName == "FORM_TYPE" )
+				if ( child.localName() == FormField.ELEMENT_NAME )
 				{
-					return field.value;
+					var field:FormField = new FormField();
+					field.xml = child;
+					if ( field.varName == "FORM_TYPE" )
+					{
+						return field.value;
+					}
 				}
 			}
+			
 			return "";
 		}
 
@@ -260,8 +237,10 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set reported( value:FormReported ):void
 		{
-			// Remove any existing...
-
+			while (xml.children().(localName() == FormReported.ELEMENT_NAME).length() > 0)
+			{
+				delete xml.children().(localName() == FormReported.ELEMENT_NAME)[0];
+			}
 
 			if (value != null)
 			{
@@ -276,13 +255,28 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get fields():Array
 		{
-			return _fields;
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == FormField.ELEMENT_NAME )
+				{
+					var field:FormField = new FormField();
+					field.xml = child;
+					list.push( field );
+				}
+			}
+			return list;
 		}
 		public function set fields( value:Array ):void
 		{
 			removeAllFields();
 
-			_fields = value;
+			var len:uint = value.length;
+			for ( var i:uint = 0; i < len; ++i )
+			{
+				var item:FormField = value[ i ] as FormField;
+				xml.appendChild( item.xml );
+			}
 		}
 
 		/**

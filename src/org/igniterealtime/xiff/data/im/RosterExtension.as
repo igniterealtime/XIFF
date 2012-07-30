@@ -51,8 +51,6 @@ package org.igniterealtime.xiff.data.im
 		public static const SHOW_UNAVAILABLE:String = "unavailable";
 		public static const SHOW_PENDING:String = "Pending";
 
-		private var _items:Array = []; // RosterItem
-
 		/**
 		 *
 		 * @param	parent
@@ -85,41 +83,6 @@ package org.igniterealtime.xiff.data.im
 		}
 
 		/**
-		 * Deserializes the RosterExtension data.
-		 *
-		 * @param	node The XML node associated this data
-		 * @return An indicator as to whether deserialization was successful
-		 */
-		override public function set xml( value:XML ):void
-		{
-			super.xml = value;
-
-			trace("RosterExtension. xml setter: " + value.toXMLString());
-
-			for each ( var child:XML in value.children() )
-			{
-				switch( child.localName() )
-				{
-					case RosterItem.ELEMENT_NAME:
-						var item:RosterItem = new RosterItem( xml );
-						item.xml = child;
-						_items.push( item );
-						break;
-				}
-			}
-		}
-
-		/**
-		 * Get all the items from this roster query.
-		 *
-		 * @return An array of roster items.
-		 */
-		public function getAllItems():Array
-		{
-			return _items;
-		}
-
-		/**
 		 * Gets one item from the roster query, returning the first item found with the JID specified.
 		 * If none is found, then it returns null.
 		 *
@@ -127,11 +90,11 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function getItemByJID( jid:EscapedJID ):RosterItem
 		{
-			for ( var i:String in _items )
+			for each ( var item:RosterItem in items )
 			{
-				if ( _items[i].jid == jid.toString() )
+				if ( item.jid.toString() == jid.toString() )
 				{
-					return _items[i];
+					return item;
 				}
 			}
 
@@ -184,8 +147,41 @@ package org.igniterealtime.xiff.data.im
 			{
 				delete xml.children().(localName() == RosterItem.ELEMENT_NAME)[0];
 			}
+		}
+		
+		
 
-			_items = [];
+		/**
+		 *
+		 * Array of RosterItem objects
+		 */
+		public function get items():Array
+		{
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == RosterItem.ELEMENT_NAME )
+				{
+					var item:RosterItem = new RosterItem();
+					item.xml = child;
+					list.push( item );
+				}
+			}
+			return list;
+		}
+		public function set items( value:Array ):void
+		{
+			removeAllItems();
+
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var item:RosterItem = value[i] as RosterItem;
+					xml.appendChild( item.xml );
+				}
+			}
 		}
 	}
 }

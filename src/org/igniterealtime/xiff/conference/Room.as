@@ -1139,7 +1139,7 @@ package org.igniterealtime.xiff.conference
 			if ( iq.type == IQ.TYPE_RESULT )
 			{
 				var adminExt:MUCAdminExtension = iq.getAllExtensionsByNS( MUCAdminExtension.NS )[ 0 ];
-				var items:Array = adminExt.getAllItems();
+				var items:Array = adminExt.items;
 				// trace("Affiliates: " + items);
 				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
 				event.data = items;
@@ -1229,7 +1229,7 @@ package org.igniterealtime.xiff.conference
 		{
 			var userNickname:String = aPresence.from.unescaped.resource;
 			var userExts:Array = aPresence.getAllExtensionsByNS( MUCUserExtension.NS );
-			var item:MUCItem = userExts[ 0 ].getAllItems()[ 0 ];
+			var item:MUCItem = userExts[ 0 ].items[ 0 ];
 			var roomEvent:RoomEvent;
 
 			if ( isThisUser( aPresence.from.unescaped ))
