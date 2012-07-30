@@ -63,17 +63,6 @@ package org.igniterealtime.xiff.data.forms
 		}
 
 		/**
-		 * Use this method to remove all fields.
-		 */
-		public function removeAllFields():void
-		{
-			while (xml.children().(localName() == FormField.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == FormField.ELEMENT_NAME)[0];
-			}
-		}
-
-		/**
 		 * Item interface to array of fields if they are contained in a "field" element
 		 *
 		 * @return Array of FormFields objects
@@ -94,7 +83,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set fields( value:Array ):void
 		{
-			removeAllFields();
+			removeFields(FormReported.ELEMENT_NAME);
 
 			if ( value != null )
 			{

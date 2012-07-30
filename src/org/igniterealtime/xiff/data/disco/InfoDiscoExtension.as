@@ -89,10 +89,7 @@ package org.igniterealtime.xiff.data.disco
 		}
 		public function set identities( value:Array ):void
 		{
-			while (xml.children().(localName() == DiscoIdentity.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == DiscoIdentity.ELEMENT_NAME)[0];
-			}
+			removeFields(DiscoIdentity.ELEMENT_NAME);
 			
 			if ( value != null )
 			{
@@ -126,10 +123,7 @@ package org.igniterealtime.xiff.data.disco
 		}
 		public function set features( value:Array ):void
 		{
-			while (xml.children().(localName() == DiscoFeature.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == DiscoFeature.ELEMENT_NAME)[0];
-			}
+			removeFields(DiscoFeature.ELEMENT_NAME);
 			
 			if ( value != null )
 			{

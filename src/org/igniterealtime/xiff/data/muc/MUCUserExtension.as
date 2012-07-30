@@ -104,14 +104,6 @@ package org.igniterealtime.xiff.data.muc
 			return false;
 		}
 
-		public function removeAllStatuses():void
-		{
-			while (xml.children().(localName() == MUCStatus.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == MUCStatus.ELEMENT_NAME)[0];
-			}
-		}
-
 		/**
 		 * Internal method that manages the type of node that we will use for invite/destroy/decline messages
 		 *
@@ -235,7 +227,6 @@ package org.igniterealtime.xiff.data.muc
 
 		/**
 		 * List of MUCStatus.
-		 * TODO: As this extension is the parent of status, the code would be easier to find directly...
 		 *
 		 * @see org.igniterealtime.xiff.data.muc.MUCStatus
 		 */
@@ -255,7 +246,7 @@ package org.igniterealtime.xiff.data.muc
 		}
 		public function set statuses(value:Array):void
 		{
-			removeAllStatuses();
+			removeFields(MUCStatus.ELEMENT_NAME);
 
 			if ( value != null )
 			{

@@ -93,12 +93,7 @@ package org.igniterealtime.xiff.data
 		{
 			if ( value == null )
 			{
-				delete xml[name];
-				var list:XMLList = xml.children().(localName() == name);
-				if ( list.length() > 0 )
-				{
-					delete list[0];
-				}
+				removeFields(name);
 			}
 			else
 			{

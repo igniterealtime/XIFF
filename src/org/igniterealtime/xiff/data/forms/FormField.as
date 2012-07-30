@@ -166,7 +166,7 @@ package org.igniterealtime.xiff.data.forms
 		{
 			if ( !value )
 			{
-				delete xml.children().(localName() == "required")[0];
+				removeFields("required");
 			}
 			else
 			{
@@ -228,7 +228,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set values( value:Array ):void
 		{
-			delete xml.value;
+			removeFields("value");
 
 			for each (var i:String in value)
 			{
@@ -253,7 +253,7 @@ package org.igniterealtime.xiff.data.forms
 		{
 			var result:Array = [];
 
-			var list:XMLList = xml.children().(localName() == "options");
+			var list:XMLList = xml.children().(localName() == "option");
 			for each ( var node:XML in list )
 			{
 				result.push( { value: node.toString(), label: node.@label.toString() } );
@@ -262,7 +262,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set options( value:Array ):void
 		{
-			delete xml.option;
+			removeFields("option");
 
 			for each (var i:Object in value)
 			{

@@ -77,15 +77,6 @@ package org.igniterealtime.xiff.data.muc
 		}
 
 		/**
-		 * Use this method to remove all items.
-		 *
-		 */
-		public function removeAllItems():void
-		{
-			removeFields(MUCItem.ELEMENT_NAME);
-		}
-
-		/**
 		 * Item interface to MUCItems if they are contained in this extension
 		 *
 		 * @return Array of MUCItem objects
@@ -106,7 +97,7 @@ package org.igniterealtime.xiff.data.muc
 		}
 		public function set items( value:Array ):void
 		{
-			removeAllItems();
+			removeFields(MUCItem.ELEMENT_NAME);
 
 			if ( value != null )
 			{

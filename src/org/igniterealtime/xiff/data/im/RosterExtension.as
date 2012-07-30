@@ -139,19 +139,6 @@ package org.igniterealtime.xiff.data.im
 		}
 
 		/**
-		 * Removes all items from the roster data.
-		 */
-		public function removeAllItems():void
-		{
-			while ( xml.children().(localName() == RosterItem.ELEMENT_NAME).length() > 0 )
-			{
-				delete xml.children().(localName() == RosterItem.ELEMENT_NAME)[0];
-			}
-		}
-		
-		
-
-		/**
 		 *
 		 * Array of RosterItem objects
 		 */
@@ -171,7 +158,7 @@ package org.igniterealtime.xiff.data.im
 		}
 		public function set items( value:Array ):void
 		{
-			removeAllItems();
+			removeFields(RosterItem.ELEMENT_NAME);
 
 			if ( value != null )
 			{

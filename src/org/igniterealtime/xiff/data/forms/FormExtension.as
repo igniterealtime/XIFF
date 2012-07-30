@@ -92,7 +92,7 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function setFieldMap( fieldMap:Object ):void
 		{
-			removeAllFields();
+			removeFields(FormField.ELEMENT_NAME);
 
 			var list:Array = [];
 			for( var varName:String in fieldMap )
@@ -103,28 +103,6 @@ package org.igniterealtime.xiff.data.forms
 				list.push( field );
 			}
 			fields = list;
-		}
-
-		/**
-		 * Use this method to remove all fields.
-		 */
-		public function removeAllFields():void
-		{
-			while (xml.children().(localName() == FormField.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == FormField.ELEMENT_NAME)[0];
-			}
-		}
-
-		/**
-		 * Use this method to remove all items.
-		 */
-		public function removeAllItems():void
-		{
-			while (xml.children().(localName() == FormItem.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == FormItem.ELEMENT_NAME)[0];
-			}
 		}
 
 		/**
@@ -157,7 +135,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set instructions( value:Array ):void
 		{
-			delete xml.instructions;
+			removeFields("instructions");
 
 			for each (var i:String in value)
 			{
@@ -237,10 +215,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set reported( value:FormReported ):void
 		{
-			while (xml.children().(localName() == FormReported.ELEMENT_NAME).length() > 0)
-			{
-				delete xml.children().(localName() == FormReported.ELEMENT_NAME)[0];
-			}
+			removeFields(FormReported.ELEMENT_NAME);
 
 			if (value != null)
 			{
@@ -269,7 +244,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set fields( value:Array ):void
 		{
-			removeAllFields();
+			removeFields(FormField.ELEMENT_NAME);
 
 			var len:uint = value.length;
 			for ( var i:uint = 0; i < len; ++i )
@@ -299,7 +274,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set items( value:Array ):void
 		{
-			removeAllItems();
+			removeFields(FormItem.ELEMENT_NAME);
 
 			var len:uint = value.length;
 			for ( var i:uint = 0; i < len; ++i )

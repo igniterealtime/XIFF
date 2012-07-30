@@ -55,6 +55,17 @@ package org.igniterealtime.xiff.data.disco
 		{
 			return ItemDiscoExtension.NS;
         }
+		
+		/**
+		 *
+		 * @param	item
+		 * @return
+		 */
+		public function addItem( item:DiscoItem ):DiscoItem
+		{
+			xml.appendChild( item.xml );
+			return item;
+		}
 
 		/**
 		 * An array of DiscoItems that represent the items discovered.
@@ -66,7 +77,7 @@ package org.igniterealtime.xiff.data.disco
 			var items:Array = [];
 			for each( var child:XML in xml.children() )
 			{
-				if ( child.localName() == "item" )
+				if ( child.localName() == DiscoItem.ELEMENT_NAME )
 				{
 					var item:DiscoItem = new DiscoItem();
 					item.xml = child;
@@ -77,10 +88,7 @@ package org.igniterealtime.xiff.data.disco
 		}
 		public function set items( value:Array ):void
 		{
-			while (xml.children().(localName() == "item").length() > 0)
-			{
-				delete xml.children().(localName() == "item")[0];
-			}
+			removeFields(DiscoItem.ELEMENT_NAME);
 			
 			if (value == null)
 			{
@@ -93,17 +101,6 @@ package org.igniterealtime.xiff.data.disco
 				var item:DiscoItem = value[i] as DiscoItem;
 				xml.appendChild( item.xml );
 			}
-		}
-		
-		/**
-		 *
-		 * @param	item
-		 * @return
-		 */
-		public function addItem( item:DiscoItem ):DiscoItem
-		{
-			xml.appendChild( item.xml );
-			return item;
 		}
 
 	}
