@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.data.im
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
-	
+
 	/**
 	 * An IQ extension for roster data. Roster data is typically any data
 	 * that is sent or received with the "jabber:iq:roster" namespace.
@@ -39,7 +39,7 @@ package org.igniterealtime.xiff.data.im
 	{
 		public static const NS:String = "jabber:iq:roster";
 		public static const ELEMENT_NAME:String = "query";
-		
+
 		public static const SUBSCRIBE_TYPE_NONE:String = "none";
 		public static const SUBSCRIBE_TYPE_TO:String = "to";
 		public static const SUBSCRIBE_TYPE_FROM:String = "from";
@@ -50,9 +50,9 @@ package org.igniterealtime.xiff.data.im
 		public static const ASK_TYPE_UNSUBSCRIBE:String = "unsubscribe";
 		public static const SHOW_UNAVAILABLE:String = "unavailable";
 		public static const SHOW_PENDING:String = "Pending";
-	
+
 		private var _items:Array = []; // RosterItem
-		
+
 		/**
 		 *
 		 * @param	parent
@@ -61,7 +61,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			super( parent );
 		}
-	
+
 		/**
 		 * Gets the namespace associated with this extension.
 		 * The namespace for the RosterExtension is "jabber:iq:roster".
@@ -72,7 +72,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			return RosterExtension.NS;
 		}
-	
+
 		/**
 		 * Gets the element name associated with this extension.
 		 * The element for this extension is "query".
@@ -83,7 +83,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			return RosterExtension.ELEMENT_NAME;
 		}
-		
+
 		/**
 		 * Deserializes the RosterExtension data.
 		 *
@@ -93,14 +93,14 @@ package org.igniterealtime.xiff.data.im
 		override public function set xml( value:XML ):void
 		{
 			super.xml = value;
-			
+
 			trace("RosterExtension. xml setter: " + value.toXMLString());
-			
+
 			for each ( var child:XML in value.children() )
 			{
 				switch( child.localName() )
 				{
-					case "item":
+					case RosterItem.ELEMENT_NAME:
 						var item:RosterItem = new RosterItem( xml );
 						item.xml = child;
 						_items.push( item );
@@ -108,7 +108,7 @@ package org.igniterealtime.xiff.data.im
 				}
 			}
 		}
-		
+
 		/**
 		 * Get all the items from this roster query.
 		 *
@@ -118,7 +118,7 @@ package org.igniterealtime.xiff.data.im
 		{
 			return _items;
 		}
-		
+
 		/**
 		 * Gets one item from the roster query, returning the first item found with the JID specified.
 		 * If none is found, then it returns null.
@@ -134,10 +134,10 @@ package org.igniterealtime.xiff.data.im
 					return _items[i];
 				}
 			}
-			
+
 			return null;
 		}
-		
+
 		/**
 		 * Adds a single roster item to the extension payload.
 		 *
@@ -150,7 +150,7 @@ package org.igniterealtime.xiff.data.im
 		public function addItem( jid:EscapedJID=null, subscription:String="", nickname:String="", groups:Array=null ):void
 		{
 			var item:RosterItem = new RosterItem( xml );
-			
+
 			if ( jid != null )
 			{
 				item.jid = jid;
@@ -174,17 +174,17 @@ package org.igniterealtime.xiff.data.im
 				}
 			}
 		}
-		
+
 		/**
 		 * Removes all items from the roster data.
 		 */
 		public function removeAllItems():void
 		{
-			while ( xml.children().(localName() == "item").length() > 0 )
+			while ( xml.children().(localName() == RosterItem.ELEMENT_NAME).length() > 0 )
 			{
-				delete xml.children().(localName() == "item")[0];
+				delete xml.children().(localName() == RosterItem.ELEMENT_NAME)[0];
 			}
-			
+
 			_items = [];
 		}
 	}

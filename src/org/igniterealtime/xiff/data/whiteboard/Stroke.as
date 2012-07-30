@@ -25,11 +25,11 @@
  */
 package org.igniterealtime.xiff.data.whiteboard
 {
-	
+
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	
-	
+
+
 	/**
 	 * A helper class that abstracts the serialization of strokes and
 	 * provides an interface to access the properties
@@ -39,68 +39,104 @@ package org.igniterealtime.xiff.data.whiteboard
 	{
 		// TODO: Not checked via any spec
 		public static const ELEMENT_NAME:String = "stroke";
-	
+
 		/**
 		 *
 		 */
 		public function Stroke( color:uint = 0, opacity:Number = 100, thickness:Number = NaN )
 		{
 			xml.setLocalName( Stroke.ELEMENT_NAME );
-			
+
 			this.color = color;
 			this.opacity = opacity;
 			this.thickness = thickness;
 		}
-	
-	    /**
-	     * The value of the RGB color.  This is the same color format used by
-	     * Graphics.lineStyle
+
+		/**
+		 * The value of the RGB color.  This is the same color format used by
+		 * Graphics.lineStyle
 		 *
-	     * <p>XML attribute "stroke"</p>
+		 * <p>XML attribute "stroke"</p>
 		 *
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
-	     */
+		 */
 		public function get color():uint
 		{
-			return parseInt("0x" + String(xml.@["stroke"]).slice(1), 16);
+			var value:String = getAttribute("stroke");
+			if ( value != null )
+			{
+				return parseInt("0x" + value.slice(1), 16);
+			}
+			return null;
 		}
 		public function set color(value:uint):void
 		{
-			xml.@["stroke"] = "#" + value.toString(16);
+			if (isNaN(value))
+			{
+				setAttribute("stroke", null);
+			}
+			else
+			{
+				setAttribute("stroke", "#" + value.toString(16));
+			}
 		}
-	
-	    /**
-	     * The thickness of the stroke in pixels.  This is in a format used by
-	     * Graphics.lineStyle
+
+		/**
+		 * The thickness of the stroke in pixels.  This is in a format used by
+		 * Graphics.lineStyle
 		 *
-	     * <p>XML attribute "stroke-width"</p>
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
-	     */
-	    public function get thickness():Number
-		{
-			return parseFloat(xml.@["stroke-width"]);
-		}
-	    public function set thickness(value:Number):void
-		{
-			xml.@["stroke-width"] = value.toString();
-		}
-	
-	    /**
-	     * The opacity of the stroke, in percent. 100 is solid, 0 is transparent.
-	     * This property can be used as the alpha parameter of Graphics.lineStyle
-		 *
-	     * <p>XML attribute "stroke-opacity"</p>
+		 * <p>XML attribute "stroke-width"</p>
 		 *
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
-	     */
-	    public function get opacity():Number
+		 */
+		public function get thickness():Number
 		{
-			return parseFloat(xml.@["stroke-opacity"]);
+			var value:String = getAttribute("stroke-width");
+			if ( value != null )
+			{
+				return parseFloat(value);
+			}
+			return NaN;
 		}
-	    public function set opacity(value:Number):void
+		public function set thickness(value:Number):void
 		{
-			xml.@["stroke-opacity"] = value.toString();
+			if (isNaN(value))
+			{
+				setAttribute("stroke-width", null);
+			}
+			else
+			{
+				setAttribute("stroke-width", value.toString());
+			}
+		}
+
+		/**
+		 * The opacity of the stroke, in percent. 100 is solid, 0 is transparent.
+		 * This property can be used as the alpha parameter of Graphics.lineStyle
+		 *
+		 * <p>XML attribute "stroke-opacity"</p>
+		 *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html
+		 */
+		public function get opacity():Number
+		{
+			var value:String = getAttribute("stroke-opacity");
+			if ( value != null )
+			{
+				return parseFloat(value);
+			}
+			return NaN;
+		}
+		public function set opacity(value:Number):void
+		{
+			if (isNaN(value))
+			{
+				setAttribute("stroke-opacity", null);
+			}
+			else
+			{
+				setAttribute("stroke-opacity", value.toString());
+			}
 		}
 	}
 }

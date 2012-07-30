@@ -43,7 +43,6 @@ package org.igniterealtime.xiff.data.forms
 		public static const NS:String = "jabber:x:data";
 		public static const ELEMENT_NAME:String = "x";
 
-		private var _reported:FormReported;
 		private var _fields:Array = []; // FormField
 
 		/**
@@ -80,11 +79,6 @@ package org.igniterealtime.xiff.data.forms
 				switch( c.localName() )
 				{
 
-					case "reported":
-						var reportedItem:FormReported = new FormReported();
-						reportedItem.xml =  c;
-						_reported = reportedItem;
-						break;
 
 					case "field":
 						var field:FormField = new FormField();
@@ -255,11 +249,24 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function get reported():FormReported
 		{
-			return _reported;
+			var list:XMLList = xml.children().(localName() == FormReported.ELEMENT_NAME);
+			if (list.length() > 0)
+			{
+				var item:FormReported = new FormReported();
+				item.xml =  list[0];
+				return item;
+			}
+			return null;
 		}
 		public function set reported( value:FormReported ):void
 		{
-			_reported = value;
+			// Remove any existing...
+
+
+			if (value != null)
+			{
+				xml.appendChild( value.xml );
+			}
 		}
 
 		/**

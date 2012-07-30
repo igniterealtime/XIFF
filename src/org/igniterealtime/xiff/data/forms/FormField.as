@@ -37,16 +37,25 @@ package org.igniterealtime.xiff.data.forms
 	 *
 	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see	http://xmpp.org/extensions/xep-0004.html
-	 * @param	parent The parent XML
 	 */
 	public class FormField extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "field";
 
+		/**
+		 *
+		 * @param	type
+		 * @param	varName
+		 * @param	values
+		 * @param	options
+		 * @param	label
+		 * @param	desc
+		 * @param	required
+		 */
 		public function FormField( type:String = null, varName:String = null, values:Array = null, options:Array = null, label:String = null, desc:String = null, required:Boolean = false )
 		{
 			super();
-			
+
 			xml.setLocalName( ELEMENT_NAME );
 
 			this.type = type;
@@ -130,7 +139,7 @@ package org.igniterealtime.xiff.data.forms
 		}
 		public function set label( value:String ):void
 		{
-			setAttribute("@label", value);
+			setAttribute("label", value);
 		}
 
 		/**
@@ -209,7 +218,7 @@ package org.igniterealtime.xiff.data.forms
 		public function get values():Array
 		{
 			var result:Array = [];
-			
+
 			var list:XMLList = xml.children().(localName() == "value");
 			for each ( var node:XML in list )
 			{
@@ -243,7 +252,7 @@ package org.igniterealtime.xiff.data.forms
 		public function get options():Array
 		{
 			var result:Array = [];
-			
+
 			var list:XMLList = xml.children().(localName() == "options");
 			for each ( var node:XML in list )
 			{

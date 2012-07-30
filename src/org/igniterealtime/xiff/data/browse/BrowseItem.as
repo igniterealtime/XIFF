@@ -30,12 +30,12 @@ package org.igniterealtime.xiff.data.browse
 	import org.igniterealtime.xiff.data.XMLStanza;
 
 	/**
-		 * XEP-0011: Jabber Browsing
-		 *
+	 * XEP-0011: Jabber Browsing
+	 *
 	 * Class that representes a child resource of a browsed resource.
-		 *
-		 * <p><strong>OBSOLETE</strong></p>
-		 *
+	 *
+	 * <p><strong>OBSOLETE</strong></p>
+	 *
 	 * @see http://xmpp.org/extensions/xep-0011.html
 	 */
 	public class BrowseItem extends XMLStanza implements INodeProxy
@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.data.browse
 		 *
 		 * @param	parent
 		 */
-		public function BrowseItem( parent:XML )
+		public function BrowseItem( parent:XML = null )
 		{
 			super();
 			xml.setLocalName( BrowseItem.ELEMENT_NAME );
@@ -145,11 +145,12 @@ package org.igniterealtime.xiff.data.browse
 		 * whichfeatures it supports, based on the namespaces associated with
 		 * those features. The <strong>ns</strong> element is allowed as a subelement of the
 		 * item. This element contains a single namespace that the entity
+		 *
 		 * supports, and multiple <strong>ns</strong> elements can be included in any item.
-		 * For a connected client this might be &gt;ns&lt;jabber:iq:oob&lt;/ns&gt;, or for a
+		 * <p>For a connected client this might be &gt;ns&lt;jabber:iq:oob&lt;/ns&gt;, or for a
 		 * service &gt;ns&lt;jabber:iq:search&lt;/ns&gt;. This list of namespaces should be
 		 * used to present available options for a user or to automatically
-		 * locate functionality for an application.
+		 * locate functionality for an application.</p>
 		 *
 		 * <p>The children of a browse result may proactively contain a few
 		 * <strong>ns</strong> elements (such as the result of the service request to the home
@@ -160,16 +161,16 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function get namespaces():Array
 		{
-			var res:Array = [];
+			var list:Array = [];
 
 			for each (var child:XML in xml.children())
 			{
 				if (child.localName() == "ns")
 				{
-					res.push(child.toString());
+					list.push(child.toString());
 				}
 			}
-			return res;
+			return list;
 		}
 	}
 }

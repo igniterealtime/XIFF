@@ -25,11 +25,11 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
+
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	
-	
+
+
 	/**
 	 * This is a base class for all data extensions.
 	 * @see http://xmpp.org/registrar/namespaces.html
@@ -44,16 +44,16 @@ package org.igniterealtime.xiff.data
 		public function Extension( parent:XML = null )
 		{
 			super();
-	
+
 			xml.setLocalName( IExtension(this).getElementName() );
 			xml.setNamespace( IExtension(this).getNS() );
-	
+
 			if (parent != null)
 			{
 				parent.appendChild(xml);
 			}
 		}
-	
+
 		/**
 		 * Removes the extension from its parent.
 		 */
@@ -66,14 +66,14 @@ package org.igniterealtime.xiff.data
 				delete parent[index];
 			}
 		}
-		
+
 		/**
-		 * Override in order to take care of the Namespacing.
+		 * Override in order to take care of setting the Namespace.
 		 */
 		override public function set xml( value:XML ):void
 		{
 			super.xml = value;
-			
+
 			xml.setNamespace( IExtension(this).getNS() );
 		}
 	}

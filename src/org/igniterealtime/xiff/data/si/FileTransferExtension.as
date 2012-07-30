@@ -25,11 +25,10 @@
  */
 package org.igniterealtime.xiff.data.si
 {
-	
-        import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.IExtension;;
+	import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.util.DateTimeParser;
-	
+
 	/**
 	 * INCOMPLETE
 	 *
@@ -43,7 +42,7 @@ package org.igniterealtime.xiff.data.si
 	{
 		public static const NS:String = "http://jabber.org/protocol/si/profile/file-transfer";
 		public static const ELEMENT_NAME:String = "file";
-		
+
 		/**
 		 * The size and name attributes MUST be present in the profile.
 		 * The other attributes MAY be present.
@@ -57,17 +56,17 @@ package org.igniterealtime.xiff.data.si
 		{
 			super(parent);
 		}
-		
+
 		public function getNS():String
 		{
 			return FileTransferExtension.NS;
 		}
-		
+
 		public function getElementName():String
 		{
 			return FileTransferExtension.ELEMENT_NAME;
-                }
-		
+		}
+
 		/**
 		 * The size, in bytes, of the data to be sent.
 		 *
@@ -88,7 +87,7 @@ package org.igniterealtime.xiff.data.si
 				setAttribute("size", value.toString());
 			}
 		}
-		
+
 		/**
 		 * The name of the file that the Sender wishes to send.
 		 *
@@ -102,7 +101,7 @@ package org.igniterealtime.xiff.data.si
 		{
 			setAttribute("name", value);
 		}
-		
+
 		/**
 		 * The last modification time of the file.
 		 *
@@ -131,7 +130,7 @@ package org.igniterealtime.xiff.data.si
 				setAttribute("date", DateTimeParser.dateTime2string(value));
 			}
 		}
-		
+
 		/**
 		 * The MD5 sum of the file contents.
 		 */
@@ -143,7 +142,7 @@ package org.igniterealtime.xiff.data.si
 		{
 			setAttribute("hash", value);
 		}
-		
+
 		/**
 		 * Used to provide a sender-generated description of the file so the receiver
 		 * can better understand what is being sent. It MUST NOT be sent in the result.
@@ -156,7 +155,7 @@ package org.igniterealtime.xiff.data.si
 		{
 			setField("desc", value);
 		}
-		
+
 		/**
 		 * When <code>range</code> is sent in the offer, it should have no attributes.
 		 * This signifies that the sender can do ranged transfers.
@@ -184,7 +183,7 @@ package org.igniterealtime.xiff.data.si
 				setField("range", null);
 			}
 		}
-		
+
 		/**
 		 * Specifies the position, in bytes, to start transferring the file data from.
 		 * This defaults to zero (0) if not specified.
@@ -206,7 +205,7 @@ package org.igniterealtime.xiff.data.si
 				setChildAttribute("range", "offset", value.toString());
 			}
 		}
-		
+
 		/**
 		 * Specifies the number of bytes to retrieve starting at offset.
 		 * This defaults to the length of the file from offset to the end.

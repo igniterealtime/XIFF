@@ -25,10 +25,10 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	
+
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.*;
-	
+
 	/**
 	 * Implements the base functionality shared by all MUC extensions
 	 *
@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.data.muc
 	public class MUCBaseExtension extends Extension implements IExtendable, INodeProxy
 	{
 		private var _items:Array = [];
-	
+
 		/**
 		 *
 		 * @param	parent
@@ -47,24 +47,24 @@ package org.igniterealtime.xiff.data.muc
 		{
 			super(parent);
 		}
-	
+
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
 			removeAllItems();
-	
+
 			for each( var child:XML in node.children() )
 			{
 				switch( child.localName() )
 				{
-					case "item":
+					case MUCItem.ELEMENT_NAME:
 						var item:MUCItem = new MUCItem(xml);
 						item.xml = child;
 						_items.push(item);
 						break;
-	
+
 					default:
-                                                var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri, child.localName());
+						var extClass:Class = ExtensionClassRegistry.lookup(child.namespace().uri, child.localName());
 						if (extClass != null)
 						{
 							var ext:IExtension = new extClass();
@@ -81,7 +81,7 @@ package org.igniterealtime.xiff.data.muc
 				}
 			}
 		}
-	
+
 		/**
 		 * Item interface to MUCItems if they are contained in this extension
 		 *
@@ -91,7 +91,7 @@ package org.igniterealtime.xiff.data.muc
 		{
 			return _items;
 		}
-	
+
 		/**
 		 * Use this method to create a new item.  Either the affiliation or role are requried.
 		 *
@@ -106,22 +106,22 @@ package org.igniterealtime.xiff.data.muc
 		public function addItem(affiliation:String=null, role:String=null, nick:String=null, jid:EscapedJID=null, actor:String=null, reason:String=null):MUCItem
 		{
 			var item:MUCItem = new MUCItem(xml);
-	
+
 			item.affiliation = affiliation;
 			item.role = role;
 			item.nick = nick;
 			item.jid = jid;
 			item.reason = reason;
-			
+
 			if (actor != null)
 			{
 				item.actor = new EscapedJID(actor);
 			}
-			
+
 			_items.push(item);
 			return item;
 		}
-		
+
 		/**
 		 * Use this method to remove all items.
 		 *
@@ -139,7 +139,7 @@ package org.igniterealtime.xiff.data.muc
 					delete parent.children()[index];
 				}
 			}
-		 	_items = [];
+			_items = [];
 		}
 	}
 }

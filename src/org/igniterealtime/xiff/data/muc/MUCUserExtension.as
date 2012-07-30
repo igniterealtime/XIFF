@@ -25,8 +25,6 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-
-
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.IExtension;
 
@@ -46,8 +44,6 @@ package org.igniterealtime.xiff.data.muc
 		public static const TYPE_INVITE:String = "invite";
 		public static const TYPE_OTHER:String = "other";
 
-		private var _statuses:Array = [];
-
 		/**
 		 *
 		 * @param	parent (Optional) The containing XML for this extension
@@ -65,23 +61,6 @@ package org.igniterealtime.xiff.data.muc
 		public function getElementName():String
 		{
 			return MUCUserExtension.ELEMENT_NAME;
-		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-			for each( var child:XML in node.children() )
-			{
-				switch( child.localName() )
-				{
-
-					case "status":
-						_statuses.push(new MUCStatus(child, this));
-						break;
-
-				}
-			}
 		}
 
 		/**
@@ -123,6 +102,14 @@ package org.igniterealtime.xiff.data.muc
 				}
 			}
 			return false;
+		}
+
+		public function removeAllStatuses():void
+		{
+			while (xml.children().(localName() == MUCStatus.ELEMENT_NAME).length() > 0)
+			{
+				delete xml.children().(localName() == MUCStatus.ELEMENT_NAME)[0];
+			}
 		}
 
 		/**
@@ -254,11 +241,31 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get statuses():Array
 		{
-			return _statuses;
+			var list:Array = [];
+			for each( var child:XML in xml.children() )
+			{
+				if ( child.localName() == MUCStatus.ELEMENT_NAME )
+				{
+					var item:MUCStatus = new MUCStatus();
+					item.xml = child;
+					list.push(item);
+				}
+			}
+			return list;
 		}
 		public function set statuses(value:Array):void
 		{
-			_statuses = value;
+			removeAllStatuses();
+
+			if ( value != null )
+			{
+				var len:uint = value.length;
+				for (var i:uint = 0; i < len; ++i)
+				{
+					var item:MUCStatus = value[i] as MUCStatus;
+					xml.appendChild( item.xml );
+				}
+			}
 		}
 	}
 }

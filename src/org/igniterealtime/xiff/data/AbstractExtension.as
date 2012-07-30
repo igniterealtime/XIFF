@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
+
 
 	/**
 	 * What is this?
@@ -36,14 +36,14 @@ package org.igniterealtime.xiff.data
 		{
 			super(parent);
 		}
-		
+
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
 			for each(var extNode:XML in node.children())
 			{
 				var ns:Namespace = extNode.namespace();
-                                var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, extNode.localName());
+				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, extNode.localName());
 				if (extClass == null)
 				{
 					continue;
@@ -60,6 +60,6 @@ package org.igniterealtime.xiff.data
 				addExtension(ext);
 			}
 		}
-		
+
 	}
 }

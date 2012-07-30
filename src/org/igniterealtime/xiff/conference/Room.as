@@ -1086,7 +1086,7 @@ package org.igniterealtime.xiff.conference
 										break;
 										
 									case 201:
-                                                                                unlockRoom( _isReserved );
+                                        unlockRoom( _isReserved );
 										break;
 								}
 							}
@@ -1107,8 +1107,7 @@ package org.igniterealtime.xiff.conference
 									roomEvent = new RoomEvent( RoomEvent.ROOM_LEAVE );
 								}
 								dispatchEvent( roomEvent );
-								_connection.removeEventListener( PresenceEvent.PRESENCE,
-																  handleEvent );
+								_connection.removeEventListener( PresenceEvent.PRESENCE, handleEvent );
 							}
 						}
 					}

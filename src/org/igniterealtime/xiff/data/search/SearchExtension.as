@@ -25,24 +25,22 @@
  */
 package org.igniterealtime.xiff.data.search
 {
-	
-	
-        import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
-	
+
 	/**
-         * XEP-0055: Jabber Search
-         *
-         * <p>Implements jabber:iq:search namespace. Use this to perform user searches.</p>
-         *
-         * <p>Send an empty IQ.TYPE_GET packet with this extension and the return will either be
-         * a conflict, or the fields you will need to fill out.</p>
-         *
-         * <p>Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
-         * getRequiredFieldNames set on this extension.</p>
-         *
-         * <p>Check the result and re-establish the connection with the new account.</p>
+	 * XEP-0055: Jabber Search
+	 *
+	 * <p>Implements jabber:iq:search namespace. Use this to perform user searches.</p>
+	 *
+	 * <p>Send an empty IQ.TYPE_GET packet with this extension and the return will either be
+	 * a conflict, or the fields you will need to fill out.</p>
+	 *
+	 * <p>Send a IQ.TYPE_SET packet to the server and with the fields that are listed in
+	 * getRequiredFieldNames set on this extension.</p>
+	 *
+	 * <p>Check the result and re-establish the connection with the new account.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0055.html
 	 */
@@ -50,9 +48,9 @@ package org.igniterealtime.xiff.data.search
 	{
 		public static const NS:String = "jabber:iq:search";
 		public static const ELEMENT_NAME:String = "query";
-	
+
 		private var _fields:Object = {};
-	
+
 		/**
 		 *
 		 * @param	parent (Optional) The parent node used to build the XML tree.
@@ -61,21 +59,21 @@ package org.igniterealtime.xiff.data.search
 		{
 			super(parent);
 		}
-	
+
 		public function getNS():String
 		{
 			return SearchExtension.NS;
 		}
-	
+
 		public function getElementName():String
 		{
 			return SearchExtension.ELEMENT_NAME;
-                }
-	
+		}
+
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
-	
+
 			for each ( var child:XML in node.children() )
 			{
 				var local:String = child.localName();
@@ -83,7 +81,7 @@ package org.igniterealtime.xiff.data.search
 				{
 					_fields[child.localName()] = child;
 				}
-				
+
 				// Refactor this out...
 				if (local == "x")
 				{
@@ -94,31 +92,37 @@ package org.igniterealtime.xiff.data.search
 						addExtension(dataFormExt);
 					}
 				}
-				
+
 			}
-	
+
 		}
-	
+
+		/**
+		 * TODO rename to getter
+		 */
 		public function getRequiredFieldNames():Array
 		{
 			var fields:Array = [];
-	
+
 			for (var i:String in _fields)
 			{
 				fields.push(i);
 			}
-	
+
 			return fields;
 		}
-		
+
 		/**
 		 * List of SearchItem in this query.
+		 *
+		 * TODO: Rename to getter, items. Add setter
+		 *
 		 * @return
 		 */
 		public function getAllItems():Array
 		{
 			var items:Array = [];
-			
+
 			var list:XMLList = xml.children().(localName() == "item");
 			for each ( var child:XML in list )
 			{
@@ -128,7 +132,7 @@ package org.igniterealtime.xiff.data.search
 			}
 			return items;
 		}
-	
+
 		/**
 		 * Use <code>null</code> to remove.
 		 */

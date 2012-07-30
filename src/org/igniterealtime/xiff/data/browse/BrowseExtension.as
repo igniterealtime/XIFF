@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.data.browse
 {
 	import org.igniterealtime.xiff.data.IExtension;
-	
+
 	/**
 	 * XEP-0011: Jabber Browsing
 	 *
@@ -43,8 +43,6 @@ package org.igniterealtime.xiff.data.browse
 		public static const NS:String = "jabber:iq:browse";
 		public static const ELEMENT_NAME:String = "query";
 
-		private var _items:Array = [];
-	
 		/**
 		 *
 		 * @param	parent
@@ -52,11 +50,11 @@ package org.igniterealtime.xiff.data.browse
 		public function BrowseExtension( parent:XML = null )
 		{
 			super(parent);
-	
+
 			xml.setLocalName( getElementName() );
 			xml.setNamespace( getNS() );
 		}
-	
+
 		/**
 		 * Gets the namespace associated with this extension.
 		 * The namespace for the BrowseExtension is "jabber:iq:browse".
@@ -67,7 +65,7 @@ package org.igniterealtime.xiff.data.browse
 		{
 			return BrowseExtension.NS;
 		}
-	
+
 		/**
 		 * Gets the element name associated with this extension.
 		 * The element for this extension is "query".
@@ -87,46 +85,29 @@ package org.igniterealtime.xiff.data.browse
 		 */
 		public function addItem(item:BrowseItem):BrowseItem
 		{
-			_items.push(item);
-			// TODO: also add it to the xml
+			xml.appendChild(item.xml);
 			return item;
 		}
-	
-		/**
-		 * INodeProxy implementation which saves this extension to XML
-		 *
-		 * @see	org.igniterealtime.xiff.data.INodeProxy
-		 */
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-	
-			this['deserialized'] = true;
-	
-			_items = [];
-	
-			for each (var child:XML in node.children())
-			{
-				switch(child.localName())
-				{
-					case "item":
-						var item:BrowseItem = new BrowseItem(xml);
-						item.xml = child;
-						_items.push(item);
-						break;
-				}
-			}
-		}
-	
+
 		/**
 		 * An array of BrowseItems containing information about the browsed resource
 		 *
-		 * @return	array of BrowseItems
+		 * @return	array of BrowseItem
 		 * @see	org.igniterealtime.xiff.data.browse.BrowseItem
 		 */
 		public function get items():Array
 		{
-			return _items;
+			var list:Array = [];
+			for each (var child:XML in xml.children())
+			{
+				if ( child.localName() == BrowseItem.ELEMENT_NAME )
+				{
+					var item:BrowseItem = new BrowseItem();
+					item.xml = child;
+					list.push(item);
+				}
+			}
+			return list;
 		}
 	}
 }

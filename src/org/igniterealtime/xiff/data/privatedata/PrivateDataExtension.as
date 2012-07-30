@@ -25,25 +25,25 @@
  */
 package org.igniterealtime.xiff.data.privatedata
 {
-	
-	
+
+
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
-	
+
 	/**
 	 * XEP-0049: Private XML Storage
-         *
+		 *
 	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataExtension extends Extension implements IExtension
 	{
 		public static const NS:String = "jabber:iq:private";
 		public static const ELEMENT_NAME:String = "query";
-		
+
 		private var _payloadExt:IPrivatePayload;
-		
+
 		/**
 		 *
 		 * @param	privateName
@@ -53,7 +53,7 @@ package org.igniterealtime.xiff.data.privatedata
 		public function PrivateDataExtension(privateName:String = null, privateNamespace:String = null,
 											 payload:IPrivatePayload = null)
 		{
-	
+
 			if (privateName != null)
 			{
 				var extension:XML = <{ privateName }/>;
@@ -61,24 +61,24 @@ package org.igniterealtime.xiff.data.privatedata
 				{
 					extension.setNamespace( privateNamespace );
 				}
-				
+
 				xml.appendChild(extension);
 			}
-			
+
 			_payloadExt = payload;
 		}
-		
-		
+
+
 		public function getNS():String
 		{
 			return PrivateDataExtension.NS;
 		}
-		
+
 		public function getElementName():String
 		{
 			return PrivateDataExtension.ELEMENT_NAME;
 		}
-		
+
 		/**
 		 * @exampleText exodus
 		 */
@@ -89,7 +89,7 @@ package org.igniterealtime.xiff.data.privatedata
 			{
 				return list[0].localName();
 			}
-			
+
 			return null;
 		}
 		/*
@@ -102,7 +102,7 @@ package org.igniterealtime.xiff.data.privatedata
 			}
 		}
 		*/
-		
+
 		/**
 		 * @exampleText exodus:prefs
 		 */
@@ -119,7 +119,7 @@ package org.igniterealtime.xiff.data.privatedata
 			}
 			return null;
 		}
-		
+
 		/**
 		 * @exampleText &gt;defaultnick&lt;Hamlet&gt;/defaultnick&lt;
 		 */
@@ -131,11 +131,11 @@ package org.igniterealtime.xiff.data.privatedata
 		{
 			_payloadExt = value;
 		}
-				
+
 		override public function set xml( node:XML ):void
 		{
 			super.xml = node;
-			
+
 			if (node.children().length() > 0)
 			{
 				var payloadNode:XML = node.children()[0];
@@ -144,8 +144,8 @@ package org.igniterealtime.xiff.data.privatedata
 				{
 					return;
 				}
-			
-                                var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, payloadNode.localName());
+
+				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, payloadNode.localName());
 				if (extClass == null)
 				{
 					return;
@@ -163,6 +163,6 @@ package org.igniterealtime.xiff.data.privatedata
 				}
 			}
 		}
-	
+
 	}
 }

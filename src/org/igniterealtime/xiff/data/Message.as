@@ -258,6 +258,7 @@ package org.igniterealtime.xiff.data
 			super.xml = node;
 
 
+			// This should have been taken care by XMLStanza, once the given extension is enabled...
 			var list:XMLList = node.children().(localName() == "x");
 			if (list.length() > 0 && list[0].namespace().uri == MUCUserExtension.NS)
 			{

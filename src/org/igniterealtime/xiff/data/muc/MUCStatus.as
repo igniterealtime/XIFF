@@ -25,6 +25,7 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
+	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 	
 	/**
@@ -39,12 +40,10 @@ package org.igniterealtime.xiff.data.muc
 	 *
 	 * @see http://xmpp.org/extensions/xep-0306.html
 	 */
-	public class MUCStatus
+	public class MUCStatus extends XMLStanza implements INodeProxy
 	{
-		public static const NS:String = "http://jabber.org/protocol/muc#user"; // same with MUCUserExtension
+		public static const NS:String = "urn:xmpp:muc:conditions:1"; // Note that this is for the message element
 		public static const ELEMENT_NAME:String = "status";
-		
-		private var _parent:XMLStanza;
 		
 		/**
 		 * Please note that the xmlNode is not used, only the parent.
@@ -52,13 +51,16 @@ package org.igniterealtime.xiff.data.muc
 		 * @param	xmlNode
 		 * @param	parentStanza
 		 */
-		public function MUCStatus(xmlNode:XML, parentStanza:XMLStanza)
+		public function MUCStatus(parent:XML = null)
 		{
 			super();
 			
-			var elem:XML = <{ ELEMENT_NAME }/>;
-			
-			_parent = parentStanza;
+			xml.setLocalName( ELEMENT_NAME );
+
+			if (parent != null)
+			{
+				parent.appendChild(xml);
+			}
 		}
 
 		/**
@@ -66,13 +68,25 @@ package org.igniterealtime.xiff.data.muc
 		 *
 		 * @see http://xmpp.org/extensions/xep-0306.html#mapping
 		 */
-		public function get code():Number
+		public function get code():int
 		{
-			return _parent.xml.status.@code as Number;
+			var value:String = getAttribute("code");
+			if (value != null)
+			{
+				return parseInt(value);
+			}
+			return NaN;
 		}
-		public function set code(value:Number):void
+		public function set code(value:int):void
 		{
-			_parent.xml.status.@code = value.toString();
+			if (isNaN(value))
+			{
+				setAttribute("code", null);
+			}
+			else
+			{
+				setAttribute("code", value.toString());
+			}
 		}
 		
 		/**
@@ -106,14 +120,20 @@ package org.igniterealtime.xiff.data.muc
 		 */
 		public function get message():String
 		{
-			return _parent.xml.status.toString();
+			var list:XMLList = xml.children();
+			if (list.length() > 0)
+			{
+				return list[0].localName();
+			}
+			return null;
 		}
 		public function set message(value:String):void
 		{
-			_parent.xml.status = value;
-			if ( value == null )
+			delete xml.children()[0];
+			if ( value != null )
 			{
-				delete _parent.xml.status;
+				xml[value] = "";
+				xml[value][0].setNamespace( MUCStatus.NS );
 			}
 		}
 	}
