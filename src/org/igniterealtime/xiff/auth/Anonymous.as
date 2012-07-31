@@ -47,7 +47,7 @@ package org.igniterealtime.xiff.auth
 		public function Anonymous( connection:IXMPPConnection )
 		{
 			this.connection = connection;
-			
+
 			req.setNamespace( Anonymous.NS );
 			req.@mechanism = Anonymous.MECHANISM;
 
@@ -64,7 +64,7 @@ package org.igniterealtime.xiff.auth
 		 */
 		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.localName() == "success";
+			var success:Boolean = response.localName() == SASLAuth.RESPONSE_SUCCESS;
 			return {
 				authComplete: true,
 				authSuccess: success,

@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-	
+
 
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.UnescapedJID;
@@ -34,6 +34,7 @@ package org.igniterealtime.xiff.bookmark
 
 	/**
 	 * XEP-0048: Bookmarks
+	 *
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
 	public class BookmarkPrivatePayload extends XMLStanza implements IPrivatePayload
@@ -55,10 +56,10 @@ package org.igniterealtime.xiff.bookmark
 		public function BookmarkPrivatePayload( groupChatBookmarks:Array = null,
 												urlBookmarks:Array = null )
 		{
-			
+
 			xml.setLocalName( ELEMENT_NAME );
 			xml.setNamespace( NS );
-			
+
 			if ( groupChatBookmarks )
 			{
 				for each ( var bookmark:GroupChatBookmark in groupChatBookmarks )
@@ -84,20 +85,20 @@ package org.igniterealtime.xiff.bookmark
 				}
 			}
 		}
-		
-		
+
+
 
 		override public function set xml( bookmarks:XML ):void
 		{
 			super.xml = bookmarks;
-			
+
 			for each ( var child:XML in bookmarks.children() )
 			{
 				if ( child.localName() == "conference" )
 				{
 					var groupChatBookmark:GroupChatBookmark = new GroupChatBookmark(new EscapedJID("temp@temp.tmp"));
 					groupChatBookmark.xml = child;
-					
+
 					//don't add it if it's a duplicate
 					if ( _groupChatBookmarks.every( function( testGroupChatBookmark:GroupChatBookmark,
 															  index:int, array:Array ):Boolean
@@ -110,7 +111,7 @@ package org.igniterealtime.xiff.bookmark
 				{
 					var urlBookmark:UrlBookmark = new UrlBookmark("temp");
 					urlBookmark.xml =  child;
-					
+
 					//don't add it if it's a duplicate
 					if ( _urlBookmarks.every( function( testURLBookmark:UrlBookmark,
 														index:int, array:Array ):Boolean
@@ -125,7 +126,7 @@ package org.igniterealtime.xiff.bookmark
 				}
 			}
 		}
-		
+
 
 		public function getElementName():String
 		{

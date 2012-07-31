@@ -26,8 +26,8 @@
 package org.igniterealtime.xiff.privatedata
 {
 	import flash.events.EventDispatcher;
-	
-        import org.igniterealtime.xiff.core.IXMPPConnection;
+
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
@@ -37,34 +37,22 @@ package org.igniterealtime.xiff.privatedata
 
 	/**
 	 * XEP-0049: Private XML Storage
-         *
+	 *
 	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataManager extends EventDispatcher
 	{
-		private static var privateDataManagerConstructed:Boolean = privateDataManagerStaticConstructor();
-		
-		/**
-	     * Registers this extension with the extension registry for it to be used,
-		 * in case incoming data matches the ELEMENT_NAME and NS.
-	     */
-		private static function privateDataManagerStaticConstructor():Boolean
-		{
-			ExtensionClassRegistry.register( PrivateDataExtension );
-			return true;
-		}
-		
-                private var _connection:IXMPPConnection;
-		
+		private var _connection:IXMPPConnection;
+
 		/**
 		 *
-		 * @param	connection
+		 * @param	aConnection
 		 */
-                public function PrivateDataManager(connection:IXMPPConnection)
+		public function PrivateDataManager( aConnection:IXMPPConnection )
 		{
-			_connection = connection;
+			connection = aConnection;
 		}
-		
+
 		/**
 		 *
 		 * @param	elementName
@@ -77,10 +65,10 @@ package org.igniterealtime.xiff.privatedata
 			var iq:IQ = new IQ(null, IQ.TYPE_GET, null, packetFilter.accept );
 			var ext:PrivateDataExtension = new PrivateDataExtension(elementName, elementNamespace);
 			iq.addExtension( ext );
-			
+
 			_connection.send(iq);
 		}
-		
+
 		/**
 		 *
 		 * @param	elementName
@@ -93,8 +81,24 @@ package org.igniterealtime.xiff.privatedata
 			var ext:PrivateDataExtension = new PrivateDataExtension(elementName, elementNamespace);
 			ext.payload = payload;
 			iq.addExtension( ext );
-			
+
 			_connection.send(iq);
+		}
+
+		/**
+		 * The instance of the XMPPConnection class to use for sending and
+		 * receiving data.
+		 */
+		public function get connection():IXMPPConnection
+		{
+			return _connection;
+		}
+		public function set connection( value:IXMPPConnection ):void
+		{
+			_connection = value;
+			_connection.enableExtensions(
+				PrivateDataExtension
+			);
 		}
 	}
 }

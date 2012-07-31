@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.auth
 {
 	import com.hurlant.util.Base64;
 
-    import org.igniterealtime.xiff.core.UnescapedJID;
+	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
 
 	/**
@@ -49,7 +49,7 @@ package org.igniterealtime.xiff.auth
 		public function Plain( connection:IXMPPConnection )
 		{
 			this.connection = connection;
-			
+
 			//should probably use the escaped form, but flex/as handles \\ weirdly for unknown reasons
 			var jid:UnescapedJID = connection.jid;
 			var authContent:String = jid.bareJID;
@@ -84,7 +84,7 @@ package org.igniterealtime.xiff.auth
 		 */
 		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.localName() == "success";
+			var success:Boolean = response.localName() == SASLAuth.RESPONSE_SUCCESS;
 			return {
 				authComplete: true,
 				authSuccess: success,

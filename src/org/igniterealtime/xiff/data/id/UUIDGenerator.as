@@ -1,6 +1,6 @@
 /*
 * Copyright (C) 2003-2012 Igniterealtime Community Contributors
-*   
+*
 *     Daniel Henninger
 *     Derrick Grigg <dgrigg@rogers.com>
 *     Juga Paazmaya <olavic@gmail.com>
@@ -8,14 +8,14 @@
 *     Sean Treadway <seant@oncotype.dk>
 *     Sean Voisen <sean@voisen.org>
 *     Mark Walters <mark@yourpalmark.com>
-* 
-* 
+*
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *     http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,11 +32,11 @@ package org.igniterealtime.xiff.data.id
 	public class UUIDGenerator implements IIDGenerator
 	{
 		private var _prefix:String;
-		
+
 		public function UUIDGenerator()
 		{
 		}
-	
+
 		/**
 		 * The prefix to use for the generated ID (for namespacing purposes).
 		 */
@@ -44,15 +44,11 @@ package org.igniterealtime.xiff.data.id
 		{
 			return _prefix;
 		}
-	
-		/**
-		 * @private
-		 */
 		public function set prefix( value:String ):void
 		{
 			_prefix = value;
 		}
-	
+
 		/**
 		 * Generates the unique ID.
 		 *
@@ -62,7 +58,7 @@ package org.igniterealtime.xiff.data.id
 		{
 			var uuid:String = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace( /[xy]/g, replaceChar );
 			var id:String;
-	
+
 			if ( _prefix != null ) {
 				id = _prefix + uuid;
 			} else {
@@ -70,7 +66,7 @@ package org.igniterealtime.xiff.data.id
 			}
 			return id;
 		}
-	
+
 		private function replaceChar():String
 		{
 			var r:Number = Math.random() * 16 | 0;

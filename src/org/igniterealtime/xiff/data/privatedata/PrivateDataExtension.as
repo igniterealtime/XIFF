@@ -28,13 +28,12 @@ package org.igniterealtime.xiff.data.privatedata
 
 
 	import org.igniterealtime.xiff.data.Extension;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.privatedata.IPrivatePayload;
 
 	/**
 	 * XEP-0049: Private XML Storage
-		 *
+	 *
 	 * @see http://xmpp.org/extensions/xep-0049.html
 	 */
 	public class PrivateDataExtension extends Extension implements IExtension
@@ -65,7 +64,7 @@ package org.igniterealtime.xiff.data.privatedata
 				xml.appendChild(extension);
 			}
 
-			_payloadExt = payload;
+			this.payload = payload;
 		}
 
 
@@ -112,7 +111,7 @@ package org.igniterealtime.xiff.data.privatedata
 			if (list.length() > 0)
 			{
 				var ns:Namespace = list[0].namespace();
-				if (ns)
+				if (ns != null)
 				{
 					return ns.uri;
 				}
@@ -125,44 +124,16 @@ package org.igniterealtime.xiff.data.privatedata
 		 */
 		public function get payload():IPrivatePayload
 		{
-			return _payloadExt;
+			var list:XMLList = xml[privateName].children();
+			if (list.length() > 0)
+			{
+				return IPrivatePayload(list[0]);
+			}
+			return null;
 		}
 		public function set payload( value:IPrivatePayload ):void
 		{
-			_payloadExt = value;
+			xml[privateName] = value; // TODO: perhaps replace children or similar...
 		}
-
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-			if (node.children().length() > 0)
-			{
-				var payloadNode:XML = node.children()[0];
-				var ns:Namespace = payloadNode.namespace();
-				if (ns == null)
-				{
-					return;
-				}
-
-				var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, payloadNode.localName());
-				if (extClass == null)
-				{
-					return;
-				}
-				var ext:IPrivatePayload = new extClass();
-				if (ext != null && ext is IPrivatePayload)
-				{
-					ext.xml = payloadNode;
-					_payloadExt = ext;
-					return;
-				}
-				else
-				{
-					return;
-				}
-			}
-		}
-
 	}
 }

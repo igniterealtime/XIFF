@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.data.muc
 {
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
-	
+
 	/**
 	 * XEP-0306: Extensible Status Conditions for Multi-User Chat
 	 *
@@ -42,19 +42,20 @@ package org.igniterealtime.xiff.data.muc
 	 */
 	public class MUCStatus extends XMLStanza implements INodeProxy
 	{
-		public static const NS:String = "urn:xmpp:muc:conditions:1"; // Note that this is for the message element
-		public static const ELEMENT_NAME:String = "status";
-		
 		/**
-		 * Please note that the xmlNode is not used, only the parent.
+		 * Note that this namespace is for the message element
+		 */
+		public static const NS:String = "urn:xmpp:muc:conditions:1";
+		public static const ELEMENT_NAME:String = "status";
+
+		/**
 		 *
-		 * @param	xmlNode
-		 * @param	parentStanza
+		 * @param	parent
 		 */
 		public function MUCStatus(parent:XML = null)
 		{
 			super();
-			
+
 			xml.setLocalName( ELEMENT_NAME );
 
 			if (parent != null)
@@ -88,7 +89,7 @@ package org.igniterealtime.xiff.data.muc
 				setAttribute("code", value.toString());
 			}
 		}
-		
+
 		/**
 		 * Property that contains some text with a description of a condition.
 		 *

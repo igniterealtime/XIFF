@@ -68,6 +68,28 @@ package org.igniterealtime.xiff.data
 		public static const ELEMENT_PRESENCE:String = "presence";
 		public static const ELEMENT_IQ:String = "iq";
 
+
+		/**
+		 * Do not retry (the error is unrecoverable)
+		 */
+		public static const ERROR_CANCEL:String = "cancel";
+		/**
+		 * Proceed (the condition was only a warning)
+		 */
+		public static const ERROR_CONTINUE:String = "continue";
+		/**
+		 * Retry after changing the data sent
+		 */
+		public static const ERROR_MODIFY:String = "modify";
+		/**
+		 * Retry after providing credentials
+		 */
+		public static const ERROR_AUTH:String = "auth";
+		/**
+		 * Retry after waiting (the error is temporary)
+		 */
+		public static const ERROR_WAIT:String = "wait";
+
 		/**
 		 * Internal name in XIFF for incoming data.
 		 * The proper element name should be available after setting the XML.
@@ -170,7 +192,6 @@ package org.igniterealtime.xiff.data
 		 * use the incremental ID generation scheme provided by the IncrementalGenerator class, while
 		 * IQs could use the shared object ID generation scheme provided by the SOIncrementalGenerator class.</p>
 		 *
-		 * @param	generator The ID generator class
 		 * @example	The following sets the ID generator for the Message stanza type to an IncrementalGenerator
 		 * found in org.igniterealtime.xiff.data.id.IncrementalGenerator:
 		 * <pre>Message.idGenerator = new IncrementalGenerator();</pre>
@@ -180,11 +201,7 @@ package org.igniterealtime.xiff.data
 		{
 			return _idGenerator;
 		}
-
-		/**
-		 * @private
-		 */
-		public static function set idGenerator(  value:IIDGenerator ):void
+		public static function set idGenerator( value:IIDGenerator ):void
 		{
 			_idGenerator = value;
 		}
@@ -456,6 +473,7 @@ package org.igniterealtime.xiff.data
 		}
 		public function set errorType( value:String ):void
 		{
+			// TODO: Check that it is one of the ERROR_*
 			setChildAttribute("error", "type", value);
 		}
 

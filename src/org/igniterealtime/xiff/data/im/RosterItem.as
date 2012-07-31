@@ -102,7 +102,7 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function removeAllGroups():void
 		{
-			delete xml.group;
+			removeFields("group");
 		}
 		
 		/**

@@ -29,7 +29,7 @@ package org.igniterealtime.xiff.auth
 	import flash.utils.Dictionary;
 
 	import org.igniterealtime.xiff.core.IXMPPConnection;
-	
+
 	/**
 	 * This class provides SASL authentication using the X-FACEBOOK-PLATFORM mechanism.
 	 *
@@ -55,10 +55,10 @@ package org.igniterealtime.xiff.auth
 		 *
 		 * @param	connection A reference to the XMPPConnection instance in use.
 		 */
-        public function XFacebookPlatform( connection:IXMPPConnection )
+		public function XFacebookPlatform( connection:IXMPPConnection )
 		{
 			this.connection = connection;
-			
+
 			req.setNamespace( XFacebookPlatform.NS );
 			req.@mechanism = XFacebookPlatform.MECHANISM;
 
@@ -139,7 +139,7 @@ package org.igniterealtime.xiff.auth
 		 */
 		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.localName() == "success";
+			var success:Boolean = response.localName() == SASLAuth.RESPONSE_SUCCESS;
 			return {
 				authComplete: true,
 				authSuccess: success,

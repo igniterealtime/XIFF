@@ -39,14 +39,14 @@ package org.igniterealtime.xiff.auth
 		public static const MECHANISM:String = "EXTERNAL";
 		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
-		
+
 		/**
 		 * Creates a new External authentication object.
 		 */
 		public function External( connection:IXMPPConnection )
 		{
 			this.connection = connection;
-			
+
 			var authContent:String = connection.jid.node;
 
 			authContent = Base64.encode(authContent);
@@ -75,7 +75,7 @@ package org.igniterealtime.xiff.auth
 		 */
 		override public function handleResponse( stage:int, response:XML ):Object
 		{
-			var success:Boolean = response.localName() == "success";
+			var success:Boolean = response.localName() == SASLAuth.RESPONSE_SUCCESS;
 			return {
 				authComplete: true,
 				authSuccess: success,

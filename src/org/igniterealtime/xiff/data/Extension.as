@@ -68,13 +68,31 @@ package org.igniterealtime.xiff.data
 		}
 
 		/**
-		 * Override in order to take care of setting the Namespace.
+		 * Override in order to take care of setting the Namespace and
+		 * checking for containing extensions.
 		 */
 		override public function set xml( value:XML ):void
 		{
 			super.xml = value;
 
 			xml.setNamespace( IExtension(this).getNS() );
+
+			// Since many of the extensions operate in a way that they contain some other extensions, check for that..
+			for each (var child:XML in value.children())
+			{
+				var ns:Namespace = child.namespace();
+				if (ns != null)
+				{
+					var extClass:Class = ExtensionClassRegistry.lookup(ns.uri, child.localName());
+					if (extClass != null)
+					{
+						var ext:IExtension = new extClass() as IExtension;
+						ext.xml = child;
+						addExtension(ext);
+					}
+
+				}
+			}
 		}
 	}
 }

@@ -1191,22 +1191,7 @@ package org.igniterealtime.xiff.vcard
 			if( privacyClass && ( privacyClass == "public" || privacyClass == "private" || privacyClass == "confidential" ) )
 			{
 				var classNode:XML = <CLASS/>;
-
-				if ( privacyClass == "public" )
-				{
-					var publicNode:XML = <PUBLIC/>;
-					classNode.appendChild( publicNode );
-				}
-				else if ( privacyClass == "private" )
-				{
-					var privateNode:XML = <PRIVATE/>;
-					classNode.appendChild( privateNode );
-				}
-				else if ( privacyClass == "confidential" )
-				{
-					var confidentialNode:XML = <CONFIDENTIAL/>;
-					classNode.appendChild( confidentialNode );
-				}
+				classNode.appendChild( <{ privacyClass.toUpperCase() }/> );
 
 				vcardXml.appendChild( classNode );
 			}

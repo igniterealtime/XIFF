@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.rpc
 		{
 			var result:Array;
 			var response:XML = findNode("methodResponse", xml);
-	
+
 			if (response.hasOwnProperty("fault"))
 			{
 				// methodResponse/fault/value/struct
@@ -68,7 +68,7 @@ package org.igniterealtime.xiff.data.rpc
 			}
 			return result;
 		}
-	
+
 		/**
 		 * The marshalling process, accepting a block of XML, a string description of the remote method,
 		 * and an array of flash type parameters.
@@ -79,20 +79,20 @@ package org.igniterealtime.xiff.data.rpc
 		{
 			var mc:XML = addNode(parent, "methodCall");
 			addText(addNode(mc, "methodName"), method);
-	
+
 			var p:XML = addNode(mc, "params");
 			for (var i:int = 0; i < params.length; ++i)
 			{
 				addParameter(p, params[i]);
 			}
-	
+
 			return mc;
 		}
-	
+
 		private static function extractValue(value:XML):*
 		{
 			var result:* = null;
-	
+
 			switch (value.localName())
 			{
 				case "int":
@@ -100,11 +100,11 @@ package org.igniterealtime.xiff.data.rpc
 				case "double":
 					result = Number(value.toString());
 					break;
-	
+
 				case "boolean":
 					result = Number(value.toString()) ? true : false;
 					break;
-	
+
 				case "array":
 					var value_array:Array = [];
 					for each (var next_value:XML in value.children())
@@ -113,7 +113,7 @@ package org.igniterealtime.xiff.data.rpc
 					}
 					result = value_array;
 					break;
-	
+
 				case "struct":
 					var value_object:Object = {};
 					for each (var member:XML in value.children())
@@ -124,34 +124,35 @@ package org.igniterealtime.xiff.data.rpc
 					}
 					result = value_object;
 					break;
-	
+
 				case "dateTime.iso8601":
 				case "Base64":
 				case "string":
 				default:
 					result = value.toString();
 					break;
-	
+
 			}
-	
+
 			return result;
 		}
-	
+
 		private static function addParameter(node:XML, param:*):XML
 		{
 			return addValue(addNode(node, "param"), param);
 		}
-	
+
 		private static function addValue(node:XML, value:*):XML
 		{
 			var value_node:XML = addNode(node, "value");
-	
-			if (typeof(value) == "string")
+			var type:String = typeof(value);
+
+			if (type == "string")
 			{
 				addText(addNode(value_node, "string"), value);
-	
+
 			}
-			else if (typeof(value) == "number")
+			else if (type == "number")
 			{
 				if (Math.floor(value) != value)
 				{
@@ -161,9 +162,9 @@ package org.igniterealtime.xiff.data.rpc
 				{
 					addText(addNode(value_node, "int"), value.toString());
 				}
-	
+
 			}
-			else if (typeof(value) == "boolean")
+			else if (type == "boolean")
 			{
 				addText(addNode(value_node, "boolean"), value == false ? "0" : "1");
 			}
@@ -175,7 +176,7 @@ package org.igniterealtime.xiff.data.rpc
 					addValue(data, value[i]);
 				}
 			}
-			else if (typeof(value) == "object")
+			else if (type == "object")
 			{
 				// Special case where type is simple custom type is defined
 				if (value.type != undefined && value.value != undefined)
@@ -193,23 +194,23 @@ package org.igniterealtime.xiff.data.rpc
 					}
 				}
 			}
-	
+
 			return node;
 		}
-	
+
 		private static function addNode(parent:XML, name:String):XML
 		{
 			var child:XML = <{ name }/>;
 			parent.appendChild(child);
 			return child;
 		}
-	
+
 		private static function addText(parent:XML, value:String):XML
 		{
 			parent.appendChild(value);
 			return parent.children()[parent.children().length() - 1];
 		}
-	
+
 		/**
 		 * Find an element that has the given name within and including the
 		 * candidate XML.
@@ -238,6 +239,6 @@ package org.igniterealtime.xiff.data.rpc
 			}
 			return null;
 		}
-	
+
 	}
 }

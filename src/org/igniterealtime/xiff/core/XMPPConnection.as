@@ -326,7 +326,7 @@ package org.igniterealtime.xiff.core
 				PingExtension,
 				FormExtension
 			);
-			
+
 			createConnection();
 		}
 
@@ -628,7 +628,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
 		 * Choose the stream start and ending tags based on the given type.
 		 *
 		 * @param	type	One of the <code>STREAM_TYPE_...</code> constants of this class.
@@ -1374,11 +1373,11 @@ package org.igniterealtime.xiff.core
 			{
 				var rawData:ByteArray = new ByteArray();
 				rawData.writeUTFBytes( xmlData.toXMLString() );
-				
+
 				// Add default namespace which is not usually included in XML from the server
 				xmlData.setNamespace( XMLStanza.DEFAULT_NS );
 				xmlData.normalize();
-				
+
 				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );
@@ -1393,7 +1392,7 @@ package org.igniterealtime.xiff.core
 				}
 			}
 		}
-		
+
 		/**
 		 * Check if the incoming data is complete once added to any existing
 		 * incoming data.
@@ -1448,7 +1447,7 @@ package org.igniterealtime.xiff.core
 				// Concatenate the raw xml to the previous xml
 				incompleteRawXML += data;
 			}
-			
+
 			if (isComplete)
 			{
 				return xmlData;
@@ -1476,7 +1475,7 @@ package org.igniterealtime.xiff.core
 		 */
 		private function sendKeepAlive_error( iq:IQ ):void
 		{
-			if( iq.errorType == "cancel" )
+			if ( iq.errorType == XMPPStanza.ERROR_CANCEL )
 			{
 				pingNotSupported = true;
 			}

@@ -238,34 +238,9 @@ package org.igniterealtime.xiff.data
 		{
 			return _idGenerator;
 		}
-
-		/**
-		 * @private
-		 */
-		public static function set idGenerator(  value:IIDGenerator ):void
+		public static function set idGenerator( value:IIDGenerator ):void
 		{
 			_idGenerator = value;
-		}
-
-		/**
-		 * Deserializes an XML object and populates the Message instance with its data.
-		 *
-		 * @param	xmlNode The XML to deserialize
-		 * @return An indication as to whether deserialization was sucessful
-		 */
-		override public function set xml( node:XML ):void
-		{
-			super.xml = node;
-
-
-			// This should have been taken care by XMLStanza, once the given extension is enabled...
-			var list:XMLList = node.children().(localName() == "x");
-			if (list.length() > 0 && list[0].namespace().uri == MUCUserExtension.NS)
-			{
-				var mucUserExtension:MUCUserExtension = new MUCUserExtension(xml);
-				mucUserExtension.xml = list[0];
-				addExtension(mucUserExtension);
-			}
 		}
 
 		/**

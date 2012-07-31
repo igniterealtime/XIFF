@@ -37,6 +37,8 @@ package org.igniterealtime.xiff.auth
 	 */
 	public class SASLAuth
 	{
+		public static const RESPONSE_SUCCESS:String = "success";
+
 		/**
 		 * The XML of the authentication request.
 		 */
@@ -51,7 +53,7 @@ package org.igniterealtime.xiff.auth
 		 * The current response stage.
 		 */
 		protected var stage:int;
-		
+
 		/**
 		 * Connection that is used to authenticate, if any
 		 */

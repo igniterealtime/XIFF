@@ -28,7 +28,7 @@ package org.igniterealtime.xiff.core
 	import com.hurlant.crypto.tls.*;
 
 	import flash.events.*;
-	
+
 
 	/**
 	 * This class is used to connect to and manage data coming from an XMPP server that supports TLS.
@@ -251,11 +251,10 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Ready for authentication only after the possible compression and TLS negotiation
 		 */
 		override protected function get authenticationReady():Boolean
 		{
-			// Ready for authentication only after the possible compression and TLS negotiation
 			return super.authenticationReady && ( ( _tls && tlsEnabled ) || !_tls );
 		}
 	}
