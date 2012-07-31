@@ -38,6 +38,14 @@ package org.igniterealtime.xiff.util
 	public class Zlib implements ICompressor
 	{
 		/**
+		 * Stream Compression - Zlib
+		 */
+		public function Zlib()
+		{
+			
+		}
+		
+		/**
 		 * Uncompress (inflate) the given ByteArray.
 		 *
 		 * @param	data
@@ -59,6 +67,7 @@ package org.igniterealtime.xiff.util
 			
 			
 			var stream:ZStream = new ZStream();
+			stream.inflateInit();
 			
 			stream.next_in = data;
 			stream.next_in_index = 0;
@@ -69,9 +78,6 @@ package org.igniterealtime.xiff.util
 			stream.avail_out = outBytesLength;
 			stream.total_in = 0;
 			
-			
-			err = stream.inflateInit();
-			checkError(stream, err, "inflateInit");
 
 			while (true)
 			{
@@ -150,9 +156,7 @@ package org.igniterealtime.xiff.util
 			var outLen:int = Math.round(data.length * 1.001) + 1 + 12;
 			
 			var stream:ZStream = new ZStream();
-
-			err = stream.deflateInit(JZlib.Z_BEST_COMPRESSION);
-			checkError(stream, err, "deflateInit");
+			stream.deflateInit(JZlib.Z_BEST_COMPRESSION);
 			
 			stream.next_in = data;
 			stream.next_in_index = 0;

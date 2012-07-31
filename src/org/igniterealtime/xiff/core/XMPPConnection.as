@@ -39,6 +39,7 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.util.ICompressor;
+	import org.igniterealtime.xiff.util.Hex;
 
 	/**
 	 * Dispatched when the connection is successfully made to the server.
@@ -323,8 +324,7 @@ package org.igniterealtime.xiff.core
 				AuthExtension,
 				BindExtension,
 				SessionExtension,
-				PingExtension,
-				FormExtension
+				PingExtension
 			);
 
 			createConnection();
@@ -440,6 +440,7 @@ package org.igniterealtime.xiff.core
 				}
 				active = false;
 				loggedIn = false;
+				compressionNegotiated = false;
 
 				var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
 				dispatchEvent( disconnectionEvent );
@@ -1138,6 +1139,7 @@ package org.igniterealtime.xiff.core
 
 			active = false;
 			loggedIn = false;
+			compressionNegotiated = false;
 
 			var disconnectionEvent:DisconnectionEvent = new DisconnectionEvent();
 			dispatchEvent( disconnectionEvent );
@@ -1363,6 +1365,7 @@ package org.igniterealtime.xiff.core
 
 			if ( compressionNegotiated && compressor != null )
 			{
+				trace(getTimer() + " - parseDataReceived. compressed bytedata: " + Hex.readBytes(bytedata));
 				bytedata = compressor.uncompress(bytedata);
 			}
 			bytedata.position = 0;
@@ -1514,6 +1517,7 @@ package org.igniterealtime.xiff.core
 			if ( compressionNegotiated && compressor != null)
 			{
 				bytedata = compressor.compress(bytedata);
+				trace(getTimer() + " - sendData. compressed bytedata: " + Hex.readBytes(bytedata));
 			}
 
 			_outgoingBytes += bytedata.length;
