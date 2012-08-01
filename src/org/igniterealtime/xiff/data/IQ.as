@@ -102,9 +102,9 @@ package org.igniterealtime.xiff.data
 		 *
 		 * @param	recipient The JID of the IQ recipient
 		 * @param	iqType The type of the IQ - there are static variables declared for each type
-		 * @param	iqID The unique ID of the IQ
+		 * @param	iqID The unique ID of the IQ, one of TYPE_* constants
 		 * @param	iqCallback The function to be called when the server responds to the IQ
-		 * @param	iqCallbackScope The object instance containing the callback method
+		 * @param	iqErrorCallback The function to be called when there is an error
 		 */
 		public function IQ( recipient:EscapedJID = null, iqType:String = null, iqID:String = null, iqCallback:Function = null, iqErrorCallback:Function = null )
 		{
