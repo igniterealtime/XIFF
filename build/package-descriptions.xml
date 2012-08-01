@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 <overviews>
 	<packages>
-        <package name="org.igniterealtime.xiff">
+		<package name="org.igniterealtime.xiff">
 			<shortDescription>
-                        <![CDATA[  ]]>
+			   <![CDATA[ XMPP Instant Messaging Library written in Actionscript 3 (Flash Player 9+) ]]>
 			</shortDescription>
 			<description>
-                        <![CDATA[  ]]>
+				<![CDATA[  ]]>
 			</description>
 		</package>
 		<package name="org.igniterealtime.xiff.auth">
-				<shortDescription>
+			<shortDescription>
 				<![CDATA[ Authentication ]]>
-				</shortDescription>
-				<description>
+			</shortDescription>
+			<description>
 				<![CDATA[  ]]>
-				</description>
+			</description>
 		</package>
 		<package name="org.igniterealtime.xiff.bookmark">
-				<shortDescription>
+			<shortDescription>
+				<![CDATA[ Bookmark management for URLs and Group Chats ]]>
+			</shortDescription>
+			<description>
 				<![CDATA[  ]]>
-				</shortDescription>
-				<description>
-				<![CDATA[  ]]>
-				</description>
+			</description>
 		</package>
 		<package name="org.igniterealtime.xiff.collections">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ Lightweight implementation of ArrayCollection ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -43,7 +43,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.conference">
 				<shortDescription>
-				<![CDATA[ MUC related ]]>
+				<![CDATA[ Multi User Chat related ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -83,7 +83,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.browse">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ OBSOLETE Jabber Browsing ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -99,7 +99,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.forms">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ Forms ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -107,7 +107,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.forms.enum">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ Static constants related to Forms ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -115,7 +115,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.id">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ Unique Identifier generation ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -147,7 +147,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.ping">
 				<shortDescription>
-				<![CDATA[ Keeping the connnection alive with ping ]]>
+				<![CDATA[ Keeping the connection alive with ping ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -299,7 +299,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.vcard">
 				<shortDescription>
-				<![CDATA[ vCard data structure  ]]>
+				<![CDATA[ vCard data structure ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
