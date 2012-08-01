@@ -1374,24 +1374,16 @@ package org.igniterealtime.xiff.core
 
 			if ( xmlData != null )
 			{
-				var rawData:ByteArray = new ByteArray();
-				rawData.writeUTFBytes( xmlData.toXMLString() );
+
 
 				// Add default namespace which is not usually included in XML from the server
 				xmlData.setNamespace( XMLStanza.DEFAULT_NS );
 				xmlData.normalize();
 
-				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
-				incomingEvent.data = rawData;
-				dispatchEvent( incomingEvent );
-
-				var len:uint = xmlData.children().length();
-
-				for ( var i:int = 0; i < len; ++i )
+				for each (var child:XML in xmlData.children())
 				{
 					// Read the data and send it to the appropriate parser
-					var currentNode:XML = xmlData.children()[ i ];
-					handleNodeType( currentNode );
+					handleNodeType( child );
 				}
 			}
 		}
@@ -1407,6 +1399,10 @@ package org.igniterealtime.xiff.core
 		{
 			var data:String = bytedata.readUTFBytes( bytedata.length );
 			var rawXML:String = incompleteRawXML + data;
+			
+			// Incoming event should have the real incoming string
+			var rawData:ByteArray = new ByteArray();
+			rawData.writeUTFBytes( rawXML );
 
 			// data coming in could also be parts of base64 encoded stuff.
 
@@ -1453,6 +1449,10 @@ package org.igniterealtime.xiff.core
 
 			if (isComplete)
 			{
+				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
+				incomingEvent.data = rawData;
+				dispatchEvent( incomingEvent );
+				
 				return xmlData;
 			}
 			return null;
