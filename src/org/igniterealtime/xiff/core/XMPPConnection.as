@@ -34,7 +34,6 @@ package org.igniterealtime.xiff.core
 	import org.igniterealtime.xiff.data.auth.AuthExtension;
 	import org.igniterealtime.xiff.data.bind.BindExtension;
 	import org.igniterealtime.xiff.data.ping.PingExtension;
-	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.session.SessionExtension;
 	import org.igniterealtime.xiff.data.disco.InfoDiscoExtension;
 	import org.igniterealtime.xiff.events.*;
@@ -530,6 +529,18 @@ package org.igniterealtime.xiff.core
 			socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
 			socket.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
 			socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+		}
+
+		/**
+		 * Remove those listeners that the <code>createConnection</code> method added.
+		 */
+		protected function removeSocketEventListeners():void
+		{
+			socket.removeEventListener( Event.CLOSE, onSocketClosed );
+			socket.removeEventListener( Event.CONNECT, onSocketConnected );
+			socket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			socket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			socket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
 		}
 
 		/**
@@ -1399,7 +1410,7 @@ package org.igniterealtime.xiff.core
 		{
 			var data:String = bytedata.readUTFBytes( bytedata.length );
 			var rawXML:String = incompleteRawXML + data;
-			
+
 			// Incoming event should have the real incoming string
 			var rawData:ByteArray = new ByteArray();
 			rawData.writeUTFBytes( rawXML );
@@ -1452,7 +1463,7 @@ package org.igniterealtime.xiff.core
 				var incomingEvent:IncomingDataEvent = new IncomingDataEvent();
 				incomingEvent.data = rawData;
 				dispatchEvent( incomingEvent );
-				
+
 				return xmlData;
 			}
 			return null;

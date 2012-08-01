@@ -163,6 +163,19 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Remove those listeners that the <code>configureTLSSocket</code> method added.
+		 */
+		protected function removeTLSSocketEventListeners():void
+		{
+			tlsSocket.removeEventListener( Event.CLOSE, onSocketClosed );
+			tlsSocket.removeEventListener( Event.CONNECT, onSocketConnected );
+			tlsSocket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
+			tlsSocket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
+			tlsSocket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+			tlsSocket.removeEventListener( TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt );
+		}
+
+		/**
 		 * @private
 		 *
 		 * @param	event
@@ -170,31 +183,6 @@ package org.igniterealtime.xiff.core
 		protected function onAcceptPeerCertPrompt( event:Event ):void
 		{
 			trace( 'onAcceptPeerCertPrompt', event.toString() );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function removeSocketEventListeners():void
-		{
-			socket.removeEventListener( Event.CONNECT, onSocketConnected );
-			socket.removeEventListener( Event.CLOSE, onSocketClosed );
-			socket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
-			socket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-			socket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function removeTLSSocketEventListeners():void
-		{
-			tlsSocket.removeEventListener( Event.CONNECT, onSocketConnected );
-			tlsSocket.removeEventListener( Event.CLOSE, onSocketClosed );
-			tlsSocket.removeEventListener( ProgressEvent.SOCKET_DATA, onSocketDataReceived );
-			tlsSocket.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
-			tlsSocket.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
-			tlsSocket.removeEventListener( TLSSocket.ACCEPT_PEER_CERT_PROMPT, onAcceptPeerCertPrompt );
 		}
 
 		/**
