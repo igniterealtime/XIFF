@@ -120,19 +120,15 @@ package org.igniterealtime.xiff.core
 		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
 
 		/**
-		 * @private
-		 *
 		 * The types of SASL mechanisms available.
+		 *
+		 * <p>By default, only <code>Anonymous</code> and <code>DigestMD5</code> are enabled.</p>
 		 * @see org.igniterealtime.xiff.auth.Anonymous
 		 * @see org.igniterealtime.xiff.auth.DigestMD5
-		 * @see org.igniterealtime.xiff.auth.External
-		 * @see org.igniterealtime.xiff.auth.Plain
 		 */
-		protected static const SASL_MECHANISMS:Object = {
+		protected const saslMechanisms:Object = {
 			"ANONYMOUS": Anonymous,
-			"DIGEST-MD5": DigestMD5,
-			"EXTERNAL": External,
-			"PLAIN": Plain
+			"DIGEST-MD5": DigestMD5
 		};
 
 		/**
@@ -151,7 +147,6 @@ package org.igniterealtime.xiff.core
 		protected var openingStreamTag:String;
 
 		/**
-		 * @private
 		 * Depending of the STREAM_TYPE_* used in the <code>connect()</code> method,
 		 * this variable will contain a matching closing element for it.
 		 * <code>parseDataReceived()</code> method will use this value.
@@ -371,29 +366,24 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Remove a SASL mechanism.
-		 *
-		 * TODO: Combine to extension disabling..
-		 *
-		 *
-		 * @param	name
-		 */
-		public static function disableSASLMechanism( name:String ):void
-		{
-			SASL_MECHANISMS[ name ] = null;
-		}
-
-		/**
-		 * Add a SASL mechanism.
-		 *
-		 * TODO: Combine to extension enabling..
+		 * Add a SASL mechanism available for this connection
 		 *
 		 * @param	name
 		 * @param	authClass
 		 */
-		public static function registerSASLMechanism( name:String, authClass:Class ):void
+		public function enableSASLMechanism( name:String, authClass:Class ):void
 		{
-			SASL_MECHANISMS[ name ] = authClass;
+			saslMechanisms[ name.toUpperCase() ] = authClass;
+		}
+
+		/**
+		 * Remove a SASL mechanism from this connection
+		 *
+		 * @param	name
+		 */
+		public function disableSASLMechanism( name:String ):void
+		{
+			saslMechanisms[ name.toUpperCase() ] = null;
 		}
 
 		/**
@@ -684,11 +674,10 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
-		 * Use the authentication which is first in the list (SASL_MECHANISMS) if possible.
+		 * Use the authentication which is first in the list (<code>saslMechanisms</code>) if possible.
 		 *
 		 * @param	mechanisms
-		 * @see #SASL_MECHANISMS
+		 * @see #saslMechanisms
 		 */
 		protected function configureAuthMechanisms( mechanisms:XML ):void
 		{
@@ -698,7 +687,7 @@ package org.igniterealtime.xiff.core
 			{
 				var authName:String = mechanism.toString();
 
-				AuthClass = SASL_MECHANISMS[ authName ];
+				AuthClass = saslMechanisms[ authName ] as Class;
 
 				if ( useAnonymousLogin )
 				{
@@ -727,6 +716,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Zlib is the most common and the one which is required to be implemented in case
+		 * Stream Compression is used.
+		 *
 		 * <p>Ask the server to enable Zlib compression of the stream.</p>
 		 * <p>Supported types in XMPP are <code>zlib</code> and <code>lzw</code>.</p>
 		 * <p>XIFF however only supports <code>zlib</code> and only after the Adler32 checksum is somehow implemented.</p>
@@ -763,7 +755,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Runs after binding
 		 */
 		protected function establishSession():void
 		{
@@ -920,10 +912,10 @@ package org.igniterealtime.xiff.core
 		protected function serviceDiscoveryResponce(to:EscapedJID, id:String):void
 		{
 			var iq:IQ = new IQ(to, IQ.TYPE_RESULT, id);
-			// now get NS from each enabled extension...
 			var names:Array = ExtensionClassRegistry.getNamespaces();
 			var ext:InfoDiscoExtension = new InfoDiscoExtension();
 			ext.addFeatures(names);
+			iq.addExtension(ext);
 			send(iq);
 
 			// Two kind of error might be needed to send:
@@ -962,18 +954,6 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Calls a appropriate parser base on the nodeName.
-		 *
-		 * <p>The XMPP RFCs define an ordering for the features defined therein, namely:</p>
-		 * <ol>
-		 * <li>TLS</li>
-		 * <li>In-band registration, if registration needed</li>
-		 * <li>SASL</li>
-		 * <li>Stream compression, if used</li>
-		 * <li>Resource binding</li>
-		 * </ol>
-		 *
-		 * @param	node
-		 * @see http://xmpp.org/extensions/xep-0170.html
 		 */
 		protected function handleNodeType( node:XML ):void
 		{
@@ -1221,64 +1201,66 @@ package org.igniterealtime.xiff.core
 		 * </tbody>
 		 * </table>
 		 *
-		 * @param	node
+		 * <p>The XMPP RFCs define an ordering for the features defined therein, namely:</p>
+		 * <ol>
+		 * <li>TLS, requires the use of <code>XMPPTLSConnection</code></li>
+		 * <li>In-band registration, if registration needed</li>
+		 * <li>SASL</li>
+		 * <li>Stream compression, if used</li>
+		 * <li>Resource binding</li>
+		 * </ol>
 		 *
+		 * @param	node
 		 * @see http://xmpp.org/registrar/stream-features.html
+		 * @see http://xmpp.org/extensions/xep-0170.html
 		 */
 		protected function handleStreamFeatures( node:XML ):void
 		{
-			if ( !loggedIn )
+			for each ( var feature:XML in node.children() )
 			{
-				for each ( var feature:XML in node.children() )
-				{
-					var localName:String = feature.localName();
+				var localName:String = feature.localName();
 
-					switch (localName)
-					{
-						case "amp":
-							break;
-						case "compression":
-							// zlib is the most common and the one which is required to be implemented.
-							if ( _compress )
-							{
-								configureStreamCompression();
-							}
-							break;
-						case "auth":
-							break;
-						case "register":
-							break;
-						case "bind":
-							break;
-						case "mechanisms":
+				switch (localName)
+				{
+					case "starttls":
+						handleStreamTLS( feature ); // Checks for 'required'
+						break;
+					case "register":
+						// In Band Registration, if enabled.... TODO
+						break;
+					case "mechanisms":
+						if ( !loggedIn )
+						{
 							configureAuthMechanisms( feature );
-							break;
-						case "session":
-							break;
-						case "starttls":
-							handleStreamTLS( feature );
-							break;
-						case "sm":
-							break;
-					}
+							beginAuthentication();
+						}
+						break;
+					case "compression":
+						if ( (_compress && !compressionNegotiated) && loggedIn )
+						{
+							configureStreamCompression();
+						}
+						break;
+					case "bind":
+						// compression needed, done? else auth done?
+						if ( ((_compress && compressionNegotiated) || !_compress) && loggedIn )
+						{
+							bindConnection();
+						}
+						break;
+					case "amp":
+						// Advanced Message Processing. Coming in XIFF 3.2.0
+						break;
+					case "auth":
+						// Non-SASL Authentication. Not supported
+						break;
+					case "session":
+						// Session Establishment. Done after successful bind
+						break;
+					case "sm":
+						// Stream Management. Not supported
+						break;
 				}
-
-				if ( authenticationReady )
-				{
-					// TODO: Why is the username required here but it is not used at the backend?
-					if ( useAnonymousLogin || ( username != null && username.length > 0 ) )
-					{
-						beginAuthentication();
-					}
-					else
-					{
-						// How to inform the user of the need for in-band registration?
-					}
-				}
-			}
-			else
-			{
-				bindConnection();
 			}
 		}
 
@@ -1291,23 +1273,21 @@ package org.igniterealtime.xiff.core
 		{
 			if ( node.hasOwnProperty("required") )
 			{
-				// No TLS support yet
-				// policy-violation might be more proper condition...
-				dispatchError( "tls-required", "The server requires TLS. Please use XMPPTLSConnection.", "cancel", 501 );
+				// No TLS support in this class
+				dispatchError( "policy-violation", "The server requires TLS. Please use XMPPTLSConnection.", "cancel", 501 );
 				disconnect();
 				return;
 			}
 		}
 
 		/**
-		 * @private
-		 * This fires the standard dispatchError method. need to add the appropriate error code
+		 * This fires the standard dispatchError method
 		 *
 		 * @param	event
 		 */
 		protected function onIOError( event:IOErrorEvent ):void
 		{
-			dispatchError( "service-unavailable", "Service Unavailable", "cancel", 503 );
+			dispatchError( "service-unavailable", "Service Unavailable", "cancel" );
 		}
 
 		/**
@@ -1385,8 +1365,6 @@ package org.igniterealtime.xiff.core
 
 			if ( xmlData != null )
 			{
-
-
 				// Add default namespace which is not usually included in XML from the server
 				xmlData.setNamespace( XMLStanza.DEFAULT_NS );
 				xmlData.normalize();
@@ -1612,7 +1590,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Get the total count of the received bytes in the current session.
-		 * Mainly useful for tracking network traffic.
+		 * <p>Mainly useful for tracking network traffic.</p>
 		 */
 		public function get incomingBytes():uint
 		{
@@ -1621,8 +1599,8 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Gets the fully qualified unescaped JID of the user.
-		 * A fully-qualified JID includes the resource. A bare JID does not.
-		 * To get the bare JID, use the <code>bareJID</code> property of the UnescapedJID.
+		 * <p>A fully-qualified JID includes the resource. A bare JID does not.
+		 * To get the bare JID, use the <code>bareJID</code> property of the UnescapedJID.</p>
 		 *
 		 * @return The fully qualified unescaped JID
 		 * @see	org.igniterealtime.xiff.core.UnescapedJID#bareJID
@@ -1654,7 +1632,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * The port to use when connecting. The default XMPP port is 5222.
+		 * The port to use when connecting.
+		 * @default 5222
 		 */
 		public function get port():uint
 		{
@@ -1774,6 +1753,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Connection is ready to authenticate
+		 * Should not be used as this does not comply with correct Feature Handling Order
 		 */
 		protected function get authenticationReady():Boolean
 		{
