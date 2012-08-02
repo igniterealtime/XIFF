@@ -27,6 +27,7 @@
 	<component class="org.igniterealtime.xiff.core.IBrowser" />
 	<component class="org.igniterealtime.xiff.core.IListener" />
 	<component class="org.igniterealtime.xiff.core.IXMPPConnection" />
+	<component class="org.igniterealtime.xiff.core.InBandRegistrator" />
 	<component class="org.igniterealtime.xiff.core.UnescapedJID" />
 	<component class="org.igniterealtime.xiff.core.XMPPBOSHConnection" />
 	<component class="org.igniterealtime.xiff.core.XMPPConnection" />
@@ -79,6 +80,7 @@
 	<component class="org.igniterealtime.xiff.data.message.ArchiveAutomaticExtension" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveChatCollection" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveExtension" />
+	<component class="org.igniterealtime.xiff.data.message.ArchiveListExtension" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveManualExtension" />
 	<component class="org.igniterealtime.xiff.data.message.ArchivePreferenceExtension" />
 	<component class="org.igniterealtime.xiff.data.muc.IMUCExtension" />
@@ -116,6 +118,7 @@
 	<component class="org.igniterealtime.xiff.events.IncomingDataEvent" />
 	<component class="org.igniterealtime.xiff.events.InviteEvent" />
 	<component class="org.igniterealtime.xiff.events.LoginEvent" />
+	<component class="org.igniterealtime.xiff.events.MessageArchiveEvent" />
 	<component class="org.igniterealtime.xiff.events.MessageEvent" />
 	<component class="org.igniterealtime.xiff.events.ModelChangedEvent" />
 	<component class="org.igniterealtime.xiff.events.OutgoingDataEvent" />
@@ -133,11 +136,13 @@
 	<component class="org.igniterealtime.xiff.filter.IPacketFilter" />
 	<component class="org.igniterealtime.xiff.im.IRoster" />
 	<component class="org.igniterealtime.xiff.im.Roster" />
+	<component class="org.igniterealtime.xiff.message.MessageArchiveManager" />
 	<component class="org.igniterealtime.xiff.namespaces.xiff_internal" />
 	<component class="org.igniterealtime.xiff.privatedata.IPrivatePayload" />
 	<component class="org.igniterealtime.xiff.privatedata.PrivateDataManager" />
 	<component class="org.igniterealtime.xiff.util.Callback" />
 	<component class="org.igniterealtime.xiff.util.DateTimeParser" />
+	<component class="org.igniterealtime.xiff.util.Hex" />
 	<component class="org.igniterealtime.xiff.util.ICompressor" />
 	<component class="org.igniterealtime.xiff.util.SHA1" />
 	<component class="org.igniterealtime.xiff.util.Zlib" />
