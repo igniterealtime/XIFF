@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var _tls:Boolean = false;
+		protected var _tls:Boolean = true;
 
 		/**
 		 * Constructor.
@@ -91,7 +91,7 @@ package org.igniterealtime.xiff.core
 		 */
 		override public function disconnect():void
 		{
-			if ( isActive() )
+			if ( active )
 			{
 				if ( tlsEnabled )
 				{
@@ -130,7 +130,10 @@ package org.igniterealtime.xiff.core
 		 */
 		override protected function handleStreamTLS( node:XML ):void
 		{
+			trace("XMPPTLSConnection::handleStreamTLS. node: " + node.toXMLString());
+			
 			// If the user did not turn on TLS but the server requires it
+			// TODO: user/developer should be notified somehow..
 			if ( node.hasOwnProperty("required") )
 			{
 				_tls = true;
@@ -228,6 +231,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Specifies whether to enable TLS.
+		 * @default true
 		 */
 		public function get tls():Boolean
 		{
@@ -236,14 +240,6 @@ package org.igniterealtime.xiff.core
 		public function set tls( value:Boolean ):void
 		{
 			_tls = value;
-		}
-
-		/**
-		 * Ready for authentication only after the possible compression and TLS negotiation
-		 */
-		override protected function get authenticationReady():Boolean
-		{
-			return super.authenticationReady && ( ( _tls && tlsEnabled ) || !_tls );
 		}
 	}
 }

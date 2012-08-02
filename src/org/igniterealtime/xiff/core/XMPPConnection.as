@@ -88,6 +88,12 @@ package org.igniterealtime.xiff.core
 	 * @eventType org.igniterealtime.xiff.events.PresenceEvent.PRESENCE
 	 */
 	[Event( name="presence", type="org.igniterealtime.xiff.events.PresenceEvent" )]
+	/**
+	 * Dispatched on incoming IQ data that has an enabled extension.
+	 *
+	 * @eventType org.igniterealtime.xiff.events.IQEvent
+	 */
+	[Event( type="org.igniterealtime.xiff.events.IQEvent" )]
 
 	/**
 	 * This class is used to connect to and manage data coming from an XMPP server.
@@ -186,7 +192,7 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var loggedIn:Boolean = false;
+		private var _loggedIn:Boolean = false;
 
 		/**
 		 * @private
@@ -419,7 +425,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function disconnect():void
 		{
-			if ( isActive() )
+			if ( active )
 			{
 				sendXML( closingStreamTag );
 
@@ -437,29 +443,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Determines whether the connection with the server is currently active. (Not necessarily logged in.
-		 * For login status, use the <code>isLoggedIn()</code> method.)
-		 *
-		 * @return A boolean indicating whether the connection is active.
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isLoggedIn
-		 */
-		public function isActive():Boolean
-		{
-			return active;
-		}
-
-		/**
-		 * Determines whether the user is connected and logged into the server.
-		 *
-		 * @return A boolean indicating whether the user is logged in.
-		 * @see	org.igniterealtime.xiff.core.XMPPConnection#isActive
-		 */
-		public function isLoggedIn():Boolean
-		{
-			return loggedIn;
-		}
-
-		/**
 		 * Sends data to the server. If the data to send cannot be serialized properly,
 		 * this method throws a <code>SerializeException</code>.
 		 *
@@ -473,7 +456,7 @@ package org.igniterealtime.xiff.core
 		 */
 		public function send( data:IXMPPStanza ):void
 		{
-			if ( isActive() )
+			if ( active )
 			{
 				if ( data is IQ )
 				{
@@ -735,12 +718,12 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @exampleText dispatchError("bind-failed", "BindExtension came without a JID", null, 401);
+		 * @exampleText dispatchError("bind-failed", "BindExtension came without a JID");
 		 *
 		 * @param	condition
 		 * @param	message
 		 * @param	type
-		 * @param	code Legacy code
+		 * @param	code Legacy code, try not to use. Will be removed in XIFF 3.2.0
 		 * @param	extension
 		 */
 		protected function dispatchError( condition:String, message:String, type:String, code:int = 0, extension:Extension=null ):void
@@ -756,6 +739,8 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Runs after binding
+		 *
+		 * @see http://tools.ietf.org/html/rfc3921#section-3
 		 */
 		protected function establishSession():void
 		{
@@ -1018,7 +1003,7 @@ package org.igniterealtime.xiff.core
 					// sends empty document
 
 					// I am enabling this for debugging. Who?
-					dispatchError( "undefined-condition", "Unknown Error", "modify", 500 );
+					dispatchError( "undefined-condition", "Unknown Error", "modify" );
 					break;
 			}
 		}
@@ -1058,12 +1043,11 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
-		 *
 		 * @param	node
 		 */
 		protected function handleStream( node:XML ):void
 		{
+			trace("handleStream. node: " + node.toXMLString());
 			sessionID = node.@id;
 			domain = node.@from;
 
@@ -1086,7 +1070,7 @@ package org.igniterealtime.xiff.core
 		 * stanza error conditions defined below; this element MUST be
 		 * qualified by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace.
 		 *
-				 * MAY contain a <strong>text</strong> child containing XML character data that
+		 * MAY contain a <strong>text</strong> child containing XML character data that
 		 * describes the error in more detail; this element MUST be qualified
 		 * by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace and SHOULD
 		 * possess an 'xml:lang' attribute specifying the natural language of
@@ -1226,7 +1210,7 @@ package org.igniterealtime.xiff.core
 						handleStreamTLS( feature ); // Checks for 'required'
 						break;
 					case "register":
-						// In Band Registration, if enabled.... TODO
+						// In-Band Registration, if enabled.... TODO
 						break;
 					case "mechanisms":
 						if ( !loggedIn )
@@ -1265,7 +1249,6 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
 		 *
 		 * @param	node The feature containing starttls tag.
 		 */
@@ -1712,7 +1695,7 @@ package org.igniterealtime.xiff.core
 		public function set useAnonymousLogin( value:Boolean ):void
 		{
 			// Set only if not connected
-			if ( !isActive() )
+			if ( !active )
 			{
 				_useAnonymousLogin = value;
 			}
@@ -1732,13 +1715,18 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Specifies whether the socket is connected.
+		 * Determines whether the connection with the server is currently active.
+		 *
+		 * <p>Not necessarily logged in. For login status, use the
+		 * <code>loggedIn</code> method.</p>
+		 *
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection#loggedIn
 		 */
-		protected function get active():Boolean
+		public function get active():Boolean
 		{
 			return _active;
 		}
-		protected function set active( value:Boolean ):void
+		public function set active( value:Boolean ):void
 		{
 			if ( value )
 			{
@@ -1752,13 +1740,17 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Connection is ready to authenticate
-		 * Should not be used as this does not comply with correct Feature Handling Order
+		 * Determines whether the user is connected and logged into the server.
+		 *
+		 * @see	org.igniterealtime.xiff.core.XMPPConnection#active
 		 */
-		protected function get authenticationReady():Boolean
+		public function get loggedIn():Boolean
 		{
-			// Ready for authentication only after the possible compression
-			return ( _compress && compressionNegotiated ) || !_compress;
+			return _loggedIn;
+		}
+		public function set loggedIn( value:Boolean ):void
+		{
+			_loggedIn = value;
 		}
 	}
 }

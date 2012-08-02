@@ -36,9 +36,12 @@ package org.igniterealtime.xiff.events
 	public class IQEvent extends Event
 	{
 		private var _data:IExtension;
-
 		private var _iq:IQ;
 
+		/**
+		 * Type should be the namespace of the extension that is related to this IQ
+		 * @param	type
+		 */
 		public function IQEvent( type:String )
 		{
 			super( type, false, false );

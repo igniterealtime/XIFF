@@ -38,10 +38,6 @@ package org.igniterealtime.xiff.core
 
 		function disconnect():void;
 
-		function isActive():Boolean;
-
-		function isLoggedIn():Boolean;
-
 		function enableExtensions(... exts):void;
 
 		function disableExtensions(... exts):void;
@@ -82,5 +78,11 @@ package org.igniterealtime.xiff.core
 
 		function get username():String;
 		function set username( value:String ):void;
+
+		function get active():Boolean;
+		function set active( value:Boolean ):void;
+
+		function get loggedIn():Boolean;
+		function set loggedIn( value:Boolean ):void;
 	}
 }

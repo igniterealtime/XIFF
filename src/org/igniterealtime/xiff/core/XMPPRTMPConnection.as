@@ -136,7 +136,7 @@ package org.igniterealtime.xiff.core
 
 		override public function disconnect():void
 		{
-			if ( isActive() )
+			if ( active )
 			{
 				netConnection.close();
 				active = false;
@@ -154,6 +154,9 @@ package org.igniterealtime.xiff.core
 			netConnection.connect(xmppUrl);
 		}
 
+		/**
+		 * No need for keepalive
+		 */
 		override public function sendKeepAlive():void
 		{
 

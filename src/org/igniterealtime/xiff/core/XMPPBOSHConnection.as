@@ -469,7 +469,7 @@ package org.igniterealtime.xiff.core
 			 * We shouldn't poll if the connection is dead, if we had requests
 			 * to send instead, or if there's already one in progress
 			 */
-			if ( !isActive() || !_pollingEnabled || sendQueuedRequests() || _requestCount > 0 )
+			if ( !active || !_pollingEnabled || sendQueuedRequests() || _requestCount > 0 )
 			{
 				return;
 			}

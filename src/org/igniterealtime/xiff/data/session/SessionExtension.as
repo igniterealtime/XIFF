@@ -26,18 +26,18 @@
 package org.igniterealtime.xiff.data.session
 {
 
-        import org.igniterealtime.xiff.data.Extension;
+    import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	
 	/**
-         * Session Establishment
-         *
-         * <p>Most instant messaging and presence applications based on XMPP are
+	 * Session Establishment
+	 *
+	 * <p>Most instant messaging and presence applications based on XMPP are
 	 * implemented via a client-server architecture that requires a client
 	 * to establish a session on a server in order to engage in the expected
 	 * instant messaging and presence activities.  However, there are
 	 * several pre-conditions that MUST be met before a client can establish
-         * an instant messaging and presence session.</p>
+     * an instant messaging and presence session.</p>
 	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-3
 	 */
@@ -47,6 +47,7 @@ package org.igniterealtime.xiff.data.session
 		public static const ELEMENT_NAME:String = "session";
 		
 		/**
+		 * Session Establishment as defined in RFC 3921
 		 *
 		 * @param	parent
 		 * @see org.igniterealtime.xiff.core.XMPPConnection#establishSession
