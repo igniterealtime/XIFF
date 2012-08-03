@@ -68,7 +68,7 @@ package org.igniterealtime.xiff.util
 			{
 				var byte:uint = ba.readUnsignedByte();
 				//trace("readBytes. byte " + i + ": " + byte + " -- " + byte.toString(16));
-				hex += byte.toString(16).substr(-2);
+				hex += String("0" + byte.toString(16)).substr(-2);
 			}
 			return hex;
 		}
