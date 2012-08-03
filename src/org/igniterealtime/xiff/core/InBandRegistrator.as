@@ -65,9 +65,12 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	aConnection A reference to the <code>XMPPConnection</code> instance to use.
 		 */
-		public function InBandRegistrator( aConnection:IXMPPConnection )
+		public function InBandRegistrator( aConnection:IXMPPConnection = null )
 		{
-			connection = aConnection;
+			if ( aConnection != null )
+			{
+				connection = aConnection;
+			}
         }
 
 

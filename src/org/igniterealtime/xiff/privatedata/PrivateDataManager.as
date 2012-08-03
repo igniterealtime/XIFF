@@ -48,9 +48,12 @@ package org.igniterealtime.xiff.privatedata
 		 *
 		 * @param	aConnection
 		 */
-		public function PrivateDataManager( aConnection:IXMPPConnection )
+		public function PrivateDataManager( aConnection:IXMPPConnection = null )
 		{
-			connection = aConnection;
+			if ( aConnection != null )
+			{
+				connection = aConnection;
+			}
 		}
 
 		/**
