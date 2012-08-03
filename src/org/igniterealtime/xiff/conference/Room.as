@@ -36,15 +36,7 @@ package org.igniterealtime.xiff.conference
 	import org.igniterealtime.xiff.data.Presence;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.forms.enum.FormType;
-	import org.igniterealtime.xiff.data.muc.IMUCExtension;
-	import org.igniterealtime.xiff.data.muc.MUC;
-	import org.igniterealtime.xiff.data.muc.MUCAdminExtension;
-	import org.igniterealtime.xiff.data.muc.MUCBaseExtension;
-	import org.igniterealtime.xiff.data.muc.MUCExtension;
-	import org.igniterealtime.xiff.data.muc.MUCItem;
-	import org.igniterealtime.xiff.data.muc.MUCOwnerExtension;
-	import org.igniterealtime.xiff.data.muc.MUCStatus;
-	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
+	import org.igniterealtime.xiff.data.muc.*;
 	import org.igniterealtime.xiff.events.DisconnectionEvent;
 	import org.igniterealtime.xiff.events.MessageEvent;
 	import org.igniterealtime.xiff.events.PresenceEvent;
@@ -259,7 +251,7 @@ package org.igniterealtime.xiff.conference
 
 		private var _anonymous:Boolean = true;
 
-				private var _connection:IXMPPConnection;
+		private var _connection:IXMPPConnection;
 
 		private var _nickname:String;
 
@@ -271,13 +263,13 @@ package org.igniterealtime.xiff.conference
 
 		private var _subject:String;
 
-				private var _isReserved:Boolean;
+		private var _isReserved:Boolean;
 
 		// Used to store nicknames in pending status, awaiting change approval from server
-				private var _pendingNickname:String;
+		private var _pendingNickname:String;
 
-				private var _affiliationExtension:MUCBaseExtension; // TODO: How about using Interface here?
-				private var _affiliationArgs:Array = [];
+		private var _affiliationExtension:MUCBaseExtension; // TODO: How about using Interface here?
+		private var _affiliationArgs:Array = [];
 
 		/**
 		 *
@@ -285,7 +277,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function Room( aConnection:IXMPPConnection = null )
 		{
-			setActive( false );
+			setActive(false);
 			if ( aConnection != null )
 			{
 				connection = aConnection;
@@ -364,7 +356,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function changeSubject( newSubject:String ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var message:Message = new Message( roomJID.escaped, null, null,
 													   null, Message.TYPE_GROUPCHAT,
@@ -638,19 +630,19 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function joinWithExplicitMUCExtension( createReserved:Boolean, mucExtension:IMUCExtension, joinPresenceExtensions:Array = null ):Boolean
 		{
-			if ( !_connection.isActive() || isActive )
+			if ( !_connection.active || active )
 			{
 				return false;
 			}
 
-						_isReserved = createReserved;
+			_isReserved = createReserved;
 
 			var joinPresence:Presence = new Presence( userJID.escaped );
 			joinPresence.addExtension( mucExtension );
 
 			if ( joinPresenceExtensions != null )
 			{
-				for each ( var joinExt:*in joinPresenceExtensions )
+				for each ( var joinExt:IExtension in joinPresenceExtensions )
 				{
 					joinPresence.addExtension( joinExt );
 				}
@@ -669,7 +661,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function kickOccupant( occupantNick:String, reason:String ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "kick_occupant_" ) );
 				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.xml );
@@ -685,7 +677,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function leave():void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var leavePresence:Presence = new Presence( userJID.escaped, null, Presence.TYPE_UNAVAILABLE );
 				_connection.send( leavePresence );
@@ -769,7 +761,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function sendMessage( body:String = null, htmlBody:String = null ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var message:Message = new Message( roomJID.escaped, null, body, htmlBody, Message.TYPE_GROUPCHAT );
 				_connection.send( message );
@@ -784,7 +776,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function sendMessageWithExtension( message:IMessage ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				_connection.send( message );
 			}
@@ -800,7 +792,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function sendPrivateMessage( recipientNickname:String, body:String = null, htmlBody:String = null ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var message:Message = new Message( new EscapedJID( roomJID + "/" + recipientNickname ), null, body, htmlBody, Message.TYPE_CHAT );
 				_connection.send( message );
@@ -817,7 +809,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function setOccupantVoice( occupantNick:String, voice:Boolean ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, IQ.generateID( "voice_" ) );
 				var adminExt:MUCAdminExtension = new MUCAdminExtension( iq.xml );
@@ -912,15 +904,14 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function grant_error( iq:IQ ):void
 		{
-						if( _affiliationExtension is MUCAdminExtension && _affiliationArgs.length > 0 )
+			if ( _affiliationExtension is MUCAdminExtension && _affiliationArgs.length > 0 )
 			{
-								_affiliationExtension = new MUCOwnerExtension();
-								grant.apply( null, _affiliationArgs );
+				_affiliationExtension = new MUCOwnerExtension();
+				grant.apply( null, _affiliationArgs );
 			}
 			else
 			{
-								_affiliationArgs = [];
-
+				_affiliationArgs = [];
 				admin_error( iq );
 			}
 		}
@@ -930,7 +921,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		private function grant_response( iq:IQ ):void
 		{
-						_affiliationArgs = [];
+			_affiliationArgs = [];
 
 			var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATION_CHANGE_COMPLETE );
 			dispatchEvent( event );
@@ -1065,10 +1056,10 @@ package org.igniterealtime.xiff.conference
 						else if ( isThisRoom( presence.from.unescaped ))
 						{
 							// If the presence has our pending nickname, nickname change went through
-														if ( presence.from.resource == _pendingNickname )
+							if ( presence.from.resource == _pendingNickname )
 							{
-																_nickname = _pendingNickname;
-																_pendingNickname = null;
+								_nickname = _pendingNickname;
+								_pendingNickname = null;
 							}
 
 							userExt = presence.getAllExtensionsByNS( MUCUserExtension.NS )[ 0 ];
@@ -1093,11 +1084,11 @@ package org.igniterealtime.xiff.conference
 
 							updateRoomRoster( presence );
 
-							if ( presence.type == Presence.TYPE_UNAVAILABLE && isActive &&
+							if ( presence.type == Presence.TYPE_UNAVAILABLE && active &&
 								isThisUser( presence.from.unescaped ))
 							{
 								//trace("Room: becoming inactive: " + presence.xml);
-								setActive( false );
+								setActive(false);
 								if ( userExt.type == MUCUserExtension.TYPE_DESTROY )
 								{
 									roomEvent = new RoomEvent( RoomEvent.ROOM_DESTROYED );
@@ -1115,7 +1106,7 @@ package org.igniterealtime.xiff.conference
 
 				case "disconnection":
 					// The server disconnected, so we are no longer active
-					setActive( false );
+					setActive(false);
 					removeAll();
 					roomEvent = new RoomEvent( RoomEvent.ROOM_LEAVE );
 					dispatchEvent( roomEvent );
@@ -1174,21 +1165,6 @@ package org.igniterealtime.xiff.conference
 		/**
 		 * @private
 		 *
-		 * @param	state
-		 */
-		private function setActive( state:Boolean ):void
-		{
-			var oldActive:Boolean = _active;
-			_active = state;
-			if ( _active != oldActive )
-			{
-				dispatchChangeEvent( "active", _active, oldActive );
-			}
-		}
-
-		/**
-		 * @private
-		 *
 		 * Room owner (creation/configuration/destruction) methods
 		 * @see	http://xmpp.org/extensions/xep-0045.html#createroom
 		 */
@@ -1237,17 +1213,21 @@ package org.igniterealtime.xiff.conference
 
 			if ( isThisUser( aPresence.from.unescaped ))
 			{
-				var oldAffiliation:String = _affiliation;
-				_affiliation = item.affiliation;
-				if( _affiliation != oldAffiliation ) dispatchChangeEvent( "affiliation", _affiliation, oldAffiliation );
-
-				var oldRole:String = _role;
-				_role = item.role;
-				if( _role != oldRole ) dispatchChangeEvent( "role", _role, oldRole );
-
-				if ( !isActive && aPresence.type != Presence.TYPE_UNAVAILABLE )
+				if ( _affiliation != item.affiliation )
 				{
-					setActive( true );
+					dispatchChangeEvent( "affiliation",item.affiliation,  _affiliation );
+				}
+				_affiliation = item.affiliation;
+
+				if ( _role != item.role )
+				{
+					dispatchChangeEvent( "role", item.role, _role );
+				}
+				_role = item.role;
+
+				if ( !active && aPresence.type != Presence.TYPE_UNAVAILABLE )
+				{
+					setActive(true);
 					roomEvent = new RoomEvent( RoomEvent.ROOM_JOIN );
 					dispatchEvent( roomEvent );
 				}
@@ -1385,9 +1365,23 @@ package org.igniterealtime.xiff.conference
 		 * Determines whether the connection to the room is active - that is, the user
 		 * is connected and has joined the room.
 		 */
-		public function get isActive():Boolean
+		public function get active():Boolean
 		{
 			return _active;
+		}
+		
+		/**
+		 * Needs to be available only within this class
+		 *
+		 * @param	state
+		 */
+		private function setActive( state:Boolean ):void
+		{
+			if ( _active != state )
+			{
+				dispatchChangeEvent( "active", state, _active );
+			}
+			_active = state;
 		}
 
 		/**
@@ -1399,7 +1393,7 @@ package org.igniterealtime.xiff.conference
 		}
 		public function set nickname( value:String ):void
 		{
-			if ( isActive )
+			if ( active )
 			{
 				_pendingNickname = value;
 				var presence:Presence = new Presence( new EscapedJID( userJID + "/" + value ) );

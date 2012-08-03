@@ -26,7 +26,7 @@
 package org.igniterealtime.xiff.util
 {
 	import flash.utils.ByteArray;
-	
+
 	/**
 	 * Interface for implementing Stream Compression
 	 */
@@ -36,10 +36,15 @@ package org.igniterealtime.xiff.util
 		 * Uncompress the given ByteArray.
 		 */
 		function uncompress(data:ByteArray):ByteArray;
-		
+
 		/**
 		 * Compress the given ByteArray.
 		 */
 		function compress(data:ByteArray):ByteArray;
+
+		/**
+		 * Finish compressing in this session.
+		 */
+		function clear():void;
 	}
 }

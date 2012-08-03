@@ -26,10 +26,10 @@
 package org.igniterealtime.xiff.util
 {
 	import flash.utils.ByteArray;
-	
+
 	import com.wirelust.as3zlib.JZlib;
 	import com.wirelust.as3zlib.ZStream;
-	
+
 	/**
 	 * Compress the given ByteArrays by using the as3zlib library.
 	 *
@@ -37,14 +37,25 @@ package org.igniterealtime.xiff.util
 	 */
 	public class Zlib implements ICompressor
 	{
+		private var _streamDef:ZStream;
+		private var _streamInf:ZStream;
+
 		/**
 		 * Stream Compression - Zlib
 		 */
 		public function Zlib()
 		{
-			
+			_streamDef = new ZStream();
+			_streamDef.deflateInit(JZlib.Z_BEST_COMPRESSION);
+
+			_streamInf = new ZStream();
+			_streamInf.inflateInit();
 		}
-		
+
+		public function clear():void
+		{
+		}
+
 		/**
 		 * Uncompress (inflate) the given ByteArray.
 		 *
@@ -57,36 +68,33 @@ package org.igniterealtime.xiff.util
 			var uncompressed:ByteArray = new ByteArray();
 			var chunk:ByteArray = new ByteArray();
 			var outBytesLength:int = data.length * 2;
-			
+
 			var err:int;
 			var i:int = 0;
 			var j:int = 0;
-			
+
 			trace("Zlib.uncompress. data.length: " + data.length);
 			trace("Zlib.uncompress. data: " + data.toString());
-			
-			
-			var stream:ZStream = new ZStream();
-			stream.inflateInit();
-			
-			stream.next_in = data;
-			stream.next_in_index = 0;
-			
-			stream.next_out = chunk;
-			stream.next_out_index = 0;
-			
-			stream.avail_out = outBytesLength;
-			stream.total_in = 0;
-			
+
+
+			_streamInf.next_in = data;
+			_streamInf.next_in_index = 0;
+
+			_streamInf.next_out = chunk;
+			_streamInf.next_out_index = 0;
+
+			_streamInf.avail_out = outBytesLength;
+			_streamInf.total_in = 0;
+
 
 			while (true)
 			{
 				// force small buffers
-				stream.avail_in = 1;
-				stream.avail_out = 1;
-				
-				//err = stream.inflate(JZlib.Z_SYNC_FLUSH);
-				err = stream.inflate(JZlib.Z_NO_FLUSH);
+				_streamInf.avail_in = 1;
+				_streamInf.avail_out = 1;
+
+				//err = _streamInf.inflate(JZlib.Z_SYNC_FLUSH);
+				err = _streamInf.inflate(JZlib.Z_NO_FLUSH);
 				switch (err)
 				{
 					case JZlib.Z_STREAM_END:
@@ -95,48 +103,48 @@ package org.igniterealtime.xiff.util
 						break;
 					case JZlib.Z_BUF_ERROR:
 						emptyByteArrayIntoByteArray(chunk, uncompressed);
-						stream.next_out_index = 0;
-						stream.avail_out = outBytesLength;
+						_streamInf.next_out_index = 0;
+						_streamInf.avail_out = outBytesLength;
 						break;
 					default:
 						// unknown error
 						if (err != JZlib.Z_OK)
 						{
-							if (stream.msg == null)
+							if (_streamInf.msg == null)
 							{
 								trace("Zlib.uncompress. Unknown error. Error code : " + err);
 							}
 							else
 							{
-								trace("Zlib.uncompress. Unknown error. Error code : " + err + " and message : " + stream.msg);
+								trace("Zlib.uncompress. Unknown error. Error code : " + err + " and message : " + _streamInf.msg);
 							}
 						}
 				}
-				stream.avail_in = 1;
-				
-				if (stream.total_in >= data.length)
+				_streamInf.avail_in = 1;
+
+				if (_streamInf.total_in >= data.length)
 				{
 					emptyByteArrayIntoByteArray(chunk, uncompressed);
 					break;
 				}
-				
-				if (!checkError(stream, err, "inflate"))
+
+				if (!checkError(_streamInf, err, "inflate"))
 				{
 					break;
 				}
 			}
 
-			err = stream.inflateEnd();
-			checkError(stream, err, "inflateEnd");
-			
-			
+			err = _streamInf.inflateEnd();
+			checkError(_streamInf, err, "inflateEnd");
+
+
 			trace("Zlib.uncompress. uncompressed.length: " + uncompressed.length);
 			trace("Zlib.uncompress. uncompressed: " + uncompressed.toString());
 
 			uncompressed.position = 0;
 			return uncompressed;
 		}
-		
+
 		/**
 		 * Compress (deflate) the given ByteArray.
 		 *
@@ -148,55 +156,52 @@ package org.igniterealtime.xiff.util
 			data.position = 0;
 			var compressed:ByteArray = new ByteArray();
 			var err:int;
-			
+
 			trace("Zlib.compress. data.length: " + data.length);
 			trace("Zlib.compress. data: " + data.toString());
-			
+
 			// How is this number build?
 			var outLen:int = Math.round(data.length * 1.001) + 1 + 12;
-			
-			var stream:ZStream = new ZStream();
-			stream.deflateInit(JZlib.Z_BEST_COMPRESSION);
-			
-			stream.next_in = data;
-			stream.next_in_index = 0;
-			stream.avail_in = data.length;
-			
-			stream.next_out = compressed;
-			stream.next_out_index = 0;
-			stream.avail_out = outLen;
-			
-			
-			
-			
-			
-			err = stream.deflate(JZlib.Z_SYNC_FLUSH);
-			
+
+			_streamDef.next_in = data;
+			_streamDef.next_in_index = 0;
+			_streamDef.avail_in = data.length;
+
+			_streamDef.next_out = compressed;
+			_streamDef.next_out_index = 0;
+			_streamDef.avail_out = outLen;
+
+
+
+
+
+			err = _streamDef.deflate(JZlib.Z_SYNC_FLUSH);
+
 			if (err != JZlib.Z_OK)
 			{
 				compressed = null;
 				trace("Zlib.compress. Compression failed with return value : " + err);
 			}
-			
-			
+
+
 			// TODO: we need this, but why? zlib must be missing something
-			
+
 			if (compressed.length > 2)
 			{
 				compressed.position = compressed.length - 2;
 				compressed.writeByte(0xFF);
 				compressed.writeByte(0xFF);
 			}
-			
-			
-			
+
+
+
 			trace("Zlib.compress. compressed.length: " + compressed.length);
 			trace("Zlib.compress. compressed: " + compressed.toString());
 
 			compressed.position = 0;
 			return compressed;
 		}
-		
+
 		/**
 		 * Check errors in the given ZStream.
 		 *
@@ -218,7 +223,7 @@ package org.igniterealtime.xiff.util
 			}
 			return true;
 		}
-		
+
 		private function emptyByteArrayIntoByteArray(chunk:ByteArray, target:ByteArray):void
 		{
 			for (var j:uint = 0; j < chunk.length; j++)
