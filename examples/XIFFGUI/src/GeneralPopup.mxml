@@ -26,6 +26,6 @@
 		]]>
 	</mx:Script>
 	
-	<mx:TextArea id="messageBody" width="100%" height="100%" wordWrap="true" backgroundColor="#EFEFEF" borderStyle="inset" editable="false" />
+	<mx:TextArea id="messageBody" width="100%" height="100%" wordWrap="true" borderStyle="inset" editable="false" />
 	
 </mx:TitleWindow>

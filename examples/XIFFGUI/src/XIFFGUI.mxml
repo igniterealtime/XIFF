@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
-				backgroundColor="#E2E2E2" usePreloader="true" viewSourceURL="srcview/index.html"
+				backgroundColor="#E2E2E2" usePreloader="true"
 				initialize="onInit( event )" addedToStage="onAddedToStage( event )" resize="onResize( event )">
 	
 	<mx:Script>

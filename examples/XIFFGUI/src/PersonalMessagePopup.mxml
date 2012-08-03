@@ -155,9 +155,9 @@
 		</mx:HBox>
 		<mx:Label id="userPresenceLabel" text="" width="100%" fontWeight="bold" />
 		<mx:Label id="userStatusLabel" text="" width="100%" fontWeight="bold" />
-		<mx:TextArea id="messageTextArea" width="100%" height="100%" backgroundColor="#EFEFEF" borderStyle="inset" editable="false" />
+		<mx:TextArea id="messageTextArea" width="100%" height="100%" borderStyle="inset" editable="false" />
 		<mx:HBox width="100%">
-			<mx:TextArea id="inputTextArea" width="100%" height="21" wordWrap="false" backgroundColor="#EFEFEF" borderStyle="inset" editable="true" />
+			<mx:TextArea id="inputTextArea" width="100%" height="21" wordWrap="false" borderStyle="inset" editable="true" />
 			<mx:Button id="sendButton" label="Send" click="onSendClick( event )" />
 		</mx:HBox>
 	</mx:VBox>

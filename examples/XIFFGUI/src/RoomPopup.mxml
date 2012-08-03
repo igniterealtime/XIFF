@@ -411,7 +411,7 @@
 				<mx:TitleWindow title="Messages" width="100%" height="100%">
 					<mx:TextArea id="messageArea" width="100%" height="100%" />
 					<mx:HBox width="100%">
-						<mx:TextArea id="inputTextArea" width="100%" height="21" wordWrap="false" backgroundColor="#EFEFEF" borderStyle="inset" />
+						<mx:TextArea id="inputTextArea" width="100%" height="21" wordWrap="false" borderStyle="inset" />
 						<mx:Button id="sendButton" label="Send" click="onSendClick( event )" />
 					</mx:HBox>
 				</mx:TitleWindow>

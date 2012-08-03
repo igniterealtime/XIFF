@@ -1,0 +1,16 @@
+<project name="build file" default='compile'>
+	<target name="folder">
+		<delete dir="${basedir}/bin"/>
+		<mkdir dir="${basedir}/bin"/>
+	</target>
+	<target name='compile' depends='folder'>
+		<property name='compiler' location='C:\flex_sdk_4.6.0.23201B\bin\mxmlc.exe'/>
+		<exec executable='${compiler}' failonerror='true'>
+			<arg line="-external-library-path+=../../libs" />
+			<arg line="-external-library-path+=libs" />
+			<arg line="-source-path src ../../src" />
+			<arg line="-output '${basedir}/bin/XIFFGUI.swf'"/>
+			<arg line="src/XIFFGUI.mxml"/>
+		</exec>
+	</target>
+</project>

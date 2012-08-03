@@ -39,7 +39,7 @@ package com.yourpalmark.chat.data
 			
 			if( jid ) _rosterItem.jid = jid;
 			jid = jid ? jid : rosterItem.jid;
-			displayName = displayName ? displayName : rosterItem.displayName;
+			displayName = displayName ? displayName : rosterItem.nickname;
 		}
 		
 		public function get vCard():VCard { return _vCard; }
