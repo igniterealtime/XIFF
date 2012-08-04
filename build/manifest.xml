@@ -146,6 +146,7 @@
 	<component class="org.igniterealtime.xiff.util.ICompressor" />
 	<component class="org.igniterealtime.xiff.util.SHA1" />
 	<component class="org.igniterealtime.xiff.util.Zlib" />
+	<component class="org.igniterealtime.xiff.util.ZlibNative" />
 	<component class="org.igniterealtime.xiff.vcard.IVCard" />
 	<component class="org.igniterealtime.xiff.vcard.IVCardAddress" />
 	<component class="org.igniterealtime.xiff.vcard.IVCardGeographicalPosition" />

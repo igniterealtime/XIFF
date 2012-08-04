@@ -28,7 +28,6 @@ package org.igniterealtime.xiff.bookmark
 	import flash.events.EventDispatcher;
 
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMPPStanza;
 	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;

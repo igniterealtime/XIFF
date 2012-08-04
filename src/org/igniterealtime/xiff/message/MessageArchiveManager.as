@@ -30,7 +30,6 @@ package org.igniterealtime.xiff.message
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.message.*;
-	import org.igniterealtime.xiff.util.DateTimeParser;
 	import org.igniterealtime.xiff.core.*;
 	
 	/**

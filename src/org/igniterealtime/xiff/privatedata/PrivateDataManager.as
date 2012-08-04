@@ -28,7 +28,6 @@ package org.igniterealtime.xiff.privatedata
 	import flash.events.EventDispatcher;
 
 	import org.igniterealtime.xiff.core.IXMPPConnection;
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.IQ;
 	import org.igniterealtime.xiff.data.privatedata.PrivateDataExtension;
 	import org.igniterealtime.xiff.filter.CallbackPacketFilter;

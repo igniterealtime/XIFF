@@ -203,7 +203,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.si">
 				<shortDescription>
-				<![CDATA[  ]]>
+				<![CDATA[ Stream Initiation (XEP-0095) and related ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
@@ -271,6 +271,14 @@
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>
+				</description>
+		</package>
+		<package name="org.igniterealtime.xiff.message">
+				<shortDescription>
+				<![CDATA[ Message related XEP tools ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[ Message Archiving ]]>
 				</description>
 		</package>
 		<package name="org.igniterealtime.xiff.namespaces">

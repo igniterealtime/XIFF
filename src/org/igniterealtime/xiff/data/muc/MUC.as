@@ -25,7 +25,6 @@
  */
 package org.igniterealtime.xiff.data.muc
 {
-	import org.igniterealtime.xiff.data.ExtensionClassRegistry;
 	import org.igniterealtime.xiff.data.muc.*;
 	
 	/**
