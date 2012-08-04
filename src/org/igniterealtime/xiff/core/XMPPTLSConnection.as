@@ -41,22 +41,12 @@ package org.igniterealtime.xiff.core
 		/**
 		 * @private
 		 */
-		protected var tlsEnabled:Boolean = false;
-
-		/**
-		 * @private
-		 */
 		protected var tlsSocket:TLSSocket;
 
 		/**
 		 * @private
 		 */
 		protected var _config:TLSConfig;
-
-		/**
-		 * @private
-		 */
-		protected var _tls:Boolean = true;
 
 		/**
 		 * Constructor.
@@ -136,11 +126,11 @@ package org.igniterealtime.xiff.core
 			// TODO: user/developer should be notified somehow..
 			if ( node.hasOwnProperty("required") )
 			{
-				_tls = true;
+				tlsRequired = true;
 			}
 
 			// If the user turned on TLS or the server requires it.
-			if ( _tls )
+			if ( tlsRequired )
 			{
 				sendXML( "<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls' />" );
 			}
@@ -231,15 +221,15 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Specifies whether to enable TLS.
-		 * @default true
+		 * @default false
 		 */
 		public function get tls():Boolean
 		{
-			return _tls;
+			return tlsRequired;
 		}
 		public function set tls( value:Boolean ):void
 		{
-			_tls = value;
+			tlsRequired = value;
 		}
 	}
 }

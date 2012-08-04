@@ -190,6 +190,18 @@ package org.igniterealtime.xiff.core
 		protected var incompleteRawXML:String = "";
 
 		/**
+		 * Even if this class is not implementing TLS, it needs to be aware
+		 * if it has been extended by <code>XMPPTLSConnection</code> that will
+		 * set this value to <code>true</code>.
+		 *
+		 * <p>For example <code>handleStreamFeatures</code> uses this value.</p>
+		 *
+		 * @see #handleStreamFeatures
+		 */
+		protected var tlsRequired:Boolean = false;
+		protected var tlsEnabled:Boolean = false;
+
+		/**
 		 * @private
 		 */
 		private var _loggedIn:Boolean = false;
@@ -1204,6 +1216,8 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleStreamFeatures( node:XML ):void
 		{
+			var isTls:Boolean = !tlsRequired || (tlsRequired && tlsEnabled );
+			
 			for each ( var feature:XML in node.children() )
 			{
 				var localName:String = feature.localName();
@@ -1220,7 +1234,7 @@ package org.igniterealtime.xiff.core
 						// In-Band Registration, if enabled.... TODO
 						break;
 					case "mechanisms":
-						if ( !loggedIn )
+						if ( !loggedIn && isTls )
 						{
 							configureAuthMechanisms( feature );
 							if ( ( username != null && username.length > 0 ) || useAnonymousLogin )
@@ -1230,13 +1244,14 @@ package org.igniterealtime.xiff.core
 						}
 						break;
 					case "compression":
-						if ( (_compress && !compressionNegotiated) && loggedIn )
+						if ( (_compress && !compressionNegotiated) && loggedIn && isTls )
 						{
 							configureStreamCompression();
 						}
 						break;
 					case "bind":
-						if ( ((_compress && compressionNegotiated) || !_compress) && loggedIn )
+						// compression needed, done? else auth done?
+						if ( ((_compress && compressionNegotiated) || !_compress) && loggedIn && isTls )
 						{
 							bindConnection();
 						}
