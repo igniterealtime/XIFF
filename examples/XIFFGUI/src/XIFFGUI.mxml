@@ -70,6 +70,7 @@
 			private var instructionText:String = "Enter your username and password and press connect to log in.\n" +
 				"Username should be a full JID (username@domain).\n" +
 				"Login server and port are used if you fill them in. For example Google Talk uses talk.google.com.\n" +
+				"Facebook uses chat.facebook.com.\n" +
 				"If you are not registered, enter a username and password and press register.\n" +
 				"Check the error log to determine if there was a conflict (ie. someone already has your ID).\n" +
 				"Once you have successfully registered you may log in.";
@@ -193,16 +194,16 @@
 			
 			private function connectToFBChat( authResponse:FacebookAuthResponse=null ):void
 			{
+				ChatManager.useTls = true;
 				authResponse = authResponse ? authResponse : Facebook.getAuthResponse();
 				chatManager.setFBAuthProperties( fbAppID, authResponse.accessToken );
-				chatManager.connect( new LoginCredentials( authResponse.uid ), true );
+				chatManager.connect( new LoginCredentials( authResponse.uid ) );
 				logDataProvider.addItem( "Facebook " + "connectToFBChat: " + "app_id:" + fbAppID + "  access_token:" + authResponse.accessToken );
 			}
 			
 			
 			private function onInit( event:FlexEvent ):void
 			{
-				viewSourceURL = "http://yourpalmark.com/blog/wp-content/uploads/2009/02/xiffgui/srcview/index.html";
 				setupChatManager();
 				messageDict = new Dictionary();
 				instructions.text = instructionText;
@@ -505,6 +506,20 @@
 				ChatManager.serverPort = parseInt( serverPortInput.text );
 			}
 			
+			private function onCompressionCheckboxChange():void
+			{
+				ChatManager.compress = compressionCheckbox.selected;
+			}
+			
+			private function onTLSCheckboxChange():void
+			{
+				ChatManager.useTls = tlsCheckbox.selected;
+				if (ChatManager.useTls)
+				{
+					ChatManager.compress = false;
+				}
+			}
+			
 			private function onUpdateGroupBuddyChange( event:ListEvent ):void
 			{
 				var rosterItem:RosterItemVO = RosterItemVO( updateGroupBuddyComboBox.selectedItem );
@@ -673,26 +688,40 @@
 					<mx:VBox width="60%" height="100%" verticalGap="10">
 						<mx:VBox width="100%" verticalGap="2">
 							<mx:Label text="Username (JID)" width="100%" fontWeight="bold" />
-							<mx:TextInput id="usernameInput" width="100%" keyUp="onKeyUp( event )" text="flasher" />
+							<mx:TextInput id="usernameInput" width="100%" keyUp="onKeyUp( event )" text="@gmail.com" />
 						</mx:VBox>
 						<mx:VBox width="100%" verticalGap="2">
 							<mx:Label text="Password" width="100%" fontWeight="bold" />
-							<mx:TextInput id="passwordInput" width="100%" displayAsPassword="true" keyUp="onKeyUp( event )" text="flasher" />
+							<mx:TextInput id="passwordInput" width="100%" displayAsPassword="true" keyUp="onKeyUp( event )" />
 						</mx:VBox>
 						<mx:Spacer height="100%" />
 						<mx:Image source="http://static.ak.fbcdn.net/images/fbconnect/login-buttons/connect_light_medium_long.gif" buttonMode="true" click="onFBImageClick( event )" />
 					</mx:VBox>
 					
 					<!-- Login server / Server port -->
-					<mx:VBox width="60%" height="100%" verticalGap="10">
+					<mx:VBox width="60%" height="100%" horizontalAlign="center"
+							 verticalAlign="middle" verticalGap="10">
 						<mx:VBox width="100%" verticalGap="2">
 							<mx:Label text="Login server" width="100%" fontWeight="bold" />
 							<mx:TextInput id="serverInput" width="100%" change="onServerInputChange()" displayAsPassword="false" text="{ChatManager.serverName}" keyUp="onKeyUp( event )" />
 						</mx:VBox>
-						<mx:VBox width="50%" verticalGap="2">
-							<mx:Label text="Server port" width="100%" fontWeight="bold" />
-							<mx:TextInput id="serverPortInput" width="100%" restrict="0-9" maxChars="6" change="onServerPortInputChange()" displayAsPassword="false" text="{ChatManager.serverPort}" keyUp="onKeyUp( event )" />
-						</mx:VBox>
+						<mx:HBox width="100%">							
+							<mx:VBox width="100%" verticalGap="2">
+								<mx:Label text="Server port" width="100%" fontWeight="bold" />
+								<mx:TextInput id="serverPortInput" width="100%" restrict="0-9" maxChars="6" change="onServerPortInputChange()" displayAsPassword="false" text="{ChatManager.serverPort}" keyUp="onKeyUp( event )" />
+							</mx:VBox>
+							<mx:VBox width="100%" horizontalAlign="left" horizontalGap="16"
+									 textAlign="right" verticalAlign="middle" verticalGap="6">
+									<mx:CheckBox id="compressionCheckbox" width="100%"
+												 label="Stream Compression"
+												 change="onCompressionCheckboxChange()"
+												 enabled="{!ChatManager.useTls}" fontWeight="bold"
+												 selected="{ChatManager.compress}" textAlign="left"/>
+									<mx:CheckBox id="tlsCheckbox" width="100%" label="Use TLS"
+												 change="onTLSCheckboxChange()" fontWeight="bold"
+												 selected="{ChatManager.useTls}" textAlign="left"/>
+							</mx:VBox>
+						</mx:HBox>
 						<mx:Spacer height="100%" />
 						<mx:HBox width="100%" height="25">
 							<mx:Button label="Connect" width="100%" height="100%" id="connectButton" click="onConnectClick( event )" />

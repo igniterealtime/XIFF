@@ -4,13 +4,13 @@ package com.yourpalmark.chat
 	import com.hurlant.crypto.tls.TLSEngine;
 	import com.yourpalmark.chat.data.ChatUser;
 	import com.yourpalmark.chat.data.LoginCredentials;
-
+	
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.system.Security;
 	import flash.utils.Timer;
-
-	import org.igniterealtime.xiff.auth.XFacebookPlatform;
+	
+	import org.igniterealtime.xiff.auth.*;
 	import org.igniterealtime.xiff.collections.ArrayCollection;
 	import org.igniterealtime.xiff.collections.events.CollectionEvent;
 	import org.igniterealtime.xiff.conference.InviteListener;
@@ -21,20 +21,25 @@ package com.yourpalmark.chat
 	import org.igniterealtime.xiff.data.muc.MUC;
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.im.Roster;
+	import org.igniterealtime.xiff.util.Zlib;
 
 	public class ChatManager extends EventDispatcher
 	{
 		[Bindable]
-		public static var serverName:String = "192.168.1.37";
-
-		public static var fbServerName:String = "chat.facebook.com";
+		public static var serverName:String = "talk.google.com";
 
 		[Bindable]
-		public static var serverPort:int = 5444;
-
+		public static var serverPort:int = 5222;
+		
+		[Bindable]
+		public static var compress:Boolean = false;
+		
+		[Bindable]
+		public static var useTls:Boolean = false;
+		
+		
 		private const KEEP_ALIVE_TIME:int = 30000;
 
-		protected var streamType:uint = XMPPConnection.STREAM_TYPE_STANDARD;
 		protected var registerUser:Boolean;
 		protected var registrationData:Object;
 		protected var keepAliveTimer:Timer;
@@ -112,22 +117,21 @@ package com.yourpalmark.chat
 			XFacebookPlatform.fb_access_token = accessToken;
 		}
 
-		public function connect( credentials:LoginCredentials, facebook:Boolean=false ):void
+		public function connect( credentials:LoginCredentials ):void
 		{
-			var serverName:String = facebook ? ChatManager.fbServerName : ChatManager.serverName;
 			var domainIndex:int = credentials.username.lastIndexOf( "@" );
 			var username:String = domainIndex > -1 ? credentials.username.substring( 0, domainIndex ) : credentials.username;
 			var domain:String = domainIndex > -1 ? credentials.username.substring( domainIndex + 1 ) : null;
 
-			Security.loadPolicyFile( "xmlsocket://" + serverName + ":" + serverPort );
+			Security.loadPolicyFile( "xmlsocket://" + ChatManager.serverName + ":" + ChatManager.serverPort );
 			registerUser = false;
-			connection.tls = facebook ? true : false;
-			connection.username = facebook ? "u" + username : username;
+			connection.tls = ChatManager.useTls;
+			connection.username = ChatManager.useTls ? "u" + username : username;
 			connection.password = credentials.password;
 			connection.domain = domain;
-			connection.server = serverName;
-			connection.port = serverPort;
-			connection.connect( streamType );
+			connection.server = ChatManager.serverName;
+			connection.port = ChatManager.serverPort;
+			connection.connect();
 		}
 
 		public function disconnect():void
@@ -150,7 +154,7 @@ package com.yourpalmark.chat
 			connection.password = null;
 
 			connection.server = serverName;
-			connection.connect( streamType );
+			connection.connect();
 
 			registrationData = {};
 			registrationData.username = credentials.username;
@@ -175,6 +179,7 @@ package com.yourpalmark.chat
 		protected function setupConnection():void
 		{
 			_connection = new XMPPTLSConnection();
+			_connection.compressor = new Zlib();
 			var config:TLSConfig = new TLSConfig( TLSEngine.CLIENT );
 			config.ignoreCommonNameMismatch = true;
 			_connection.config = config;
@@ -250,7 +255,11 @@ package com.yourpalmark.chat
 
 		protected function registerSASLMechanisms():void
 		{
-			_connection.enableSASLMechanism( "X-FACEBOOK-PLATFORM", XFacebookPlatform );
+			// By default only ANONYMOUS and DIGEST-MD5 enabled.
+			_connection.enableSASLMechanism( External.MECHANISM, External );
+			_connection.enableSASLMechanism( Plain.MECHANISM, Plain );
+			_connection.enableSASLMechanism( XFacebookPlatform.MECHANISM, XFacebookPlatform );
+			//_connection.enableSASLMechanism( XGoogleToken.MECHANISM, XGoogleToken );
 		}
 
 		protected function setupTimer():void

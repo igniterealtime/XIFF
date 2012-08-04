@@ -1,7 +1,7 @@
 package com.yourpalmark.chat.data
 {
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	import org.igniterealtime.xiff.core.XMPPConnection;
+	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
 	import org.igniterealtime.xiff.events.VCardEvent;
 	import org.igniterealtime.xiff.vcard.IVCardName;
@@ -68,7 +68,7 @@ package com.yourpalmark.chat.data
 			return jid.equals( other.jid, false );
 		}
 		
-		public function loadVCard( connection:XMPPConnection ):void
+		public function loadVCard( connection:IXMPPConnection ):void
 		{
 			if( !_vCardRequested )
 			{

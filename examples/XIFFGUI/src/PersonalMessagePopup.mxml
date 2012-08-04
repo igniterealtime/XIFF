@@ -8,6 +8,7 @@
 			import org.igniterealtime.xiff.core.UnescapedJID;
 			import org.igniterealtime.xiff.data.Message;
 			import org.igniterealtime.xiff.events.MessageEvent;
+			import org.igniterealtime.xiff.util.DateTimeParser;
 
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -73,9 +74,7 @@
 			{
 				if( !time ) time = new Date();
 				
-				var hours:int = ( time.hours == 0 || time.hours == 12 ) ? 12 : time.hours > 12 ? time.hours - 12 : time.hours;
-				var minutes:String = time.minutes.toString().length == 1 ? "0" + time.minutes.toString() : time.minutes.toString();
-				messageTextArea.htmlText += "[" + hours.toString() + ":" + minutes + " | " + jid.bareJID + "] " + message;
+				messageTextArea.htmlText += "[" + DateTimeParser.time2string(time) + " | " + jid.bareJID + "] " + message;
 				callLater( updateScrollPosition );
 			}
 			
