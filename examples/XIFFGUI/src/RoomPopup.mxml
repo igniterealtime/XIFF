@@ -10,6 +10,7 @@
 			import com.yourpalmark.chat.data.ChatUser;
 			
 			import mx.core.Application;
+			import mx.core.FlexGlobals;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
@@ -85,8 +86,8 @@
 			{
 				super.measure();
 				
-				measuredWidth = Application.application.width * .8;
-				measuredHeight = Application.application.height * .8;
+				measuredWidth = FlexGlobals.topLevelApplication.width * .8;
+				measuredHeight = FlexGlobals.topLevelApplication.height * .8;
 				PopUpManager.centerPopUp( this );
 			}
 			

@@ -25,12 +25,12 @@ package com.yourpalmark.chat
 	public class ChatManager extends EventDispatcher
 	{
 		[Bindable]
-		public static var serverName:String = "";
+		public static var serverName:String = "192.168.1.37";
 
 		public static var fbServerName:String = "chat.facebook.com";
 
 		[Bindable]
-		public static var serverPort:int = 5222;
+		public static var serverPort:int = 5444;
 
 		private const KEEP_ALIVE_TIME:int = 30000;
 
