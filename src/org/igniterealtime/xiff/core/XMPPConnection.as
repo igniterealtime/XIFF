@@ -126,7 +126,7 @@ package org.igniterealtime.xiff.core
 		public static const STREAM_TYPE_FLASH_TERMINATED:uint = 3;
 
 		/**
-		 * The types of SASL mechanisms available.
+		 * The types of SASL mechanisms available. Indexed by their MECHANISM constant.
 		 *
 		 * <p>By default, only <code>Anonymous</code> and <code>DigestMD5</code> are enabled.</p>
 		 * @see org.igniterealtime.xiff.auth.Anonymous
@@ -529,7 +529,11 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * SASL Authentication should been set up, begin the authentication
+		 * process by sending the initial request.
+		 *
+		 * <p>Make sure that the username and password are set, or the connection is using
+		 * anonymous authentication before calling this method.</p>
 		 */
 		protected function beginAuthentication():void
 		{
@@ -1207,7 +1211,10 @@ package org.igniterealtime.xiff.core
 				switch (localName)
 				{
 					case "starttls":
-						handleStreamTLS( feature ); // Checks for 'required'
+						if ( !loggedIn )
+						{
+							handleStreamTLS( feature ); // Checks for 'required'
+						}
 						break;
 					case "register":
 						// In-Band Registration, if enabled.... TODO
@@ -1216,7 +1223,10 @@ package org.igniterealtime.xiff.core
 						if ( !loggedIn )
 						{
 							configureAuthMechanisms( feature );
-							beginAuthentication();
+							if ( ( username != null && username.length > 0 ) || useAnonymousLogin )
+							{
+								beginAuthentication();
+							}
 						}
 						break;
 					case "compression":
@@ -1226,7 +1236,6 @@ package org.igniterealtime.xiff.core
 						}
 						break;
 					case "bind":
-						// compression needed, done? else auth done?
 						if ( ((_compress && compressionNegotiated) || !_compress) && loggedIn )
 						{
 							bindConnection();
