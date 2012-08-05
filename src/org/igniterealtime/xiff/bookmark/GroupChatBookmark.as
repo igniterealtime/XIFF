@@ -25,8 +25,6 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-
-
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.INodeProxy;
@@ -34,6 +32,7 @@ package org.igniterealtime.xiff.bookmark
 
 	/**
 	 * XEP-0048: Bookmarks
+	 *
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
 	public class GroupChatBookmark extends XMLStanza implements INodeProxy

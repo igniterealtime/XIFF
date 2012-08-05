@@ -45,7 +45,6 @@ package org.igniterealtime.xiff.auth
 	public class XFacebookPlatform extends SASLAuth
 	{
 		public static const MECHANISM:String = "X-FACEBOOK-PLATFORM";
-		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		public static var fb_app_id:String;
 		public static var fb_access_token:String;
@@ -59,10 +58,10 @@ package org.igniterealtime.xiff.auth
 		{
 			this.connection = connection;
 
-			req.setNamespace( XFacebookPlatform.NS );
+			req.setNamespace( SASLAuth.NS );
 			req.@mechanism = XFacebookPlatform.MECHANISM;
 
-			response.setNamespace( XFacebookPlatform.NS );
+			response.setNamespace( SASLAuth.NS );
 
 			stage = 0;
 		}

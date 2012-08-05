@@ -31,14 +31,13 @@ package org.igniterealtime.xiff.auth
 	/**
 	 * This class provides SASL authentication using the EXTERNAL mechanism.
 	 * This is particularly useful when TLS authentication is required.
+	 *
 	 * @see http://xmpp.org/extensions/xep-0178.html
 	 * @see http://tools.ietf.org/html/rfc3920#section-6
 	 */
 	public class External extends SASLAuth
 	{
 		public static const MECHANISM:String = "EXTERNAL";
-		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
-
 
 		/**
 		 * Creates a new External authentication object.
@@ -58,7 +57,7 @@ package org.igniterealtime.xiff.auth
 			authContent = b64coder.flush();
 			*/
 
-			req.setNamespace( External.NS );
+			req.setNamespace( SASLAuth.NS );
 			req.@mechanism = External.MECHANISM;
 			req.setChildren( authContent );
 

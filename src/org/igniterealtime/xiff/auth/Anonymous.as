@@ -37,7 +37,6 @@ package org.igniterealtime.xiff.auth
 	public class Anonymous extends SASLAuth
 	{
 		public static const MECHANISM:String = "ANONYMOUS";
-		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * Creates a new Anonymous authentication object.
@@ -48,7 +47,7 @@ package org.igniterealtime.xiff.auth
 		{
 			this.connection = connection;
 
-			req.setNamespace( Anonymous.NS );
+			req.setNamespace( SASLAuth.NS );
 			req.@mechanism = Anonymous.MECHANISM;
 
 			stage = 0;

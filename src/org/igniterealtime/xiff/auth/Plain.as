@@ -32,7 +32,7 @@ package org.igniterealtime.xiff.auth
 
 	/**
 	 * This class provides SASL authentication using the PLAIN mechanism.
-	 * This is used for plain text password authentication with an XMPP
+	 * This is used for plain text (base64 encoded) password authentication with an XMPP
 	 * server.
 	 *
 	 * @see http://tools.ietf.org/html/rfc4616
@@ -41,7 +41,6 @@ package org.igniterealtime.xiff.auth
 	public class Plain extends SASLAuth
 	{
 		public static const MECHANISM:String = "PLAIN";
-		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * Creates a new Plain authentication object.
@@ -60,14 +59,7 @@ package org.igniterealtime.xiff.auth
 
 			authContent = Base64.encode(authContent);
 
-			/*
-			var b64coder:Base64Encoder = new Base64Encoder();
-			b64coder.insertNewLines = false;
-			b64coder.encodeUTFBytes( authContent );
-			authContent = b64coder.flush();
-			*/
-
-			req.setNamespace( Plain.NS );
+			req.setNamespace( SASLAuth.NS );
 			req.@mechanism = Plain.MECHANISM;
 			req.setChildren( authContent );
 

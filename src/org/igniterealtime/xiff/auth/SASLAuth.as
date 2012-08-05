@@ -38,6 +38,7 @@ package org.igniterealtime.xiff.auth
 	public class SASLAuth
 	{
 		public static const RESPONSE_SUCCESS:String = "success";
+		public static const NS:String = "urn:ietf:params:xml:ns:xmpp-sasl";
 
 		/**
 		 * The XML of the authentication request.

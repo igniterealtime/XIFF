@@ -53,6 +53,7 @@ package org.igniterealtime.xiff.bookmark
 
 	/**
 	 * XEP-0048: Bookmarks
+	 *
 	 * @see http://xmpp.org/extensions/xep-0048.html
 	 */
 	public class BookmarkManager extends EventDispatcher
@@ -79,8 +80,7 @@ package org.igniterealtime.xiff.bookmark
 			if ( !_bookmarks )
 			{
 				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
-													new Callback( this, this[ "_processBookmarksAdd" ],
-																  serverBookmark ));
+					new Callback( this, this[ "_processBookmarksAdd" ], serverBookmark ));
 			}
 			else
 			{
@@ -93,7 +93,7 @@ package org.igniterealtime.xiff.bookmark
 			if ( !_bookmarks )
 			{
 				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
-													new Callback( this, this[ "_processBookmarks" ]));
+					new Callback( this, this[ "_processBookmarks" ]));
 			}
 			else
 			{
@@ -101,6 +101,12 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 
+		/**
+		 * Get a group chat bookmark with the given JID
+		 *
+		 * @param	jid
+		 * @return
+		 */
 		public function getGroupChatBookmark( jid:UnescapedJID ):GroupChatBookmark
 		{
 			for each ( var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks )
@@ -113,6 +119,12 @@ package org.igniterealtime.xiff.bookmark
 			return null;
 		}
 
+		/**
+		 * Does there exist a group chat bookmark with the given JID
+		 *
+		 * @param	jid
+		 * @return
+		 */
 		public function isGroupChatBookmarked( jid:UnescapedJID ):Boolean
 		{
 			for each ( var bookmark:GroupChatBookmark in _bookmarks.groupChatBookmarks )
@@ -125,13 +137,16 @@ package org.igniterealtime.xiff.bookmark
 			return false;
 		}
 
+		/**
+		 * Remove
+		 * @param	jid
+		 */
 		public function removeGroupChatBookmark( jid:UnescapedJID ):void
 		{
 			if ( !_bookmarks )
 			{
 				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
-													new Callback( this, this[ "_processBookmarksRemove" ],
-																  jid ));
+					new Callback( this, this[ "_processBookmarksRemove" ], jid ));
 			}
 			else
 			{
@@ -139,13 +154,18 @@ package org.igniterealtime.xiff.bookmark
 			}
 		}
 
+		/**
+		 * Set autoJoin for the given bookmark JID
+		 *
+		 * @param	jid
+		 * @param	state
+		 */
 		public function setAutoJoin( jid:UnescapedJID, state:Boolean ):void
 		{
 			if ( !_bookmarks )
 			{
 				_privateDataManager.getPrivateData( "storage", "storage:bookmarks",
-													new Callback( this, this[ "_processBookmarksSetAuto" ],
-																  jid, state ));
+					new Callback( this, this[ "_processBookmarksSetAuto" ], jid, state ));
 			}
 			else
 			{
@@ -226,8 +246,7 @@ package org.igniterealtime.xiff.bookmark
 			var groupChats:Array = _bookmarks.groupChatBookmarks;
 			var urls:Array = _bookmarks.urlBookmarks;
 
-			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload( groupChats,
-																			 urls );
+			var payload:BookmarkPrivatePayload = new BookmarkPrivatePayload( groupChats, urls );
 			_privateDataManager.setPrivateData( "storage", "storage:bookmarks", payload );
 		}
 

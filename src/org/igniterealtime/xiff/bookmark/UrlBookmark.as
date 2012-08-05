@@ -25,7 +25,6 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-
 	import org.igniterealtime.xiff.data.INodeProxy;
 	import org.igniterealtime.xiff.data.XMLStanza;
 

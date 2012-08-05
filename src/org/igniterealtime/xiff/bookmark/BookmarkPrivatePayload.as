@@ -25,8 +25,6 @@
  */
 package org.igniterealtime.xiff.bookmark
 {
-
-
 	import org.igniterealtime.xiff.core.EscapedJID;
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.XMLStanza;
@@ -143,7 +141,11 @@ package org.igniterealtime.xiff.bookmark
 			return _groupChatBookmarks.slice();
 		}
 
-		//removes the bookmark from the list, and returns it
+		/**
+		 * Removes the bookmark from the list, and returns it
+		 * @param	jid
+		 * @return
+		 */
 		public function removeGroupChatBookmark( jid:UnescapedJID ):GroupChatBookmark
 		{
 			var removedItem:GroupChatBookmark = null;

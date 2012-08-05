@@ -45,7 +45,7 @@ package org.igniterealtime.xiff.conference
 
 
 	/**
-         * Manages the dispatching of events during invitations. Add event
+	 * Manages the dispatching of events during invitations. Add event
 	 * listeners to an instance of this class to monitor invite and decline
 	 * events.
 	 *
