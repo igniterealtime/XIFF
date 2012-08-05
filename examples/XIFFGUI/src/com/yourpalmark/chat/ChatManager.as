@@ -37,6 +37,9 @@ package com.yourpalmark.chat
 		[Bindable]
 		public static var useTls:Boolean = false;
 		
+		[Bindable]
+		public static var facebookAppId:String = "FACEBOOK_APP_ID";
+		
 		
 		private const KEEP_ALIVE_TIME:int = 30000;
 
@@ -126,7 +129,7 @@ package com.yourpalmark.chat
 			Security.loadPolicyFile( "xmlsocket://" + ChatManager.serverName + ":" + ChatManager.serverPort );
 			registerUser = false;
 			connection.tls = ChatManager.useTls;
-			connection.username = ChatManager.useTls ? "u" + username : username;
+			connection.username = XFacebookPlatform.fb_app_id != null ? "u" + username : username;
 			connection.password = credentials.password;
 			connection.domain = domain;
 			connection.server = ChatManager.serverName;
