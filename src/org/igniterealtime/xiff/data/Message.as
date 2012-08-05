@@ -96,7 +96,6 @@ package org.igniterealtime.xiff.data
 		 */
 		public static const TYPE_NORMAL:String = "normal";
 
-
 		/**
 		 * User is actively participating in the chat session.
 		 */

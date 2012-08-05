@@ -43,7 +43,6 @@ package org.igniterealtime.xiff.util
 		{
 			ba.position = ba.length;
 			var len:uint = hex.length;
-			trace("writeBytes. len: " + len);
 			for (var i:uint = 0; i < len; i += 2)
 			{
 				var byte:uint = uint("0x" + hex.substr(i, 2));
@@ -63,7 +62,6 @@ package org.igniterealtime.xiff.util
 			var hex:String = "";
 			ba.position = 0;
 			var len:uint = ba.length;
-			trace("readBytes. len: " + len);
 			for (var i:uint = 0; i < len; ++i)
 			{
 				var byte:uint = ba.readUnsignedByte();

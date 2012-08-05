@@ -1013,7 +1013,6 @@ package org.igniterealtime.xiff.conference
 					break;
 
 				case "presence":
-					//trace("ROOM presence: " + presence.from + " : " + nickname);
 					for each ( var presence:Presence in eventObj.data )
 					{
 						if ( presence.type == Presence.TYPE_ERROR )
@@ -1087,7 +1086,6 @@ package org.igniterealtime.xiff.conference
 							if ( presence.type == Presence.TYPE_UNAVAILABLE && active &&
 								isThisUser( presence.from.unescaped ))
 							{
-								//trace("Room: becoming inactive: " + presence.xml);
 								setActive(false);
 								if ( userExt.type == MUCUserExtension.TYPE_DESTROY )
 								{
@@ -1130,10 +1128,8 @@ package org.igniterealtime.xiff.conference
 			if ( iq.type == IQ.TYPE_RESULT )
 			{
 				var adminExt:MUCAdminExtension = iq.getAllExtensionsByNS( MUCAdminExtension.NS )[ 0 ];
-				var items:Array = adminExt.items;
-				// trace("Affiliates: " + items);
 				var event:RoomEvent = new RoomEvent( RoomEvent.AFFILIATIONS );
-				event.data = items;
+				event.data = adminExt.items;
 				dispatchEvent( event );
 			}
 		}

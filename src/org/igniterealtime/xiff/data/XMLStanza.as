@@ -120,12 +120,10 @@ package org.igniterealtime.xiff.data
 			}
 			
 			var list:XMLList = xml.children().(localName() == elem);
-			trace("getChildField. list: " + list.toXMLString());
 			if (list.length() > 0 && list[0].children().length() > 0)
 			{
 				for each (var child:XML in list[0].children())
 				{
-					trace("getChildField. child: " + child.toXMLString());
 					if (child.localName() == name)
 					{
 						return child.toString();

@@ -74,7 +74,6 @@ package org.igniterealtime.xiff.util
 			var err:int;
 
 			trace("Zlib.uncompress. data.length: " + data.length);
-			trace("Zlib.uncompress. data: " + data.toString());
 
 			_streamInf.next_in = data;
 			_streamInf.next_in_index = 0;

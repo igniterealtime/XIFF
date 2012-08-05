@@ -707,8 +707,6 @@ package org.igniterealtime.xiff.vcard
 			var vcardExt:VCardExtension = new VCardExtension();
 			var vcardXml:XML = vcardExt.xml;
 
-			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
-
 			//FN
 			if ( formattedName )
 			{
@@ -1212,8 +1210,6 @@ package org.igniterealtime.xiff.vcard
 					vcardXml[ xName ] = _extensions[ xName ];
 				}
 			}
-
-			trace("createExtension. vcardXml: " + vcardXml.toXMLString());
 
 			vcardExt.xml = vcardXml;
 

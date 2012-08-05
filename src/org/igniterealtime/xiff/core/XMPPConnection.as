@@ -364,8 +364,7 @@ package org.igniterealtime.xiff.core
 			var len:uint = exts.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				var success:Boolean = ExtensionClassRegistry.register(exts[ i ]);
-				trace("enableExtensions. i: " + i + ", success: " + success);
+				ExtensionClassRegistry.register(exts[ i ]);
 			}
 		}
 
@@ -378,8 +377,7 @@ package org.igniterealtime.xiff.core
 			var len:uint = exts.length;
 			for (var i:uint = 0; i < len; ++i)
 			{
-				var success:Boolean = ExtensionClassRegistry.remove(exts[ i ]);
-				trace("disableExtensions. i: " + i + ", success: " + success);
+				ExtensionClassRegistry.remove(exts[ i ]);
 			}
 		}
 
@@ -881,7 +879,7 @@ package org.igniterealtime.xiff.core
 			}
 			else
 			{
-				trace("handleIQ. iq.type: " + iq.type);
+				trace(getTimer() + " - handleIQ. iq.type: " + iq.type);
 				// TODO: type == "get", handle XEP-0030: Service Discovery
 
 				var exts:Array = iq.getAllExtensions();
@@ -930,14 +928,11 @@ package org.igniterealtime.xiff.core
 		 *
 		 * @param	node
 		 */
-		protected function handleMessage( node:XML ):Message
+		protected function handleMessage( node:XML ):void
 		{
-			trace(getTimer() + " - handleMessage. node: " + node.toXMLString());
-
 			var message:Message = new Message();
 			message.xml = node;
 
-			// ADDED in error handling for messages
 			if ( message.type == Message.TYPE_ERROR )
 			{
 				var exts:Array = message.getAllExtensions();
@@ -950,7 +945,6 @@ package org.igniterealtime.xiff.core
 				messageEvent.data = message;
 				dispatchEvent( messageEvent );
 			}
-			return message;
 		}
 
 		/**
@@ -1063,7 +1057,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleStream( node:XML ):void
 		{
-			trace("handleStream. node: " + node.toXMLString());
+			trace(getTimer() + " - handleStream. node: " + node.toXMLString());
 			sessionID = node.@id;
 			domain = node.@from;
 

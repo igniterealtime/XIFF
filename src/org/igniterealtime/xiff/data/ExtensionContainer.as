@@ -61,17 +61,12 @@ package org.igniterealtime.xiff.data
 		 */
 		public function addExtension( extension:IExtension ):IExtension
 		{
-			trace("addExtension. extension.getNS(): " + extension.getNS());
-			// addExtension. extension.getNS(): urn:ietf:params:xml:ns:xmpp-bind
-			
 			if (!_exts.hasOwnProperty(extension.getNS()))
 			{
 				_exts[extension.getNS()] = [];
 			}
-			trace("addExtension. _exts[extension.getNS()].length before: " + _exts[extension.getNS()].length);
 			_exts[extension.getNS()].push(extension);
 			
-			// Append...
 			if (!xml.children().contains(extension.xml))
 			{
 				xml.appendChild(extension.xml);
@@ -137,13 +132,11 @@ package org.igniterealtime.xiff.data
 		public function getExtension( elementName:String ):IExtension
 		{
 			var exts:Array = getAllExtensions();
-			trace("getExtension. exts.length: " + exts.length);
 			
 			var list:Array = exts.filter( function(obj:IExtension, idx:int, arr:Array):Boolean
 			{
 				return obj.getElementName() == elementName;
 			});
-			trace("getExtension. elementName: " + elementName + ", list.length: " + list.length);
 			
 			return list[0];
 		}
