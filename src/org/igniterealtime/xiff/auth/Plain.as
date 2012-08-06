@@ -38,7 +38,7 @@ package org.igniterealtime.xiff.auth
 	 * @see http://tools.ietf.org/html/rfc4616
 	 * @see http://tools.ietf.org/html/rfc3920#section-6
 	 */
-	public class Plain extends SASLAuth
+	public class Plain extends SASLAuth implements ISASLAuth
 	{
 		public static const MECHANISM:String = "PLAIN";
 

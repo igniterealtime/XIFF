@@ -35,7 +35,7 @@ package org.igniterealtime.xiff.auth
 	 * @see http://xmpp.org/extensions/xep-0178.html
 	 * @see http://tools.ietf.org/html/rfc3920#section-6
 	 */
-	public class External extends SASLAuth
+	public class External extends SASLAuth implements ISASLAuth
 	{
 		public static const MECHANISM:String = "EXTERNAL";
 

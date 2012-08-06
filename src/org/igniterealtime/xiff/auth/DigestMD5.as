@@ -43,7 +43,7 @@ package org.igniterealtime.xiff.auth
 	 * @see http://www.ietf.org/rfc/rfc2831.txt
 	 * @see http://tools.ietf.org/html/rfc3920#section-6
 	 */
-	public class DigestMD5 extends SASLAuth
+	public class DigestMD5 extends SASLAuth implements ISASLAuth
 	{
 		public static const MECHANISM:String = "DIGEST-MD5";
 

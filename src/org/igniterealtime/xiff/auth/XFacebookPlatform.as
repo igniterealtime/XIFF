@@ -42,7 +42,7 @@ package org.igniterealtime.xiff.auth
 	 * @see http://tools.ietf.org/html/rfc3920#section-6
 	 * @see https://developers.facebook.com/docs/chat/
 	 */
-	public class XFacebookPlatform extends SASLAuth
+	public class XFacebookPlatform extends SASLAuth implements ISASLAuth
 	{
 		public static const MECHANISM:String = "X-FACEBOOK-PLATFORM";
 
