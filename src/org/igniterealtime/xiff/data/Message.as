@@ -389,7 +389,7 @@ package org.igniterealtime.xiff.data
 				&& value != Message.STATE_GONE
 				&& value != null)
 			{
-				throw new Error("Invalid state value: " + value + " for ChatState");
+				throw new Error("Invalid 'state' value: " + value + " for ChatState");
 			}
 
 			/*
@@ -446,7 +446,7 @@ package org.igniterealtime.xiff.data
 				&& value != Message.RECEIPT_RECEIVED
 				&& value != null)
 			{
-				throw new Error("Invalid receipt value: " + value + " for DeliveryReceipt");
+				throw new Error("Invalid 'receipt' value: " + value + " for DeliveryReceipt");
 			}
 
 			if ( value == null )

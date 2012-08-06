@@ -55,7 +55,7 @@ package org.igniterealtime.xiff.data
 	 * messaging and presence applications, refer to Exchanging Presence
 	 * Information (Section 5) and Managing Subscriptions (Section 6).</p>
 
-	 * @see http://www.ietf.org/rfc/rfc3921.txt
+	 * @see http://tools.ietf.org/html/rfc3921
 	 */
 	public class Presence extends XMPPStanza implements IPresence
 	{

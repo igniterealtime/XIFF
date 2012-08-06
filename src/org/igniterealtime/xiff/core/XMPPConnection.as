@@ -324,6 +324,7 @@ package org.igniterealtime.xiff.core
 		 * <li>BindExtension, resource binding</li>
 		 * <li>SessionExtension</li>
 		 * <li>PingExtension, for keeping the connection alive</li>
+		 * <li>InfoDiscoExtension, for outgoing Service Discovery</li>
 		 * </ul>
 		 */
 		public function XMPPConnection()
@@ -336,7 +337,8 @@ package org.igniterealtime.xiff.core
 				AuthExtension,
 				BindExtension,
 				SessionExtension,
-				PingExtension
+				PingExtension,
+				InfoDiscoExtension
 			);
 
 			createConnection();
@@ -880,7 +882,6 @@ package org.igniterealtime.xiff.core
 			else
 			{
 				trace(getTimer() + " - handleIQ. iq.type: " + iq.type);
-				// TODO: type == "get", handle XEP-0030: Service Discovery
 
 				var exts:Array = iq.getAllExtensions();
 				var len:uint = exts.length;
@@ -896,6 +897,12 @@ package org.igniterealtime.xiff.core
 						iqEvent.data = ext;
 						iqEvent.iq = iq;
 						dispatchEvent( iqEvent );
+
+						// Handle XEP-0030: Service Discovery
+						if (iq.type == IQ.TYPE_GET && ext is InfoDiscoExtension)
+						{
+							serviceDiscoveryResponce(iq.from, iq.id);
+						}
 					}
 				}
 			}
@@ -924,7 +931,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * TODO: Add similar extension handling as in IQ,
+		 * after message specific extensions are separated from Message class
 		 *
 		 * @param	node
 		 */
@@ -949,6 +957,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Calls a appropriate parser base on the nodeName.
+		 * @param	node
 		 */
 		protected function handleNodeType( node:XML ):void
 		{
@@ -1211,7 +1220,7 @@ package org.igniterealtime.xiff.core
 		protected function handleStreamFeatures( node:XML ):void
 		{
 			var isTls:Boolean = !tlsRequired || (tlsRequired && tlsEnabled );
-			
+
 			for each ( var feature:XML in node.children() )
 			{
 				var localName:String = feature.localName();

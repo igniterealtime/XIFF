@@ -508,16 +508,16 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function grant( affiliation:String, jids:Array ):void
 		{
-						_affiliationArgs = arguments;
+			_affiliationArgs = arguments;
 
 			var iq:IQ = new IQ( roomJID.escaped, IQ.TYPE_SET, null, grant_response, grant_error );
 
 			for each ( var jid:UnescapedJID in jids )
 			{
-								_affiliationExtension.addItem( affiliation, null, null, jid.escaped, null, null );
+				_affiliationExtension.addItem( affiliation, null, null, jid.escaped, null, null );
 			}
 
-						iq.addExtension( _affiliationExtension as IExtension );
+			iq.addExtension( _affiliationExtension as IExtension );
 			_connection.send( iq );
 		}
 

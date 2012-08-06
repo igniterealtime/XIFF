@@ -26,19 +26,22 @@
 package org.igniterealtime.xiff.core
 {
 	/**
-	 * This is a base class for the JID (Jabber ID) classes.
-	 * This class should not be instantiated directly, but should be subclassed
-	 * instead.
+	 * This is a base class for the JID (Jabber Identifier) classes.
 	 *
-	 * It provides functionality to determine if a JID is valid, as well as extract the
-	 * node, domain and resource from the JID.
+	 * <p>This class should not be instantiated directly, but should be subclassed
+	 * instead.</p>
 	 *
-	 * The structure of JID is defined in RFC3920.
-	 * <code>jid = [ node "&#64;" ] domain [ "/" resource ]</code>
-	 * <code>domain = fqdn / address-literal</code>
-	 * <code>fqdn = (sub-domain 1*("." sub-domain))</code>
-	 * <code>sub-domain = (internationalized domain label)</code>
-	 * <code>address-literal = IPv4address / IPv6address</code>
+	 * <p>It provides functionality to determine if a JID is valid, as well as extract the
+	 * node, domain and resource from the JID.</p>
+	 *
+	 * <p>The structure of JID is defined in RFC3920:</p>
+	 * <ul>
+	 * <li><code>jid = [ node "&#64;" ] domain [ "/" resource ]</code></li>
+	 * <li><code>domain = fqdn / address-literal</code></li>
+	 * <li><code>fqdn = (sub-domain 1*("." sub-domain))</code></li>
+	 * <li><code>sub-domain = (internationalized domain label)</code></li>
+	 * <li><code>address-literal = IPv4address / IPv6address</code></li>
+	 * </ul>
 	 *
 	 * @exampleText user&#64;host/resource
 	 * @exampleText room&#64;service/nick
@@ -48,7 +51,7 @@ package org.igniterealtime.xiff.core
 	{
 		private const BYTE_LIMIT_ITEM:uint = 1023;
 		private const BYTE_LIMIT_TOTAL:uint = 3071;
-		
+
 		//TODO: this doesn't actually validate properly in some cases; need separate nodePrep, etc...
 		protected static var jidNodeValidator:RegExp = /^([\x29\x23-\x25\x28-\x2E\x30-\x39\x3B\x3D\x3F\x41-\x7E\xA0 \u1680\u202F\u205F\u3000\u2000-\u2009\u200A-\u200B\u06DD \u070F\u180E\u200C-\u200D\u2028-\u2029\u0080-\u009F \u2060-\u2063\u206A-\u206F\uFFF9-\uFFFC\uE000-\uF8FF\uFDD0-\uFDEF \uFFFE-\uFFFF\uD800-\uDFFF\uFFF9-\uFFFD\u2FF0-\u2FFB]{1,1023})/;
 		protected var _node:String = "";
@@ -94,13 +97,16 @@ package org.igniterealtime.xiff.core
 				_node = inJID.substring(0, separatorIndex);
 			}
 		}
-		
+
 		/**
 		 * Provides functionality to convert a JID to an escaped format.
 		 *
 		 * @param	n The string to escape.
 		 *
 		 * @return The escaped string.
+		 *
+		 * TODO: simplify with native methods
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/package.html#encodeURIComponent%28%29
 		 */
 		public static function escapedNode( n:String ):String
 		{
@@ -142,11 +148,11 @@ package org.igniterealtime.xiff.core
 			if( n && (
 				n.indexOf("\\40") >= 0 ||
 				n.indexOf("\\20") >= 0 ||
-				n.indexOf("\\26")>= 0 ||
+				n.indexOf("\\26") >= 0 ||
 				n.indexOf("\\3e") >= 0 ||
 				n.indexOf("\\3c") >= 0 ||
 				n.indexOf("\\5c") >= 0 ||
-				n.indexOf('\\3a') >= 0 ||
+				n.indexOf("\\3a") >= 0 ||
 				n.indexOf("\\2f") >= 0 ||
 				n.indexOf("\\22") >= 0 ||
 				n.indexOf("\\27") >= 0) )
