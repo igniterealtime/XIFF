@@ -3,6 +3,7 @@
 	<component class="org.igniterealtime.xiff.auth.Anonymous" />
 	<component class="org.igniterealtime.xiff.auth.DigestMD5" />
 	<component class="org.igniterealtime.xiff.auth.External" />
+	<component class="org.igniterealtime.xiff.auth.ISASLAuth" />
 	<component class="org.igniterealtime.xiff.auth.Plain" />
 	<component class="org.igniterealtime.xiff.auth.SASLAuth" />
 	<component class="org.igniterealtime.xiff.auth.XFacebookPlatform" />
@@ -77,6 +78,8 @@
 	<component class="org.igniterealtime.xiff.data.im.RosterGroup" />
 	<component class="org.igniterealtime.xiff.data.im.RosterItem" />
 	<component class="org.igniterealtime.xiff.data.im.RosterItemVO" />
+	<component class="org.igniterealtime.xiff.data.message.AMPExtension" />
+	<component class="org.igniterealtime.xiff.data.message.AMPRule" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveAutomaticExtension" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveChatCollection" />
 	<component class="org.igniterealtime.xiff.data.message.ArchiveExtension" />
