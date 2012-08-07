@@ -27,7 +27,7 @@ package org.igniterealtime.xiff.data.message
 {
 	import org.igniterealtime.xiff.data.XMLStanza;
 	import org.igniterealtime.xiff.data.INodeProxy;
-	
+
 	/**
 	 * XEP-0079: Advanced Message Processing - Rule
 	 *
@@ -36,16 +36,16 @@ package org.igniterealtime.xiff.data.message
 	public class AMPRule extends XMLStanza implements INodeProxy
 	{
 		public static const ELEMENT_NAME:String = "rule";
-		
+
 		public static const ACTION_ALERT:String = "alert";
 		public static const ACTION_DROP:String = "drop";
 		public static const ACTION_ERROR:String = "error";
 		public static const ACTION_NOTIFY:String = "notify";
-		
+
 		public static const CONDITION_DELIVER:String = "deliver";
 		public static const CONDITION_EXPIRE_AT:String = "expire-at";
 		public static const CONDITION_MATCH_RESOURCE:String = "match-resource";
-		
+
 		/**
 		 *
 		 * @param	parent
@@ -61,12 +61,12 @@ package org.igniterealtime.xiff.data.message
 				parent.appendChild(xml);
 			}
 		}
-		
+
 		public function getElementName():String
 		{
 			return AMPExtension.ELEMENT_NAME;
-        }
-		
+		}
+
 		/**
 		 * Required. Must be one of the ACTION_* constants.
 		 *
@@ -90,10 +90,10 @@ package org.igniterealtime.xiff.data.message
 			{
 				throw new Error("Invalid 'action' value: " + value + " for AMPRule");
 			}
-			
+
 			setAttribute("action", value);
 		}
-		
+
 		/**
 		 * Required. Must be one of the CONDITION_* constants.
 		 *
@@ -119,7 +119,7 @@ package org.igniterealtime.xiff.data.message
 			}
 			setAttribute("condition", value);
 		}
-		
+
 		/**
 		 * Required.
 		 *
@@ -127,6 +127,9 @@ package org.igniterealtime.xiff.data.message
 		 * attribute MUST be present, and MUST NOT be an empty string.
 		 * The interpretation of this attribute's value is determined by the
 		 * 'condition' attribute.</p>
+		 *
+		 * <p>Note that when 'condition' is set to 'expire-at', the 'value' is a date,
+		 * thus the use of <code>DateTimeParser</code> is suggested.</p>
 		 *
 		 * @see http://xmpp.org/extensions/xep-0079.html#description
 		 */
@@ -138,11 +141,11 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("value", val);
 		}
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 	}
 }

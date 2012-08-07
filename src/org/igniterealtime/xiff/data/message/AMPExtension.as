@@ -139,7 +139,8 @@ package org.igniterealtime.xiff.data.message
 		 */
 		public function get perHop():Boolean
 		{
-			return getAttribute("per-hop") != null || getAttribute("per-hop") == "true";
+			var value:String = getAttribute("per-hop");
+			return value != null && value == "true";
 		}
 		public function set perHop( value:Boolean ):void
 		{
@@ -181,11 +182,5 @@ package org.igniterealtime.xiff.data.message
 				}
 			}
 		}
-		
-
-		
-		
-		
-		
 	}
 }
