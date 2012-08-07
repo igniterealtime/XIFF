@@ -61,6 +61,7 @@
 	<component class="org.igniterealtime.xiff.data.disco.DiscoItem" />
 	<component class="org.igniterealtime.xiff.data.disco.InfoDiscoExtension" />
 	<component class="org.igniterealtime.xiff.data.disco.ItemDiscoExtension" />
+	<component class="org.igniterealtime.xiff.data.feature.FeatureNegotiationExtension" />
 	<component class="org.igniterealtime.xiff.data.forms.FormExtension" />
 	<component class="org.igniterealtime.xiff.data.forms.FormField" />
 	<component class="org.igniterealtime.xiff.data.forms.FormItem" />

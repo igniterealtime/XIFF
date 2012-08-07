@@ -97,6 +97,14 @@
 				<![CDATA[  ]]>
 				</description>
 		</package>
+		<package name="org.igniterealtime.xiff.data.feature">
+				<shortDescription>
+				<![CDATA[ XEP-0020: Feature Negotiation ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
 		<package name="org.igniterealtime.xiff.data.forms">
 				<shortDescription>
 				<![CDATA[ Forms ]]>
