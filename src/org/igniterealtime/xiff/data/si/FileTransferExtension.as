@@ -30,8 +30,6 @@ package org.igniterealtime.xiff.data.si
 	import org.igniterealtime.xiff.util.DateTimeParser;
 
 	/**
-	 * INCOMPLETE
-	 *
 	 * XEP-0096: SI File Transfer.
 	 *
 	 * <p>To be used within XEP-0095: Stream Initiation</p>
