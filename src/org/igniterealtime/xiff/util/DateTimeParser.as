@@ -135,6 +135,7 @@ package org.igniterealtime.xiff.util
 		{
 			var value:String = date2string(dateTime) + "T";
 			value += time2string(dateTime, ms);
+			value += "Z"; // Always UTC
 			return value;
 		}
 		
