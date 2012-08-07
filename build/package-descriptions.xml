@@ -211,7 +211,7 @@
 		</package>
 		<package name="org.igniterealtime.xiff.data.si">
 				<shortDescription>
-				<![CDATA[ Stream Initiation (XEP-0095) and related ]]>
+				<![CDATA[ Stream Initiation (XEP-0095) and SI File Transfer ]]>
 				</shortDescription>
 				<description>
 				<![CDATA[  ]]>

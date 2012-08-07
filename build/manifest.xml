@@ -106,6 +106,7 @@
 	<component class="org.igniterealtime.xiff.data.session.SessionExtension" />
 	<component class="org.igniterealtime.xiff.data.sharedgroups.SharedGroupsExtension" />
 	<component class="org.igniterealtime.xiff.data.si.FileTransferExtension" />
+	<component class="org.igniterealtime.xiff.data.si.StreamInitiationExtension" />
 	<component class="org.igniterealtime.xiff.data.vcard.VCardExtension" />
 	<component class="org.igniterealtime.xiff.data.version.SoftwareVersionExtension" />
 	<component class="org.igniterealtime.xiff.data.whiteboard.Fill" />
