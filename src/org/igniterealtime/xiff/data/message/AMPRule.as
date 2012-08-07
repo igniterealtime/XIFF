@@ -47,19 +47,21 @@ package org.igniterealtime.xiff.data.message
 		public static const CONDITION_MATCH_RESOURCE:String = "match-resource";
 
 		/**
+		 * Advanced Message Processing can have one or more rules. This defines it.
 		 *
-		 * @param	parent
+		 * @param	action
+		 * @param	condition
+		 * @param	value
 		 */
-		public function AMPRule( parent:XML = null )
+		public function AMPRule( action:String = null, condition:String = null, value:String = null )
 		{
 			super();
 
 			xml.setLocalName( ELEMENT_NAME );
 
-			if (parent != null)
-			{
-				parent.appendChild(xml);
-			}
+			this.action = action;
+			this.condition = condition;
+			this.value = value;
 		}
 
 		public function getElementName():String
@@ -141,11 +143,5 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("value", val);
 		}
-
-
-
-
-
-
 	}
 }
