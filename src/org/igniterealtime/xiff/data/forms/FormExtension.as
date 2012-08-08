@@ -72,7 +72,8 @@ package org.igniterealtime.xiff.data.forms
 		 */
 		public function getFormField( varName:String ):FormField
 		{
-			for each( var field:FormField in fields )
+			var list:Array = fields;
+			for each( var field:FormField in list )
 			{
 				if ( field.varName == varName )
 				{
@@ -84,7 +85,9 @@ package org.igniterealtime.xiff.data.forms
 
 		/**
 		 * Sets the fields given a fieldMap object containing keys of field vars
-		 * and values of value arrays
+		 * and values of value arrays.
+		 *
+		 * <p>Shorthand for setting <code>fields</code> property.</p>
 		 *
 		 * @param	fieldMap Object
 		 * Format:
@@ -193,7 +196,7 @@ package org.igniterealtime.xiff.data.forms
 					}
 				}
 			}
-			
+
 			return "";
 		}
 

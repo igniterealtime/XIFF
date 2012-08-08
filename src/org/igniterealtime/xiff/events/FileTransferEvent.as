@@ -33,6 +33,7 @@ package org.igniterealtime.xiff.events
 	public class FileTransferEvent extends Event
 	{
 		public static const TRANSFER_INIT:String = "transferInit";
+		public static const FEATURE_NEGOTIATED:String = "featureNegotiated";
 
 		/**
 		 *
@@ -53,7 +54,7 @@ package org.igniterealtime.xiff.events
 
 		override public function toString():String
 		{
-			return '[RoomEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' +
+			return '[FileTransferEvent type="' + type + '" bubbles=' + bubbles + ' cancelable=' +
 				cancelable + ' eventPhase=' + eventPhase + ']';
 		}
 	}

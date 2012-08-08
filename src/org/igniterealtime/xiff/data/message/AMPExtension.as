@@ -25,10 +25,10 @@
  */
 package org.igniterealtime.xiff.data.message
 {
-    import org.igniterealtime.xiff.data.Extension;
+	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 	import org.igniterealtime.xiff.core.UnescapedJID;
-	
+
 	/**
 	 * XEP-0079: Advanced Message Processing
 	 *
@@ -44,7 +44,7 @@ package org.igniterealtime.xiff.data.message
 	{
 		public static const NS:String = "http://jabber.org/protocol/amp";
 		public static const ELEMENT_NAME:String = "amp";
-		
+
 		/**
 		 *
 		 * @param	parent
@@ -53,17 +53,17 @@ package org.igniterealtime.xiff.data.message
 		{
 			super(parent);
 		}
-		
+
 		public function getNS():String
 		{
 			return AMPExtension.NS;
 		}
-		
+
 		public function getElementName():String
 		{
 			return AMPExtension.ELEMENT_NAME;
-        }
-		
+		}
+
 		/**
 		 * The 'status' attribute specifies the reason for this
 		 * <strong>amp</strong> element. When specifying semantics to be
@@ -81,7 +81,7 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("status", value);
 		}
-		
+
 		/**
 		 * The 'to' attribute specifies the original (intended) recipient of
 		 * the containing <strong>message</strong> stanza.
@@ -106,7 +106,7 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("to", value != null ? value.toString() : null);
 		}
-		
+
 		/**
 		 * The 'from' attribute specifies the original sender of the
 		 * containing <strong>message</strong> stanza. This attribute MUST
@@ -129,7 +129,7 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("from", value != null ? value.toString() : null);
 		}
-		
+
 		/**
 		 * The 'per-hop' attribute flags the contained ruleset for processing
 		 * at each server in the route between the original sender and
@@ -146,7 +146,7 @@ package org.igniterealtime.xiff.data.message
 		{
 			setAttribute("per-hop", value.toString());
 		}
-		
+
 		/**
 		 * List of AMPRule attached to this instance.
 		 *

@@ -74,18 +74,8 @@ package org.igniterealtime.xiff.data.feature
 		public static const ELEMENT_NAME:String = "feature";
 
 		/**
-		 * Feature negotiation is done with a FormExtension.
+		 * Use <code>FormExtension</code> as a child extension.
 		 *
-		 * <p>It can for example contain a list of possible stream methods.
-		 * It seems that SOCKS5 Bytestreams (XEP-0065) will almost always be preferable.</p>
-		 <field var='stream-method' type='list-single'>
-		<option><value>http://jabber.org/protocol/bytestreams</value></option>
-		<option><value>jabber:iq:oob</value></option>
-		<option><value>http://jabber.org/protocol/ibb</value></option>
-	  </field>
-		 * @see http://xmpp.org/extensions/xep-0047.html
-		 * @see http://xmpp.org/extensions/xep-0066.html
-		 * @see http://xmpp.org/extensions/xep-0065.html
 		 * @param	parent
 		 */
 		public function FeatureNegotiationExtension( parent:XML = null )

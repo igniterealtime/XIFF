@@ -34,7 +34,6 @@ package org.igniterealtime.xiff.data.forms
 	 * as fields have multiple behaviors depending on the type of the form
 	 * while containing different kinds of data, some optional some not.
 	 *
-	 *
 	 * @see	org.igniterealtime.xiff.data.forms.FormExtension
 	 * @see	http://xmpp.org/extensions/xep-0004.html
 	 */
@@ -240,14 +239,16 @@ package org.igniterealtime.xiff.data.forms
 		/**
 		 * If options are provided for possible selections of the value they are listed here.
 		 *
-		 * Applies to the following field types:
+		 * <p>Applies to the following field types:</p>
 		 *
-		 * <code>FormFieldType.JID_MULTI</code>
-		 * <code>FormFieldType.JID_SINGLE</code>
 		 * <code>FormFieldType.LIST_MULTI</code>
 		 * <code>FormFieldType.LIST_SINGLE</code>
 		 *
 		 * <p>Array of objects with the properties <code>label</code> and <code>value</code>, {label, value}.</p>
+		 *
+		 * <p>The <strong>option</strong> element MUST contain one and only one
+		 * <strong>value</strong> child. If the field is not of type "list-single"
+		 * or "list-multi", it MUST NOT contain an <strong>option</strong> element.</p>
 		 */
 		public function get options():Array
 		{
@@ -256,7 +257,7 @@ package org.igniterealtime.xiff.data.forms
 			var list:XMLList = xml.children().(localName() == "option");
 			for each ( var node:XML in list )
 			{
-				result.push( { value: node.toString(), label: node.@label.toString() } );
+				result.push( { value: node.value.toString(), label: node.@label.toString() } );
 			}
 			return result;
 		}
@@ -266,7 +267,7 @@ package org.igniterealtime.xiff.data.forms
 
 			for each (var i:Object in value)
 			{
-				var option:XML = <option>{ i.value }</option>;
+				var option:XML = <option><value>{ i.value }</value></option>;
 				option.@label = i.label;
 				xml.appendChild(option);
 			}
