@@ -25,6 +25,10 @@
  */
 package org.igniterealtime.xiff.data.message
 {
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.events.Event;
+
 	import org.igniterealtime.xiff.data.Extension;
 	import org.igniterealtime.xiff.data.IExtension;
 
@@ -70,6 +74,18 @@ package org.igniterealtime.xiff.data.message
 		public function getElementName():String
 		{
 			return OutOfBoundDataExtension.ELEMENT_NAME;
+		}
+
+		/**
+		 * Download the data from the URL defined in this extension.
+		 * @param	callback	onComplete handler,
+		 *   function(event:Event):void, where event.target is URLLoader
+		 */
+		public function download(callback:Function):void
+		{
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, callback);
+			loader.load(new URLRequest(url));
 		}
 
 		/**
