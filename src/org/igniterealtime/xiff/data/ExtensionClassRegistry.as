@@ -25,7 +25,7 @@
  */
 package org.igniterealtime.xiff.data
 {
-	
+
 	/**
 	 * This is a static class that contains class constructors for all
 	 * extensions that could come from the network.
@@ -35,18 +35,18 @@ package org.igniterealtime.xiff.data
 		/**
 		 * Array of the Extension classes.
 		 */
-        private static var _classes:Array = [];
-		
+		private static var _classes:Array = [];
+
 		/**
-	     * Registers the given extension with the extension registry for it to be used,
+		 * Registers the given extension with the extension registry for it to be used,
 		 * in case incoming data matches its ELEMENT_NAME and NS.
 		 *
 		 * @return In case the Extension was already added or it was not proper type, returns false.
-	     */
+		 */
 		public static function register( extensionClass:Class ):Boolean
 		{
 			var extensionInstance:IExtension = new extensionClass();
-			
+
 			//if (extensionInstance instanceof IExtension) {
 			if (extensionInstance is IExtension)
 			{
@@ -78,7 +78,7 @@ package org.igniterealtime.xiff.data
 			}
 			return false;
 		}
-		
+
 		/**
 		 * Find the extension with the given NS and ELEMENT_NAME if availale in the registery.
 		 *
@@ -93,7 +93,7 @@ package org.igniterealtime.xiff.data
 			{
 				var candidateClass:Class = _classes[ i ] as Class;
 				var candidateInstance:IExtension = new candidateClass() as IExtension;
-				if (ns == candidateInstance.getNS())
+				if (candidateInstance != null && ns == candidateInstance.getNS())
 				{
 					if (elementName == null)
 					{

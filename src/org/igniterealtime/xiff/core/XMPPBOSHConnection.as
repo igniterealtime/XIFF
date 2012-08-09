@@ -38,17 +38,10 @@ package org.igniterealtime.xiff.core
 	 * XEP-0124: Bidirectional-streams Over Synchronous HTTP (BOSH) and
 	 * XEP-0206: XMPP Over BOSH.
 	 *
-	 * <p>Using BOSH do not prevent your application from respecting
+	 * <p>Using BOSH does not prevent your application from respecting
 	 * Adobe Flash Player policy file issues. HTTP requests to your
-	 * server must be authorized with a crossdomain.xml file
+	 * server must be authorized with a <code>crossdomain.xml</code> file
 	 * in your webserver root.</p>
-	 *
-	 * <p>For eJabberd users : if your crossdomain policy file cannot
-	 * be served by your server, this issue can be solved with an
-	 * Apache proxy redirect so that any automatic Flash/Flex calls
-	 * to an URL like http://xmppserver:5280/crossdomain.xml will be
-	 * redirected as an URL of your choice such as
-	 * http://webserver/crossdomain.xml</p>
 	 *
 	 * <p>Warning: if you are using BOSH through HTTPS, your crossdomain
 	 * policy file must also be served through HTTPS. Your application
@@ -56,6 +49,13 @@ package org.igniterealtime.xiff.core
 	 * have a crossdomain policy issue. This issue can be solved by
 	 * using the secure property of the allow-access-from node in the
 	 * crossdomain.xml file. But this is not recommended by Adobe.</p>
+	 *
+	 * <p>For eJabberd users : if your crossdomain policy file cannot
+	 * be served by your server, this issue can be solved with an
+	 * Apache proxy redirect so that any automatic Flash/Flex calls
+	 * to an URL like http://xmppserver:5280/crossdomain.xml will be
+	 * redirected as an URL of your choice such as
+	 * http://webserver/crossdomain.xml</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0124.html
 	 * @see http://xmpp.org/extensions/xep-0206.html
@@ -99,7 +99,8 @@ package org.igniterealtime.xiff.core
 					 'no-store',
 					 'Cache-Control',
 					 'no-cache',
-					 'Pragma', 'no-cache' ]
+					 'Pragma', 'no-cache'
+			]
 		};
 
 		private var _boshPath:String = "http-bind/";
@@ -154,10 +155,12 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * TLS compression (as defined in RFC 3920) and Stream Compression (as defined
-		 * in Stream Compression [XEP-0138]) are NOT RECOMMENDED since compression
+		 * in Stream Compression [XEP-0138]) are NOT RECOMMENDED in BOSH since compression
 		 * SHOULD be negotiated at the HTTP layer using the 'accept' attribute
-		 * of the BOSH session creation response. TLS compression and Stream
-		 * Compression SHOULD NOT be used at the same time as HTTP content encoding.
+		 * of the BOSH session creation response.
+		 *
+		 * <p>TLS compression and Stream Compression SHOULD NOT be used at
+		 * the same time as HTTP content encoding.</p>
 		 *
 		 * @param	secure	Determines which port is used
 		 */
@@ -190,7 +193,7 @@ package org.igniterealtime.xiff.core
 
 			var result:XML = <{ ELEMENT_NAME }/>;
 			result.setNamespace(XMPPBOSHConnection.BOSH_NS);
-			
+
 			for (var key:String in attrs)
 			{
 				if (attrs.hasOwnProperty(key))
@@ -198,7 +201,7 @@ package org.igniterealtime.xiff.core
 					result.@[ key ] = attrs[ key ];
 				}
 			}
-			
+
 			sendRequests( result );
 		}
 
@@ -402,9 +405,9 @@ package org.igniterealtime.xiff.core
 
 			_requestCount--;
 			var byteData:ByteArray = loader.data as ByteArray;
-			
+
 			_incomingBytes += byteData.length;
-			
+
 			var strData:String = byteData.readUTFBytes(byteData.length);
 			trace("onRequestComplete. strData: " + strData);
 
@@ -533,7 +536,7 @@ package org.igniterealtime.xiff.core
 
 			return sendRequests();
 		}
-		
+
 		/**
 		 * Pass through to <code>sendRequests</code> method for having the
 		 * <code>body</code> wrapper around the given data.
@@ -581,11 +584,11 @@ package org.igniterealtime.xiff.core
 			}
 			trace("sendRequests. data: " + data.toXMLString());
 
-			
+
 			// Dispatch OutgoingDataEvent, calls sendDataToServer.
 			sendData(data.toXMLString());
-			
-			
+
+
 			if ( isPoll )
 			{
 				_lastPollTime = new Date();
@@ -593,7 +596,7 @@ package org.igniterealtime.xiff.core
 			}
 			return true;
 		}
-		
+
 		/**
 		 * Connection to the server in BOSH is a simple URLRequest.
 		 *
@@ -619,12 +622,12 @@ package org.igniterealtime.xiff.core
 			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, onHTTPStatus);
 			loader.load(req);
 		}
-		
+
 		private function onHTTPStatus(event:HTTPStatusEvent):void
 		{
 			trace("onHTTPStatus. " + event.toString());
 			trace("onHTTPStatus. status: " + event.status);
-			
+
 		}
 
 		/**

@@ -346,6 +346,8 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Enable the given extensions for interacting with the incoming data.
+		 * Once an extension is enabled, it can be listened by adding an event
+		 * listener to its namespace.
 		 *
 		 * <p>Some extensions might responce to an incoming request, such as
 		 * SoftwareVersionExtension if enabled</p>
@@ -873,9 +875,7 @@ package org.igniterealtime.xiff.core
 				pendingIQs[ iq.id ] = null;
 				delete pendingIQs[ iq.id ];
 			}
-
-			// Before XML migration, the IQEvent was only triggered if there was no error and no callback.
-			if ( iq.type == IQ.TYPE_ERROR )
+			else if ( iq.type == IQ.TYPE_ERROR )
 			{
 				dispatchError( iq.errorCondition, iq.errorMessage, iq.errorType, iq.errorCode );
 			}
@@ -888,7 +888,6 @@ package org.igniterealtime.xiff.core
 
 				for ( var i:uint = 0; i < len; ++i )
 				{
-					// Static type casting
 					var ext:IExtension = exts[ i ] as IExtension;
 
 					if ( ext != null )

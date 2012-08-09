@@ -97,11 +97,12 @@ package org.igniterealtime.xiff.data.stream
 		 */
 		public function get data():String
 		{
-			return getAttribute("seq");
+			xml.normalize();
+			return xml.children().toXMLString().replace("\n", "");
 		}
 		public function set data( value:String ):void
 		{
-			setAttribute("seq", value);
+			xml.setChildren(value);
 		}
 
 

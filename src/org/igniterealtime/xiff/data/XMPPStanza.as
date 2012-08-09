@@ -373,32 +373,18 @@ package org.igniterealtime.xiff.data
 		 *
 		 * <p>Use <code>null</code> to remove.</p>
 		 *
-		 * TODO
+		 * <p>This is the <strong>text</strong> element that is a child
+		 * of <strong>error</strong> element.</p>
+		 *
 		 * @see http://tools.ietf.org/html/rfc3920#section-9.3
 		 */
 		public function get errorMessage():String
 		{
-			if ( errorCondition != null )
-			{
-				return xml.error[errorCondition];
-			}
-			return getField("error");
+			return getChildField("error", "text");
 		}
 		public function set errorMessage( value:String ):void
 		{
-			value = value != null ? value : "";
-
-			if ( errorCondition != null )
-			{
-				// Use the element name
-				xml.error[errorCondition] = value;
-			}
-			else
-			{
-				var attributes:XMLList = xml.error.attributes();
-				xml.error = value;
-				xml.error.attributes = attributes; // TODO: sure?
-			}
+			setChildField("error", "text", value); // Should the namespace be added? urn:ietf:params:xml:ns:xmpp-stanzas
 		}
 
 		/**
@@ -418,9 +404,9 @@ package org.igniterealtime.xiff.data
 		 */
 		public function get errorCondition():String
 		{
-			// TODO: Add check for correct namespace...
+			// TODO: Add check that this is not the "text" field that would have the same namespace...
 			var list:XMLList = xml.children().(localName() == "error");
-			if ( list.length() > 0 && list[0].children().length() > 0)
+			if ( list.length() > 0 && list[0].children().length() > 0 )
 			{
 				return list[0].children()[0].localName();
 			}
