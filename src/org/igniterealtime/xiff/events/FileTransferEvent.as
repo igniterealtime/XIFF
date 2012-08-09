@@ -26,14 +26,32 @@
 package org.igniterealtime.xiff.events
 {
 	import flash.events.Event;
+	
+	import org.igniterealtime.xiff.data.IQ;
 
 	/**
 	 * Events from the FileTransferManager
 	 */
 	public class FileTransferEvent extends Event
 	{
-		public static const TRANSFER_INIT:String = "transferInit";
-		public static const FEATURE_NEGOTIATED:String = "featureNegotiated";
+		public static const OUTGOING_FEATURE:String = "outgoingFeature";
+		public static const OUTGOING_OPEN:String = "outgoingOpen";
+		public static const OUTGOING_CLOSE:String = "outgoingClose";
+
+		public static const INCOMING_FEATURE:String = "incomingFeature";
+		public static const INCOMING_OPEN:String = "incomingOpen";
+		public static const INCOMING_CLOSE:String = "incomingClose";
+
+		/**
+		 * Extensions that might be related to the event type.
+		 * FeatureNegotiationExtension, FileTransferExtension
+		 */
+		public var extensions:Array;
+
+		/**
+		 * The original IQ that contained the extension that might have triggered this event.
+		 */
+		public var iq:IQ;
 
 		/**
 		 *
