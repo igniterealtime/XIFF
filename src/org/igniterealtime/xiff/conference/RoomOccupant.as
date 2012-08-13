@@ -26,11 +26,11 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.EventDispatcher;
-	
+
 	import org.igniterealtime.xiff.core.UnescapedJID;
 	import org.igniterealtime.xiff.data.im.IRosterItemVO;
 	import org.igniterealtime.xiff.data.im.RosterItemVO;
-	
+
 	/**
 	 * A person in a room
 	 *
@@ -109,18 +109,13 @@ package org.igniterealtime.xiff.conference
 		}
 
 		/**
-		 *
+		 * RoomOccupants can't exist unless they're online
 		 */
 		public function get online():Boolean
 		{
 			return true;
 		}
-		public function set online( value:Boolean ):void
-		{
-			//RoomOccupants can't exist unless they're online
-		}
 
-		
 		/**
 		 *
 		 */

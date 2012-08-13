@@ -98,15 +98,11 @@ package org.igniterealtime.xiff.data.stream
 		public function get data():String
 		{
 			xml.normalize();
-			return xml.children().toXMLString().replace("\n", "");
+			return xml.children().toXMLString().replace(" ", "");
 		}
 		public function set data( value:String ):void
 		{
 			xml.setChildren(value);
 		}
-
-
-
-
 	}
 }

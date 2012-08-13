@@ -26,14 +26,14 @@
 package org.igniterealtime.xiff.conference
 {
 	import flash.events.EventDispatcher;
-	
+
 	import org.igniterealtime.xiff.core.IListener;
 	import org.igniterealtime.xiff.core.IXMPPConnection;
 	import org.igniterealtime.xiff.data.Message;
 	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
 	import org.igniterealtime.xiff.events.InviteEvent;
 	import org.igniterealtime.xiff.events.MessageEvent;
-	
+
 	/**
 	 * Dispatched when an invitations has been received.
 	 *
@@ -68,12 +68,12 @@ package org.igniterealtime.xiff.conference
 				connection = aConnection;
 			}
 		}
-		
+
 		/**
 		 *
 		 * @param	event
 		 */
-		private function handleEvent( event:Object ):void
+		private function handleEvent( event:MessageEvent ):void
 		{
 			switch ( event.type )
 			{
@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.conference
 		{
 			if ( _connection != null )
 			{
-                // Make sure that the listener is set only once
+				// Make sure that the listener is set only once
 				_connection.removeEventListener( MessageEvent.MESSAGE, handleEvent );
 			}
 			_connection = value;
