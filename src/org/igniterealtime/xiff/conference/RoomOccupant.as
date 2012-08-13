@@ -115,7 +115,11 @@ package org.igniterealtime.xiff.conference
 		{
 			return true;
 		}
+		public function set online( value:Boolean ):void
+		{
+		}
 
+		
 		/**
 		 *
 		 */
