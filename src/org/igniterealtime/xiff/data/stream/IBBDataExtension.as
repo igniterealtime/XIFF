@@ -98,7 +98,7 @@ package org.igniterealtime.xiff.data.stream
 		public function get data():String
 		{
 			xml.normalize();
-			return xml.children().toXMLString().replace(" ", "");
+			return xml.children().toXMLString().replace(/\s/mg, "");
 		}
 		public function set data( value:String ):void
 		{
