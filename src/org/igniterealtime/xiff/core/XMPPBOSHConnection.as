@@ -170,9 +170,44 @@ package org.igniterealtime.xiff.core
 			this.secure = secure;
 			_responseTimer = new Timer( 0.0, 1 );
 			_responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
+			
+			// Default values for super class
+			port = XMPPBOSHConnection.HTTP_PORT;
 		}
 
 		/**
+		 * The first request from the client to the connection manager requests a new session.
+		 *
+		 * <p>The <strong>body</strong> element of the first request SHOULD possess
+		 * the following attributes (they SHOULD NOT be included in any other requests
+		 * except as specified under Adding Streams To A Session):</p>
+		 *
+		 * <ul>
+		 * <li>'to' -- This attribute specifies the target domain of the first stream.</li>
+		 * <li>'xml:lang' -- This attribute (as defined in Section 2.12 of XML 1.0 [17])
+		 *   specifies the default language of any human-readable XML character data
+		 *   sent or received during the session.</li>
+		 * <li>'ver' -- This attribute specifies the highest version of the BOSH protocol
+		 *   that the client supports. The numbering scheme is "major.minor" (where
+		 *   the minor number MAY be incremented higher than a single digit, so it
+		 *   MUST be treated as a separate integer). Note: The 'ver' attribute should
+		 *   not be confused with the version of any protocol being transported.</li>
+		 * <li>'wait' -- This attribute specifies the longest time (in seconds) that
+		 *   the connection manager is allowed to wait before responding to any request
+		 *   during the session. This enables the client to limit the delay before it
+		 *   discovers any network failure, and to prevent its HTTP/TCP connection
+		 *   from expiring due to inactivity.</li>
+		 * <li>'hold' -- This attribute specifies the maximum number of requests the
+		 *   connection manager is allowed to keep waiting at any one time during the
+		 *   session. If the client is not able to use HTTP Pipelining then this SHOULD
+		 *   be set to "1".</li>
+		 * </ul>
+		 *
+		 * <p>Note: Clients that only support Polling Sessions MAY prevent the connection
+		 * manager from waiting by setting 'wait' or 'hold' to "0". However, polling is
+		 * NOT RECOMMENDED since the associated increase in bandwidth consumption and
+		 * the decrease in responsiveness are both typically one or two orders of
+		 * magnitude!</p>
 		 *
 		 * @param	streamType Not used
 		 * @see http://xmpp.org/extensions/xep-0206.html#initiate
@@ -247,8 +282,57 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Session Creation Response
+		 *
+		 * <p>After receiving a new session request, the connection manager MUST generate
+		 * an opaque, unpredictable session identifier (or SID). The SID MUST be unique
+		 * within the context of the connection manager application. The <strong>body</strong>
+		 * element of the connection manager's response to the client's session creation
+		 * request MUST possess the following attributes (they SHOULD NOT be included in
+		 * any other responses):</p>
+		 *
+		 * <ul>
+		 * <li>'sid' -- This attribute specifies the SID</li>
+		 * <li>'wait' -- This is the longest time (in seconds) that the connection manager
+		 *   will wait before responding to any request during the session. The time MUST be
+		 *   less than or equal to the value specified in the session request.</li>
+		 * </ul>
+		 *
+		 * <p>The <strong>body</strong> element SHOULD also include the following attributes
+		 * (they SHOULD NOT be included in any other responses):</p>
+		 *
+		 * <ul>
+		 * <li>'ver' -- This attribute specifies the highest version of the BOSH protocol
+		 *   that the connection manager supports, or the version specified by the client in
+		 *   its request, whichever is lower.</li>
+		 * <li>'polling' -- This attribute specifies the shortest allowable polling
+		 *   interval (in seconds). This enables the client to not send empty request
+		 *   elements more often than desired (see Polling Sessions and Overactivity).</li>
+		 * <li>'inactivity' -- This attribute specifies the longest allowable inactivity
+		 *   period (in seconds). This enables the client to ensure that the periods with
+		 *   no requests pending are never too long (see Polling Sessions and Inactivity).</li>
+		 * <li>'requests' -- This attribute enables the connection manager to limit the
+		 *   number of simultaneous requests the client makes (see Overactivity and
+		 *   Polling Sessions). The RECOMMENDED values are either "2" or one more than
+		 *   the value of the 'hold' attribute specified in the session request.</li>
+		 * <li>'hold' -- This attribute informs the client about the maximum number
+		 *   of requests the connection manager will keep waiting at any one time during
+		 *   the session. This value MUST NOT be greater than the value specified by the
+		 *   client in the session request.</li>
+		 * <li>'to' -- This attribute communicates the identity of the backend server
+		 *   to which the client is attempting to connect.</li>
+		 * </ul>
+		 *
+		 * <p>The connection manager MAY include an 'accept' attribute in the session
+		 * creation response element, to specify a space-separated list of the content
+		 * encodings it can decompress. After receiving a session creation response
+		 * with an 'accept' attribute, clients MAY include an HTTP Content-Encoding
+		 * header in subsequent requests (indicating one of the encodings specified
+		 * in the 'accept' attribute) and compress the bodies of the requests
+		 * accordingly.</p>
 		 *
 		 * @param	responseBody
+		 * @see http://xmpp.org/extensions/xep-0124.html#session-response
 		 * @see http://xmpp.org/extensions/xep-0206.html#create
 		 */
 		public function processConnectionResponse( responseBody:XML ):void
@@ -286,7 +370,9 @@ package org.igniterealtime.xiff.core
 			addEventListener( LoginEvent.LOGIN, handleLogin );
 		}
 
-		//do nothing, we use polling instead
+		/**
+		 * Does nothing, BOSH uses polling instead.
+		 */
 		override public function sendKeepAlive():void
 		{
 		}
@@ -318,6 +404,9 @@ package org.igniterealtime.xiff.core
 			_streamRestarted = true;
 		}
 
+		/**
+		 * TODO: Is this somthing that could be safely removed?
+		 */
 		override protected function handleNodeType( node:XML ):void
 		{
 			super.handleNodeType( node );
@@ -429,6 +518,7 @@ package org.igniterealtime.xiff.core
 				active = false;
 			}
 
+			// sid is supposed to be only available when creating a new session
 			// http://xmpp.org/extensions/xep-0206.html#create
 			if ( xmlData.hasOwnProperty("@sid") && !loggedIn )
 			{
@@ -608,6 +698,8 @@ package org.igniterealtime.xiff.core
 		 */
 		override protected function sendDataToServer( data:ByteArray ):void
 		{
+			trace("XMPPBOSHConnection::sendDataToServer. httpServer: " + httpServer);
+			
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
 			req.contentType = "text/xml"; // How about while compressed data?
@@ -673,6 +765,8 @@ package org.igniterealtime.xiff.core
 		/**
 		 * HTTP bind requests type. If secure, the requests will be sent
 		 * through HTTPS. If not, through HTTP.
+		 *
+		 * <p>Please note that the <code>port</code> needs to be set separately.</p>
 		 */
 		public function get secure():Boolean
 		{
