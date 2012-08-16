@@ -50,12 +50,12 @@ package org.igniterealtime.xiff.core
 	 * using the secure property of the allow-access-from node in the
 	 * crossdomain.xml file. But this is not recommended by Adobe.</p>
 	 *
-	 * <p>For eJabberd users : if your crossdomain policy file cannot
-	 * be served by your server, this issue can be solved with an
+	 * <p>If your crossdomain policy file cannot
+	 * be served by your server, this issue could be solved with an
 	 * Apache proxy redirect so that any automatic Flash/Flex calls
-	 * to an URL like http://xmppserver:5280/crossdomain.xml will be
+	 * to an URL like <code>http://xmppserver:5280/crossdomain.xml</code> will be
 	 * redirected as an URL of your choice such as
-	 * http://webserver/crossdomain.xml</p>
+	 * <code>http://webserver/crossdomain.xml</code>.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0124.html
 	 * @see http://xmpp.org/extensions/xep-0206.html
@@ -63,12 +63,14 @@ package org.igniterealtime.xiff.core
 	public class XMPPBOSHConnection extends XMPPConnection implements IXMPPConnection
 	{
 		/**
+		 * Current version of the BOSH defined in the XEP and the
+		 * version which this class implements.
 		 * @default 1.6
 		 */
 		public static const BOSH_VERSION:String = "1.6";
 
 		/**
-		 *
+		 * Namespace used by BOSH body wrapper
 		 */
 		public static const BOSH_NS:String = "http://jabber.org/protocol/httpbind";
 
@@ -85,23 +87,9 @@ package org.igniterealtime.xiff.core
 		public static const HTTPS_PORT:uint = 7443;
 
 		/**
-		 * BOSH body element name
+		 * BOSH body wrapper element name
 		 */
 		public static const ELEMENT_NAME:String = "body";
-
-		/**
-		 * Keys should match URLRequestMethod constants.
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestMethod.html
-		 */
-		private static const HEADERS:Object = {
-			"POST": [],
-			"GET": [ 'Cache-Control',
-					 'no-store',
-					 'Cache-Control',
-					 'no-cache',
-					 'Pragma', 'no-cache'
-			]
-		};
 
 		private var _boshPath:String = "http-bind/";
 
@@ -140,7 +128,7 @@ package org.igniterealtime.xiff.core
 
 		private var _requestQueue:Array = []; // XML
 
-		private var _responseQueue:Array = [];
+		private var _responseQueue:Array = []; // XML
 
 		private var _responseTimer:Timer;
 
@@ -149,6 +137,9 @@ package org.igniterealtime.xiff.core
 		 */
 		private var _rid:uint;
 
+		/**
+		 * Session ID, as defined by the server
+		 */
 		private var _sid:String;
 
 		private var _streamRestarted:Boolean;
@@ -170,7 +161,7 @@ package org.igniterealtime.xiff.core
 			this.secure = secure;
 			_responseTimer = new Timer( 0.0, 1 );
 			_responseTimer.addEventListener( TimerEvent.TIMER_COMPLETE, processResponse );
-			
+
 			// Default values for super class
 			port = XMPPBOSHConnection.HTTP_PORT;
 		}
@@ -512,9 +503,20 @@ package org.igniterealtime.xiff.core
 				bindConnection();
 			}
 
-			if ( xmlData.@type == "terminate" )
+			// TODO: Error handling... http://xmpp.org/extensions/xep-0124.html#errorstatus
+			if ( xmlData.@type == "terminate" && xmlData.hasOwnProperty("@condition") )
 			{
-				dispatchError( "BOSH Error", xmlData.@condition, "", -1 );
+				/*
+				@condition can be:
+				 bad-request
+				 policy-violation
+				 item-not-found
+
+				 see-other-uri --> uri element
+
+				In case there is no condition, the "terminate" was not due to an error.
+				*/
+				dispatchError( xmlData.@condition, "BOSH Error", "" );
 				active = false;
 			}
 
@@ -596,7 +598,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 *
+		 * Reset the response time if there are items in the queue
 		 */
 		private function resetResponseProcessor():void
 		{
@@ -690,20 +692,25 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Connection to the server in BOSH is a simple URLRequest.
 		 *
+		 * <p>All information is encoded in the body of standard HTTP POST
+		 * requests and responses. Each HTTP body contains a single
+		 * <strong>body</strong> wrapper which encapsulates the XML elements
+		 * being transferred.</p>
+		 *
 		 * <p>BOSH requires all incoming and outgoing data to be wrapped in
 		 * <code>body</code> element. That should be taken care of before possible
 		 * Stream Compression.</p>
 		 *
 		 * @param	data ByteArray that might be compressed if enabled
+		 * @see http://xmpp.org/extensions/xep-0124.html#overview
 		 */
 		override protected function sendDataToServer( data:ByteArray ):void
 		{
 			trace("XMPPBOSHConnection::sendDataToServer. httpServer: " + httpServer);
-			
+
 			var req:URLRequest = new URLRequest( httpServer );
 			req.method = URLRequestMethod.POST;
-			req.contentType = "text/xml"; // How about while compressed data?
-			req.requestHeaders = HEADERS[ req.method ];
+			req.contentType = "text/xml";
 			req.data = data;
 
 			var loader:URLLoader = new URLLoader();
