@@ -176,7 +176,10 @@ package org.igniterealtime.xiff.si
 			fileExt.name = fileName;
 			fileExt.size = fileSize;
 			fileExt.date = modificationDate;
-			//fileExt.hash = _md5.hash();
+
+			var hash:ByteArray = _md5.hash(_outGoingData);
+			hash.position = 0;
+			fileExt.hash = hash.readUTFBytes(hash.length);
 
 			var siExt:StreamInitiationExtension = new StreamInitiationExtension();
 			siExt.id = "letsdoit";
