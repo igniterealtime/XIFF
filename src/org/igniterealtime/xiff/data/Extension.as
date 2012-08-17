@@ -44,9 +44,11 @@ package org.igniterealtime.xiff.data
 		public function Extension( parent:XML = null )
 		{
 			super();
+			
+			var ns:Namespace = new Namespace(null, IExtension(this).getNS());
 
 			xml.setLocalName( IExtension(this).getElementName() );
-			xml.setNamespace( IExtension(this).getNS() );
+			xml.setNamespace( ns );
 
 			if (parent != null)
 			{

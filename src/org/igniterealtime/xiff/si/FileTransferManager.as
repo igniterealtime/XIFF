@@ -154,6 +154,8 @@ package org.igniterealtime.xiff.si
 		 */
 		public function sendFile(to:EscapedJID, fileName:String, fileSize:uint, mimeType:String, modificationDate:Date = null):void
 		{
+			trace("sendFile. to: " + to.toString() + ", fileName: " + fileName + ", fileSize: " + fileSize + ", mimeType: " + mimeType);
+			
 			var options:Array = [
 				{ label: "XEP-0047: In-Band Bytestreams", value: IBBExtension.NS } // Only supported method...
 			];
