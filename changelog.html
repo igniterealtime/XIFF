@@ -159,186 +159,121 @@ hr {
 	<div id="content">
 		<!--
 		<h2>3.2.0 -- <span style="font-weight: normal;">2013</span></h2>
-
-		<h3>Bug</h3>
-		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-'>XIFF-</a>] - </li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-'>XIFF-</a>] - </li>
-		</ul>
-
-		<h3>Improvement</h3>
-		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-104'>XIFF-104</a>] - RFC update from 3920 to 6122 (Address Format)</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-103'>XIFF-103</a>] - RFC update from 3921 to 6121</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-102'>XIFF-102</a>] - RFC update from 3920 to 6120</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-72'>XIFF-72</a>] - Add USER_VOICE_REVOKED and USER_VOICE_GRANTED events to RoomEvent</li>
-		</ul>
-
-		<h3>New Feature</h3>
-		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-76'>XIFF-76</a>] - XEP-0136: Message Archiving</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-86'>XIFF-86</a>] - XEP-0060: Publish-Subscribe</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-100'>XIFF-100</a>] - XEP-0166: Jingle</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-84'>XIFF-84</a>] - XEP-0012: Last Activity</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-87'>XIFF-87</a>] - XEP-0079: Advanced Message Processing</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-85'>XIFF-85</a>] - XEP-0080: User Location</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-99'>XIFF-99</a>] - Add RTMP Connection - Redfire plugin related</li>
-		</ul>
-
-		<h3>Task</h3>
-		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-17'>XIFF-17</a>] - Event data types</li>
-		</ul>
 		-->
 
 		<h2>3.1.0 -- <span style="font-weight: normal;">August 22, 2012</span></h2>
 
-		<p>This release contains few classes that are not listed in the manifest as they are not fully implemented.</p>
-
 		<h3>Bug</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-15'>XIFF-15</a>] - Fix recognition of namespace in extension handlers</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-74'>XIFF-74</a>] - XMPPTLSConnection needs to send the TLSConfig object when startTLS is called</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-25'>XIFF-25</a>] - Need to enable support for xhtml under XIFF.</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-34'>XIFF-34</a>] - Incorrect error type is being pass in XMPPBOSHConnection when SASL fails (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-15'>XIFF-15</a>] - Fix recognition of namespace in extension handlers</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-25'>XIFF-25</a>] - Need to enable support for xhtml under XIFF.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-34'>XIFF-34</a>] - Incorrect error type is being pass in XMPPBOSHConnection when SASL fails (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-51'>XIFF-51</a>] - DiscoExtension.serviceNode</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-73'>XIFF-73</a>] - Apply patches to as3crypto for successful TLS connection and as3crypto library build</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-74'>XIFF-74</a>] - XMPPTLSConnection needs to send the TLSConfig object when startTLS is called</li>
 		</ul>
 
 		<h3>Improvement</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-98'>XIFF-98</a>] - XEP-0030: Service Discovery - Outgoing</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-83'>XIFF-83</a>] - Unit Tests for core XIFF classes</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-44'>XIFF-44</a>] - Finish ASdoc documentation of all classes</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-94'>XIFF-94</a>] - XEP-0170: Recommended Order of Stream Feature Negotiation</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-32'>XIFF-32</a>] - Convert from XMLDocument/XMLNode to XML</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-97'>XIFF-97</a>] - XEP-0203: Delayed Delivery - Also for Presence</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-79'>XIFF-79</a>] - Add ability to change the ID generator on XMPP stanzas.</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-80'>XIFF-80</a>] - Add universally unique identifier generator for XMPP stanzas.</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-81'>XIFF-81</a>] - Prevent pinging the server if the server responds with an error of type cancel.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-6'>XIFF-6</a>] - Add userKick events when kicking</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-30'>XIFF-30</a>] - Merge exnihilo&#39;s AS3Crypto patch</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-32'>XIFF-32</a>] - Convert from XMLDocument/XMLNode to XML</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-44'>XIFF-44</a>] - Finish ASdoc documentation of all classes</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-54'>XIFF-54</a>] - Use XML and other proper AS3 classes instead of the legacy XMLNode and such</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-79'>XIFF-79</a>] - Add ability to change the ID generator on XMPP stanzas.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-80'>XIFF-80</a>] - Add universally unique identifier generator for XMPP stanzas.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-81'>XIFF-81</a>] - Prevent pinging the server if the server responds with an error of type cancel.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-83'>XIFF-83</a>] - Unit Tests for core XIFF classes</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-94'>XIFF-94</a>] - XEP-0170: Recommended Order of Stream Feature Negotiation</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-97'>XIFF-97</a>] - XEP-0203: Delayed Delivery - Also for Presence</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-98'>XIFF-98</a>] - XEP-0030: Service Discovery - Outgoing</li>
 		</ul>
 
 		<h3>New Feature</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-88'>XIFF-88</a>] - XEP-0184: Message Delivery Receipts</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-53'>XIFF-53</a>] - XEP-0138: Stream Compression</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-91'>XIFF-91</a>] - XEP-0092: Software Version</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-95'>XIFF-95</a>] - XEP-0224: Attention</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-75'>XIFF-75</a>] - Add Facebook Chat support.</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-47'>XIFF-47</a>] - Support XEP-0085: Chat State Notifications (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-47'>XIFF-47</a>] - Support XEP-0085: Chat State Notifications (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-53'>XIFF-53</a>] - XEP-0138: Stream Compression</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-75'>XIFF-75</a>] - Add Facebook Chat support.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-88'>XIFF-88</a>] - XEP-0184: Message Delivery Receipts</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-91'>XIFF-91</a>] - XEP-0092: Software Version</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-92'>XIFF-92</a>] - XEP-0096: SI File Transfer</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-95'>XIFF-95</a>] - XEP-0224: Attention</li>
 		</ul>
 
 		<h3>Task</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-77'>XIFF-77</a>] - Add XIFFGUI as example into svn</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-13'>XIFF-13</a>] - Get rid of XMLSocket usage (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-2'>XIFF-2</a>] - Determine if XIFF has roster issues with 1500+ users</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-13'>XIFF-13</a>] - Get rid of XMLSocket usage (Done prior to 3.0.0 release)</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-77'>XIFF-77</a>] - Add XIFFGUI as example into svn</li>
 		</ul>
-
+		
 		<h2>3.0.0 -- <span style="font-weight: normal;">August 19, 2010</span></h2>
 
 		<h3>Bug</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-3'>XIFF-3</a>] -         Private messaging in conferencing
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-33'>XIFF-33</a>] -         SASL failure is not being handled by XMPPBOSHConnection.as
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-36'>XIFF-36</a>] -         Fix reconnection
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-38'>XIFF-38</a>] -         RegistrationFieldsEvent dispatch and key fix
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-39'>XIFF-39</a>] -         Roster EscapedJID passed to addRosterItem
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-40'>XIFF-40</a>] -         Add clone() and toString() to all events
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-41'>XIFF-41</a>] -         Remove void return type on constructors
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-60'>XIFF-60</a>] -         Room events related to updates in the room
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-63'>XIFF-63</a>] -         Update ArrayCollection to Extend Proxy and Implement Dynamic Object/Array Methods
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-64'>XIFF-64</a>] -         Destroy method inconsistencies and error in Room and MUCOwnerExtension.
-		</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-3'>XIFF-3</a>] - Private messaging in conferencing</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-33'>XIFF-33</a>] - SASL failure is not being handled by XMPPBOSHConnection.as</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-36'>XIFF-36</a>] - Fix reconnection</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-38'>XIFF-38</a>] - RegistrationFieldsEvent dispatch and key fix</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-39'>XIFF-39</a>] - Roster EscapedJID passed to addRosterItem</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-40'>XIFF-40</a>] - Add clone() and toString() to all events</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-41'>XIFF-41</a>] - Remove void return type on constructors</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-60'>XIFF-60</a>] - Room events related to updates in the room</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-63'>XIFF-63</a>] - Update ArrayCollection to Extend Proxy and Implement Dynamic Object/Array Methods</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-64'>XIFF-64</a>] - Destroy method inconsistencies and error in Room and MUCOwnerExtension.</li>
 		</ul>
 
 		<h3>Improvement</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-37'>XIFF-37</a>] -         If a server requires TLS, dispatch an error event and disconnect since we do not support this feature yet.
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-43'>XIFF-43</a>] -         Add ant build scripts
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-46'>XIFF-46</a>] -         Fire events for ERROR types in messages
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-50'>XIFF-50</a>] -         new Object() ---&gt; {} ,  new Array() ---&gt; []
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-52'>XIFF-52</a>] -         Change license
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-58'>XIFF-58</a>] -         Removal of Flex specific classes
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-61'>XIFF-61</a>] -         IQ Changes. Remove iqCallback and iqCallbackScope. Only need iqCallbackFunc (rewrite as iqCallback or iqSuccessCallback). Add iqErrorCallback.
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-62'>XIFF-62</a>] -         Ant Build File Update
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-70'>XIFF-70</a>] -         Add itemUpdated call to updateRosterItemPresence in Roster.
-		</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-37'>XIFF-37</a>] - If a server requires TLS, dispatch an error event and disconnect since we do not support this feature yet.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-43'>XIFF-43</a>] - Add ant build scripts</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-46'>XIFF-46</a>] - Fire events for ERROR types in messages</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-50'>XIFF-50</a>] - new Object() ---&gt; {} ,  new Array() ---&gt; []</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-52'>XIFF-52</a>] - Change license</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-58'>XIFF-58</a>] - Removal of Flex specific classes</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-61'>XIFF-61</a>] - IQ Changes. Remove iqCallback and iqCallbackScope. Only need iqCallbackFunc (rewrite as iqCallback or iqSuccessCallback). Add iqErrorCallback.</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-62'>XIFF-62</a>] - Ant Build File Update</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-70'>XIFF-70</a>] - Add itemUpdated call to updateRosterItemPresence in Roster.</li>
 		</ul>
 
 		<h3>New Feature</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-35'>XIFF-35</a>] -         XEP-0106 (JID escaping) support
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-55'>XIFF-55</a>] -         Support for Digest-MD5 authentication
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-71'>XIFF-71</a>] -         Add support for retrieving one&#39;s own vCard
-		</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-35'>XIFF-35</a>] - XEP-0106 (JID escaping) support</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-55'>XIFF-55</a>] - Support for Digest-MD5 authentication</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-71'>XIFF-71</a>] - Add support for retrieving one&#39;s own vCard</li>
 		</ul>
 
 		<h3>Task</h3>
 		<ul>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-42'>XIFF-42</a>] -         Look into removal of AVAILABLE_TYPE
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-45'>XIFF-45</a>] -         Move to org.igniterealtime namespace
-		</li>
-		<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-69'>XIFF-69</a>] -         Include as3crypto.swc in XIFF
-		</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-42'>XIFF-42</a>] - Look into removal of AVAILABLE_TYPE</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-45'>XIFF-45</a>] - Move to org.igniterealtime namespace</li>
+			<li>[<a href='http://issues.igniterealtime.org/browse/XIFF-69'>XIFF-69</a>] - Include as3crypto.swc in XIFF</li>
 		</ul>
 
 		<h2>3.0.0 Beta 1 -- <span style="font-weight: normal;">April 2, 2008</span></h2>
 
-		<h3><span style="color:red; font-weight:bold;">!</span>        Upgrade Information
-		</h3>
+		<h3><span style="color:red; font-weight:bold;">!</span> Upgrade Information</h3>
 		<ul>
-		<li>XIFF 3 is <i>not</i> API compatible with XIFF 2
-		</li>
-		<li>XIFF 3 requires Adobe Flex and ActionScript 3
-		</li>
+			<li>XIFF 3 is <i>not</i> API compatible with XIFF 2</li>
+			<li>XIFF 3 requires Adobe Flex and ActionScript 3</li>
 		</ul>
 
-		<h3>        Major Improvement
-		</h3>
+		<h3>Major Improvement</h3>
 		<ul>
-		<li>Many many API changes. Documentation on the new API will be improved in subsequent betas. Please provide feedback on the new design
-		</li>
-		<li>BOSH support
-		</li>
-		<li>Limited SASL support (only when using BOSH, only ANONYMOUS and PLAIN)
-		</li>
-		<li>XEP-0055 support (Jabber Search), including data forms
-		</li>
-		<li>MUC improvements (kick/ban support, error handling, non-anonymous room support, bug fixes)
-		</li>
-		<li>VCard support including XEP-0153 (VCard Avatars)
-		</li>
+			<li>Many many API changes. Documentation on the new API will be improved in subsequent betas. Please provide feedback on the new design</li>
+			<li>BOSH support</li>
+			<li>Limited SASL support (only when using BOSH, only ANONYMOUS and PLAIN)</li>
+			<li>XEP-0055 support (Jabber Search), including data forms</li>
+			<li>MUC improvements (kick/ban support, error handling, non-anonymous room support, bug fixes)</li>
+			<li>VCard support including XEP-0153 (VCard Avatars)</li>
 		</ul>
 
-		<h3>        Minor Improvement
-		</h3>
+		<h3>Minor Improvement</h3>
 		<ul>
-		<li>Added support for contacts being in multiple groups
-		</li>
-		<li>XEP-0091 support (Note: this needs to be updated to use XEP-0203 instead)
-		</li>
-		<li>Improved support for 'pending' contacts
-		</li>
-		<li>Tons of assorted bugs fixed
-		</li>
+			<li>Added support for contacts being in multiple groups</li>
+			<li>XEP-0091 support (Note: this needs to be updated to use XEP-0203 instead)</li>
+			<li>Improved support for 'pending' contacts</li>
+			<li>Tons of assorted bugs fixed</li>
 		</ul>
 
 		<div class="footer">
