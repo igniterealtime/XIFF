@@ -66,6 +66,9 @@
 			<arg line="-output ${docs.dir}" />
 			<arg line="-templates-path ${flex.asdoc.templates}" />
 			<arg line="-package-description-file=${docs.descriptions}" />
+			<arg line="-date-in-footer" />
+			<arg line="-keep-xml" />
+			<arg line="-dump-config ${docs.dir}/config.xml" />
 		</exec>
 	</target>
 	
