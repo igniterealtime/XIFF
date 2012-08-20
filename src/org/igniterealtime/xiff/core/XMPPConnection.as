@@ -488,7 +488,10 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Sends ping to server in order to keep the connection alive.
+		 * Sends ping to server in order to keep the connection alive, in case the server
+		 * has not indicated that it would not support it.
+		 *
+		 * TODO: Whitespace keepalive if ping not supported...
 		 */
 		public function sendKeepAlive():void
 		{
