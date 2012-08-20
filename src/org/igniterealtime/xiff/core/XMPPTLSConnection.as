@@ -116,12 +116,13 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @inheritDoc
+		 * In case the user or the server requires the use of TLS, this method
+		 * will initiate the handshake.
 		 */
 		override protected function handleStreamTLS( node:XML ):void
 		{
 			trace("XMPPTLSConnection::handleStreamTLS. node: " + node.toXMLString());
-			
+
 			// If the user did not turn on TLS but the server requires it
 			// TODO: user/developer should be notified somehow..
 			if ( node.hasOwnProperty("required") )

@@ -148,7 +148,8 @@ package org.igniterealtime.xiff.core
 		protected var auth:SASLAuth;
 
 		/**
-		 * @private
+		 * Opening part of the stream tag, such as
+		 * <code>&lt;stream:stream</code> or <code>&lt;flash:stream</code>
 		 */
 		protected var openingStreamTag:String;
 
@@ -160,14 +161,14 @@ package org.igniterealtime.xiff.core
 		protected var closingStreamTag:String;
 
 		/**
-		 * @private
 		 * Depending of the STREAM_TYPE_* used in the <code>connect()</code> method,
 		 * the name of the opening tag for stream is saved in this variable, such as
 		 * <code>stream:stream</code> or <code>flash:stream</code>.
-		 * Default value matches the default value of <code>connect()</code> method,
-		 * which is STREAM_TYPE_STANDARD.
+		 *
+		 * <p>Default value matches the default value of <code>connect()</code> method,
+		 * which is STREAM_TYPE_STANDARD.</p>
 		 */
-		protected var openingStreamTagSearch:String = "stream:stream";
+		protected var streamTagSearch:String = "stream:stream";
 
 		/**
 		 * @private
@@ -179,7 +180,8 @@ package org.igniterealtime.xiff.core
 		 * Once received data from the socket, should the closing tag be seached?
 		 * Initially this should be <code>true</code> as for the first incoming data
 		 * there might be an error available.
-		 * @private
+		 *
+		 * TODO: Not used, not needed?
 		 */
 		protected var expireTagSearch:Boolean = false;
 
@@ -207,20 +209,19 @@ package org.igniterealtime.xiff.core
 		private var _loggedIn:Boolean = false;
 
 		/**
-		 * @private
 		 * Hash to hold callbacks for IQs
 		 */
 		protected var pendingIQs:Object = {};
 
 		/**
-		 * @private
+		 * Server supports keeping the connection alive with Ping extension
 		 * @see http://xmpp.org/extensions/xep-0199.html
 		 * @see org.igniterealtime.xiff.data.ping.PingExtension
 		 */
 		protected var pingNotSupported:Boolean;
 
 		/**
-		 * @private
+		 * List of incoming presences that are waiting to be dispatched
 		 */
 		protected var presenceQueue:Array = [];
 
@@ -503,8 +504,9 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * Set up the connection and listeners related to this class.
-		 * This method should be overridden in any class that would extend this one
-		 * and provide alternative way for connectiong, such as BOSH or TLSSocket.
+		 *
+		 * <p>This method should be overridden in any class that would extend this one
+		 * and provide alternative way for connectiong, such as BOSH or TLSSocket.</p>
 		 *
 		 * @see flash.net.Socket
 		 */
@@ -571,12 +573,12 @@ package org.igniterealtime.xiff.core
 		 * identifier on its behalf, it sends an IQ stanza of type "set" that
 		 * contains an empty <strong>bind</strong> element.</p>
 		 *
-		 * Client asks server to bind a resource:
+		 * <p>Client asks server to bind a resource:
 		 * <pre>
 		 * <iq type='set' id='bind_1'>
 		 *  <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
 		 * </iq>
-		 * </pre>
+		 * </pre></p>
 		 */
 		protected function bindConnection():void
 		{
@@ -641,13 +643,13 @@ package org.igniterealtime.xiff.core
 
 			if ( type == STREAM_TYPE_FLASH || type == STREAM_TYPE_FLASH_TERMINATED )
 			{
-				openingStreamTagSearch = "flash:stream";
+				streamTagSearch = "flash:stream";
 				openingStreamTag += '<flash';
 				closingStreamTag = '</flash:stream>';
 			}
 			else
 			{
-				openingStreamTagSearch = "stream:stream";
+				streamTagSearch = "stream:stream";
 				openingStreamTag += '<stream';
 				closingStreamTag = '</stream:stream>';
 			}
@@ -662,6 +664,8 @@ package org.igniterealtime.xiff.core
 			{
 				openingStreamTag += 'xmlns:stream="' + XMPPStanza.NAMESPACE_STREAM + '"';
 			}
+
+			// TODO: xml:xmlns ?
 			openingStreamTag += ' to="' + domain + '"'
 				+ ' xml:lang="' + XMPPStanza.XML_LANG + '"'
 				+ ' version="' + XMPPStanza.CLIENT_VERSION + '"';
@@ -792,7 +796,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Dispatches a single PresenceEvent in case there are any in the
+		 * queue. This event will contain all the presences available at this
+		 * given moment.
 		 *
 		 * @param	event
 		 */
@@ -931,7 +937,7 @@ package org.igniterealtime.xiff.core
 
 		/**
 		 * TODO: Add similar extension handling as in IQ,
-		 * after message specific extensions are separated from Message class
+		 * after message specific extensions are separated from Message class, v3.2.0
 		 *
 		 * @param	node
 		 */
@@ -961,8 +967,6 @@ package org.igniterealtime.xiff.core
 		protected function handleNodeType( node:XML ):void
 		{
 			var nodeName:String = String(node.localName()).toLowerCase();
-
-			trace(getTimer() + " - handleNodeType. nodeName: " + nodeName);
 
 			switch( nodeName )
 			{
@@ -1027,7 +1031,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * @private
+		 * Handle the incoming <code>Presence</code> either with the queue timer or directly
+		 * dispatching the <code>PresenceEvent</code>. In both cases the event occurs right after
+		 * this method.
 		 *
 		 * @param	node
 		 */
@@ -1061,6 +1067,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Initial stream element has been received once this method is called.
+		 *
 		 * @param	node
 		 */
 		protected function handleStream( node:XML ):void
@@ -1071,6 +1079,7 @@ package org.igniterealtime.xiff.core
 
 			for each ( var child:XML in node.children() )
 			{
+				// Initial stream content should only have features listed
 				if ( child.localName() == "features" )
 				{
 					handleStreamFeatures( child );
@@ -1081,18 +1090,18 @@ package org.igniterealtime.xiff.core
 		/**
 		 * Handle stream error related element.
 		 *
-		 * RFC 3920 (XMPP Core, published October 2004),
-		 * in chapters 4.7. defines Stream Errors:
+		 * <p>RFC 3920 (XMPP Core, published October 2004),
+		 * in chapters 4.7. defines Stream Errors:</p>
 		 *
-		 * MUST contain a child element corresponding to one of the defined
+		 * <p>MUST contain a child element corresponding to one of the defined
 		 * stanza error conditions defined below; this element MUST be
-		 * qualified by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace.
+		 * qualified by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace.</p>
 		 *
-		 * MAY contain a <strong>text</strong> child containing XML character data that
+		 * <p>MAY contain a <strong>text</strong> child containing XML character data that
 		 * describes the error in more detail; this element MUST be qualified
 		 * by the 'urn:ietf:params:xml:ns:xmpp-streams' namespace and SHOULD
 		 * possess an 'xml:lang' attribute specifying the natural language of
-		 * the XML character data.
+		 * the XML character data.</p>
 		 *
 		 * @param	node Error node
 		 * @see http://xmpp.org/protocols/urn_ietf_params_xml_ns_xmpp-streams/
@@ -1100,6 +1109,7 @@ package org.igniterealtime.xiff.core
 		 */
 		protected function handleStreamError( node:XML ):void
 		{
+			trace(getTimer() + " - handleStreamError. node: " + node.toXMLString());
 			/*
 			<stream:error>
 			  <defined-condition xmlns='urn:ietf:params:xml:ns:xmpp-streams'/>
@@ -1111,14 +1121,21 @@ package org.igniterealtime.xiff.core
 			</stream:error>
 			*/
 			var errorCondition:String = "service-unavailable";
+			var errorMessage:String = "Remote Server Error";
 			if (node.children().length() > 0)
 			{
 				// Something from section 4.7.3. Defined Conditions
-				trace(getTimer() + " - handleStreamError. " + node.children()[0].localName());
 				errorCondition = node.children()[0].localName();
+
+				var textList:XMLList = node.children().(localName() == "text");
+				if (textList.length() > 0)
+				{
+					errorMessage = textList[0].toString();
+				}
 			}
+
 			// TODO: There could be other types of errors available...
-			dispatchError( errorCondition, "Remote Server Error", "cancel", 502 );
+			dispatchError( errorCondition, errorMessage, "cancel", 502 );
 
 			// Cancel everything by closing connection
 			try
@@ -1275,8 +1292,13 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Checks if the TLS feature available is required or not and dispatches
+		 * an error in case it is.
+		 *
+		 * <p>A connection class supporting TLS should override this handler.</p>
 		 *
 		 * @param	node The feature containing starttls tag.
+		 * @see org.igniterealtime.xiff.core.XMPPRTMPConnection#handleStreamTLS
 		 */
 		protected function handleStreamTLS( node:XML ):void
 		{
@@ -1408,10 +1430,11 @@ package org.igniterealtime.xiff.core
 			// the unterminated tag should be in the first string of xml data retured from the server
 
 			// http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/RegExp.html
-			var regExpOpen:RegExp = new RegExp( "<" + openingStreamTagSearch );
+			var regExpOpen:RegExp = new RegExp( "<" + streamTagSearch );
 			var regExpOpenExec:Object = regExpOpen.exec( rawXML );
 
-			var regExpClose:RegExp = new RegExp( closingStreamTag );
+			var closingTag:String = "</" + streamTagSearch + ">";
+			var regExpClose:RegExp = new RegExp( closingTag );
 			var regExpCloseExec:Object = regExpClose.exec( rawXML );
 
 			// Create qualified XML if needed.
@@ -1423,7 +1446,7 @@ package org.igniterealtime.xiff.core
 			if ( regExpCloseExec == null )
 			{
 				// What about when the opening tag is the only, and self closing?
-				rawXML = rawXML.concat( closingStreamTag );
+				rawXML = rawXML.concat( closingTag );
 			}
 
 			var isComplete:Boolean = false;
@@ -1654,7 +1677,9 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Should the connection queue presence events for a small interval so that it can send multiple in a batch?
+		 * Should the connection queue presence events for a small interval so that it can
+		 * send multiple in a batch?
+		 *
 		 * @default true To maintain original behavior -- has to be explicitly set to false to disable.
 		 */
 		public function get queuePresences():Boolean

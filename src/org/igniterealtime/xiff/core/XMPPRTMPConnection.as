@@ -26,39 +26,35 @@
 
 package org.igniterealtime.xiff.core
 {
-	import flash.errors.IOError;
-	import flash.events.ProgressEvent;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.AsyncErrorEvent;
-	import flash.events.NetStatusEvent;
-	import flash.events.SecurityErrorEvent;
-
+	import flash.events.*;
 	import flash.net.NetConnection;
 	import flash.net.Responder;
 	import flash.net.NetStream;
+	import flash.net.ObjectEncoding;
 	import flash.utils.ByteArray;
 
 	import org.igniterealtime.xiff.events.*;
-
 
 	/**
 	 * A child of <code>XMPPConnection</code>, this class makes use of the
 	 * Flash RTMP connection instead of the <code>Socket</code>.
 	 *
-	 * @see org.jivesoftware.xiff.core.XMPPConnection
+	 * @see org.igniterealtime.xiff.core.XMPPConnection
 	 */
-	public class XMPPRTMPConnection extends XMPPConnection
+	public class XMPPRTMPConnection extends XMPPConnection implements IXMPPConnection
 	{
 
-		public var netConnection:NetConnection = null;
-		private var xmppUrl:String = "rtmp:/xmpp";
+		private var _netConnection:NetConnection;
+		private var _rtmpUrl:String = "rtmp:/xmpp";
 
-
-		public function XMPPRTMPConnection(xmppUrl:String = "rtmp:/xmpp")
+		/**
+		 *
+		 * @param	url
+		 */
+		public function XMPPRTMPConnection(url:String = "rtmp:/xmpp")
 		{
 			super();
-			this.xmppUrl = xmppUrl;
+			_rtmpUrl = url;
 		}
 
 		/**
@@ -66,25 +62,27 @@ package org.igniterealtime.xiff.core
 		 */
 		override protected function createConnection():void
 		{
-			NetConnection.defaultObjectEncoding = flash.net.ObjectEncoding.AMF0;
-			netConnection = new NetConnection();
-			netConnection.client = this;
-			netConnection.addEventListener( NetStatusEvent.NET_STATUS , netStatus );
-			netConnection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+			NetConnection.defaultObjectEncoding = ObjectEncoding.AMF0;
+
+			_netConnection = new NetConnection();
+			_netConnection.client = this;
+			_netConnection.addEventListener( NetStatusEvent.NET_STATUS , onNetStatus );
+			_netConnection.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
+			_netConnection.addEventListener( AsyncErrorEvent.ASYNC_ERROR, onAsyncError );
 		}
 
 
-		private function netStatus (evt:NetStatusEvent ):void
+		private function onNetStatus( event:NetStatusEvent ):void
 		{
 
-			switch(evt.info.code) {
-
+			switch(event.info.code)
+			{
 				case "NetConnection.Connect.Success":
 					active = true;
 					dispatchEvent( new ConnectionSuccessEvent() );
 
 					var myResult:Responder = new Responder(this.onResult);
-					netConnection.call("xmppConnect", myResult, username, password, resource);
+					_netConnection.call("xmppConnect", myResult, username, password, resource);
 
 					break;
 
@@ -93,56 +91,48 @@ package org.igniterealtime.xiff.core
 					break;
 
 				case "NetConnection.Connect.Closed":
-					var event2:DisconnectionEvent = new DisconnectionEvent();
-					dispatchEvent( event2 );
+					dispatchEvent( new DisconnectionEvent() );
 					break;
 
 				case "NetConnection.Connect.Rejected":
 					dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 					break;
 
-				default:
-
 			}
 		}
 
-		private function onResult (loginOK:Boolean): void
+		private function onResult(success:Boolean): void
 		{
-			if (loginOK)
+			if (success)
 			{
 				dispatchEvent( new LoginEvent() );
 
-			} else {
+			}
+			else
+			{
 
 				dispatchError( "not-authorized", "Not Authorized", "auth", 401 );
 			}
 		}
 
-		private function asyncErrorHandler(event:AsyncErrorEvent):void
+		private function onAsyncError(event:AsyncErrorEvent):void
 		{
-			//trace("AsyncErrorEvent: " + event);
+			trace("AsyncErrorEvent: " + event);
 		}
-
-		private function securityErrorHandler(event:SecurityErrorEvent):void
-		{
-			//trace("securityErrorHandler: " + event);
-		}
-
 
 		override protected function sendDataToServer( data:ByteArray ):void
 		{
-			netConnection.call("xmppSend", null, data.readUTFBytes(data.length));
+			_netConnection.call("xmppSend", null, data.readUTFBytes(data.length));
 		}
 
 		override public function disconnect():void
 		{
 			if ( active )
 			{
-				netConnection.close();
+				_netConnection.close();
 				active = false;
 				loggedIn = false;
-				var event:DisconnectionEvent = new DisconnectionEvent();
-				dispatchEvent(event);
+				dispatchEvent( new DisconnectionEvent() );
 			}
 		}
 
@@ -151,7 +141,7 @@ package org.igniterealtime.xiff.core
 			active = false;
 			loggedIn = false;
 
-			netConnection.connect(xmppUrl);
+			_netConnection.connect(_rtmpUrl);
 		}
 
 		/**

@@ -93,12 +93,24 @@ package org.igniterealtime.xiff.core
 
 		private var _boshPath:String = "http-bind/";
 
+		/**
+		 * Maximum number of requests kept on hold
+		 */
 		private var _hold:uint = 1;
 
+		/**
+		 * Value fecthed from the server
+		 */
 		private var _maxConcurrentRequests:uint = 2;
 
+		/**
+		 * Is the secure port used or not, according to the application developer
+		 */
 		private var _secure:Boolean;
 
+		/**
+		 * Seconds between traffic
+		 */
 		private var _wait:uint = 20;
 
 		/**
@@ -111,8 +123,9 @@ package org.igniterealtime.xiff.core
 		 */
 		private var _inactivity:uint;
 
-		private var _isDisconnecting:Boolean = false;
-
+		/**
+		 * The most recent poll to the server occured at this time
+		 */
 		private var _lastPollTime:Date = null;
 
 		/**
@@ -120,16 +133,38 @@ package org.igniterealtime.xiff.core
 		 */
 		private var _maxPause:uint;
 
+		/**
+		 * Server had the 'maxpause' attribute in the initial connection
+		 * openining element, thus supports pausing the connection.
+		 */
 		private var _pauseEnabled:Boolean = false;
 
+		/**
+		 * Connection is polling at the moment
+		 */
 		private var _pollingEnabled:Boolean = false;
 
+		/**
+		 * Counter for current outgoing requests.
+		 * Once a request is being setn, this counter is increased.
+		 * Once the request has been succesfuly received by the server,
+		 * this value is degreased.
+		 */
 		private var _requestCount:int = 0;
 
+		/**
+		 * Outgoing XML requests
+		 */
 		private var _requestQueue:Array = []; // XML
 
+		/**
+		 * Incoming XML responses
+		 */
 		private var _responseQueue:Array = []; // XML
 
+		/**
+		 * Timer that triggers <code>processResponse</code> handler.
+		 */
 		private var _responseTimer:Timer;
 
 		/**
@@ -142,6 +177,11 @@ package org.igniterealtime.xiff.core
 		 */
 		private var _sid:String;
 
+		/**
+		 * Has the stream been restarted by <code>restartStream</code> method.
+		 * For some "workaround" reason, <code>handleNodeType</code> has a sole purpose
+		 * of setting this to <code>false</code> in case 'features' are available.
+		 */
 		private var _streamRestarted:Boolean;
 
 		/**
@@ -460,6 +500,8 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
+		 * Outgoing request has completed.
+		 *
 		 * <p>If the BOSH <strong>body</strong> wrapper is not empty, then it SHOULD
 		 * contain one of the following:</p>
 		 *
@@ -808,7 +850,7 @@ package org.igniterealtime.xiff.core
 		}
 
 		/**
-		 * Defaults to 2
+		 * Defaults to 2. Value retrieved from the server once stream is initiating.
 		 */
 		public function get maxConcurrentRequests():uint
 		{
