@@ -143,6 +143,11 @@ package org.igniterealtime.xiff.core
 		protected static var _openConnections:Array = [];
 
 		/**
+		 * Features as provided by the server, in their original XML form.
+		 */
+		protected var featuresAvailable:XML = <features/>;
+
+		/**
 		 * @private
 		 */
 		protected var auth:SASLAuth;
@@ -316,6 +321,8 @@ package org.igniterealtime.xiff.core
 		 * @private
 		 */
 		protected var _username:String;
+
+		protected var _registrationSupported:Boolean = false;
 
 		/**
 		 * Constructor. By default will enable the following extensions:
@@ -1225,11 +1232,11 @@ package org.igniterealtime.xiff.core
 		 *
 		 * <p>The XMPP RFCs define an ordering for the features defined therein, namely:</p>
 		 * <ol>
-		 * <li>TLS, requires the use of <code>XMPPTLSConnection</code></li>
-		 * <li>In-band registration, if registration needed</li>
-		 * <li>SASL</li>
-		 * <li>Stream compression, if used</li>
-		 * <li>Resource binding</li>
+		 *   <li>TLS, requires the use of <code>XMPPTLSConnection</code></li>
+		 *   <li>In-band registration, if registration needed</li>
+		 *   <li>SASL</li>
+		 *   <li>Stream compression, if used</li>
+		 *   <li>Resource binding</li>
 		 * </ol>
 		 *
 		 * @param	node
@@ -1242,6 +1249,9 @@ package org.igniterealtime.xiff.core
 
 			for each ( var feature:XML in node.children() )
 			{
+				// Saved but not used until 3.2.0
+				featuresAvailable.appendChild(feature);
+
 				var localName:String = feature.localName();
 
 				switch (localName)
@@ -1253,7 +1263,8 @@ package org.igniterealtime.xiff.core
 						}
 						break;
 					case "register":
-						// In-Band Registration, if enabled.... TODO
+						// In-Band Registration, via separate manager
+						_registrationSupported = true;
 						break;
 					case "mechanisms":
 						if ( !loggedIn && isTls )
@@ -1753,6 +1764,17 @@ package org.igniterealtime.xiff.core
 			{
 				_useAnonymousLogin = value;
 			}
+		}
+
+		/**
+		 * Does the connection support registration.
+		 * Find out after initial features have arrived.
+		 *
+		 * @see org.igniterealtime.xiff.core.InBandRegistrator
+		 */
+		public function get registrationSupported():Boolean
+		{
+			return _registrationSupported;
 		}
 
 		/**

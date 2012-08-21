@@ -26,12 +26,12 @@
 package org.igniterealtime.xiff.core
 {
 	import flash.events.*;
-	
+
 	import org.igniterealtime.xiff.events.*;
 	import org.igniterealtime.xiff.data.*;
 	import org.igniterealtime.xiff.data.forms.FormExtension;
 	import org.igniterealtime.xiff.data.register.RegisterExtension;
-	
+
 	/**
 	 * Dispatched when a password change is successful.
 	 *
@@ -50,9 +50,13 @@ package org.igniterealtime.xiff.core
 	 * @eventType org.igniterealtime.xiff.events.RegistrationFieldsEvent.REG_FIELDS
 	 */
 	[Event( name="registrationFields", type="org.igniterealtime.xiff.events.RegistrationFieldsEvent" )]
-	
+
 	/**
 	 * Manager for XEP-0077: In-Band Registration
+	 *
+	 * <p>Once the connection has been established and the server has provided feature
+	 * information, check <code>XMPPConnection.registrationSupported</code> before trying to use
+	 * the registration.</p>
 	 *
 	 * @see http://xmpp.org/extensions/xep-0077.html
 	 */
@@ -71,10 +75,10 @@ package org.igniterealtime.xiff.core
 			{
 				connection = aConnection;
 			}
-        }
+		}
 
 
-		
+
 
 		/**
 		 * Changes the user's account password on the server. If the password change is successful,
@@ -135,7 +139,7 @@ package org.igniterealtime.xiff.core
 		protected function getRegistrationFields_response( iq:IQ ):void
 		{
 			var ext:RegisterExtension = iq.getAllExtensionsByNS( RegisterExtension.NS )[ 0 ];
-			
+
 			trace("getRegistrationFields_response. iq: " + iq);
 
 			var event:RegistrationFieldsEvent = new RegistrationFieldsEvent();
@@ -174,7 +178,7 @@ package org.igniterealtime.xiff.core
 			regIQ.addExtension( ext );
 			_connection.send( regIQ );
 		}
-		
+
 		/**
 		 * @private
 		 *
@@ -189,7 +193,7 @@ package org.igniterealtime.xiff.core
 			}
 			else
 			{
-				// We weren't expecting any other type that "result"...
+				// We weren't expecting any other type than "result"...
 				//dispatchError( "unexpected-request", "Unexpected Request", "wait", 400 );
 			}
 		}
