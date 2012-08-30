@@ -161,6 +161,14 @@
 				<![CDATA[  ]]>
 				</description>
 		</package>
+		<package name="org.igniterealtime.xiff.data.pubsub">
+				<shortDescription>
+				<![CDATA[ Publish and Subscribe ]]>
+				</shortDescription>
+				<description>
+				<![CDATA[  ]]>
+				</description>
+		</package>
 		<package name="org.igniterealtime.xiff.data.privatedata">
 				<shortDescription>
 				<![CDATA[  ]]>

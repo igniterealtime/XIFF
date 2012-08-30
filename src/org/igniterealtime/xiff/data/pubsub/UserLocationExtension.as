@@ -127,7 +127,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
 		/**
 		 * A named area such as a campus or neighborhood
 		 * @exampleText Central Park
@@ -140,8 +139,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("area", value);
 		}
-
-
 
 		/**
 		 * GPS bearing (direction in which the entity is heading to reach
@@ -166,7 +163,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
 		/**
 		 * A specific building on a street or in an area
 		 * @exampleText The Empire State Building
@@ -179,8 +175,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("building", value);
 		}
-
-
 
 		/**
 		 * The nation where the user is located
@@ -195,9 +189,6 @@ package org.igniterealtime.xiff.data.pubsub
 			setField("country", value);
 		}
 
-	
-
-
 		/**
 		 * The ISO 3166 two-letter country code
 		 * @exampleText US
@@ -210,9 +201,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("countrycode", value);
 		}
-
-
-
 
 		/**
 		 * GPS datum. If datum is not included, receiver MUST assume WGS84;
@@ -229,8 +217,6 @@ package org.igniterealtime.xiff.data.pubsub
 			setField("datum", value);
 		}
 
-
-
 		/**
 		 * A natural-language name for or description of the location
 		 * @exampleText Bill's house
@@ -243,9 +229,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("description", value);
 		}
-
-
-
 
 		/**
 		 * Horizontal GPS error in arc minutes; this element is deprecated in
@@ -268,7 +251,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
 		/**
 		 * A particular floor in a building
 		 * @exampleText 102
@@ -281,8 +263,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("floor", value);
 		}
-
-
 
 		/**
 		 * Latitude in decimal degrees North
@@ -304,8 +284,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
-
 		/**
 		 * A locality within the administrative region, such as a town or city
 		 * @exampleText New York City
@@ -318,8 +296,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("locality", value);
 		}
-
-
 
 		/**
 		 * Longitude in decimal degrees East
@@ -341,9 +317,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
-
-
 		/**
 		 * A code used for postal delivery
 		 * @exampleText 10118
@@ -356,7 +329,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("postalcode", value);
 		}
-
 
 		/**
 		 * An administrative region of the nation, such as a state or province
@@ -383,7 +355,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("room", value);
 		}
-		
 
 		/**
 		 * The speed at which the entity is moving, in meters per second
@@ -405,7 +376,6 @@ package org.igniterealtime.xiff.data.pubsub
 			}
 		}
 
-
 		/**
 		 * A thoroughfare within the locality, or a crossing of two thoroughfares
 		 * @exampleText 350 Fifth Avenue / 34th and Broadway
@@ -419,7 +389,6 @@ package org.igniterealtime.xiff.data.pubsub
 			setField("street", value);
 		}
 
-
 		/**
 		 * A catch-all element that captures any other information about the location
 		 * @exampleText Northwest corner of the lobby
@@ -432,8 +401,6 @@ package org.igniterealtime.xiff.data.pubsub
 		{
 			setField("text", value);
 		}
-
-	import org.igniterealtime.xiff.util.DateTimeParser;
 
 		/**
 		 * UTC timestamp specifying the moment when the reading was taken
@@ -461,7 +428,6 @@ package org.igniterealtime.xiff.data.pubsub
 				setField("timestamp", DateTimeParser.dateTime2string(value));
 			}
 		}
-
 
 		/**
 		 * A URI or URL pointing to information about the location
