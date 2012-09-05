@@ -3,22 +3,12 @@
 
 as3crypto
 ---------
+https://github.com/timkurvers/as3-crypto
+which is a fork of
 http://code.google.com/p/as3crypto
+with additional patches and fixes.
 
-Originally added 2010-02-25, via
-http://issues.igniterealtime.org/browse/XIFF-69
-
-Then patched via
-http://issues.igniterealtime.org/browse/XIFF-73
-
-Fix for as3crypto issue 22: flex2.compiler.as3.SignatureExtension.SignatureGenerationFailed when compiling com.hurlant.crypto.symmetric.AESKey
-http://code.google.com/p/as3crypto/issues/detail?id=22
-
-Fix for as3crypto compile error: A file found in a source-path 'pkcs9unstructuredString' must have the same name as the class definition inside the file 'universalString'.
-
-Fix for as3crypto issue 25: TLSSocket "pure virtual function call"
-http://code.google.com/p/as3crypto/issues/detail?id=25
-
+Current included SWC version updated 2011-10-02.
 
 as3zlib
 -------
