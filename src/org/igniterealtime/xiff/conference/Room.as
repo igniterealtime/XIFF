@@ -1447,7 +1447,7 @@ package org.igniterealtime.xiff.conference
 		 */
 		public function get roomName():String
 		{
-			return _roomJID ? _roomJID.node : null;
+			return _roomJID ? _roomJID.localpart : null;
 		}
 		public function set roomName( value:String ):void
 		{

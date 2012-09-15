@@ -53,7 +53,7 @@ package org.igniterealtime.xiff.auth
 			var jid:UnescapedJID = connection.jid;
 			var authContent:String = jid.bareJID;
 			authContent += '\u0000';
-			authContent += jid.node;
+			authContent += jid.localpart;
 			authContent += '\u0000';
 			authContent += connection.password;
 

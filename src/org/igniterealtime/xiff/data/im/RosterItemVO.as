@@ -125,7 +125,7 @@ package org.igniterealtime.xiff.data.im
 		 */
 		public function get nickname():String
 		{
-			return _nickname ? _nickname : _jid.node;
+			return _nickname ? _nickname : _jid.localpart;
 		}
 		public function set nickname( value:String ):void
 		{

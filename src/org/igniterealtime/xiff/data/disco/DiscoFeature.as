@@ -58,13 +58,13 @@ package org.igniterealtime.xiff.data.disco
 		}
 
 		/**
-                 * The var of this feature used by the application or server.
-                 * In most cases this is the namespace of the given feature/extension.
+		 * The var of this feature used by the application or server.
+		 * In most cases this is the namespace of the given feature/extension.
 		 *
-                 * <p>Note: This serializes to the <code>var</code> attribute on the feature node.</p>
-                 *
-                 * <p>Since <code>var</code> is a reserved word in ActionScript,
-                 * this feature uses <code>varName</code> to describe the var of this feature.</p>
+		 * <p>Note: This serializes to the <code>var</code> attribute on the feature node.</p>
+		 *
+		 * <p>Since <code>var</code> is a reserved word in ActionScript,
+		 * this feature uses <code>varName</code> to describe the var of this feature.</p>
 		 *
 		 */
 		public function get varName():String

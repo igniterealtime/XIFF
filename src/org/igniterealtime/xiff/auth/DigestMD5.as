@@ -56,7 +56,7 @@ package org.igniterealtime.xiff.auth
 		{
 			this.connection = connection;
 
-			var authContent:String = Base64.encode( connection.jid.node );
+			var authContent:String = Base64.encode( connection.jid.localpart );
 
 			req.setNamespace( SASLAuth.NS );
 			req.@mechanism = DigestMD5.MECHANISM;

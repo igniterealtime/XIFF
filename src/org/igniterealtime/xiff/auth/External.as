@@ -46,7 +46,7 @@ package org.igniterealtime.xiff.auth
 		{
 			this.connection = connection;
 
-			var authContent:String = connection.jid.node;
+			var authContent:String = connection.jid.localpart;
 
 			authContent = Base64.encode(authContent);
 

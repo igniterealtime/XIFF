@@ -51,14 +51,14 @@ package org.igniterealtime.xiff.core
 			assertEquals( testValue, jid.resource );
 		}
 
-		[Test( description="value - node" )]
-		public function testNode():void
+		[Test( description="value - localpart" )]
+		public function testLocalpart():void
 		{
 			var testValue:String = "catalog";
 
 			var jid:AbstractJID = new AbstractJID("catalog@shakespeare.lit/Secrets");
 
-			assertEquals( testValue, jid.node );
+			assertEquals( testValue, jid.localpart );
 		}
 
 		[Test( description="value - domain" )]

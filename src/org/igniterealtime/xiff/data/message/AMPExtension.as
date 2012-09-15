@@ -90,7 +90,7 @@ package org.igniterealtime.xiff.data.message
 		 * <strong>message</strong> stanza sent from a
 		 * supporting server, regardless of the recipient. It SHOULD NOT be
 		 * specified otherwise. The value of the 'to' attribute MUST be the
-		 * full JID (node&#64;domain/resource) of the intended recipient for the
+		 * full JID (localpart&#64;domain/resource) of the intended recipient for the
 		 * original <strong>message</strong> stanza.</p>
 		 */
 		public function get to():UnescapedJID
@@ -113,7 +113,7 @@ package org.igniterealtime.xiff.data.message
 		 * be specified for any <strong>message</strong> stanza sent from
 		 * a supporting server, regardless of the recipient. It SHOULD NOT
 		 * be specified otherwise. The value of the 'from' attribute MUST be
-		 * the full JID (node&#64;domain/resource) of the sender for the original
+		 * the full JID (localpart&#64;domain/resource) of the sender for the original
 		 * <strong>message</strong> stanza.
 		 */
 		public function get from():UnescapedJID

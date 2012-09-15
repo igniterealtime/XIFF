@@ -44,9 +44,9 @@ package org.igniterealtime.xiff.core
 		{
 			super( inJID, validate );
 
-			if ( node )
+			if ( localpart )
 			{
-				_node = escapedNode( node );
+				_localpart = escapedNode( localpart );
 			}
 		}
 

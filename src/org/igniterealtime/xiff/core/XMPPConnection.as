@@ -622,7 +622,7 @@ package org.igniterealtime.xiff.core
 			if (jid != null)
 			{
 				_resource = jid.unescaped.resource;
-				_username = jid.unescaped.node;
+				_username = jid.unescaped.localpart;
 				_domain = jid.unescaped.domain;
 
 				establishSession();
