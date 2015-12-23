@@ -129,7 +129,7 @@ package org.igniterealtime.xiff.data.muc
 		public function get jid():EscapedJID
 		{
 			var value:String = getAttribute("jid");
-			if ( value != null )
+			if ( value != null && value != "" )
 			{
 				return new EscapedJID(value);
 			}

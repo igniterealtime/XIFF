@@ -25,14 +25,13 @@
  */
 package org.igniterealtime.xiff.data
 {
-	import org.igniterealtime.xiff.core.EscapedJID;
-	import org.igniterealtime.xiff.data.id.IIDGenerator;
-	import org.igniterealtime.xiff.data.id.IncrementalGenerator;
-	import org.igniterealtime.xiff.data.muc.MUCUserExtension;
-	import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
-	import org.igniterealtime.xiff.namespaces.xiff_internal;
+import org.igniterealtime.xiff.core.EscapedJID;
+import org.igniterealtime.xiff.data.id.IIDGenerator;
+import org.igniterealtime.xiff.data.id.IncrementalGenerator;
+import org.igniterealtime.xiff.data.xhtml.XHTMLExtension;
+import org.igniterealtime.xiff.namespaces.xiff_internal;
 
-	/**
+/**
 	 * Message, nuff said.
 	 *
 	 * @see http://tools.ietf.org/html/rfc3921#section-2.1.1
@@ -451,6 +450,9 @@ package org.igniterealtime.xiff.data
 
 			if ( value == null )
 			{
+				var ns:Namespace = new Namespace(null, Message.NS_RECEIPT);
+				delete xml.ns::[Message.RECEIPT_REQUEST];
+				delete xml.ns::[Message.RECEIPT_RECEIVED];
 				delete xml[Message.RECEIPT_REQUEST];
 				delete xml[Message.RECEIPT_RECEIVED];
 			}
